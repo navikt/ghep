@@ -1,0 +1,9 @@
+{
+  "channel": "{{ .Channel }}",
+  "text": "{{ .Commits | len }} new commits pushed to `<{{ .URL }}|{{ .Repository }}>` by {{ .Author }}",
+  "attachments": [
+     {
+       "text": "{{ range .Commits }}`<{{ .URL }}|{{ .Ref }}>` - {{ .Message }}\n{{ end }}"
+     }
+   ]
+}
