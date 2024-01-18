@@ -1,0 +1,19 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    team: the-g-team
+  name: ghep
+spec:
+  image: {{ image }}
+  ingresses:
+    - https://ghep.nav.no
+  replicas:
+      max: 2
+      min: 1
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 20m
+      memory: 16Mi
