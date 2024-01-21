@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ghep-teams
+data:
+  teams.yaml: |
+    nada:
+      channels:
+        commits: "#nada-commits"
+        issues: "#nada-issues"
+        pulls: "#nada-pull-requests"
