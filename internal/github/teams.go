@@ -55,7 +55,8 @@ func fetchTeamsRepositories(url, bearerToken string) ([]string, error) {
 	}
 
 	type GithubRepo struct {
-		Name string `json:"name"`
+		Name     string `json:"name"`
+		Archived bool   `json:"archived"`
 	}
 
 	githubRepos := []GithubRepo{}
@@ -63,9 +64,13 @@ func fetchTeamsRepositories(url, bearerToken string) ([]string, error) {
 		return nil, err
 	}
 
-	repos := make([]string, len(githubRepos))
-	for i, repo := range githubRepos {
-		repos[i] = repo.Name
+	var repos []string
+	for _, repo := range githubRepos {
+		if repo.Archived {
+			continue
+		}
+
+		repos = append(repos, repo.Name)
 	}
 
 	return repos, nil

@@ -31,15 +31,13 @@ func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
 }
 
 func (c client) events(w http.ResponseWriter, r *http.Request) {
-	slog.Info("Received event")
-	defer r.Body.Close()
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		slog.Error("error reading body", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	defer r.Body.Close()
 
 	simpleEvent := simpleEvent{}
 	if err := json.Unmarshal(body, &simpleEvent); err != nil {
@@ -60,7 +58,7 @@ func (c client) events(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	slog.Info(fmt.Sprintf("Received repository event for v%:%v", team.Name, simpleEvent.Repository.Name))
+	slog.Info(fmt.Sprintf("Received repository event for %v:%v", team.Name, simpleEvent.Repository.Name))
 	if err := c.processTeam(team, body); err != nil {
 		slog.Error("error processing team", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
@@ -73,6 +71,7 @@ func (c client) events(w http.ResponseWriter, r *http.Request) {
 func (c client) processTeam(team github.Team, body []byte) error {
 	// TODO: Check what kind of event this is
 
+	slog.Info("Processing commit event")
 	commit, err := github.CreateCommitEvent(body)
 	if err != nil {
 		return fmt.Errorf("error creating commit event: %v", err.Error())
