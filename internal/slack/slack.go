@@ -21,6 +21,10 @@ type Client struct {
 }
 
 func New(token string) (Client, error) {
+	if token == "" {
+		return Client{}, fmt.Errorf("missing Slack token")
+	}
+
 	var err error
 	commitTmpl, err = template.ParseFS(templates, "templates/commit.tmpl")
 	if err != nil {
