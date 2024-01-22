@@ -5,7 +5,7 @@ Det som skiller Ghep fra en haug av andre lignende tjenester er at den automagis
 
 ## Ta den i bruk
 
-Alt du trenger å gjøre er å redigere `.nais/repos.yaml` og legge til ditt team og deres kanaler.
+Alt du trenger å gjøre er å redigere `.nais/teams.yaml` og legge til ditt team og deres kanaler.
 
 ```
 nada:
