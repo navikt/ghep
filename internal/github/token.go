@@ -66,10 +66,6 @@ func createBearerToken(githubAPI, appInstallationID, appID, appPrivateKey string
 		return "", fmt.Errorf("error getting bearer token, got %v: %v", resp.StatusCode, (body))
 	}
 
-	type bearerToken struct {
-		Token string `json:"token"`
-	}
-
 	var bearer map[string]interface{}
 	if err := json.Unmarshal(body, &bearer); err != nil {
 		return "", err
