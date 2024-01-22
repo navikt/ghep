@@ -20,6 +20,7 @@ func CreateCommitMessage(channel string, event github.CommitEvent) ([]byte, erro
 		Repository string
 		Author     string
 		Commits    []commit
+		Compare    string
 	}
 
 	payload := text{

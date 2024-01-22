@@ -26,6 +26,7 @@ type Repository struct {
 type CommitEvent struct {
 	Commits    []Commit   `json:"commits"`
 	Repository Repository `json:"repository"`
+	Compare    string     `json:"compare"`
 }
 
 func CreateCommitEvent(body []byte) (CommitEvent, error) {

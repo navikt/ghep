@@ -22,6 +22,7 @@ func TestCreateCommitMessage(t *testing.T) {
 	}
 
 	event := github.CommitEvent{
+		Compare: "https://github.com/test/compare/2d7f6c9...d6f21c8",
 		Repository: github.Repository{
 			Name:    "test",
 			HtmlUrl: "https://github.com/test",

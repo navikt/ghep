@@ -1,6 +1,6 @@
 {
   "channel": "#test",
-  "text": "1 new commits pushed to `<https://github.com/test|test>` by Ola Nordmann",
+  "text": "<https://github.com/test/compare/2d7f6c9...d6f21c8|1 new commits> pushed to `<https://github.com/test|test>` by Ola Nordmann",
   "attachments": [
      {
        "text": "`<https://github.com/test|d6f21c84>` - test\n"
