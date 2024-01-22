@@ -47,7 +47,7 @@ func (c Client) PostMessage(payload []byte) error {
 		return err
 	}
 
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", c.token))
+	req.Header.Add("Authorization", "Bearer %v"+c.token)
 	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := c.httpClient.Do(req)
