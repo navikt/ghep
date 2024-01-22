@@ -3,7 +3,8 @@
   "text": "<{{ .Compare }}|{{ .Commits | len }} new commits> pushed to `<{{ .URL }}|{{ .Repository }}>` by {{ .Author }}",
   "attachments": [
      {
-       "text": "{{ range .Commits }}`<{{ .URL }}|{{ .Ref }}>` - {{ .Message }}\n{{ end }}"
+       "text": "{{ range .Commits }}`<{{ .URL }}|{{ .Ref }}>` - {{ .Message }}\n{{ end }}",
+       "color": "#000"
      }
    ]
 }
