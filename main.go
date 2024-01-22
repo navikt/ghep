@@ -30,7 +30,13 @@ func main() {
 	}
 
 	api := api.New(teams, slackApi)
-	if err := api.Run(); err != nil {
+
+	addr := os.Getenv("SERVER_ADDR")
+	if addr == "" {
+		addr = "0.0.0.0:8080"
+	}
+
+	if err := api.Run(addr); err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}

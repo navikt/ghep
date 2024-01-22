@@ -20,8 +20,8 @@ func New(teams []github.Team, slack slack.Client) client {
 	}
 }
 
-func (c client) Run() error {
+func (c client) Run(addr string) error {
 	slog.Info("Starting server")
 	http.HandleFunc("/events", c.events)
-	return http.ListenAndServe("127.0.0.1:8080", nil)
+	return http.ListenAndServe(addr, nil)
 }
