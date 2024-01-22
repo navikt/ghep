@@ -63,7 +63,7 @@ func createBearerToken(githubAPI, appInstallationID, appID, appPrivateKey string
 	}
 
 	if resp.StatusCode != http.StatusCreated {
-		return "", fmt.Errorf("error getting bearer token, got %v: %v", resp.StatusCode, (body))
+		return "", fmt.Errorf("error getting bearer token, got %v: %v", resp.StatusCode, string(body))
 	}
 
 	var bearer map[string]interface{}
