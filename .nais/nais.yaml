@@ -26,9 +26,11 @@ spec:
     - name: GITHUB_ORG
       value: navikt
     - name: GITHUB_APP_PRIVATE_KEY_FILE_PATH
-      value: github.pem
+      value: /var/run/secrets/github.pem
   filesFrom:
     - configmap: ghep-teams
       mountPath: /var/run/configmaps
+    - secret: ghep-github-pem
+      mountPath: /var/run/secrets
   envFrom:
     - secret: ghep
