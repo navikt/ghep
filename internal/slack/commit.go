@@ -3,6 +3,7 @@ package slack
 import (
 	"bytes"
 	"fmt"
+	"strings"
 
 	"github.com/navikt/ghep/internal/github"
 )
@@ -33,9 +34,11 @@ func CreateCommitMessage(channel string, event github.CommitEvent) ([]byte, erro
 
 	commits := []commit{}
 	for _, c := range event.Commits {
+		message := strings.Split(c.Message, "\n")[0]
+
 		commits = append(commits, commit{
 			Ref:     c.ID[:8],
-			Message: c.Message,
+			Message: message,
 			URL:     c.URL,
 		})
 	}
