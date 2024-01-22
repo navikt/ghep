@@ -14,7 +14,6 @@ type Commit struct {
 	ID      string `json:"id"`
 	Message string `json:"message"`
 	URL     string `json:"url"`
-	Author  Author `json:"author"`
 }
 
 type Repository struct {
@@ -26,6 +25,7 @@ type CommitEvent struct {
 	Commits    []Commit   `json:"commits"`
 	Repository Repository `json:"repository"`
 	Compare    string     `json:"compare"`
+	Pusher     Author     `json:"pusher"`
 }
 
 func CreateCommitEvent(body []byte) (CommitEvent, error) {

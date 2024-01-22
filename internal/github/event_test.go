@@ -1,7 +1,6 @@
 package github
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -22,31 +21,27 @@ func TestCreateCommitEvent(t *testing.T) {
 				Commits: []Commit{
 					{
 						ID: "2df91bf91d56ec91e64fb8c60e779ab548b4d599",
-						Author: Author{
-							Name: "dependabot[bot]",
-						},
 					},
 					{
 						ID: "c08bcc4ee8c8b951319244c470f182496d4e0c23",
-						Author: Author{
-							Name: "Kyrre Havik",
-						},
 					},
 				},
 				Repository: Repository{
 					Name: "knorten",
+				},
+				Pusher: Author{
+					Name: "Kyrremann",
 				},
 			},
 		},
 	}
 
 	opt := cmp.FilterPath(func(p cmp.Path) bool {
-		fmt.Println(p)
 		vx := p.String()
 
 		if vx == "Commits.URL" ||
 			vx == "Commits.Message" ||
-			vx == "Commits.Author.Email" ||
+			vx == "Pusher.Email" ||
 			vx == "Repository.URL" ||
 			vx == "Compare" {
 			return true

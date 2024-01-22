@@ -32,11 +32,11 @@ func TestCreateCommitMessage(t *testing.T) {
 				ID:      "d6f21c84",
 				Message: "test",
 				URL:     "https://github.com/test",
-				Author: github.Author{
-					Name:  "Ola Nordmann",
-					Email: "ole@nordmann.no",
-				},
 			},
+		},
+		Pusher: github.Author{
+			Name:  "Ola Nordmann",
+			Email: "ole@nordmann.no",
 		},
 	}
 

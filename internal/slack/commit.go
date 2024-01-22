@@ -26,7 +26,7 @@ func CreateCommitMessage(channel string, event github.CommitEvent) ([]byte, erro
 	payload := text{
 		Channel:    channel,
 		URL:        event.Repository.URL,
-		Author:     event.Commits[0].Author.Name,
+		Author:     event.Pusher.Name,
 		Repository: event.Repository.Name,
 		Compare:    event.Compare,
 	}
