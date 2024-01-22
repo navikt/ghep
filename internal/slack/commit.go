@@ -25,17 +25,18 @@ func CreateCommitMessage(channel string, event github.CommitEvent) ([]byte, erro
 
 	payload := text{
 		Channel:    channel,
-		URL:        event.Repository.HtmlUrl,
+		URL:        event.Repository.URL,
 		Author:     event.Commits[0].Author.Name,
 		Repository: event.Repository.Name,
+		Compare:    event.Compare,
 	}
 
 	commits := []commit{}
 	for _, c := range event.Commits {
 		commits = append(commits, commit{
-			Ref:     c.Id[:8],
+			Ref:     c.ID[:8],
 			Message: c.Message,
-			URL:     c.Url,
+			URL:     c.URL,
 		})
 	}
 	payload.Commits = commits

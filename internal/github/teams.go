@@ -126,6 +126,7 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 		}
 
 		teams = append(teams, Team{
+			Name:          name,
 			Repositories:  repos,
 			SlackChannels: team,
 		})

@@ -24,14 +24,14 @@ func TestCreateCommitMessage(t *testing.T) {
 	event := github.CommitEvent{
 		Compare: "https://github.com/test/compare/2d7f6c9...d6f21c8",
 		Repository: github.Repository{
-			Name:    "test",
-			HtmlUrl: "https://github.com/test",
+			Name: "test",
+			URL:  "https://github.com/test",
 		},
 		Commits: []github.Commit{
 			{
-				Id:      "d6f21c84",
+				ID:      "d6f21c84",
 				Message: "test",
-				Url:     "https://github.com/test",
+				URL:     "https://github.com/test",
 				Author: github.Author{
 					Name:  "Ola Nordmann",
 					Email: "ole@nordmann.no",

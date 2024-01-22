@@ -11,16 +11,15 @@ type Author struct {
 }
 
 type Commit struct {
-	Id        string `json:"id"`
-	Message   string `json:"message"`
-	Timestamp string `json:"timestamp"`
-	Url       string `json:"url"`
-	Author    Author `json:"author"`
+	ID      string `json:"id"`
+	Message string `json:"message"`
+	URL     string `json:"url"`
+	Author  Author `json:"author"`
 }
 
 type Repository struct {
-	Name    string `json:"name"`
-	HtmlUrl string `json:"html_url"`
+	Name string `json:"name"`
+	URL  string `json:"html_url"`
 }
 
 type CommitEvent struct {

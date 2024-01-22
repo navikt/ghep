@@ -1,59 +1,75 @@
 package github
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
-const testDataDirectory = "../../testdata"
-
 func TestCreateCommitEvent(t *testing.T) {
-	files, err := os.ReadDir(testDataDirectory)
-	if err != nil {
-		t.Error(err)
-		t.Fail()
+	tests := []struct {
+		name     string
+		filename string
+		want     CommitEvent
+	}{
+		{
+			name:     "Test create commit event",
+			filename: "commit-1.json",
+			want: CommitEvent{
+				Commits: []Commit{
+					{
+						ID: "2df91bf91d56ec91e64fb8c60e779ab548b4d599",
+						Author: Author{
+							Name: "dependabot[bot]",
+						},
+					},
+					{
+						ID: "c08bcc4ee8c8b951319244c470f182496d4e0c23",
+						Author: Author{
+							Name: "Kyrre Havik",
+						},
+					},
+				},
+				Repository: Repository{
+					Name: "knorten",
+				},
+			},
+		},
 	}
 
-	for _, file := range files {
-		if file.IsDir() {
-			continue
+	opt := cmp.FilterPath(func(p cmp.Path) bool {
+		fmt.Println(p)
+		vx := p.String()
+
+		if vx == "Commits.URL" ||
+			vx == "Commits.Message" ||
+			vx == "Commits.Author.Email" ||
+			vx == "Repository.URL" ||
+			vx == "Compare" {
+			return true
 		}
+		return false
+	}, cmp.Ignore())
 
-		name := file.Name()
-		if !strings.HasPrefix(name, "commit-1.json") {
-			continue
-		}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			path := filepath.Join("testdata", tt.filename)
 
-		path := filepath.Join(testDataDirectory, name)
-
-		t.Run(path, func(t *testing.T) {
 			testdata, err := os.ReadFile(path)
 			if err != nil {
 				t.Error(err)
 			}
 
-			event, err := CreateCommitEvent(testdata)
+			got, err := CreateCommitEvent(testdata)
 			if err != nil {
 				t.Error(err)
 			}
 
-			if event.Repository.Name != "crm-nks-integration" {
-				t.Errorf("expected repository name to be 'crm-nks-integration', got '%v'", event.Repository.Name)
-			}
-
-			if len(event.Commits) != 11 {
-				t.Errorf("expected 1 commit, got %v", len(event.Commits))
-			}
-
-			commit := event.Commits[0]
-			if commit.Id != "b7" {
-				t.Errorf("expected commit id to be 'b7', got '%v'", commit.Id)
-			}
-
-			if commit.Author.Name != "Ola Nordmann" {
-				t.Errorf("expected commit author to be 'Ola Nordmann', got '%v'", commit.Author.Name)
+			if diff := cmp.Diff(tt.want, got, opt); diff != "" {
+				t.Errorf("CreateCommitEvent() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
