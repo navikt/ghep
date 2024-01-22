@@ -25,6 +25,8 @@ spec:
       value: /var/run/configmap/teams.yaml
     - name: GITHUB_ORG
       value: navikt
+    - name: GITHUB_APP_PRIVATE_KEY_FILE_PATH
+      value: github.pem
   filesFrom:
     - configmap: ghep-teams
       mountPath: /var/run/configmaps

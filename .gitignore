@@ -25,3 +25,5 @@ go.work
 
 # Test environment
 *.env
+teams.yaml
+github.pem

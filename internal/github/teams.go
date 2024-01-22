@@ -90,7 +90,7 @@ func getTeamsChannels(teamsFilePath string) (map[string]SlackChannels, error) {
 	return channels, nil
 }
 
-func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, teamsFilePath string) ([]Team, error) {
+func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKeyFilePath, githubOrg, teamsFilePath string) ([]Team, error) {
 	tmpl, err := template.New("github").Parse(githubAPITeamEndpointTmpl)
 	if err != nil {
 		return nil, err
@@ -101,7 +101,7 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 		"org": githubOrg,
 	}
 
-	bearerToken, err := createBearerToken(githubAPI, appInstallationID, appID, appPrivateKey)
+	bearerToken, err := createBearerToken(githubAPI, appInstallationID, appID, appPrivateKeyFilePath)
 	if err != nil {
 		return nil, err
 	}
