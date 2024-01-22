@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ghep-teams
+  namespace: the-g-team
 data:
   teams.yaml: |
     nada:
