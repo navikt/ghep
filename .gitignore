@@ -22,5 +22,6 @@ go.work
 # editors
 .idea
 .tool-versions
-*.json
+
+# Test environment
 *.env
