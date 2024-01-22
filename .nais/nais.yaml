@@ -1,9 +1,10 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
+  name: ghep
+  namespace: the-g-team
   labels:
     team: the-g-team
-  name: ghep
 spec:
   image: {{ image }}
   ingresses:
