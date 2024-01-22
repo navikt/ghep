@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func createJWTToken(appID, appPrivateKeyFilePath string) (string, error) {
+func createJWTToken(appID, appPrivateKey string) (string, error) {
 	now := time.Now()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
@@ -20,12 +19,7 @@ func createJWTToken(appID, appPrivateKeyFilePath string) (string, error) {
 		"iss": appID,
 	})
 
-	pem, err := os.ReadFile(appPrivateKeyFilePath)
-	if err != nil {
-		return "", err
-	}
-
-	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(pem)
+	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(appPrivateKey))
 	if err != nil {
 		return "", err
 	}
@@ -38,14 +32,14 @@ func createJWTToken(appID, appPrivateKeyFilePath string) (string, error) {
 	return jwtToken, nil
 }
 
-func createBearerToken(githubAPI, appInstallationID, appID, appPrivateKeyFilePath string) (string, error) {
+func createBearerToken(githubAPI, appInstallationID, appID, appPrivateKey string) (string, error) {
 	url := fmt.Sprintf("%v/app/installations/%v/access_tokens", githubAPI, appInstallationID)
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
 		return "", err
 	}
 
-	jwtToken, err := createJWTToken(appID, appPrivateKeyFilePath)
+	jwtToken, err := createJWTToken(appID, appPrivateKey)
 	if err != nil {
 		return "", err
 	}

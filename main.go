@@ -14,7 +14,7 @@ func main() {
 		os.Getenv("GITHUB_API"),
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
 		os.Getenv("GITHUB_APP_ID"),
-		os.Getenv("GITHUB_APP_PRIVATE_KEY_FILE_PATH"),
+		os.Getenv("GITHUB_APP_PRIVATE_KEY"),
 		os.Getenv("GITHUB_ORG"),
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
 	)
