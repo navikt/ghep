@@ -22,7 +22,7 @@ spec:
     - name: GITHUB_API
       value: https://api.github.com
     - name: REPOS_CONFIG_FILE_PATH
-      value: /var/run/configmap/teams.yaml
+      value: /var/run/configmaps/teams.yaml
     - name: GITHUB_ORG
       value: navikt
   filesFrom:

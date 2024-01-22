@@ -6,7 +6,6 @@ metadata:
 data:
   teams.yaml: |
     nada:
-      channels:
-        commits: "#nada-commits"
-        issues: "#nada-issues"
-        pulls: "#nada-pull-requests"
+      commits: "#nada-commits"
+      issues: "#nada-issues"
+      pulls: "#nada-pull-requests"
