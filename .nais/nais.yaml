@@ -33,5 +33,5 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: https://api.github.com
-        - host: https://slack.com/
+        - host: api.github.com
+        - host: slack.com
