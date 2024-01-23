@@ -30,3 +30,8 @@ spec:
       mountPath: /var/run/configmaps
   envFrom:
     - secret: ghep
+  accessPolicy:
+    outbound:
+      external:
+        - host: https://api.github.com
+        - host: https://slack.com/
