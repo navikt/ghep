@@ -16,6 +16,6 @@ RUN CGO_ENABLED=0 go build -o /src/app
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
-COPY --from=builder /src/internal/slack/templates /templates
+COPY --from=builder /src/internal/slack/templates/ /templates/
 COPY --from=builder /src/app /
 CMD ["/app"]
