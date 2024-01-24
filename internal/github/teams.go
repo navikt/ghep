@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -25,13 +26,16 @@ type Team struct {
 	SlackChannels SlackChannels
 }
 
-const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}/repos?per_page=100"
+const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}/repos"
 
-func fetchTeamsRepositories(url, bearerToken string) ([]string, error) {
-	req, err := http.NewRequest("GET", url, nil)
+func fetchTeamsRepositories(teamURL, bearerToken string) ([]string, error) {
+	req, err := http.NewRequest("GET", teamURL, nil)
 	if err != nil {
 		return nil, err
 	}
+
+	query := req.URL.Query()
+	query.Set("per_page", "100")
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearerToken))
 	req.Header.Add("Content-Type", "application/json")
@@ -40,37 +44,49 @@ func fetchTeamsRepositories(url, bearerToken string) ([]string, error) {
 		Timeout: 10 * time.Second,
 	}
 
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, resp.Body)
-	}
-
 	type GithubRepo struct {
 		Name     string `json:"name"`
 		Archived bool   `json:"archived"`
 	}
 
-	githubRepos := []GithubRepo{}
-	if err := json.Unmarshal(body, &githubRepos); err != nil {
-		return nil, err
-	}
-
 	var repos []string
-	for _, repo := range githubRepos {
-		if repo.Archived {
-			continue
+	page := 1
+	for {
+		query.Set("page", strconv.Itoa(page))
+		req.URL.RawQuery = query.Encode()
+
+		resp, err := httpClient.Do(req)
+		if err != nil {
+			return nil, err
 		}
 
-		repos = append(repos, repo.Name)
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, resp.Body)
+		}
+
+		githubRepos := []GithubRepo{}
+		if err := json.Unmarshal(body, &githubRepos); err != nil {
+			return nil, err
+		}
+
+		for _, repo := range githubRepos {
+			if repo.Archived {
+				continue
+			}
+
+			repos = append(repos, repo.Name)
+		}
+
+		if len(githubRepos) < 100 {
+			break
+		}
+
+		page++
 	}
 
 	return repos, nil
