@@ -14,12 +14,10 @@ permissions:
 
 jobs:
   deploy:
-    needs:
-      - build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: nais/deploy/actions/deploy@v2
       env:
         CLUSTER: prod-gcp
-        RESOURCE: .nais/teams.yaml,.nais/nais.yaml
+        RESOURCE: .nais/teams.yaml
