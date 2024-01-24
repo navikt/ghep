@@ -6,5 +6,7 @@
        "text": "`<https://github.com/test|d6f21c84>` - test\n",
        "color": "#000"
      }
-   ]
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
 }
