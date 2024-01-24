@@ -27,7 +27,8 @@ func TestCreateCommitEvent(t *testing.T) {
 					},
 				},
 				Repository: Repository{
-					Name: "knorten",
+					Name:          "knorten",
+					DefaultBranch: "main",
 				},
 				Sender: Sender{
 					Login: "Kyrremann",
