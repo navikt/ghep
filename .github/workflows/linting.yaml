@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '.nais/teams.yaml'
+      - '.github/workflows/linting.yaml'
 
 jobs:
   lint-teams:
@@ -17,4 +18,4 @@ jobs:
         with:
           node-version: 20
       - run: npm install --save-dev --save-exact prettier
-      - run: prettier --check .nais/teams.yaml
+      - run: npm run prettier --check .nais/teams.yaml
