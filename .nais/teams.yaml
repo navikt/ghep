@@ -3,9 +3,19 @@ kind: ConfigMap
 metadata:
   name: ghep-teams
   namespace: the-g-team
+  labels:
+    team: the-g-team
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   teams.yaml: |
     nada:
       commits: "#nada-commits"
       issues: "#nada-issues"
       pulls: "#nada-pull-requests"
+    flex:
+      commits: "#flex-github-feed"
+      issues: "#flex-github-feed"
+      pulls: "#flex-github-feed"
+    tbd:
+      commits: "#område-helse-dev"
