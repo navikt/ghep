@@ -9,3 +9,5 @@ data:
       commits: "#nada-commits"
       issues: "#nada-issues"
       pulls: "#nada-pull-requests"
+    tbd:
+      commits: "#område-helse-dev"
