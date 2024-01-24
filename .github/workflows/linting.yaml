@@ -17,4 +17,4 @@ jobs:
         with:
           node-version: 20
       - run: npm install --save-dev --save-exact prettier
-      - prettier --check .nais/teams.yaml
+      - run: prettier --check .nais/teams.yaml
