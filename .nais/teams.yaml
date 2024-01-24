@@ -13,3 +13,5 @@ data:
       commits: "#flex-github-feed"
       issues: "#flex-github-feed"
       pulls: "#flex-github-feed"
+    tbd:
+      commits: "#område-helse-dev"
