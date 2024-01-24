@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-type Author struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+type Sender struct {
+	Login string `json:"login"`
+	URL   string `json:"html_url"`
 }
 
 type Commit struct {
@@ -25,7 +25,7 @@ type CommitEvent struct {
 	Commits    []Commit   `json:"commits"`
 	Repository Repository `json:"repository"`
 	Compare    string     `json:"compare"`
-	Pusher     Author     `json:"pusher"`
+	Sender     Sender     `json:"sender"`
 }
 
 func CreateCommitEvent(body []byte) (CommitEvent, error) {

@@ -1,6 +1,6 @@
 {
   "channel": "{{ .Channel }}",
-  "text": "<{{ .Compare }}|{{ .Commits | len }} new commits> pushed to `<{{ .URL }}|{{ .Repository }}>` by {{ .Author }}",
+  "text": "<{{ .Compare }}|{{ .Commits | len }} new commits> pushed to `<{{ .URL }}|{{ .Repository }}>` by <{{ .Sender.URL }}|{{ .Sender.Login }}>",
   "attachments": [
      {
        "text": "{{ range .Commits }}`<{{ .URL }}|{{ .Ref }}>` - {{ .Message }}\n{{ end }}",

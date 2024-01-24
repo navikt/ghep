@@ -29,8 +29,8 @@ func TestCreateCommitEvent(t *testing.T) {
 				Repository: Repository{
 					Name: "knorten",
 				},
-				Pusher: Author{
-					Name: "Kyrremann",
+				Sender: Sender{
+					Login: "Kyrremann",
 				},
 			},
 		},
@@ -41,7 +41,7 @@ func TestCreateCommitEvent(t *testing.T) {
 
 		if vx == "Commits.URL" ||
 			vx == "Commits.Message" ||
-			vx == "Pusher.Email" ||
+			vx == "Sender.URL" ||
 			vx == "Repository.URL" ||
 			vx == "Compare" {
 			return true
