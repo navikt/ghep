@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 
@@ -22,6 +23,8 @@ func main() {
 		slog.Error("error fetching teams", "err", err.Error())
 		os.Exit(1)
 	}
+
+	slog.Info(fmt.Sprintf("found %v teams", len(teams)))
 
 	slackApi, err := slack.New(os.Getenv("SLACK_TOKEN"))
 	if err != nil {
