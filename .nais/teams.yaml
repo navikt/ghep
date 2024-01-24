@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: ghep-teams
   namespace: the-g-team
+  labels:
+    team: the-g-team
   annotations:
     reloader.stakater.com/match: "true"
 data:
