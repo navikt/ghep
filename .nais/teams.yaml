@@ -9,3 +9,7 @@ data:
       commits: "#nada-commits"
       issues: "#nada-issues"
       pulls: "#nada-pull-requests"
+    flex:
+      commits: "#flex-github-feed"
+      issues: "#flex-github-feed"
+      pulls: "#flex-github-feed"
