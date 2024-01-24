@@ -47,8 +47,8 @@ func (c Client) PostMessage(payload []byte) error {
 		return err
 	}
 
-	req.Header.Add("Authorization", "Bearer %v"+c.token)
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer "+c.token)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
