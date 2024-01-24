@@ -24,7 +24,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	slog.Info(fmt.Sprintf("found %v teams", len(teams)))
+	teamNames := []string{}
+	for _, team := range teams {
+		teamNames = append(teamNames, team.Name)
+	}
+
+	slog.Info(fmt.Sprintf("Teams using Ghep: %v", teamNames))
 
 	slackApi, err := slack.New(os.Getenv("SLACK_TOKEN"))
 	if err != nil {
