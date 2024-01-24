@@ -19,3 +19,5 @@ data:
       pulls: "#flex-github-feed"
     tbd:
       commits: "#område-helse-dev"
+    the-g-team:
+      commits: "#the-g-team-ci"
