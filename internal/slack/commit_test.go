@@ -34,9 +34,9 @@ func TestCreateCommitMessage(t *testing.T) {
 				URL:     "https://github.com/test",
 			},
 		},
-		Pusher: github.Author{
-			Name:  "Ola Nordmann",
-			Email: "ole@nordmann.no",
+		Sender: github.Sender{
+			Login: "Ola Nordmann",
+			URL:   "https://github.com/olanordmann",
 		},
 	}
 
