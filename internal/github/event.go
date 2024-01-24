@@ -17,8 +17,9 @@ type Commit struct {
 }
 
 type Repository struct {
-	Name string `json:"name"`
-	URL  string `json:"html_url"`
+	Name          string `json:"name"`
+	URL           string `json:"html_url"`
+	DefaultBranch string `json:"default_branch"`
 }
 
 type CommitEvent struct {

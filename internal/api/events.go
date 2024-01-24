@@ -6,12 +6,14 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strings"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
 )
 
 type simpleEvent struct {
+	Refs       string `json:"refs"`
 	Repository struct {
 		Name string `json:"name"`
 	} `json:"repository"`
@@ -52,29 +54,37 @@ func (c client) events(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	team, ok := findTeam(c.teams, simpleEvent.Repository.Name)
-	if !ok {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
+	if strings.HasPrefix(simpleEvent.Refs, "refs/tags/") {
+		slog.Info("Received commit event")
+		branch := strings.TrimPrefix(simpleEvent.Refs, "refs/heads/")
+		if err := c.handleCommitEvent(body, simpleEvent.Repository.Name, branch); err != nil {
+			slog.Error("error handling commit event", "err", err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 
-	slog.Info(fmt.Sprintf("Received repository event for %v:%v", team.Name, simpleEvent.Repository.Name))
-	if err := c.processTeam(team, body); err != nil {
-		slog.Error("error processing team", "err", err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusOK)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (c client) processTeam(team github.Team, body []byte) error {
-	// TODO: Check what kind of event this is
+func (c client) handleCommitEvent(body []byte, repository, branch string) error {
+	team, ok := findTeam(c.teams, repository)
+	if !ok {
+		return fmt.Errorf("no team found for repository %v", repository)
+	}
 
-	slog.Info("Processing commit event")
+	slog.Info(fmt.Sprintf("Received commit to %v for %v", repository, team.Name))
 	commit, err := github.CreateCommitEvent(body)
 	if err != nil {
 		return fmt.Errorf("error creating commit event: %v", err.Error())
+	}
+
+	if commit.Repository.DefaultBranch != branch {
+		slog.Info(fmt.Sprintf("Ignoring commit to %v on branch %v", repository, branch))
+		return nil
 	}
 
 	if len(commit.Commits) == 0 {
