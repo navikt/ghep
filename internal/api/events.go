@@ -12,8 +12,10 @@ import (
 	"github.com/navikt/ghep/internal/slack"
 )
 
+const refHeadsPrefix = "refs/heads/"
+
 type simpleEvent struct {
-	Refs       string `json:"refs"`
+	Ref        string `json:"ref"`
 	Repository struct {
 		Name string `json:"name"`
 	} `json:"repository"`
@@ -54,9 +56,9 @@ func (c client) events(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if strings.HasPrefix(simpleEvent.Refs, "refs/tags/") {
+	if strings.HasPrefix(simpleEvent.Ref, refHeadsPrefix) {
 		slog.Info("Received commit event")
-		branch := strings.TrimPrefix(simpleEvent.Refs, "refs/heads/")
+		branch := strings.TrimPrefix(simpleEvent.Ref, refHeadsPrefix)
 		if err := c.handleCommitEvent(body, simpleEvent.Repository.Name, branch); err != nil {
 			slog.Error("error handling commit event", "err", err.Error())
 			w.WriteHeader(http.StatusInternalServerError)
