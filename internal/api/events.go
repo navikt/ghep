@@ -34,7 +34,12 @@ func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
 	return github.Team{}, false
 }
 
-func (c client) events(w http.ResponseWriter, r *http.Request) {
+func (c client) eventsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		slog.Error("error reading body", "err", err.Error())
