@@ -18,13 +18,11 @@ var templates embed.FS
 type Client struct {
 	httpClient *http.Client
 	token      string
-	templates  map[string]*template.Template
+	templates  map[string]template.Template
 }
 
-func (c Client) CommitTmpl() *template.Template {
+func (c Client) CommitTmpl() template.Template {
 	return c.templates["commit"]
-}
-
 }
 
 func New(token string) (Client, error) {
@@ -37,7 +35,7 @@ func New(token string) (Client, error) {
 			Timeout: 10 * time.Second,
 		},
 		token:     token,
-		templates: map[string]*template.Template{},
+		templates: map[string]template.Template{},
 	}
 
 	commitTmpl, err := template.ParseFS(templates, "templates/commit.tmpl")
@@ -45,7 +43,7 @@ func New(token string) (Client, error) {
 		return Client{}, err
 	}
 
-	client.templates["commit"] = commitTmpl
+	client.templates["commit"] = *commitTmpl
 
 	return client, nil
 }

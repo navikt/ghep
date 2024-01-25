@@ -22,8 +22,6 @@ type Commit struct {
 	URL     string `json:"url"`
 }
 
-}
-
 type Event struct {
 	Action     string     `json:"action"`
 	Ref        string     `json:"ref"`

@@ -40,7 +40,7 @@ func TestCreateCommitMessage(t *testing.T) {
 	}
 
 	t.Run("test", func(t *testing.T) {
-		got, err := CreateCommitMessage(commitTmpl, "#test", event)
+		got, err := CreateCommitMessage(*commitTmpl, "#test", event)
 		if err != nil {
 			t.Error(err)
 		}

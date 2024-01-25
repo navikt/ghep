@@ -9,7 +9,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateCommitMessage(tmpl *template.Template, channel string, event github.Event) ([]byte, error) {
+func CreateCommitMessage(tmpl template.Template, channel string, event github.Event) ([]byte, error) {
 	type commit struct {
 		URL     string
 		Ref     string

@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"text/template"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
@@ -40,7 +41,7 @@ func (c Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := c.handleSimpleEvent(team, event); err != nil {
+	if err := c.handleEvent(team, event); err != nil {
 		slog.Error("error handling event", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -49,12 +50,12 @@ func (c Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (c Client) handleSimpleEvent(team github.Team, event github.Event) error {
+func (c Client) handleEvent(team github.Team, event github.Event) error {
 	var payload []byte
 	var err error
 
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
-		payload, err = c.handleCommitEvent(team, event)
+		payload, err = handleCommitEvent(c.slack.CommitTmpl(), team, event)
 	}
 
 	if err != nil {
@@ -68,7 +69,7 @@ func (c Client) handleSimpleEvent(team github.Team, event github.Event) error {
 	return c.slack.PostMessage(payload)
 }
 
-func (c Client) handleCommitEvent(team github.Team, event github.Event) ([]byte, error) {
+func handleCommitEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
 	branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
 
 	if branch != event.Repository.DefaultBranch {
@@ -80,7 +81,7 @@ func (c Client) handleCommitEvent(team github.Team, event github.Event) ([]byte,
 	}
 
 	slog.Info(fmt.Sprintf("Received commit to %v for %v", event.Repository.Name, team.Name))
-	return slack.CreateCommitMessage(c.slack.CommitTmpl(), team.SlackChannels.Commits, event)
+	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event)
 }
 
 func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
