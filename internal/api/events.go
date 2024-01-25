@@ -48,33 +48,29 @@ func (c client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	simpleEvent := simpleEvent{}
-	if err := json.Unmarshal(body, &simpleEvent); err != nil {
+	event := simpleEvent{}
+	if err := json.Unmarshal(body, &event); err != nil {
 		slog.Error("error decoding body", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if simpleEvent.Zen != "" {
-		slog.Info("Received ping event")
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
-	if strings.HasPrefix(simpleEvent.Ref, refHeadsPrefix) {
-		slog.Info("Received commit event")
-		branch := strings.TrimPrefix(simpleEvent.Ref, refHeadsPrefix)
-		if err := c.handleCommitEvent(body, simpleEvent.Repository.Name, branch); err != nil {
-			slog.Error("error handling commit event", "err", err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
+	if err := c.handleSimpleEvent(body, event); err != nil {
+		slog.Error("error handling simple event", "err", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (c client) handleSimpleEvent(body []byte, event simpleEvent) error {
+	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
+		branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
+		return c.handleCommitEvent(body, event.Repository.Name, branch)
+	}
+
+	return nil
 }
 
 func (c client) handleCommitEvent(body []byte, repository, branch string) error {
