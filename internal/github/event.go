@@ -10,29 +10,33 @@ type Sender struct {
 	URL   string `json:"html_url"`
 }
 
-type Commit struct {
-	ID      string `json:"id"`
-	Message string `json:"message"`
-	URL     string `json:"url"`
-}
-
 type Repository struct {
 	Name          string `json:"name"`
 	URL           string `json:"html_url"`
 	DefaultBranch string `json:"default_branch"`
 }
 
-type CommitEvent struct {
-	Commits    []Commit   `json:"commits"`
+type Commit struct {
+	ID      string `json:"id"`
+	Message string `json:"message"`
+	URL     string `json:"url"`
+}
+
+}
+
+type Event struct {
+	Action     string     `json:"action"`
+	Ref        string     `json:"ref"`
 	Repository Repository `json:"repository"`
+	Commits    []Commit   `json:"commits"`
 	Compare    string     `json:"compare"`
 	Sender     Sender     `json:"sender"`
 }
 
-func CreateCommitEvent(body []byte) (CommitEvent, error) {
-	event := CommitEvent{}
+func CreateEvent(body []byte) (Event, error) {
+	event := Event{}
 	if err := json.Unmarshal(body, &event); err != nil {
-		return CommitEvent{}, fmt.Errorf("decoding commit event: %w", err)
+		return Event{}, fmt.Errorf("decoding event: %w", err)
 	}
 
 	return event, nil

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
@@ -13,26 +12,6 @@ import (
 )
 
 const refHeadsPrefix = "refs/heads/"
-
-type simpleEvent struct {
-	Ref        string `json:"ref"`
-	Repository struct {
-		Name string `json:"name"`
-	} `json:"repository"`
-	Zen string `json:"zen"`
-}
-
-func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
-	for _, team := range teams {
-		for _, repo := range team.Repositories {
-			if repo == repositoryName {
-				return team, true
-			}
-		}
-	}
-
-	return github.Team{}, false
-}
 
 func (c client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -48,15 +27,21 @@ func (c client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	event := simpleEvent{}
-	if err := json.Unmarshal(body, &event); err != nil {
-		slog.Error("error decoding body", "err", err.Error())
+	event, err := github.CreateEvent(body)
+	if err != nil {
+		slog.Error("error creating event", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if err := c.handleSimpleEvent(body, event); err != nil {
-		slog.Error("error handling simple event", "err", err.Error())
+	team, found := findTeam(c.teams, event.Repository.Name)
+	if !found {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	if err := c.handleSimpleEvent(team, event); err != nil {
+		slog.Error("error handling event", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -64,46 +49,48 @@ func (c client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (c client) handleSimpleEvent(body []byte, event simpleEvent) error {
+func (c client) handleSimpleEvent(team github.Team, event github.Event) error {
+	var payload []byte
+	var err error
+
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
-		branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
-		return c.handleCommitEvent(body, event.Repository.Name, branch)
+		payload, err = c.handleCommitEvent(team, event)
 	}
 
-	return nil
+	if err != nil {
+		return err
+	}
+
+	if payload == nil {
+		return nil
+	}
+
+	return c.slack.PostMessage(payload)
 }
 
-func (c client) handleCommitEvent(body []byte, repository, branch string) error {
-	team, ok := findTeam(c.teams, repository)
-	if !ok {
-		return fmt.Errorf("no team found for repository %v", repository)
+func (c client) handleCommitEvent(team github.Team, event github.Event) ([]byte, error) {
+	branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
+
+	if branch != event.Repository.DefaultBranch {
+		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received commit to %v for %v", repository, team.Name))
-	commit, err := github.CreateCommitEvent(body)
-	if err != nil {
-		return fmt.Errorf("error creating commit event: %v", err.Error())
+	if len(event.Commits) == 0 {
+		return nil, nil
 	}
 
-	if commit.Repository.DefaultBranch != branch {
-		slog.Info(fmt.Sprintf("Ignoring commit to %v on branch %v", repository, branch))
-		return nil
+	slog.Info(fmt.Sprintf("Received commit to %v for %v", event.Repository.Name, team.Name))
+	return slack.CreateCommitMessage(c.slack.CommitTmpl(), team.SlackChannels.Commits, event)
+}
+
+func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
+	for _, team := range teams {
+		for _, repo := range team.Repositories {
+			if repo == repositoryName {
+				return team, true
+			}
+		}
 	}
 
-	if len(commit.Commits) == 0 {
-		slog.Info("No commits to process")
-		return nil
-	}
-
-	payload, err := slack.CreateCommitMessage(team.SlackChannels.Commits, commit)
-	if err != nil {
-		return fmt.Errorf("error creating Slack message: %v", err.Error())
-	}
-
-	if err := c.slack.PostMessage(payload); err != nil {
-		return fmt.Errorf("error posting to Slack: %v", err.Error())
-	}
-
-	slog.Info("Successfully posted to Slack")
-	return nil
+	return github.Team{}, false
 }

@@ -12,12 +12,12 @@ func TestCreateCommitEvent(t *testing.T) {
 	tests := []struct {
 		name     string
 		filename string
-		want     CommitEvent
+		want     Event
 	}{
 		{
 			name:     "Test create commit event",
 			filename: "commit-1.json",
-			want: CommitEvent{
+			want: Event{
 				Commits: []Commit{
 					{
 						ID: "2df91bf91d56ec91e64fb8c60e779ab548b4d599",
@@ -33,6 +33,7 @@ func TestCreateCommitEvent(t *testing.T) {
 				Sender: Sender{
 					Login: "Kyrremann",
 				},
+				Ref: "refs/heads/main",
 			},
 		},
 	}
@@ -59,7 +60,7 @@ func TestCreateCommitEvent(t *testing.T) {
 				t.Error(err)
 			}
 
-			got, err := CreateCommitEvent(testdata)
+			got, err := CreateEvent(testdata)
 			if err != nil {
 				t.Error(err)
 			}
