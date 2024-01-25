@@ -13,7 +13,7 @@ import (
 
 const refHeadsPrefix = "refs/heads/"
 
-func (c client) eventsHandler(w http.ResponseWriter, r *http.Request) {
+func (c Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -49,7 +49,7 @@ func (c client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (c client) handleSimpleEvent(team github.Team, event github.Event) error {
+func (c Client) handleSimpleEvent(team github.Team, event github.Event) error {
 	var payload []byte
 	var err error
 
@@ -68,7 +68,7 @@ func (c client) handleSimpleEvent(team github.Team, event github.Event) error {
 	return c.slack.PostMessage(payload)
 }
 
-func (c client) handleCommitEvent(team github.Team, event github.Event) ([]byte, error) {
+func (c Client) handleCommitEvent(team github.Team, event github.Event) ([]byte, error) {
 	branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
 
 	if branch != event.Repository.DefaultBranch {
