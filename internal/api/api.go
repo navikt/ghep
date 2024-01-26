@@ -8,20 +8,20 @@ import (
 	"github.com/navikt/ghep/internal/slack"
 )
 
-type client struct {
+type Client struct {
 	slack slack.Client
 	teams []github.Team
 }
 
-func New(teams []github.Team, slack slack.Client) client {
-	return client{
+func New(teams []github.Team, slack slack.Client) Client {
+	return Client{
 		slack: slack,
 		teams: teams,
 	}
 }
 
-func (c client) Run(addr string) error {
+func (c Client) Run(addr string) error {
 	slog.Info("Starting server")
-	http.HandleFunc("/events", c.events)
+	http.HandleFunc("/events", c.eventsHandler)
 	return http.ListenAndServe(addr, nil)
 }

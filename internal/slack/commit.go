@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"text/template"
 
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateCommitMessage(channel string, event github.CommitEvent) ([]byte, error) {
+func CreateCommitMessage(tmpl template.Template, channel string, event github.Event) ([]byte, error) {
 	type commit struct {
 		URL     string
 		Ref     string
@@ -45,7 +46,7 @@ func CreateCommitMessage(channel string, event github.CommitEvent) ([]byte, erro
 	payload.Commits = commits
 
 	var output bytes.Buffer
-	if err := commitTmpl.Execute(&output, payload); err != nil {
+	if err := tmpl.Execute(&output, payload); err != nil {
 		return nil, fmt.Errorf("executing commit template: %w", err)
 	}
 

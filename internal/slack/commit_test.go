@@ -10,8 +10,7 @@ import (
 )
 
 func TestCreateCommitMessage(t *testing.T) {
-	var err error
-	commitTmpl, err = template.ParseFS(templates, "templates/commit.tmpl")
+	commitTmpl, err := template.ParseFiles("templates/commit.tmpl")
 	if err != nil {
 		t.Error(err)
 	}
@@ -21,7 +20,7 @@ func TestCreateCommitMessage(t *testing.T) {
 		t.Error(err)
 	}
 
-	event := github.CommitEvent{
+	event := github.Event{
 		Compare: "https://github.com/test/compare/2d7f6c9...d6f21c8",
 		Repository: github.Repository{
 			Name: "test",
@@ -41,7 +40,7 @@ func TestCreateCommitMessage(t *testing.T) {
 	}
 
 	t.Run("test", func(t *testing.T) {
-		got, err := CreateCommitMessage("#test", event)
+		got, err := CreateCommitMessage(*commitTmpl, "#test", event)
 		if err != nil {
 			t.Error(err)
 		}
