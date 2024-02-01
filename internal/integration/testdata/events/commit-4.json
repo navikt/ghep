@@ -1,0 +1,240 @@
+{
+  "ref": "refs/heads/python-versions-support",
+  "before": "acaee6a7796f2c980038df31a447561a7744b0ec",
+  "after": "9891f39e63020269e9c20a9d792742953789b2c6",
+  "repository": {
+    "id": 307376974,
+    "node_id": "MDEwOlJlcG9zaXRvcnkzMDczNzY5NzQ=",
+    "name": "dataverk-airflow",
+    "full_name": "navikt/dataverk-airflow",
+    "private": false,
+    "owner": {
+      "name": "navikt",
+      "email": null,
+      "login": "navikt",
+      "id": 11848947,
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjExODQ4OTQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11848947?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/navikt",
+      "html_url": "https://github.com/navikt",
+      "followers_url": "https://api.github.com/users/navikt/followers",
+      "following_url": "https://api.github.com/users/navikt/following{/other_user}",
+      "gists_url": "https://api.github.com/users/navikt/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/navikt/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/navikt/subscriptions",
+      "organizations_url": "https://api.github.com/users/navikt/orgs",
+      "repos_url": "https://api.github.com/users/navikt/repos",
+      "events_url": "https://api.github.com/users/navikt/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/navikt/received_events",
+      "type": "Organization",
+      "site_admin": false
+    },
+    "html_url": "https://github.com/navikt/dataverk-airflow",
+    "description": "Knada wrapper for airflow KubernetesPodOperator",
+    "fork": false,
+    "url": "https://github.com/navikt/dataverk-airflow",
+    "forks_url": "https://api.github.com/repos/navikt/dataverk-airflow/forks",
+    "keys_url": "https://api.github.com/repos/navikt/dataverk-airflow/keys{/key_id}",
+    "collaborators_url": "https://api.github.com/repos/navikt/dataverk-airflow/collaborators{/collaborator}",
+    "teams_url": "https://api.github.com/repos/navikt/dataverk-airflow/teams",
+    "hooks_url": "https://api.github.com/repos/navikt/dataverk-airflow/hooks",
+    "issue_events_url": "https://api.github.com/repos/navikt/dataverk-airflow/issues/events{/number}",
+    "events_url": "https://api.github.com/repos/navikt/dataverk-airflow/events",
+    "assignees_url": "https://api.github.com/repos/navikt/dataverk-airflow/assignees{/user}",
+    "branches_url": "https://api.github.com/repos/navikt/dataverk-airflow/branches{/branch}",
+    "tags_url": "https://api.github.com/repos/navikt/dataverk-airflow/tags",
+    "blobs_url": "https://api.github.com/repos/navikt/dataverk-airflow/git/blobs{/sha}",
+    "git_tags_url": "https://api.github.com/repos/navikt/dataverk-airflow/git/tags{/sha}",
+    "git_refs_url": "https://api.github.com/repos/navikt/dataverk-airflow/git/refs{/sha}",
+    "trees_url": "https://api.github.com/repos/navikt/dataverk-airflow/git/trees{/sha}",
+    "statuses_url": "https://api.github.com/repos/navikt/dataverk-airflow/statuses/{sha}",
+    "languages_url": "https://api.github.com/repos/navikt/dataverk-airflow/languages",
+    "stargazers_url": "https://api.github.com/repos/navikt/dataverk-airflow/stargazers",
+    "contributors_url": "https://api.github.com/repos/navikt/dataverk-airflow/contributors",
+    "subscribers_url": "https://api.github.com/repos/navikt/dataverk-airflow/subscribers",
+    "subscription_url": "https://api.github.com/repos/navikt/dataverk-airflow/subscription",
+    "commits_url": "https://api.github.com/repos/navikt/dataverk-airflow/commits{/sha}",
+    "git_commits_url": "https://api.github.com/repos/navikt/dataverk-airflow/git/commits{/sha}",
+    "comments_url": "https://api.github.com/repos/navikt/dataverk-airflow/comments{/number}",
+    "issue_comment_url": "https://api.github.com/repos/navikt/dataverk-airflow/issues/comments{/number}",
+    "contents_url": "https://api.github.com/repos/navikt/dataverk-airflow/contents/{+path}",
+    "compare_url": "https://api.github.com/repos/navikt/dataverk-airflow/compare/{base}...{head}",
+    "merges_url": "https://api.github.com/repos/navikt/dataverk-airflow/merges",
+    "archive_url": "https://api.github.com/repos/navikt/dataverk-airflow/{archive_format}{/ref}",
+    "downloads_url": "https://api.github.com/repos/navikt/dataverk-airflow/downloads",
+    "issues_url": "https://api.github.com/repos/navikt/dataverk-airflow/issues{/number}",
+    "pulls_url": "https://api.github.com/repos/navikt/dataverk-airflow/pulls{/number}",
+    "milestones_url": "https://api.github.com/repos/navikt/dataverk-airflow/milestones{/number}",
+    "notifications_url": "https://api.github.com/repos/navikt/dataverk-airflow/notifications{?since,all,participating}",
+    "labels_url": "https://api.github.com/repos/navikt/dataverk-airflow/labels{/name}",
+    "releases_url": "https://api.github.com/repos/navikt/dataverk-airflow/releases{/id}",
+    "deployments_url": "https://api.github.com/repos/navikt/dataverk-airflow/deployments",
+    "created_at": 1603717941,
+    "updated_at": "2023-10-23T15:35:42Z",
+    "pushed_at": 1706103208,
+    "git_url": "git://github.com/navikt/dataverk-airflow.git",
+    "ssh_url": "git@github.com:navikt/dataverk-airflow.git",
+    "clone_url": "https://github.com/navikt/dataverk-airflow.git",
+    "svn_url": "https://github.com/navikt/dataverk-airflow",
+    "homepage": null,
+    "size": 954,
+    "stargazers_count": 1,
+    "watchers_count": 1,
+    "language": "Jupyter Notebook",
+    "has_issues": true,
+    "has_projects": false,
+    "has_downloads": true,
+    "has_wiki": false,
+    "has_pages": false,
+    "has_discussions": false,
+    "forks_count": 1,
+    "mirror_url": null,
+    "archived": false,
+    "disabled": false,
+    "open_issues_count": 0,
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "allow_forking": true,
+    "is_template": false,
+    "web_commit_signoff_required": false,
+    "topics": [
+
+    ],
+    "visibility": "public",
+    "forks": 1,
+    "open_issues": 0,
+    "watchers": 1,
+    "default_branch": "main",
+    "stargazers": 1,
+    "master_branch": "main",
+    "organization": "navikt",
+    "custom_properties": {
+
+    }
+  },
+  "pusher": {
+    "name": "erikvatt",
+    "email": "42180319+erikvatt@users.noreply.github.com"
+  },
+  "organization": {
+    "login": "navikt",
+    "id": 11848947,
+    "node_id": "MDEyOk9yZ2FuaXphdGlvbjExODQ4OTQ3",
+    "url": "https://api.github.com/orgs/navikt",
+    "repos_url": "https://api.github.com/orgs/navikt/repos",
+    "events_url": "https://api.github.com/orgs/navikt/events",
+    "hooks_url": "https://api.github.com/orgs/navikt/hooks",
+    "issues_url": "https://api.github.com/orgs/navikt/issues",
+    "members_url": "https://api.github.com/orgs/navikt/members{/member}",
+    "public_members_url": "https://api.github.com/orgs/navikt/public_members{/member}",
+    "avatar_url": "https://avatars.githubusercontent.com/u/11848947?v=4",
+    "description": "Arbeids- og velferdsdirektoratet - The Norwegian Labour and Welfare Directorate"
+  },
+  "enterprise": {
+    "id": 371,
+    "slug": "nav",
+    "name": "NAV",
+    "node_id": "MDEwOkVudGVycHJpc2UzNzE=",
+    "avatar_url": "https://avatars.githubusercontent.com/b/371?v=4",
+    "description": "",
+    "website_url": "https://nav.no",
+    "html_url": "https://github.com/enterprises/nav",
+    "created_at": "2019-06-26T11:17:54Z",
+    "updated_at": "2023-11-09T19:02:45Z"
+  },
+  "sender": {
+    "login": "erikvatt",
+    "id": 42180319,
+    "node_id": "MDQ6VXNlcjQyMTgwMzE5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/42180319?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/erikvatt",
+    "html_url": "https://github.com/erikvatt",
+    "followers_url": "https://api.github.com/users/erikvatt/followers",
+    "following_url": "https://api.github.com/users/erikvatt/following{/other_user}",
+    "gists_url": "https://api.github.com/users/erikvatt/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/erikvatt/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/erikvatt/subscriptions",
+    "organizations_url": "https://api.github.com/users/erikvatt/orgs",
+    "repos_url": "https://api.github.com/users/erikvatt/repos",
+    "events_url": "https://api.github.com/users/erikvatt/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/erikvatt/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "installation": {
+    "id": 46186369,
+    "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uNDYxODYzNjk="
+  },
+  "created": false,
+  "deleted": false,
+  "forced": false,
+  "base_ref": null,
+  "compare": "https://github.com/navikt/dataverk-airflow/compare/acaee6a7796f...9891f39e6302",
+  "commits": [
+    {
+      "id": "9891f39e63020269e9c20a9d792742953789b2c6",
+      "tree_id": "9732474db454ed8efbac38d7b8ae0d990b0ed6d7",
+      "distinct": true,
+      "message": "python is not an neccessary input for kubernetes_operator",
+      "timestamp": "2024-01-24T14:33:19+01:00",
+      "url": "https://github.com/navikt/dataverk-airflow/commit/9891f39e63020269e9c20a9d792742953789b2c6",
+      "author": {
+        "name": "Erik Vattekar",
+        "email": "erik.vattekar@nav.no",
+        "username": "erikvatt"
+      },
+      "committer": {
+        "name": "Erik Vattekar",
+        "email": "erik.vattekar@nav.no",
+        "username": "erikvatt"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "dataverk_airflow/notebook_operator.py",
+        "dataverk_airflow/python_operator.py",
+        "dataverk_airflow/quarto_operator.py"
+      ]
+    }
+  ],
+  "head_commit": {
+    "id": "9891f39e63020269e9c20a9d792742953789b2c6",
+    "tree_id": "9732474db454ed8efbac38d7b8ae0d990b0ed6d7",
+    "distinct": true,
+    "message": "python is not an neccessary input for kubernetes_operator",
+    "timestamp": "2024-01-24T14:33:19+01:00",
+    "url": "https://github.com/navikt/dataverk-airflow/commit/9891f39e63020269e9c20a9d792742953789b2c6",
+    "author": {
+      "name": "Erik Vattekar",
+      "email": "erik.vattekar@nav.no",
+      "username": "erikvatt"
+    },
+    "committer": {
+      "name": "Erik Vattekar",
+      "email": "erik.vattekar@nav.no",
+      "username": "erikvatt"
+    },
+    "added": [
+
+    ],
+    "removed": [
+
+    ],
+    "modified": [
+      "dataverk_airflow/notebook_operator.py",
+      "dataverk_airflow/python_operator.py",
+      "dataverk_airflow/quarto_operator.py"
+    ]
+  }
+}

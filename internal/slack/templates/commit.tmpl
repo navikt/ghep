@@ -1,9 +1,9 @@
 {
   "channel": "{{ .Channel }}",
-  "text": "<{{ .Compare }}|{{ .Commits | len }} new commits> pushed to `<{{ .URL }}|{{ .Repository }}>` by <{{ .Sender.URL }}|{{ .Sender.Login }}>",
+  "text": "<{{ .Compare }}|{{ .NumberOfCommits }} new commits> pushed to `<{{ .URL }}|{{ .Repository }}>` by <{{ .Sender.URL }}|{{ .Sender.Login }}>",
   "attachments": [
      {
-       "text": "{{ range .Commits }}`<{{ .URL }}|{{ .Ref }}>` - {{ .Message }}\n{{ end }}",
+       "text": {{ .AttachmentsText }},
        "color": "#000"
      }
   ],
