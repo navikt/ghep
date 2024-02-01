@@ -18,6 +18,7 @@ func main() {
 		os.Getenv("GITHUB_APP_PRIVATE_KEY"),
 		os.Getenv("GITHUB_ORG"),
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
+		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
 	)
 	if err != nil {
 		slog.Error("error fetching teams", "err", err.Error())
