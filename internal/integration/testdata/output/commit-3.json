@@ -1,0 +1,12 @@
+{
+  "channel": "#test",
+  "text": "<https://github.com/navikt/knada-gcp/compare/070d6ce6e394...70fdb6abd5c5|2 new commits> pushed to `<https://github.com/navikt/knada-gcp|knada-gcp>` by <https://github.com/apps/atlantis-knada|atlantis-knada[bot]>",
+  "attachments": [
+     {
+       "text": "`<https://github.com/navikt/knada-gcp/commit/fdee350a0d6be07a1e86eb2fab7a0b6c3f32f791|fdee350a>` - add inactive jupyterhub teams alert\n`<https://github.com/navikt/knada-gcp/commit/70fdb6abd5c5df439be1fa9e5df1e6824ee8dd4a|70fdb6ab>` - Merge pull request #291 from navikt/jupyter-inactive-alert\n",
+       "color": "#000"
+     }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

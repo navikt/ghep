@@ -2,6 +2,7 @@ package slack
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"text/template"
@@ -10,40 +11,41 @@ import (
 )
 
 func CreateCommitMessage(tmpl template.Template, channel string, event github.Event) ([]byte, error) {
-	type commit struct {
-		URL     string
-		Ref     string
-		Message string
-	}
-
 	type text struct {
-		Channel    string
-		URL        string
-		Repository string
-		Sender     github.Sender
-		Commits    []commit
-		Compare    string
+		Channel         string
+		URL             string
+		Repository      string
+		Sender          github.Sender
+		NumberOfCommits int
+		AttachmentsText string
+		Compare         string
 	}
 
 	payload := text{
-		Channel:    channel,
-		URL:        event.Repository.URL,
-		Sender:     event.Sender,
-		Repository: event.Repository.Name,
-		Compare:    event.Compare,
+		Channel:         channel,
+		URL:             event.Repository.URL,
+		Sender:          event.Sender,
+		Repository:      event.Repository.Name,
+		NumberOfCommits: len(event.Commits),
+		Compare:         event.Compare,
 	}
 
-	commits := []commit{}
+	var attachementText strings.Builder
 	for _, c := range event.Commits {
-		message := strings.Split(c.Message, "\n")[0]
+		firstLine := strings.Split(c.Message, "\n")[0]
 
-		commits = append(commits, commit{
-			Ref:     c.ID[:8],
-			Message: message,
-			URL:     c.URL,
-		})
+		attachementText.WriteString(fmt.Sprintf("`<%s|%s>` - %s\n", c.URL, c.ID[:8], firstLine))
 	}
-	payload.Commits = commits
+
+	var marshalled bytes.Buffer
+	enc := json.NewEncoder(&marshalled)
+	enc.SetEscapeHTML(false)
+
+	if err := enc.Encode(attachementText.String()); err != nil {
+		return nil, fmt.Errorf("marshalling commit messages: %w", err)
+	}
+
+	payload.AttachmentsText = strings.TrimSuffix(marshalled.String(), "\n")
 
 	var output bytes.Buffer
 	if err := tmpl.Execute(&output, payload); err != nil {
