@@ -28,7 +28,7 @@ type Team struct {
 
 const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}/repos"
 
-func fetchTeamsRepositories(teamURL, bearerToken string) ([]string, error) {
+func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
 	req, err := http.NewRequest("GET", teamURL, nil)
 	if err != nil {
 		return nil, err
@@ -79,6 +79,10 @@ func fetchTeamsRepositories(teamURL, bearerToken string) ([]string, error) {
 				continue
 			}
 
+			if contains(blocklist, repo.Name) {
+				continue
+			}
+
 			repos = append(repos, repo.Name)
 		}
 
@@ -90,6 +94,15 @@ func fetchTeamsRepositories(teamURL, bearerToken string) ([]string, error) {
 	}
 
 	return repos, nil
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if strings.EqualFold(a, e) {
+			return true
+		}
+	}
+	return false
 }
 
 func getTeamsChannels(teamsFilePath string) (map[string]SlackChannels, error) {
@@ -106,7 +119,7 @@ func getTeamsChannels(teamsFilePath string) (map[string]SlackChannels, error) {
 	return channels, nil
 }
 
-func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, teamsFilePath string) ([]Team, error) {
+func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, teamsFilePath, reposBlocklistString string) ([]Team, error) {
 	tmpl, err := template.New("github").Parse(githubAPITeamEndpointTmpl)
 	if err != nil {
 		return nil, err
@@ -127,6 +140,8 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 		return nil, err
 	}
 
+	reposBlocklist := strings.Split(reposBlocklistString, ",")
+
 	var teams []Team
 	for name, team := range teamsChannels {
 		tmplData["team"] = name
@@ -136,7 +151,7 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 			return nil, err
 		}
 
-		repos, err := fetchTeamsRepositories(url.String(), bearerToken)
+		repos, err := fetchTeamsRepositories(url.String(), bearerToken, reposBlocklist)
 		if err != nil {
 			return nil, err
 		}

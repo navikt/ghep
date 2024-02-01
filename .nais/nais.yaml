@@ -25,6 +25,8 @@ spec:
       value: /var/run/configmaps/teams.yaml
     - name: GITHUB_ORG
       value: navikt
+    - name: GITHUB_BLOCKLIST_REPOS
+      value: "vault-iac,aad-iac"
   filesFrom:
     - configmap: ghep-teams
       mountPath: /var/run/configmaps
