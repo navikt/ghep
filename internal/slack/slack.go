@@ -57,7 +57,7 @@ func (c Client) PostMessage(payload []byte) error {
 	req.Header.Add("Authorization", "Bearer "+c.token)
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.httpDoWithRetry(req, 3)
 	if err != nil {
 		return err
 	}
@@ -91,4 +91,19 @@ func (c Client) PostMessage(payload []byte) error {
 	}
 
 	return nil
+}
+
+func (c Client) httpDoWithRetry(req *http.Request, retries int) (*http.Response, error) {
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		if retries == 0 {
+			return nil, err
+		}
+
+		time.Sleep(1 * time.Second)
+
+		return c.httpDoWithRetry(req, retries-1)
+	}
+
+	return resp, nil
 }
