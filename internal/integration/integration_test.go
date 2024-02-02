@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"text/template"
 
@@ -24,11 +25,6 @@ func TestHandleEvent(t *testing.T) {
 		}
 
 		t.Run(entry.Name(), func(t *testing.T) {
-			tmpl, err := template.ParseFiles("../slack/templates/commit.tmpl")
-			if err != nil {
-				t.Fatal(err)
-			}
-
 			testdataPath := filepath.Join("testdata/events", entry.Name())
 			testdata, err := os.ReadFile(testdataPath)
 			if err != nil {
@@ -46,9 +42,30 @@ func TestHandleEvent(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			got, err := slack.CreateCommitMessage(*tmpl, "#test", event)
-			if err != nil {
-				t.Fatal(err)
+			var got []byte
+			switch strings.Split(entry.Name(), "-")[0] {
+			case "commit":
+				tmpl, err := template.ParseFiles("../slack/templates/commit.tmpl")
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				got, err = slack.CreateCommitMessage(*tmpl, "#test", event)
+				if err != nil {
+					t.Fatal(err)
+				}
+			case "issue":
+				tmpl, err := template.ParseFiles("../slack/templates/issue.tmpl")
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				got, err = slack.CreateIssueMessage(*tmpl, "#test", event)
+				if err != nil {
+					t.Fatal(err)
+				}
+			default:
+				t.Skipf("unknown event file: %s", entry.Name())
 			}
 
 			if ok := json.Valid(got); !ok {
