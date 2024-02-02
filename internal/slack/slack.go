@@ -29,6 +29,10 @@ func (c Client) IssueTmpl() template.Template {
 	return c.templates["issue"]
 }
 
+func (c Client) PullRequestTmpl() template.Template {
+	return c.templates["pullRequest"]
+}
+
 func New(token string) (Client, error) {
 	if token == "" {
 		return Client{}, fmt.Errorf("missing Slack token")
@@ -55,6 +59,13 @@ func New(token string) (Client, error) {
 	}
 
 	client.templates["issue"] = *issueTmpl
+
+	pullRequestTmpl, err := template.ParseFS(templates, "templates/pull.tmpl")
+	if err != nil {
+		return Client{}, err
+	}
+
+	client.templates["pullRequest"] = *pullRequestTmpl
 
 	return client, nil
 }

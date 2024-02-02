@@ -64,6 +64,16 @@ func TestHandleEvent(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
+			case "pull":
+				tmpl, err := template.ParseFiles("../slack/templates/pull.tmpl")
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				got, err = slack.CreatePullRequestMessage(*tmpl, "#test", event)
+				if err != nil {
+					t.Fatal(err)
+				}
 			default:
 				t.Skipf("unknown event file: %s", entry.Name())
 			}

@@ -22,6 +22,8 @@ type Commit struct {
 	URL     string `json:"url"`
 }
 
+// Issue is a struct for issues and pull requests
+// Every pull request is an issue, but not every issue is a pull request
 type Issue struct {
 	Action      string `json:"action"`
 	URL         string `json:"html_url"`
@@ -29,16 +31,18 @@ type Issue struct {
 	Body        string `json:"body"`
 	Number      int    `json:"number"`
 	StateReason string `json:"state_reason"`
+	Merged      bool   `json:"merged"`
 }
 
 type Event struct {
-	Action     string     `json:"action"`
-	Ref        string     `json:"ref"`
-	Repository Repository `json:"repository"`
-	Commits    []Commit   `json:"commits"`
-	Compare    string     `json:"compare"`
-	Issue      *Issue     `json:"issue"`
-	Sender     Sender     `json:"sender"`
+	Action      string     `json:"action"`
+	Ref         string     `json:"ref"`
+	Repository  Repository `json:"repository"`
+	Commits     []Commit   `json:"commits"`
+	Compare     string     `json:"compare"`
+	Issue       *Issue     `json:"issue"`
+	PullRequest *Issue     `json:"pull_request"`
+	Sender      Sender     `json:"sender"`
 }
 
 func CreateEvent(body []byte) (Event, error) {
