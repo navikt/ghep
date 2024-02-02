@@ -1,0 +1,12 @@
+{
+  "channel": "#test",
+  "text": "Pull request <https://github.com/navikt/nada-frontend/pull/275|#275> merged in `<https://github.com/navikt/nada-frontend|nada-frontend>` by <https://github.com/petteja|petteja>",
+  "attachments": [
+     {
+       "text": "*<https://github.com/navikt/nada-frontend/pull/275|#275> <https://github.com/navikt/nada-frontend/pull/275|Added info about development requirements>*",
+       "color": "#8251df"
+     }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}
