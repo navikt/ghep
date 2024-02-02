@@ -1,0 +1,12 @@
+{
+  "channel": "{{ .Channel }}",
+  "text": "Issue <{{ .Attachment.URL }}|#{{ .Number }}> {{ .Action }}{{ if eq .Action "closed" }} as {{ .Status }}{{ end }} in `<{{ .Repository.URL }}|{{ .Repository.Name }}>` by <{{ .Sender.URL }}|{{ .Sender.Login }}>",
+  "attachments": [
+     {
+       "text": "*<{{ .Attachment.URL }}|#{{ .Number }}> <{{ .Attachment.URL }}|{{ .Attachment.Title }}>*{{ if eq .Action "opened" }}\n{{ .Attachment.Body }}{{ end }}",
+       "color": "#8251df"
+     }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}
