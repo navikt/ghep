@@ -22,12 +22,22 @@ type Commit struct {
 	URL     string `json:"url"`
 }
 
+type Issue struct {
+	Action      string `json:"action"`
+	URL         string `json:"html_url"`
+	Title       string `json:"title"`
+	Body        string `json:"body"`
+	Number      int    `json:"number"`
+	StateReason string `json:"state_reason"`
+}
+
 type Event struct {
 	Action     string     `json:"action"`
 	Ref        string     `json:"ref"`
 	Repository Repository `json:"repository"`
 	Commits    []Commit   `json:"commits"`
 	Compare    string     `json:"compare"`
+	Issue      *Issue     `json:"issue"`
 	Sender     Sender     `json:"sender"`
 }
 

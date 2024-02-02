@@ -25,6 +25,10 @@ func (c Client) CommitTmpl() template.Template {
 	return c.templates["commit"]
 }
 
+func (c Client) IssueTmpl() template.Template {
+	return c.templates["issue"]
+}
+
 func New(token string) (Client, error) {
 	if token == "" {
 		return Client{}, fmt.Errorf("missing Slack token")
@@ -44,6 +48,13 @@ func New(token string) (Client, error) {
 	}
 
 	client.templates["commit"] = *commitTmpl
+
+	issueTmpl, err := template.ParseFS(templates, "templates/issue.tmpl")
+	if err != nil {
+		return Client{}, err
+	}
+
+	client.templates["issue"] = *issueTmpl
 
 	return client, nil
 }

@@ -56,6 +56,8 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
 		payload, err = handleCommitEvent(c.slack.CommitTmpl(), team, event)
+	} else if event.Issue != nil {
+		payload, err = handleIssueEvent(c.slack.IssueTmpl(), team, event)
 	}
 
 	if err != nil {
@@ -82,6 +84,11 @@ func handleCommitEvent(tmpl template.Template, team github.Team, event github.Ev
 
 	slog.Info(fmt.Sprintf("Received commit to %v for %v", event.Repository.Name, team.Name))
 	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event)
+}
+
+func handleIssueEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+	slog.Info(fmt.Sprintf("Received issue to %v for %v", event.Repository.Name, team.Name))
+	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, event)
 }
 
 func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
