@@ -89,11 +89,19 @@ func handleCommitEvent(tmpl template.Template, team github.Team, event github.Ev
 }
 
 func handleIssueEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+	if event.Action != "opened" || event.Action != "closed" {
+		return nil, nil
+	}
+
 	slog.Info(fmt.Sprintf("Received issue to %v for %v", event.Repository.Name, team.Name))
 	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, event)
 }
 
 func handlePullRequestEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+	if event.Action != "opened" || event.Action != "closed" {
+		return nil, nil
+	}
+
 	slog.Info(fmt.Sprintf("Received pull request to %v for %v", event.Repository.Name, team.Name))
 	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, event)
 }
