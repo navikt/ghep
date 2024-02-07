@@ -2,6 +2,7 @@ package slack
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"text/template"
 
@@ -16,6 +17,7 @@ func CreatePullRequestMessage(tmpl template.Template, channel string, event gith
 		Number     int
 		Sender     github.Sender
 		Status     string
+		Color      string
 		Attachment struct {
 			Title string
 			Body  string
@@ -28,14 +30,22 @@ func CreatePullRequestMessage(tmpl template.Template, channel string, event gith
 		Action:     event.Action,
 		Number:     event.PullRequest.Number,
 		Sender:     event.Sender,
+		Color:      "#36A750",
 	}
 
+	marshaledText, err := json.Marshal(event.PullRequest.Body)
+	if err != nil {
+		return nil, fmt.Errorf("marshalling pull request: %w", err)
+	}
+	marshaledText = bytes.Trim(marshaledText, "\"")
+
 	payload.Attachment.Title = event.PullRequest.Title
-	payload.Attachment.Body = event.PullRequest.Body
+	payload.Attachment.Body = string(marshaledText)
 	payload.Attachment.URL = event.PullRequest.URL
 
 	if event.PullRequest.Merged {
 		payload.Action = "merged"
+		payload.Color = "#8251df"
 	}
 
 	var output bytes.Buffer

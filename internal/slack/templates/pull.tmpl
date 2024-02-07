@@ -4,7 +4,7 @@
   "attachments": [
      {
        "text": "*<{{ .Attachment.URL }}|#{{ .Number }}> <{{ .Attachment.URL }}|{{ .Attachment.Title }}>*{{ if eq .Action "opened" }}\n{{ .Attachment.Body }}{{ end }}",
-       "color": "#8251df"
+       "color": "{{ .Color }}"
      }
   ],
   "unfurl_links": false,
