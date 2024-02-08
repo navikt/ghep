@@ -27,3 +27,7 @@ data:
       commits: "#spenn-commits"
       issues: "#spenn-pull-requests"
       pulls: "#spenn-pull-requests"
+    leesah-quiz:
+      commits: "#leesah-game-ci"
+      issues: "#leesah-game-ci"
+      pulls: "#leesah-game-ci"
