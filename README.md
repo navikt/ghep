@@ -16,4 +16,4 @@ nada:
 
 ## Kontakt oss
 
-Ta kontakt med Kyrre på Slack hvis du har noen spørsmål.
+Ta kontakt i `#ghep-værsågod` på Slack hvis du har noen spørsmål.
