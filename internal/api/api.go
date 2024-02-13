@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strings"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
@@ -18,6 +19,7 @@ type Client struct {
 }
 
 func New(ctx context.Context, teams []github.Team, slack slack.Client, redisAddr, redisUsername, redisPassword string) Client {
+	redisAddr = strings.TrimPrefix(redisAddr, "rediss://")
 	return Client{
 		slack: slack,
 		teams: teams,
