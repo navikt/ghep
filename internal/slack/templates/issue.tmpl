@@ -1,5 +1,9 @@
 {
   "channel": "{{ .Channel }}",
+  {{- if ne .ThreadTimestamp "" }}
+  "thread_ts": "{{ .ThreadTimestamp }}",
+  "reply_broadcast": true,
+  {{ end }}
   "text": "Issue <{{ .Attachment.URL }}|#{{ .Number }}> {{ .Action }}{{ if eq .Action "closed" }} as {{ .Status }}{{ end }} in `<{{ .Repository.URL }}|{{ .Repository.Name }}>` by <{{ .Sender.URL }}|{{ .Sender.Login }}>",
   "attachments": [
      {

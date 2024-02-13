@@ -5,11 +5,13 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"strings"
 	"text/template"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
+	"github.com/redis/go-redis/v9"
 )
 
 const refHeadsPrefix = "refs/heads/"
@@ -53,13 +55,26 @@ func (c Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 func (c Client) handleEvent(team github.Team, event github.Event) error {
 	var payload []byte
 	var err error
+	var threadTimestamp string
 
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
 		payload, err = handleCommitEvent(c.slack.CommitTmpl(), team, event)
 	} else if event.Issue != nil {
-		payload, err = handleIssueEvent(c.slack.IssueTmpl(), team, event)
+		id := strconv.Itoa(event.Issue.ID)
+		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
+		if err != nil && err != redis.Nil {
+			return err
+		}
+
+		payload, err = handleIssueEvent(c.slack.IssueTmpl(), team, threadTimestamp, event)
 	} else if event.PullRequest != nil {
-		payload, err = handlePullRequestEvent(c.slack.PullRequestTmpl(), team, event)
+		id := strconv.Itoa(event.PullRequest.ID)
+		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
+		if err != nil && err != redis.Nil {
+			return err
+		}
+
+		payload, err = handlePullRequestEvent(c.slack.PullRequestTmpl(), team, threadTimestamp, event)
 	}
 
 	if err != nil {
@@ -70,7 +85,26 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 		return nil
 	}
 
-	return c.slack.PostMessage(payload)
+	ts, err := c.slack.PostMessage(payload)
+	if err != nil {
+		return err
+	}
+
+	if ts != "" && event.Action == "opened" {
+		if event.Issue != nil {
+			id := strconv.Itoa(event.Issue.ID)
+			if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
+				return err
+			}
+		} else if event.PullRequest != nil {
+			id := strconv.Itoa(event.PullRequest.ID)
+			if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
 func handleCommitEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
@@ -88,22 +122,22 @@ func handleCommitEvent(tmpl template.Template, team github.Team, event github.Ev
 	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event)
 }
 
-func handleIssueEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+func handleIssueEvent(tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
 	if event.Action != "opened" && event.Action != "closed" {
 		return nil, nil
 	}
 
 	slog.Info(fmt.Sprintf("Received issue to %v for %v", event.Repository.Name, team.Name))
-	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, event)
+	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, threadTimestamp, event)
 }
 
-func handlePullRequestEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+func handlePullRequestEvent(tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
 	if event.Action != "opened" && event.Action != "closed" {
 		return nil, nil
 	}
 
 	slog.Info(fmt.Sprintf("Received pull request to %v for %v", event.Repository.Name, team.Name))
-	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, event)
+	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, threadTimestamp, event)
 }
 
 func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {

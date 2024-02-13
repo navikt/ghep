@@ -70,10 +70,10 @@ func New(token string) (Client, error) {
 	return client, nil
 }
 
-func (c Client) PostMessage(payload []byte) error {
+func (c Client) PostMessage(payload []byte) (string, error) {
 	req, err := http.NewRequest("POST", "https://slack.com/api/chat.postMessage", bytes.NewReader(payload))
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	req.Header.Add("Authorization", "Bearer "+c.token)
@@ -81,38 +81,39 @@ func (c Client) PostMessage(payload []byte) error {
 
 	resp, err := c.httpDoWithRetry(req, 3)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	type slackResponse struct {
-		Ok    bool   `json:"ok"`
-		Error string `json:"error"`
-		Warn  string `json:"warning"`
+		Ok        bool   `json:"ok"`
+		Error     string `json:"error"`
+		Warn      string `json:"warning"`
+		TimeStamp string `json:"ts"`
 	}
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("error posting message to Slack(%v): %v", resp.Status, body)
+		return "", fmt.Errorf("error posting message to Slack(%v): %v", resp.Status, body)
 	}
 
 	var slackResp slackResponse
 	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
-		return err
+		return "", err
 	}
 
 	if !slackResp.Ok {
-		return fmt.Errorf("error posting message to Slack: %v", slackResp.Error)
+		return "", fmt.Errorf("error posting message to Slack: %v", slackResp.Error)
 	}
 
 	if slackResp.Warn != "" {
 		slog.Info("warning posting message to Slack", "warn", slackResp.Warn)
 	}
 
-	return nil
+	return slackResp.TimeStamp, nil
 }
 
 func (c Client) httpDoWithRetry(req *http.Request, retries int) (*http.Response, error) {
