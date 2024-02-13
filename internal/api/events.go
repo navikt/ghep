@@ -55,12 +55,13 @@ func (c Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 func (c Client) handleEvent(team github.Team, event github.Event) error {
 	var payload []byte
 	var err error
+	var threadTimestamp string
 
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
 		payload, err = handleCommitEvent(c.slack.CommitTmpl(), team, event)
 	} else if event.Issue != nil {
 		id := strconv.Itoa(event.Issue.ID)
-		threadTimestamp, err := c.rdb.Get(c.ctx, id).Result()
+		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
 		if err != nil && err != redis.Nil {
 			return err
 		}
@@ -68,7 +69,7 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 		payload, err = handleIssueEvent(c.slack.IssueTmpl(), team, threadTimestamp, event)
 	} else if event.PullRequest != nil {
 		id := strconv.Itoa(event.PullRequest.ID)
-		threadTimestamp, err := c.rdb.Get(c.ctx, id).Result()
+		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
 		if err != nil && err != redis.Nil {
 			return err
 		}
