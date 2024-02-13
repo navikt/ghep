@@ -60,7 +60,7 @@ func TestHandleEvent(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				got, err = slack.CreateIssueMessage(*tmpl, "#test", event)
+				got, err = slack.CreateIssueMessage(*tmpl, "#test", "", event)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -70,7 +70,7 @@ func TestHandleEvent(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				got, err = slack.CreatePullRequestMessage(*tmpl, "#test", event)
+				got, err = slack.CreatePullRequestMessage(*tmpl, "#test", "", event)
 				if err != nil {
 					t.Fatal(err)
 				}

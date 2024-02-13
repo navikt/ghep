@@ -37,3 +37,6 @@ spec:
       external:
         - host: api.github.com
         - host: slack.com
+  redis:
+    - instance: events
+      access: readwrite

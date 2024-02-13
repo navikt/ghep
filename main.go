@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"os"
@@ -38,7 +39,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	api := api.New(teams, slackApi)
+	api := api.New(
+		context.Background(),
+		teams,
+		slackApi,
+		os.Getenv("REDIS_URI_EVENTS"),
+		os.Getenv("REDIS_USERNAME_EVENTS"),
+		os.Getenv("REDIS_PASSWORD_EVENTS"),
+	)
 
 	addr := os.Getenv("SERVER_ADDR")
 	if addr == "" {

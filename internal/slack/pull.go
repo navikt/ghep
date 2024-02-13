@@ -9,28 +9,30 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreatePullRequestMessage(tmpl template.Template, channel string, event github.Event) ([]byte, error) {
+func CreatePullRequestMessage(tmpl template.Template, channel, threadTimestamp string, event github.Event) ([]byte, error) {
 	type text struct {
-		Channel    string
-		Repository github.Repository
-		Action     string
-		Number     int
-		Sender     github.Sender
-		Status     string
-		Color      string
-		Attachment struct {
+		Channel         string
+		ThreadTimestamp string
+		Repository      github.Repository
+		Action          string
+		Number          int
+		Sender          github.Sender
+		Status          string
+		Color           string
+		Attachment      struct {
 			Title string
 			Body  string
 			URL   string
 		}
 	}
 	payload := text{
-		Channel:    channel,
-		Repository: event.Repository,
-		Action:     event.Action,
-		Number:     event.PullRequest.Number,
-		Sender:     event.Sender,
-		Color:      "#36A750",
+		Channel:         channel,
+		ThreadTimestamp: threadTimestamp,
+		Repository:      event.Repository,
+		Action:          event.Action,
+		Number:          event.PullRequest.Number,
+		Sender:          event.Sender,
+		Color:           "#36A750",
 	}
 
 	marshaledText, err := json.Marshal(event.PullRequest.Body)
