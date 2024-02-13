@@ -63,7 +63,7 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 		id := strconv.Itoa(event.Issue.ID)
 		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
 		if err != nil && err != redis.Nil {
-			return err
+			slog.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
 		payload, err = handleIssueEvent(c.slack.IssueTmpl(), team, threadTimestamp, event)
@@ -71,7 +71,7 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 		id := strconv.Itoa(event.PullRequest.ID)
 		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
 		if err != nil && err != redis.Nil {
-			return err
+			slog.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
 		payload, err = handlePullRequestEvent(c.slack.PullRequestTmpl(), team, threadTimestamp, event)
@@ -91,16 +91,15 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 	}
 
 	if ts != "" && event.Action == "opened" {
+		var id string
 		if event.Issue != nil {
-			id := strconv.Itoa(event.Issue.ID)
-			if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
-				return err
-			}
+			id = strconv.Itoa(event.Issue.ID)
 		} else if event.PullRequest != nil {
-			id := strconv.Itoa(event.PullRequest.ID)
-			if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
-				return err
-			}
+			id = strconv.Itoa(event.PullRequest.ID)
+		}
+
+		if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
+			slog.Error("error setting thread timestamp", "err", err.Error(), "id", id)
 		}
 	}
 
