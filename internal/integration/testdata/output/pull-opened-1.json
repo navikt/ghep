@@ -1,9 +1,9 @@
 {
   "channel": "#test",
-  "text": "Pull request <https://github.com/navikt/nada-frontend/pull/276|#276> opened in `<https://github.com/navikt/nada-frontend|nada-frontend>` by <https://github.com/petteja|petteja>",
+  "text": "Pull request <https://github.com/navikt/datafortelling-proxy/pull/1|#1> opened in `<https://github.com/navikt/datafortelling-proxy|datafortelling-proxy>` by <https://github.com/Kyrremann|Kyrremann>",
   "attachments": [
      {
-       "text": "*<https://github.com/navikt/nada-frontend/pull/276|#276> <https://github.com/navikt/nada-frontend/pull/276|Add padding to bottom of access request form modal>*\n",
+       "text": "*<https://github.com/navikt/datafortelling-proxy/pull/1|#1> <https://github.com/navikt/datafortelling-proxy/pull/1|doc: en liten beskrivelse>*\n",
        "color": "#36A750"
      }
   ],
