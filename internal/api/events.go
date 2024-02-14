@@ -99,7 +99,7 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 		}
 
 		if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
-			slog.Error("error setting thread timestamp", "err", err.Error(), "id", id)
+			slog.Error("error setting thread timestamp", "err", err.Error(), "id", id, "ts", ts)
 		}
 	}
 

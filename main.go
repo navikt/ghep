@@ -39,7 +39,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	api := api.New(
+	api, err := api.New(
 		context.Background(),
 		teams,
 		slackApi,
@@ -47,6 +47,10 @@ func main() {
 		os.Getenv("REDIS_USERNAME_EVENTS"),
 		os.Getenv("REDIS_PASSWORD_EVENTS"),
 	)
+	if err != nil {
+		slog.Error("error creating API client", "err", err.Error())
+		os.Exit(1)
+	}
 
 	addr := os.Getenv("SERVER_ADDR")
 	if addr == "" {

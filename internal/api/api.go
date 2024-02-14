@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
-	"strings"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
@@ -18,18 +17,29 @@ type Client struct {
 	ctx   context.Context
 }
 
-func New(ctx context.Context, teams []github.Team, slack slack.Client, redisAddr, redisUsername, redisPassword string) Client {
-	redisAddr = strings.TrimPrefix(redisAddr, "rediss://")
+func New(ctx context.Context, teams []github.Team, slack slack.Client, redisAddr, redisUsername, redisPassword string) (Client, error) {
+	opt, err := redis.ParseURL(redisAddr)
+	if err != nil {
+		return Client{}, err
+	}
+
+	opt.Username = redisUsername
+	opt.Password = redisPassword
+
+	rdb := redis.NewClient(opt)
+
+	rsl, err := rdb.Ping(ctx).Result()
+	if err != nil {
+		return Client{}, err
+	}
+	slog.Info("Redis connection established", "response", rsl)
+
 	return Client{
 		slack: slack,
 		teams: teams,
-		rdb: redis.NewClient(&redis.Options{
-			Addr:     redisAddr,
-			Username: redisUsername,
-			Password: redisPassword,
-		}),
-		ctx: ctx,
-	}
+		rdb:   rdb,
+		ctx:   ctx,
+	}, nil
 }
 
 func (c Client) Run(addr string) error {
