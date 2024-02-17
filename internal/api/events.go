@@ -16,7 +16,7 @@ import (
 
 const refHeadsPrefix = "refs/heads/"
 
-func (c Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -52,7 +52,7 @@ func (c Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (c Client) handleEvent(team github.Team, event github.Event) error {
+func (c *Client) handleEvent(team github.Team, event github.Event) error {
 	var payload []byte
 	var err error
 	var threadTimestamp string
@@ -75,6 +75,10 @@ func (c Client) handleEvent(team github.Team, event github.Event) error {
 		}
 
 		payload, err = handlePullRequestEvent(c.slack.PullRequestTmpl(), team, threadTimestamp, event)
+	} else if event.Team != nil {
+		payload, err = handleTeamEvent(c.slack.TeamTmpl(), &team, event)
+	} else {
+		return fmt.Errorf("unknown event type")
 	}
 
 	if err != nil {
@@ -126,7 +130,7 @@ func handleIssueEvent(tmpl template.Template, team github.Team, threadTimestamp 
 		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received issue to %v for %v", event.Repository.Name, team.Name))
+	slog.Info(fmt.Sprintf("Received issue to %v for %v (action: %v)", event.Repository.Name, team.Name, event.Action))
 	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, threadTimestamp, event)
 }
 
@@ -135,8 +139,28 @@ func handlePullRequestEvent(tmpl template.Template, team github.Team, threadTime
 		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received pull request to %v for %v", event.Repository.Name, team.Name))
+	slog.Info(fmt.Sprintf("Received pull request to %v for %v (action: %v)", event.Repository.Name, team.Name, event.Action))
 	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, threadTimestamp, event)
+}
+
+func handleTeamEvent(tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
+	if event.Action != "added_to_repository" && event.Action != "removed_from_repository" {
+		return nil, nil
+	}
+
+	slog.Info(fmt.Sprintf("Received team event to %v for %v (action: %v)", event.Repository.Name, team.Name, event.Action))
+	if event.Action == "added_to_repository" {
+		team.Repositories = append(team.Repositories, event.Repository.Name)
+	} else {
+		for i, repo := range team.Repositories {
+			if repo == event.Repository.Name {
+				team.Repositories = append(team.Repositories[:i], team.Repositories[i+1:]...)
+				break
+			}
+		}
+	}
+
+	return slack.CreateTeamMessage(tmpl, team.SlackChannels.Commits, event)
 }
 
 func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {

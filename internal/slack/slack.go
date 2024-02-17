@@ -31,6 +31,9 @@ func (c Client) IssueTmpl() template.Template {
 
 func (c Client) PullRequestTmpl() template.Template {
 	return c.templates["pullRequest"]
+
+func (c Client) TeamTmpl() template.Template {
+	return c.templates["team"]
 }
 
 func New(token string) (Client, error) {
