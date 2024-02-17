@@ -1,15 +1,15 @@
 {
   "action": "removed_from_repository",
   "team": {
-    "name": "leesah-quiz",
+    "name": "nada",
     "id": 5312669,
     "node_id": "T_kwDOALTM884AURCd",
-    "slug": "leesah-quiz",
+    "slug": "nada",
     "description": "Team for arbeid med leesah quizen",
     "privacy": "closed",
     "notification_setting": "notifications_enabled",
     "url": "https://api.github.com/organizations/11848947/team/5312669",
-    "html_url": "https://github.com/orgs/navikt/teams/leesah-quiz",
+    "html_url": "https://github.com/orgs/navikt/teams/nada",
     "members_url": "https://api.github.com/organizations/11848947/team/5312669/members{/member}",
     "repositories_url": "https://api.github.com/organizations/11848947/team/5312669/repos",
     "permission": "pull",
