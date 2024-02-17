@@ -164,8 +164,8 @@ func TestHandleTeamEvent(t *testing.T) {
 				t.Error(err)
 			}
 
-			if diff := cmp.Diff(tt.args.team.Repositories, tt.want); diff != "" {
-				t.Errorf("unexpected repositories: %v", diff)
+			if diff := cmp.Diff(tt.want, tt.args.team.Repositories); diff != "" {
+				t.Errorf("repositories mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
