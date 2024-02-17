@@ -5,6 +5,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 	"text/template"
@@ -37,10 +38,15 @@ func (c *Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	team, found := findTeam(c.teams, event.Repository.Name)
-	if !found {
-		w.WriteHeader(http.StatusOK)
-		return
+	var team github.Team
+	if event.Team == nil {
+		var found bool
+
+		team, found = findTeam(c.teams, event.Repository.Name)
+		if !found {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 	}
 
 	if err := c.handleEvent(team, event); err != nil {
@@ -76,7 +82,13 @@ func (c *Client) handleEvent(team github.Team, event github.Event) error {
 
 		payload, err = handlePullRequestEvent(c.slack.PullRequestTmpl(), team, threadTimestamp, event)
 	} else if event.Team != nil {
+		index := slices.IndexFunc(c.teams, func(t github.Team) bool {
+			return t.Name == event.Team.Name
+		})
+		team := c.teams[index]
+
 		payload, err = handleTeamEvent(c.slack.TeamTmpl(), &team, event)
+		c.teams[index] = team
 	} else {
 		return fmt.Errorf("unknown event type")
 	}
