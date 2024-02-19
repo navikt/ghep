@@ -4,6 +4,7 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/navikt/ghep/internal/github"
 )
 
@@ -87,6 +88,84 @@ func TestHandleCommitEvent(t *testing.T) {
 
 			if !tt.wantPayload && got != nil {
 				t.Errorf("expected no payload, got %v", got)
+			}
+		})
+	}
+}
+
+func TestHandleTeamEvent(t *testing.T) {
+	tmpl, err := template.New("dummy").Parse("test")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	type args struct {
+		team  github.Team
+		event github.Event
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []string
+	}{
+		{
+			name: "Added to repository",
+			args: args{
+				team: github.Team{
+					Name: "test",
+					SlackChannels: github.SlackChannels{
+						Commits: "#test",
+					},
+					Repositories: []string{"test"},
+				},
+				event: github.Event{
+					Action: "added_to_repository",
+					Team: &github.TeamEvent{
+						Name: "test",
+					},
+					Repository: github.Repository{
+						Name:     "new-repo",
+						RoleName: "admin",
+					},
+				},
+			},
+			want: []string{"test", "new-repo"},
+		},
+		{
+			name: "Removed from repository",
+			args: args{
+				team: github.Team{
+					Name: "test",
+					SlackChannels: github.SlackChannels{
+						Commits: "#test",
+					},
+					Repositories: []string{"test", "new-repo"},
+				},
+				event: github.Event{
+					Action: "removed_from_repository",
+					Team: &github.TeamEvent{
+						Name: "test",
+					},
+					Repository: github.Repository{
+						Name:     "new-repo",
+						RoleName: "admin",
+					},
+				},
+			},
+			want: []string{"test"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err = handleTeamEvent(*tmpl, &tt.args.team, tt.args.event)
+			if err != nil {
+				t.Error(err)
+			}
+
+			if diff := cmp.Diff(tt.want, tt.args.team.Repositories); diff != "" {
+				t.Errorf("repositories mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}

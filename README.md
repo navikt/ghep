@@ -14,6 +14,14 @@ nada:
  pulls: #nada-pull-requests
 ```
 
+## Lokal utvikling
+
+Kjør opp Redis for testing med Docker.
+
+```shell
+docker run --name redis -p 6379:6379 -d redis
+```
+
 ## Kontakt oss
 
 Ta kontakt i `#ghep-værsågod` på Slack hvis du har noen spørsmål.

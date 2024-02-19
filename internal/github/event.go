@@ -14,6 +14,7 @@ type Repository struct {
 	Name          string `json:"name"`
 	URL           string `json:"html_url"`
 	DefaultBranch string `json:"default_branch"`
+	RoleName      string `json:"role_name"`
 }
 
 type Commit struct {
@@ -35,6 +36,11 @@ type Issue struct {
 	Merged      bool   `json:"merged"`
 }
 
+type TeamEvent struct {
+	Name string `json:"name"`
+	URL  string `json:"html_url"`
+}
+
 type Event struct {
 	Action      string     `json:"action"`
 	Ref         string     `json:"ref"`
@@ -44,6 +50,7 @@ type Event struct {
 	Issue       *Issue     `json:"issue"`
 	PullRequest *Issue     `json:"pull_request"`
 	Sender      Sender     `json:"sender"`
+	Team        *TeamEvent `json:"team"`
 }
 
 func CreateEvent(body []byte) (Event, error) {

@@ -8,12 +8,14 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 )
 
 //go:embed templates/*.tmpl
-var templates embed.FS
+var templatesFS embed.FS
 
 type Client struct {
 	httpClient *http.Client
@@ -30,7 +32,11 @@ func (c Client) IssueTmpl() template.Template {
 }
 
 func (c Client) PullRequestTmpl() template.Template {
-	return c.templates["pullRequest"]
+	return c.templates["pull"]
+}
+
+func (c Client) TeamTmpl() template.Template {
+	return c.templates["team"]
 }
 
 func New(token string) (Client, error) {
@@ -38,36 +44,41 @@ func New(token string) (Client, error) {
 		return Client{}, fmt.Errorf("missing Slack token")
 	}
 
+	templates, err := initSlackTemplates()
+	if err != nil {
+		return Client{}, err
+	}
+
 	client := Client{
 		httpClient: &http.Client{
 			Timeout: 10 * time.Second,
 		},
 		token:     token,
-		templates: map[string]template.Template{},
+		templates: templates,
 	}
-
-	commitTmpl, err := template.ParseFS(templates, "templates/commit.tmpl")
-	if err != nil {
-		return Client{}, err
-	}
-
-	client.templates["commit"] = *commitTmpl
-
-	issueTmpl, err := template.ParseFS(templates, "templates/issue.tmpl")
-	if err != nil {
-		return Client{}, err
-	}
-
-	client.templates["issue"] = *issueTmpl
-
-	pullRequestTmpl, err := template.ParseFS(templates, "templates/pull.tmpl")
-	if err != nil {
-		return Client{}, err
-	}
-
-	client.templates["pullRequest"] = *pullRequestTmpl
 
 	return client, nil
+}
+
+func initSlackTemplates() (map[string]template.Template, error) {
+	templates := map[string]template.Template{}
+
+	files, err := templatesFS.ReadDir("templates")
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range files {
+		tmpl, err := template.ParseFS(templatesFS, "templates/"+file.Name())
+		if err != nil {
+			return nil, err
+		}
+
+		name := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
+		templates[name] = *tmpl
+	}
+
+	return templates, nil
 }
 
 func (c Client) PostMessage(payload []byte) (string, error) {

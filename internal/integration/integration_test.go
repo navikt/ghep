@@ -74,6 +74,16 @@ func TestHandleEvent(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
+			case "team":
+				tmpl, err := template.ParseFiles("../slack/templates/team.tmpl")
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				got, err = slack.CreateTeamMessage(*tmpl, "#test", event)
+				if err != nil {
+					t.Fatal(err)
+				}
 			default:
 				t.Skipf("unknown event file: %s", entry.Name())
 			}
