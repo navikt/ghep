@@ -35,14 +35,22 @@ func CreatePullRequestMessage(tmpl template.Template, channel, threadTimestamp s
 		Color:           "#36A750",
 	}
 
-	marshaledText, err := json.Marshal(event.PullRequest.Body)
+	marshaledTitle, err := json.Marshal(event.PullRequest.Title)
 	if err != nil {
 		return nil, fmt.Errorf("marshalling pull request: %w", err)
 	}
-	marshaledText = bytes.Trim(marshaledText, "\"")
+	title := string(marshaledTitle)
+	title = title[1 : len(title)-1]
 
-	payload.Attachment.Title = event.PullRequest.Title
-	payload.Attachment.Body = string(marshaledText)
+	marshaledBody, err := json.Marshal(event.PullRequest.Body)
+	if err != nil {
+		return nil, fmt.Errorf("marshalling pull request: %w", err)
+	}
+	body := string(marshaledBody)
+	body = body[1 : len(body)-1]
+
+	payload.Attachment.Title = title
+	payload.Attachment.Body = body
 	payload.Attachment.URL = event.PullRequest.URL
 
 	if event.PullRequest.Merged {
