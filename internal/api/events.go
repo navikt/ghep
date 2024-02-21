@@ -85,6 +85,10 @@ func (c *Client) handleEvent(team github.Team, event github.Event) error {
 		index := slices.IndexFunc(c.teams, func(t github.Team) bool {
 			return t.Name == event.Team.Name
 		})
+		if index == -1 {
+			return nil
+		}
+
 		team := c.teams[index]
 
 		payload, err = handleTeamEvent(c.slack.TeamTmpl(), &team, event)
