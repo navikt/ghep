@@ -15,6 +15,7 @@ func CreatePullRequestMessage(tmpl template.Template, channel, threadTimestamp s
 		ThreadTimestamp string
 		Repository      github.Repository
 		Action          string
+		Draft           bool
 		Number          int
 		Sender          github.Sender
 		Status          string
@@ -30,6 +31,7 @@ func CreatePullRequestMessage(tmpl template.Template, channel, threadTimestamp s
 		ThreadTimestamp: threadTimestamp,
 		Repository:      event.Repository,
 		Action:          event.Action,
+		Draft:           event.PullRequest.Draft,
 		Number:          event.PullRequest.Number,
 		Sender:          event.Sender,
 		Color:           "#36A750",
