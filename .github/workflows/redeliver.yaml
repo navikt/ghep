@@ -21,17 +21,11 @@ jobs:
 
       - run: npm install octokit
 
-      - uses: navikt/github-app-token-generator@v1
-        id: get-token
-        with:
-          private-key: ${{ secrets.PRIVATE_KEY }}
-          app-id: ${{ secrets.APP_ID }}
-
       - name: Run script
         env:
           APP_ID: ${{ secrets.APP_ID }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          TOKEN: ${{ steps.get-token-outputs.token }}
+          TOKEN: ${{ secrets.PAT }}
           LAST_REDELIVERY_VARIABLE_NAME: 'LAST_REDELIVERY_EVENT'
           WORKFLOW_REPO: ${{ github.event.repository.name }}
           WORKFLOW_REPO_OWNER: ${{ github.repository_owner }}
