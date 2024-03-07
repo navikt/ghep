@@ -1,0 +1,39 @@
+name: Redeliver failed webhook deliveries
+
+on:
+  schedule:
+    - cron: '40 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  redeliver-failed-deliveries:
+    name: Redeliver failed deliveries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - run: npm install octokit
+
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+
+      - name: Run script
+        env:
+          APP_ID: ${{ secrets.APP_ID }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          TOKEN: ${{ steps.get-token-outputs.token }}
+          LAST_REDELIVERY_VARIABLE_NAME: 'LAST_REDELIVERY_EVENT'
+          WORKFLOW_REPO: ${{ github.event.repository.name }}
+          WORKFLOW_REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          node .github/workflows/scripts/redeliver-failed-deliveries.js
