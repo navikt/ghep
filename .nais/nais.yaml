@@ -37,6 +37,10 @@ spec:
       external:
         - host: api.github.com
         - host: slack.com
+  readiness:
+    path: /internal/health
+  liveness:
+    path: /internal/health
   redis:
     - instance: events
       access: readwrite

@@ -44,6 +44,7 @@ func New(ctx context.Context, teams []github.Team, slack slack.Client, redisAddr
 
 func (c Client) Run(addr string) error {
 	slog.Info("Starting server")
-	http.HandleFunc("/events", c.eventsHandler)
+	http.HandleFunc("POST /events", c.eventsPostHandler)
+	http.HandleFunc("GET /internal/health", c.healthGetHandler)
 	return http.ListenAndServe(addr, nil)
 }
