@@ -17,12 +17,7 @@ import (
 
 const refHeadsPrefix = "refs/heads/"
 
-func (c *Client) eventsHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
+func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		slog.Error("error reading body", "err", err.Error())
