@@ -36,7 +36,7 @@ func CreateIssueMessage(tmpl template.Template, channel, threadTimestamp string,
 		Color:           "#34a44c",
 	}
 
-	marshaledtitle, err := json.Marshal(event.Issue.Title)
+	marshaledTitle, err := json.Marshal(event.Issue.Title)
 	if err != nil {
 		return nil, fmt.Errorf("marshalling issue: %w", err)
 	}
