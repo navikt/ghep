@@ -4,7 +4,7 @@
   "attachments": [
      {
        "text": "*<https://github.com/navikt/knada-gcp/pull/317|#317> <https://github.com/navikt/knada-gcp/pull/317|[NOTASK] cnpg memory spikes to ~1.7Gi memory at startup>*\n\u003cimg width=\"381\" alt=\"image\" src=\"https://github.com/navikt/knada-gcp/assets/154348/a5010285-eece-4f2d-b132-4aa1e71a11ae\"\u003e\r\n\r\nRecommend to set request first, then look at workload graph, and set limit afterwards :D",
-       "color": "#36A750"
+       "color": "#34a44c"
      }
   ],
   "unfurl_links": false,

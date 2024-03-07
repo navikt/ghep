@@ -27,6 +27,7 @@ type Commit struct {
 // Every pull request is an issue, but not every issue is a pull request
 type Issue struct {
 	Action      string `json:"action"`
+	Draft       bool   `json:"draft"`
 	ID          int    `json:"id"`
 	URL         string `json:"html_url"`
 	Title       string `json:"title"`

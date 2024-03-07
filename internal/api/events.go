@@ -146,7 +146,7 @@ func handleIssueEvent(tmpl template.Template, team github.Team, threadTimestamp 
 }
 
 func handlePullRequestEvent(tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
-	if event.Action != "opened" && event.Action != "closed" {
+	if event.Action != "opened" && event.Action != "closed" && event.Action != "reopened" {
 		return nil, nil
 	}
 

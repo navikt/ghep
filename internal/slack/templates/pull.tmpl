@@ -4,7 +4,7 @@
   "thread_ts": "{{ .ThreadTimestamp }}",
   "reply_broadcast": true,
   {{ end }}
-  "text": "Pull request <{{ .Attachment.URL }}|#{{ .Number }}> {{ .Action }} in `<{{ .Repository.URL }}|{{ .Repository.Name }}>` by <{{ .Sender.URL }}|{{ .Sender.Login }}>",
+  "text": "{{ if .Draft }}Draft pull request{{ else }}Pull request{{ end }} <{{ .Attachment.URL }}|#{{ .Number }}> {{ .Action }} in `<{{ .Repository.URL }}|{{ .Repository.Name }}>` by <{{ .Sender.URL }}|{{ .Sender.Login }}>",
   "attachments": [
      {
        "text": "*<{{ .Attachment.URL }}|#{{ .Number }}> <{{ .Attachment.URL }}|{{ .Attachment.Title }}>*{{ if eq .Action "opened" }}\n{{ .Attachment.Body }}{{ end }}",
