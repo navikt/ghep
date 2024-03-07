@@ -39,10 +39,10 @@ spec:
         - host: slack.com
   readiness:
     path: /internal/health
-    initialDelay: 5
+    initialDelay: 10
   liveness:
     path: /internal/health
-    initialDelay: 5
+    initialDelay: 10
   redis:
     - instance: events
       access: readwrite
