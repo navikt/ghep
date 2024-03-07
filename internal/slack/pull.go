@@ -34,7 +34,7 @@ func CreatePullRequestMessage(tmpl template.Template, channel, threadTimestamp s
 		Draft:           event.PullRequest.Draft,
 		Number:          event.PullRequest.Number,
 		Sender:          event.Sender,
-		Color:           "#36A750",
+		Color:           "#34a44c",
 	}
 
 	marshaledTitle, err := json.Marshal(event.PullRequest.Title)
@@ -57,7 +57,11 @@ func CreatePullRequestMessage(tmpl template.Template, channel, threadTimestamp s
 
 	if event.PullRequest.Merged {
 		payload.Action = "merged"
-		payload.Color = "#8251df"
+		payload.Color = "#7044c4"
+	}
+
+	if payload.Action == "closed" && !event.PullRequest.Merged {
+		payload.Color = "#d02434"
 	}
 
 	var output bytes.Buffer

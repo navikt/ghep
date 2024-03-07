@@ -33,10 +33,10 @@ func CreateIssueMessage(tmpl template.Template, channel, threadTimestamp string,
 		Number:          event.Issue.Number,
 		Sender:          event.Sender,
 		Status:          event.Issue.StateReason,
-		Color:           "#36A750",
+		Color:           "#34a44c",
 	}
 
-	marshaledTitle, err := json.Marshal(event.Issue.Title)
+	marshaledtitle, err := json.Marshal(event.Issue.Title)
 	if err != nil {
 		return nil, fmt.Errorf("marshalling issue: %w", err)
 	}
@@ -55,7 +55,7 @@ func CreateIssueMessage(tmpl template.Template, channel, threadTimestamp string,
 	payload.Attachment.URL = event.Issue.URL
 
 	if event.Action == "closed" {
-		payload.Color = "#8251df"
+		payload.Color = "#d02434"
 	}
 
 	var output bytes.Buffer
