@@ -1,0 +1,12 @@
+{
+  "channel": "#test",
+  "text": "Pull request <https://github.com/navikt/nada-soda-service/pull/24|#24> reopened in `<https://github.com/navikt/nada-soda-service|nada-soda-service>` by <https://github.com/Kyrremann|Kyrremann>",
+  "attachments": [
+     {
+       "text": "*<https://github.com/navikt/nada-soda-service/pull/24|#24> <https://github.com/navikt/nada-soda-service/pull/24|build(deps): bump the go group with 1 update>*",
+       "color": "#34a44c"
+     }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}
