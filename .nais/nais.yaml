@@ -37,6 +37,12 @@ spec:
       external:
         - host: api.github.com
         - host: slack.com
+        - ipv4: 3.68.124.95
+        - ipv4: 52.29.238.212
+        - ipv4: 3.68.175.98
+        - ipv4: 18.159.197.225
+        - ipv4: 3.68.124.168
+        - ipv4: 3.68.170.153
   readiness:
     path: /internal/health
     initialDelay: 10
