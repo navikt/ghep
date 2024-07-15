@@ -31,3 +31,7 @@ data:
       commits: "#leesah-game-ci"
       issues: "#leesah-game-ci"
       pulls: "#leesah-game-ci"
+    teamsykmelding:
+      commits: "tsm-commits"
+    tsm:
+      commits: "tsm-commits"
