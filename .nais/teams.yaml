@@ -13,6 +13,7 @@ data:
       commits: "#nada-commits"
       issues: "#nada-issues"
       pulls: "#nada-pull-requests"
+      workflows: "#nada-ci"
     flex:
       commits: "#flex-github-feed"
       issues: "#flex-github-feed"

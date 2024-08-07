@@ -39,6 +39,10 @@ func (c Client) TeamTmpl() template.Template {
 	return c.templates["team"]
 }
 
+func (c Client) WorkflowTmpl() template.Template {
+	return c.templates["workflow"]
+}
+
 func New(token string) (Client, error) {
 	if token == "" {
 		return Client{}, fmt.Errorf("missing Slack token")
