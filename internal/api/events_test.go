@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log/slog"
 	"testing"
 	"text/template"
 
@@ -77,7 +78,7 @@ func TestHandleCommitEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := handleCommitEvent(*tmpl, team, tt.args.event)
+			got, err := handleCommitEvent(slog.Default(), *tmpl, team, tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -159,7 +160,7 @@ func TestHandleTeamEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err = handleTeamEvent(*tmpl, &tt.args.team, tt.args.event)
+			_, err = handleTeamEvent(slog.Default(), *tmpl, &tt.args.team, tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
