@@ -126,6 +126,10 @@ func (c *Client) handleEvent(team github.Team, event github.Event) error {
 func handleCommitEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
 	branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
 
+	if team.SlackChannels.Commits == "" {
+		return nil, nil
+	}
+
 	if branch != event.Repository.DefaultBranch {
 		return nil, nil
 	}
@@ -139,6 +143,10 @@ func handleCommitEvent(tmpl template.Template, team github.Team, event github.Ev
 }
 
 func handleIssueEvent(tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
+	if team.SlackChannels.Issues == "" {
+		return nil, nil
+	}
+
 	if event.Action != "opened" && event.Action != "closed" {
 		return nil, nil
 	}
@@ -148,6 +156,10 @@ func handleIssueEvent(tmpl template.Template, team github.Team, threadTimestamp 
 }
 
 func handlePullRequestEvent(tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
+	if team.SlackChannels.PullRequests == "" {
+		return nil, nil
+	}
+
 	if event.Action != "opened" && event.Action != "closed" && event.Action != "reopened" {
 		return nil, nil
 	}
@@ -157,6 +169,10 @@ func handlePullRequestEvent(tmpl template.Template, team github.Team, threadTime
 }
 
 func handleTeamEvent(tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
+	if team.SlackChannels.Commits == "" {
+		return nil, nil
+	}
+
 	if event.Action != "added_to_repository" && event.Action != "removed_from_repository" {
 		return nil, nil
 	}
@@ -189,6 +205,10 @@ func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
 }
 
 func handleWorkflowEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+	if team.SlackChannels.Workflows == "" {
+		return nil, nil
+	}
+
 	if event.Action != "completed" && event.Workflow.Conclusion != "failure" {
 		return nil, nil
 	}
