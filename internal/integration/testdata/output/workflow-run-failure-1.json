@@ -1,6 +1,6 @@
 {
   "channel": "#test",
-  "text": ":x: The workflow <https://github.com/navikt/foreldrepengesoknad/actions/runs/9836221528|#1457 Refaktorer API kall til Tanstack query istedenfor Axios+hjemmelaget> triggered by <https://github.com/johannbm|johannbm> in the repository <https://github.com/navikt/foreldrepengesoknad|foreldrepengesoknad> has the status `failure`›",
+  "text": ":x: The workflow <https://github.com/navikt/foreldrepengesoknad/actions/runs/9836221528|#1457 Refaktorer API kall til Tanstack query istedenfor Axios+hjemmelaget> triggered by <https://github.com/johannbm|johannbm> in the repository <https://github.com/navikt/foreldrepengesoknad|foreldrepengesoknad> has the status `failure`",
   "unfurl_links": false,
   "unfurl_media": false
 }
