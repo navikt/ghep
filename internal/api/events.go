@@ -138,7 +138,7 @@ func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Tea
 		return nil, nil
 	}
 
-	log.Info("Received commit event")
+	log.Info("Received commit event", "slack_channel", team.SlackChannels.Commits)
 	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event)
 }
 
@@ -151,7 +151,7 @@ func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team
 		return nil, nil
 	}
 
-	log.Info("Received issue")
+	log.Info("Received issue", "slack_channel", team.SlackChannels.Issues)
 	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, threadTimestamp, event)
 }
 
@@ -164,7 +164,7 @@ func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team githu
 		return nil, nil
 	}
 
-	slog.Info("Received pull request")
+	slog.Info("Received pull request", "slack_channel", team.SlackChannels.PullRequests)
 	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, threadTimestamp, event)
 }
 
@@ -177,7 +177,7 @@ func handleTeamEvent(log *slog.Logger, tmpl template.Template, team *github.Team
 		return nil, nil
 	}
 
-	log.Info("Received team event")
+	log.Info("Received team event", "slack_channel", team.SlackChannels.Commits)
 	if event.Action == "added_to_repository" {
 		team.Repositories = append(team.Repositories, event.Repository.Name)
 	} else {
@@ -213,6 +213,6 @@ func handleWorkflowEvent(log *slog.Logger, tmpl template.Template, team github.T
 		return nil, nil
 	}
 
-	log.Info("Received workflow run", "conclusion", event.Workflow.Conclusion)
+	log.Info("Received workflow run", "conclusion", event.Workflow.Conclusion, "slack_channel", team.SlackChannels.Workflows)
 	return slack.CreateWorkflowMessage(tmpl, team.SlackChannels.Workflows, event)
 }
