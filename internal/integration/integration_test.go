@@ -84,6 +84,16 @@ func TestHandleEvent(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
+			case "workflow":
+				tmpl, err := template.ParseFiles("../slack/templates/workflow.tmpl")
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				got, err = slack.CreateWorkflowMessage(*tmpl, "#test", event)
+				if err != nil {
+					t.Fatal(err)
+				}
 			default:
 				t.Skipf("unknown event file: %s", entry.Name())
 			}

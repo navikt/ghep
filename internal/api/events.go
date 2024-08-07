@@ -88,6 +88,8 @@ func (c *Client) handleEvent(team github.Team, event github.Event) error {
 
 		payload, err = handleTeamEvent(c.slack.TeamTmpl(), &team, event)
 		c.teams[index] = team
+	} else if event.Workflow != nil {
+		payload, err = handleWorkflowEvent(c.slack.WorkflowTmpl(), team, event)
 	} else {
 		return fmt.Errorf("unknown event type")
 	}
@@ -184,4 +186,13 @@ func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
 	}
 
 	return github.Team{}, false
+}
+
+func handleWorkflowEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+	if event.Action != "completed" && event.Workflow.Conclusion != "failure" {
+		return nil, nil
+	}
+
+	slog.Info(fmt.Sprintf("Received workflow run in %v for %v (action: %v, conclusion: %v)", event.Repository.Name, team.Name, event.Action, event.Workflow.Conclusion))
+	return slack.CreateWorkflowMessage(tmpl, team.SlackChannels.Workflows, event)
 }

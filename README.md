@@ -12,6 +12,7 @@ nada:
  commits: #nada-commits
  issues: #nada-issues
  pulls: #nada-pull-requests
+ workflows: #nada-ci
 ```
 
 ## Lokal utvikling

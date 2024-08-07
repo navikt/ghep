@@ -18,6 +18,7 @@ type SlackChannels struct {
 	Commits      string `yaml:"commits"`
 	Issues       string `yaml:"issues"`
 	PullRequests string `yaml:"pulls"`
+	Workflows    string `yaml:"workflows"`
 }
 
 type Team struct {

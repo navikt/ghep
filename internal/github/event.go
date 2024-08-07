@@ -42,6 +42,15 @@ type TeamEvent struct {
 	URL  string `json:"html_url"`
 }
 
+type Workflow struct {
+	HeadSHA    string `json:"head_sha"`
+	Status     string `json:"status"`
+	Conclusion string `json:"conclusion"`
+	Title      string `json:"display_title"`
+	RunNumber  int    `json:"run_number"`
+	URL        string `json:"html_url"`
+}
+
 type Event struct {
 	Action      string     `json:"action"`
 	Ref         string     `json:"ref"`
@@ -52,6 +61,7 @@ type Event struct {
 	PullRequest *Issue     `json:"pull_request"`
 	Sender      Sender     `json:"sender"`
 	Team        *TeamEvent `json:"team"`
+	Workflow    *Workflow  `json:"workflow_run"`
 }
 
 func CreateEvent(body []byte) (Event, error) {
