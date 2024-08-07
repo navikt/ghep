@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -44,8 +43,9 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := c.handleEvent(team, event); err != nil {
-		slog.Error("error handling event", "err", err.Error())
+	log := slog.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
+	if err := c.handleEvent(log, team, event); err != nil {
+		log.Error("error handling event", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -53,29 +53,29 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (c *Client) handleEvent(team github.Team, event github.Event) error {
+func (c *Client) handleEvent(log *slog.Logger, team github.Team, event github.Event) error {
 	var payload []byte
 	var err error
 	var threadTimestamp string
 
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
-		payload, err = handleCommitEvent(c.slack.CommitTmpl(), team, event)
+		payload, err = handleCommitEvent(log, c.slack.CommitTmpl(), team, event)
 	} else if event.Issue != nil {
 		id := strconv.Itoa(event.Issue.ID)
 		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
 		if err != nil && err != redis.Nil {
-			slog.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
-		payload, err = handleIssueEvent(c.slack.IssueTmpl(), team, threadTimestamp, event)
+		payload, err = handleIssueEvent(log, c.slack.IssueTmpl(), team, threadTimestamp, event)
 	} else if event.PullRequest != nil {
 		id := strconv.Itoa(event.PullRequest.ID)
 		threadTimestamp, err = c.rdb.Get(c.ctx, id).Result()
 		if err != nil && err != redis.Nil {
-			slog.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
-		payload, err = handlePullRequestEvent(c.slack.PullRequestTmpl(), team, threadTimestamp, event)
+		payload, err = handlePullRequestEvent(log, c.slack.PullRequestTmpl(), team, threadTimestamp, event)
 	} else if event.Team != nil {
 		index := slices.IndexFunc(c.teams, func(t github.Team) bool {
 			return t.Name == event.Team.Name
@@ -86,12 +86,12 @@ func (c *Client) handleEvent(team github.Team, event github.Event) error {
 
 		team := c.teams[index]
 
-		payload, err = handleTeamEvent(c.slack.TeamTmpl(), &team, event)
+		payload, err = handleTeamEvent(log, c.slack.TeamTmpl(), &team, event)
 		c.teams[index] = team
 	} else if event.Workflow != nil {
-		payload, err = handleWorkflowEvent(c.slack.WorkflowTmpl(), team, event)
+		payload, err = handleWorkflowEvent(log, c.slack.WorkflowTmpl(), team, event)
 	} else {
-		return fmt.Errorf("unknown event type")
+		log.Info("unknown event type")
 	}
 
 	if err != nil {
@@ -116,14 +116,14 @@ func (c *Client) handleEvent(team github.Team, event github.Event) error {
 		}
 
 		if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
-			slog.Error("error setting thread timestamp", "err", err.Error(), "id", id, "ts", ts)
+			log.Error("error setting thread timestamp", "err", err.Error(), "id", id, "ts", ts)
 		}
 	}
 
 	return nil
 }
 
-func handleCommitEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
 	branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
 
 	if team.SlackChannels.Commits == "" {
@@ -138,11 +138,11 @@ func handleCommitEvent(tmpl template.Template, team github.Team, event github.Ev
 		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received commit to %v for %v", event.Repository.Name, team.Name))
+	log.Info("Received commit event")
 	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event)
 }
 
-func handleIssueEvent(tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
+func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
 	if team.SlackChannels.Issues == "" {
 		return nil, nil
 	}
@@ -151,11 +151,11 @@ func handleIssueEvent(tmpl template.Template, team github.Team, threadTimestamp 
 		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received issue to %v for %v (action: %v)", event.Repository.Name, team.Name, event.Action))
+	log.Info("Received issue")
 	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, threadTimestamp, event)
 }
 
-func handlePullRequestEvent(tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
+func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
 	if team.SlackChannels.PullRequests == "" {
 		return nil, nil
 	}
@@ -164,11 +164,11 @@ func handlePullRequestEvent(tmpl template.Template, team github.Team, threadTime
 		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received pull request to %v for %v (action: %v)", event.Repository.Name, team.Name, event.Action))
+	slog.Info("Received pull request")
 	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, threadTimestamp, event)
 }
 
-func handleTeamEvent(tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
+func handleTeamEvent(log *slog.Logger, tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
 	if team.SlackChannels.Commits == "" {
 		return nil, nil
 	}
@@ -177,7 +177,7 @@ func handleTeamEvent(tmpl template.Template, team *github.Team, event github.Eve
 		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received team event to %v for %v (action: %v)", event.Repository.Name, team.Name, event.Action))
+	log.Info("Received team event")
 	if event.Action == "added_to_repository" {
 		team.Repositories = append(team.Repositories, event.Repository.Name)
 	} else {
@@ -204,7 +204,7 @@ func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
 	return github.Team{}, false
 }
 
-func handleWorkflowEvent(tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+func handleWorkflowEvent(log *slog.Logger, tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
 	if team.SlackChannels.Workflows == "" {
 		return nil, nil
 	}
@@ -213,6 +213,6 @@ func handleWorkflowEvent(tmpl template.Template, team github.Team, event github.
 		return nil, nil
 	}
 
-	slog.Info(fmt.Sprintf("Received workflow run in %v for %v (action: %v, conclusion: %v)", event.Repository.Name, team.Name, event.Action, event.Workflow.Conclusion))
+	log.Info("Received workflow run", "conclusion", event.Workflow.Conclusion)
 	return slack.CreateWorkflowMessage(tmpl, team.SlackChannels.Workflows, event)
 }
