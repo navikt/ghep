@@ -20,6 +20,7 @@ data:
       pulls: "#flex-github-pullrequest-feed"
     tbd:
       commits: "#område-helse-dev"
+      workflows: "#område-helse-dev"
     dv-a-team:
       commits: "#dv-a-team-commits"
       issues: "#dv-a-team-pull-requests"
