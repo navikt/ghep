@@ -102,7 +102,7 @@ func (c *Client) handleEvent(log *slog.Logger, team github.Team, event github.Ev
 		}
 
 		if timestamp != "" {
-			if err := c.slack.PostWorkflowReaction(team, event, timestamp); err != nil {
+			if err := c.slack.PostWorkflowReaction(log, team, event, timestamp); err != nil {
 				log.Error("error posting workflow reaction", "err", err.Error())
 			}
 		}

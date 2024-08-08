@@ -94,7 +94,7 @@ func initSlackTemplates() (map[string]template.Template, error) {
 	return templates, nil
 }
 
-func (c Client) PostWorkflowReaction(team github.Team, event github.Event, timestamp string) error {
+func (c Client) PostWorkflowReaction(log *slog.Logger, team github.Team, event github.Event, timestamp string) error {
 	reaction := "dogcited"
 	if team.SlackChannels.Commits != "" {
 		if event.Action == "requested" && event.Workflow.Status == "queued" {
@@ -114,6 +114,7 @@ func (c Client) PostWorkflowReaction(team github.Team, event github.Event, times
 		}
 	}
 
+	log.Info("Posting reaction to workflow event", "reaction", reaction)
 	return c.PostReaction(reaction, team.SlackChannels.Commits, timestamp)
 }
 
