@@ -164,7 +164,7 @@ func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team githu
 		return nil, nil
 	}
 
-	slog.Info("Received pull request", "slack_channel", team.SlackChannels.PullRequests)
+	log.Info("Received pull request", "slack_channel", team.SlackChannels.PullRequests)
 	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, threadTimestamp, event)
 }
 
