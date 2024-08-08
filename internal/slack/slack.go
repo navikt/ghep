@@ -12,10 +12,19 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/navikt/ghep/internal/github"
 )
 
 //go:embed templates/*.tmpl
 var templatesFS embed.FS
+
+type slackResponse struct {
+	Ok        bool   `json:"ok"`
+	Error     string `json:"error"`
+	Warn      string `json:"warning"`
+	TimeStamp string `json:"ts"`
+}
 
 type Client struct {
 	httpClient *http.Client
@@ -85,6 +94,71 @@ func initSlackTemplates() (map[string]template.Template, error) {
 	return templates, nil
 }
 
+func (c Client) PostWorkflowReaction(team github.Team, event github.Event, timestamp string) error {
+	reaction := "dogcited"
+	if team.SlackChannels.Commits != "" {
+		if event.Action == "requested" && event.Workflow.Status == "queued" {
+			reaction = "eyes"
+		}
+
+		if event.Action == "in_progress" && event.Workflow.Status == "in_progress" {
+			reaction = "hourglass_with_flowing_sand"
+		}
+
+		if event.Action == "completed" && event.Workflow.Conclusion == "success" {
+			reaction = "white_check_mark"
+		}
+
+		if event.Action == "completed" && event.Workflow.Conclusion == "failure" {
+			reaction = "x"
+		}
+	}
+
+	return c.PostReaction(reaction, team.SlackChannels.Commits, timestamp)
+}
+
+func (c Client) PostReaction(channel, reaction, timestamp string) error {
+	payload := map[string]string{
+		"channel":   channel,
+		"name":      reaction,
+		"timestamp": timestamp,
+	}
+
+	marshalled, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("POST", "https://slack.com/api/reactions.add", bytes.NewReader(marshalled))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Authorization", "Bearer "+c.token)
+	req.Header.Add("Content-Type", "application/json; charset=utf-8")
+
+	resp, err := c.httpDoWithRetry(req, 3)
+	if err != nil {
+		return err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 200 {
+		var slackResp slackResponse
+		if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
+			return fmt.Errorf("error unmarshal Slack response: %v, body: %v", err, body)
+		}
+
+		return fmt.Errorf("error posting message to Slack(%v): %v", resp.StatusCode, slackResp.Error)
+	}
+
+	return nil
+}
+
 func (c Client) PostMessage(payload []byte) (string, error) {
 	req, err := http.NewRequest("POST", "https://slack.com/api/chat.postMessage", bytes.NewReader(payload))
 	if err != nil {
@@ -102,13 +176,6 @@ func (c Client) PostMessage(payload []byte) (string, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
-	}
-
-	type slackResponse struct {
-		Ok        bool   `json:"ok"`
-		Error     string `json:"error"`
-		Warn      string `json:"warning"`
-		TimeStamp string `json:"ts"`
 	}
 
 	if resp.StatusCode != 200 {

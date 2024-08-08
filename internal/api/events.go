@@ -94,6 +94,19 @@ func (c *Client) handleEvent(log *slog.Logger, team github.Team, event github.Ev
 		payload, err = handleTeamEvent(log, c.slack.TeamTmpl(), &team, event)
 		c.teams[index] = team
 	} else if event.Workflow != nil {
+		var timestamp string
+		id := event.Workflow.HeadSHA
+		timestamp, err = c.rdb.Get(c.ctx, id).Result()
+		if err != nil && err != redis.Nil {
+			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+		}
+
+		if timestamp != "" {
+			if err := c.slack.PostWorkflowReaction(team, event, timestamp); err != nil {
+				log.Error("error posting workflow reaction", "err", err.Error())
+			}
+		}
+
 		payload, err = handleWorkflowEvent(log, c.slack.WorkflowTmpl(), team, event)
 	} else {
 		log.Info("unknown event type")
