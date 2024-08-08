@@ -171,3 +171,86 @@ func TestHandleTeamEvent(t *testing.T) {
 		})
 	}
 }
+
+func TestHandleWorkflow(t *testing.T) {
+	tmpl, err := template.New("dummy").Parse("test")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	team := github.Team{
+		Name: "test",
+		SlackChannels: github.SlackChannels{
+			Workflows: "#test",
+		},
+	}
+
+	tests := []struct {
+		name  string
+		event github.Event
+		team  github.Team
+		err   bool
+		want  []byte
+	}{
+		{
+			name:  "No slack channel",
+			event: github.Event{},
+			team: github.Team{
+				Name:          "test",
+				SlackChannels: github.SlackChannels{},
+			},
+		},
+		{
+			name: "Not completed action",
+			event: github.Event{
+				Action: "started",
+				Workflow: &github.Workflow{
+					Conclusion: "",
+				},
+			},
+			team: team,
+		},
+		{
+			name: "Not failure conclusion",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					Conclusion: "success",
+				},
+			},
+			team: team,
+		},
+		{
+			name: "Valid event",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					Conclusion: "failure",
+				},
+			},
+			team: team,
+			want: []byte("test"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := handleWorkflowEvent(slog.Default(), *tmpl, tt.team, tt.event)
+			if err != nil && !tt.err {
+				t.Error(err)
+			}
+
+			if tt.err && err == nil {
+				t.Errorf("expected error, got nil")
+			}
+
+			if tt.want == nil && got != nil {
+				t.Errorf("expected no payload, got %v", got)
+			}
+
+			if tt.want != nil && got == nil {
+				t.Errorf("expected payload, got nil")
+			}
+		})
+	}
+}

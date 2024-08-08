@@ -209,7 +209,7 @@ func handleWorkflowEvent(log *slog.Logger, tmpl template.Template, team github.T
 		return nil, nil
 	}
 
-	if event.Action != "completed" && event.Workflow.Conclusion != "failure" {
+	if event.Action != "completed" || event.Workflow.Conclusion != "failure" {
 		return nil, nil
 	}
 
