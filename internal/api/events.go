@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -111,12 +112,16 @@ func (c *Client) handleEvent(log *slog.Logger, team github.Team, event github.Ev
 		return err
 	}
 
-	if ts != "" && event.Action == "opened" {
+	if ts != "" && saveEventSlackResponse(event) {
 		var id string
 		if event.Issue != nil {
 			id = strconv.Itoa(event.Issue.ID)
 		} else if event.PullRequest != nil {
 			id = strconv.Itoa(event.PullRequest.ID)
+		} else if strings.HasPrefix(event.Ref, refHeadsPrefix) {
+			id = event.After
+		} else {
+			return fmt.Errorf("unknown id string when saving timestamp")
 		}
 
 		if err := c.rdb.Set(c.ctx, id, ts, oneYear).Err(); err != nil {
@@ -125,6 +130,16 @@ func (c *Client) handleEvent(log *slog.Logger, team github.Team, event github.Ev
 	}
 
 	return nil
+}
+
+func saveEventSlackResponse(event github.Event) bool {
+	if event.Action != "opened" {
+		return event.Issue != nil || event.PullRequest != nil
+	} else if strings.HasPrefix(event.Ref, refHeadsPrefix) {
+		return true
+	}
+
+	return false
 }
 
 func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {

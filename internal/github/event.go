@@ -54,6 +54,7 @@ type Workflow struct {
 type Event struct {
 	Action      string     `json:"action"`
 	Ref         string     `json:"ref"`
+	After       string     `json:"after"`
 	Repository  Repository `json:"repository"`
 	Commits     []Commit   `json:"commits"`
 	Compare     string     `json:"compare"`
