@@ -8,13 +8,17 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/redis/go-redis/v9"
 )
 
-const refHeadsPrefix = "refs/heads/"
+const (
+	refHeadsPrefix = "refs/heads/"
+	oneYear        = 8760 * time.Hour
+)
 
 func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
@@ -115,7 +119,7 @@ func (c *Client) handleEvent(log *slog.Logger, team github.Team, event github.Ev
 			id = strconv.Itoa(event.PullRequest.ID)
 		}
 
-		if err := c.rdb.Set(c.ctx, id, ts, 0).Err(); err != nil {
+		if err := c.rdb.Set(c.ctx, id, ts, oneYear).Err(); err != nil {
 			log.Error("error setting thread timestamp", "err", err.Error(), "id", id, "ts", ts)
 		}
 	}
