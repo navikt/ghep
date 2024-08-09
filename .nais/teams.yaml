@@ -39,3 +39,8 @@ data:
     tsm:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
+    teamdagpenger:
+      commits: "#dp-commits"
+      issues: "#dp-issues"
+      pulls: "#dp-pull-requests"
+      workflows: "#dp-failed-workflows"
