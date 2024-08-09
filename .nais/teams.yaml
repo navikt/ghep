@@ -35,5 +35,7 @@ data:
       pulls: "#leesah-game-ci"
     teamsykmelding:
       commits: "tsm-commits"
+      workflows: "tsm-broken-actions"
     tsm:
       commits: "tsm-commits"
+      workflows: "tsm-broken-actions"
