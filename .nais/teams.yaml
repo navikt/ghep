@@ -46,3 +46,9 @@ data:
       issues: "#dp-issues"
       pulls: "#dp-pull-requests"
       workflows: "#dp-failed-workflows"
+    dataseksjonen:
+      commits: "#dataseksjonen-github"
+      issues: "#dataseksjonen-github"
+      pulls: "#dataseksjonen-github"
+      workflows: "#dataseksjonen-github"
+
