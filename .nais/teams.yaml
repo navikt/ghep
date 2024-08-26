@@ -38,9 +38,11 @@ data:
     teamsykmelding:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
+      issues: "tsm-issues"
     tsm:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
+      issues: "tsm-issues"
     teamdagpenger:
       commits: "#dp-commits"
       issues: "#dp-issues"
