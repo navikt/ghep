@@ -44,6 +44,7 @@ type TeamEvent struct {
 }
 
 type Workflow struct {
+	HeadBranch string `json:"head_branch"`
 	HeadSHA    string `json:"head_sha"`
 	Status     string `json:"status"`
 	Conclusion string `json:"conclusion"`
