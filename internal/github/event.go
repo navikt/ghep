@@ -8,6 +8,7 @@ import (
 type Sender struct {
 	Login string `json:"login"`
 	URL   string `json:"html_url"`
+	Type  string `json:"type"`
 }
 
 type Repository struct {

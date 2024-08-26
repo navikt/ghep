@@ -231,6 +231,29 @@ func TestHandleWorkflow(t *testing.T) {
 			team: team,
 			want: []byte("test"),
 		},
+		{
+			name: "Event from bot user",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					Conclusion: "failure",
+				},
+				Sender: github.Sender{
+					Type: "Bot",
+				},
+			},
+			team: github.Team{
+				Name: "test",
+				SlackChannels: github.SlackChannels{
+					Workflows: "#test",
+				},
+				Config: github.Config{
+					Workflows: github.Workflows{
+						IgnoreBots: true,
+					},
+				},
+			},
+		},
 	}
 
 	for _, tt := range tests {

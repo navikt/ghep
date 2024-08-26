@@ -241,6 +241,10 @@ func handleWorkflowEvent(log *slog.Logger, tmpl template.Template, team github.T
 		return nil, nil
 	}
 
+	if team.Config.Workflows.IgnoreBots && event.Sender.Type == "Bot" {
+		return nil, nil
+	}
+
 	if event.Action != "completed" || event.Workflow.Conclusion != "failure" {
 		return nil, nil
 	}
