@@ -14,6 +14,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}/repos"
+
+type Workflows struct {
+	Branches   []string `yaml:"branches"`
+	IgnoreBots bool     `yaml:"ignoreBots"`
+}
+
+type Config struct {
+	Workflows Workflows `yaml:"workflows"`
+}
+
 type SlackChannels struct {
 	Commits      string `yaml:"commits"`
 	Issues       string `yaml:"issues"`
@@ -24,10 +35,9 @@ type SlackChannels struct {
 type Team struct {
 	Name          string
 	Repositories  []string
-	SlackChannels SlackChannels
+	SlackChannels SlackChannels `yaml:",inline"`
+	Config        Config        `yaml:"config"`
 }
-
-const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}/repos"
 
 func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
 	req, err := http.NewRequest("GET", teamURL, nil)
@@ -106,21 +116,33 @@ func contains(s []string, e string) bool {
 	return false
 }
 
-func getTeamsChannels(teamsFilePath string) (map[string]SlackChannels, error) {
-	teamsFile, err := os.Open(teamsFilePath)
+func parseTeamConfig(path string) ([]Team, error) {
+	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 
-	channels := map[string]SlackChannels{}
-	if err := yaml.NewDecoder(teamsFile).Decode(&channels); err != nil {
-		return nil, err
+	teamsAsMap := map[string]Team{}
+	if err := yaml.NewDecoder(file).Decode(&teamsAsMap); err != nil {
+		return nil, fmt.Errorf("decoding team config: %v", err)
 	}
 
-	return channels, nil
+	teams := make([]Team, 0, len(teamsAsMap))
+	for name, team := range teamsAsMap {
+		team.Name = name
+		teams = append(teams, team)
+	}
+
+	return teams, nil
 }
 
 func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, teamsFilePath, reposBlocklistString string) ([]Team, error) {
+	teams, err := parseTeamConfig(teamsFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("parsing team config: %v", err)
+	}
+
 	tmpl, err := template.New("github").Parse(githubAPITeamEndpointTmpl)
 	if err != nil {
 		return nil, err
@@ -133,19 +155,13 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 
 	bearerToken, err := createBearerToken(githubAPI, appInstallationID, appID, appPrivateKey)
 	if err != nil {
-		return nil, err
-	}
-
-	teamsChannels, err := getTeamsChannels(teamsFilePath)
-	if err != nil {
 		return nil, fmt.Errorf("creating bearer token: %v", err)
 	}
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")
 
-	var teams []Team
-	for name, team := range teamsChannels {
-		tmplData["team"] = name
+	for _, team := range teams {
+		tmplData["team"] = team.Name
 
 		var url strings.Builder
 		if err := tmpl.Execute(&url, tmplData); err != nil {
@@ -157,11 +173,7 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 			return nil, err
 		}
 
-		teams = append(teams, Team{
-			Name:          name,
-			Repositories:  repos,
-			SlackChannels: team,
-		})
+		team.Repositories = repos
 	}
 
 	return teams, nil
