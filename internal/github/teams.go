@@ -138,7 +138,7 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 
 	teamsChannels, err := getTeamsChannels(teamsFilePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("creating bearer token: %v", err)
 	}
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")

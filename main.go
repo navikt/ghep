@@ -22,7 +22,7 @@ func main() {
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
 	)
 	if err != nil {
-		slog.Error("error fetching teams", "err", err.Error())
+		slog.Error("fetching teams from Github", "err", err.Error())
 		os.Exit(1)
 	}
 
@@ -35,7 +35,7 @@ func main() {
 
 	slackApi, err := slack.New(os.Getenv("SLACK_TOKEN"))
 	if err != nil {
-		slog.Error("error creating Slack client", "err", err.Error())
+		slog.Error("creating Slack client", "err", err.Error())
 		os.Exit(1)
 	}
 
@@ -48,7 +48,7 @@ func main() {
 		os.Getenv("REDIS_PASSWORD_EVENTS"),
 	)
 	if err != nil {
-		slog.Error("error creating API client", "err", err.Error())
+		slog.Error("creating API client", "err", err.Error())
 		os.Exit(1)
 	}
 
