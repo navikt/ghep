@@ -231,6 +231,73 @@ func TestHandleWorkflow(t *testing.T) {
 			team: team,
 			want: []byte("test"),
 		},
+		{
+			name: "Event from bot user",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					Conclusion: "failure",
+				},
+				Sender: github.Sender{
+					Type: "Bot",
+				},
+			},
+			team: github.Team{
+				Name: "test",
+				SlackChannels: github.SlackChannels{
+					Workflows: "#test",
+				},
+				Config: github.Config{
+					Workflows: github.Workflows{
+						IgnoreBots: true,
+					},
+				},
+			},
+		},
+		{
+			name: "Only interested in some branches",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					HeadBranch: "main",
+					Conclusion: "failure",
+				},
+			},
+			team: github.Team{
+				Name: "test",
+				SlackChannels: github.SlackChannels{
+					Workflows: "#test",
+				},
+				Config: github.Config{
+					Workflows: github.Workflows{
+						Branches: []string{"main"},
+					},
+				},
+			},
+			want: []byte("test"),
+		},
+		{
+			name: "Ignore branches not matching",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					HeadBranch: "feature/some_feature",
+					Conclusion: "success",
+				},
+			},
+			team: github.Team{
+				Name: "test",
+				SlackChannels: github.SlackChannels{
+					Workflows: "#test",
+				},
+				Config: github.Config{
+					Workflows: github.Workflows{
+						Branches: []string{"main"},
+					},
+				},
+			},
+			want: nil,
+		},
 	}
 
 	for _, tt := range tests {

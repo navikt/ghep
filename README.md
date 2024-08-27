@@ -7,7 +7,7 @@ Det som skiller Ghep fra en haug av andre lignende tjenester er at den automagis
 
 Alt du trenger å gjøre er å redigere `.nais/teams.yaml` og legge til ditt team og deres kanaler.
 
-```
+``` yaml
 nada:
  commits: #nada-commits
  issues: #nada-issues
@@ -15,11 +15,30 @@ nada:
  workflows: #nada-ci
 ```
 
+### Konfigurering
+
+Vi har også støtte for litt konfigurering.
+Dette legges under `teamnavn.config` og hver sin type.
+
+#### Workflows
+
+``` yaml
+team:
+  workflows: #channel
+  config:
+    workflows:
+      ignoreBots: bool
+      branches: [string]
+```
+
+- `ignoreBots` - Ikke få Slack-melding om workflows som feiler for bots (for eksempel Dependabot)
+- `branches` - Få kun Slack-melding om workflows som feiler for spesifikke branches
+
 ## Lokal utvikling
 
 Kjør opp Redis for testing med Docker.
 
-```shell
+``` shell
 docker run --name redis -p 6379:6379 -d redis
 ```
 

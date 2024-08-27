@@ -1,0 +1,10 @@
+nada:
+  commits: "#nada-test"
+  issues: "#nada-test"
+  pulls: "#nada-test"
+  workflows: "#nada-test"
+  config:
+    workflows:
+      branches:
+        - main
+      ignoreBots: true

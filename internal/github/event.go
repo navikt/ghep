@@ -8,6 +8,7 @@ import (
 type Sender struct {
 	Login string `json:"login"`
 	URL   string `json:"html_url"`
+	Type  string `json:"type"`
 }
 
 type Repository struct {
@@ -43,6 +44,7 @@ type TeamEvent struct {
 }
 
 type Workflow struct {
+	HeadBranch string `json:"head_branch"`
 	HeadSHA    string `json:"head_sha"`
 	Status     string `json:"status"`
 	Conclusion string `json:"conclusion"`
