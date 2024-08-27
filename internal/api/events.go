@@ -183,8 +183,13 @@ func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team
 		return nil, nil
 	}
 
-	log.Info("Received issue", "slack_channel", team.SlackChannels.Issues)
-	return slack.CreateIssueMessage(tmpl, team.SlackChannels.Issues, threadTimestamp, event)
+	channel := team.SlackChannels.Issues
+	if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.Sender.Login) {
+		channel = team.Config.ExternalContributorsChannel
+	}
+
+	log.Info("Received issue", "slack_channel", channel)
+	return slack.CreateIssueMessage(tmpl, channel, threadTimestamp, event)
 }
 
 func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
