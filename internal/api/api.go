@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -20,7 +21,7 @@ type Client struct {
 func New(ctx context.Context, teams []github.Team, slack slack.Client, redisAddr, redisUsername, redisPassword string) (Client, error) {
 	opt, err := redis.ParseURL(redisAddr)
 	if err != nil {
-		return Client{}, err
+		return Client{}, fmt.Errorf("parsing redis URL: %w", err)
 	}
 
 	opt.Username = redisUsername
@@ -30,7 +31,7 @@ func New(ctx context.Context, teams []github.Team, slack slack.Client, redisAddr
 
 	rsl, err := rdb.Ping(ctx).Result()
 	if err != nil {
-		return Client{}, err
+		return Client{}, fmt.Errorf("pinging redis: %w", err)
 	}
 	slog.Info("Redis connection established", "response", rsl)
 

@@ -16,10 +16,18 @@ data:
       workflows: "#nada-ci"
     aap:
       workflows: "#aap-github-workflows"
+      config:
+        workflows:
+          ignoreBots: true
     flex:
       commits: "#flex-github-feed"
       issues: "#flex-github-feed"
       pulls: "#flex-github-pullrequest-feed"
+      workflows: "#spokelser"
+      config:
+        workflows:
+          ignoreBots: false
+          branches: ["main"]
     tbd:
       commits: "#område-helse-dev"
       workflows: "#team-bømlo-workflow"
@@ -53,4 +61,3 @@ data:
       issues: "#dataseksjonen-github"
       pulls: "#dataseksjonen-github"
       workflows: "#dataseksjonen-github"
-
