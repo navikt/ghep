@@ -94,6 +94,134 @@ func TestHandleCommitEvent(t *testing.T) {
 	}
 }
 
+func TestHandleIssueAndPullEvent(t *testing.T) {
+	tmpl, err := template.New("dummy").Parse("{{ .Channel }}")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	type args struct {
+		team  github.Team
+		event github.Event
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "No external channel",
+			args: args{
+				team: github.Team{
+					Name: "test",
+					SlackChannels: github.SlackChannels{
+						Issues:       "#internal",
+						PullRequests: "#internal",
+					},
+					Members: []string{"internal"},
+				},
+				event: github.Event{
+					Action: "opened",
+					Sender: github.Sender{
+						Login: "external",
+					},
+					Issue: &github.Issue{
+						Number:      1,
+						StateReason: "external",
+					},
+					PullRequest: &github.Issue{
+						Number: 1,
+					},
+				},
+			},
+			want: "#internal",
+		},
+		{
+			name: "External channel",
+			args: args{
+				team: github.Team{
+					Name: "test",
+					SlackChannels: github.SlackChannels{
+						Issues:       "#internal",
+						PullRequests: "#internal",
+					},
+					Members: []string{"internal"},
+					Config: github.Config{
+						ExternalContributorsChannel: "#external",
+					},
+				},
+				event: github.Event{
+					Action: "opened",
+					Sender: github.Sender{
+						Login: "external",
+					},
+					Issue: &github.Issue{
+						Number:      1,
+						StateReason: "external",
+					},
+					PullRequest: &github.Issue{
+						Number: 1,
+					},
+				},
+			},
+			want: "#external",
+		},
+		{
+			name: "External channel, internal sender",
+			args: args{
+				team: github.Team{
+					Name: "test",
+					SlackChannels: github.SlackChannels{
+						Issues:       "#internal",
+						PullRequests: "#internal",
+					},
+					Members: []string{"internal"},
+					Config: github.Config{
+						ExternalContributorsChannel: "#external",
+					},
+				},
+				event: github.Event{
+					Action: "opened",
+					Sender: github.Sender{
+						Login: "internal",
+					},
+					Issue: &github.Issue{
+						Number:      1,
+						StateReason: "external",
+					},
+					PullRequest: &github.Issue{
+						Number: 1,
+					},
+				},
+			},
+			want: "#internal",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			issue, err := handleIssueEvent(slog.Default(), *tmpl, tt.args.team, "", tt.args.event)
+			if err != nil {
+				t.Error(err)
+			}
+
+			if diff := cmp.Diff(tt.want, string(issue)); diff != "" {
+				t.Errorf("handleIssueEvent() mismatch (-want +got):\n%s", diff)
+			}
+
+			pull, err := handlePullRequestEvent(slog.Default(), *tmpl, tt.args.team, "", tt.args.event)
+			if err != nil {
+				t.Error(err)
+			}
+
+			if diff := cmp.Diff(tt.want, string(pull)); diff != "" {
+				t.Errorf("handlePullRequestEvent() mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
 func TestHandleTeamEvent(t *testing.T) {
 	tmpl, err := template.New("dummy").Parse("test")
 	if err != nil {
