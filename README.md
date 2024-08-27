@@ -20,6 +20,18 @@ nada:
 Vi har også støtte for litt konfigurering.
 Dette legges under `teamnavn.config` og hver sin type.
 
+#### Issues and pull requests
+
+Disse konfigurasjonene gjelder for både issues og pull requests.
+
+``` yaml
+team:
+  config:
+    externalContributorsChannel: #channel
+```
+
+- `externalContributorsChannel` - Bidrag fra brukere som ikke er i teamet vil havne i en egen kanal
+
 #### Workflows
 
 ``` yaml

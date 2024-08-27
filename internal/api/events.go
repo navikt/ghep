@@ -196,8 +196,13 @@ func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team githu
 		return nil, nil
 	}
 
-	log.Info("Received pull request", "slack_channel", team.SlackChannels.PullRequests)
-	return slack.CreatePullRequestMessage(tmpl, team.SlackChannels.PullRequests, threadTimestamp, event)
+	channel := team.SlackChannels.PullRequests
+	if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.Sender.Login) {
+		channel = team.Config.ExternalContributorsChannel
+	}
+
+	log.Info("Received pull request", "slack_channel", channel)
+	return slack.CreatePullRequestMessage(tmpl, channel, threadTimestamp, event)
 }
 
 func handleTeamEvent(log *slog.Logger, tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
