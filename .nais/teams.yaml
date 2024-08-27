@@ -16,6 +16,9 @@ data:
       workflows: "#nada-ci"
     aap:
       workflows: "#aap-github-workflows"
+      config:
+        workflows:
+          ignoreBots: true
     flex:
       commits: "#flex-github-feed"
       issues: "#flex-github-feed"
