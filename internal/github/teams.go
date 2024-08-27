@@ -160,7 +160,7 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")
 
-	for _, team := range teams {
+	for i, team := range teams {
 		tmplData["team"] = team.Name
 
 		var url strings.Builder
@@ -174,6 +174,7 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 		}
 
 		team.Repositories = repos
+		teams[i] = team
 	}
 
 	return teams, nil
