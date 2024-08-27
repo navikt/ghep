@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 	"text/template"
@@ -90,7 +91,7 @@ func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]
 				continue
 			}
 
-			if contains(blocklist, repo.Name) {
+			if slices.Contains(blocklist, repo.Name) {
 				continue
 			}
 
@@ -105,15 +106,6 @@ func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]
 	}
 
 	return repos, nil
-}
-
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if strings.EqualFold(a, e) {
-			return true
-		}
-	}
-	return false
 }
 
 func parseTeamConfig(path string) ([]Team, error) {
