@@ -23,6 +23,11 @@ data:
       commits: "#flex-github-feed"
       issues: "#flex-github-feed"
       pulls: "#flex-github-pullrequest-feed"
+      workflows: "#spokelser"
+      config:
+        workflows:
+          ignoreBots: false
+          branches: ["main"]
     tbd:
       commits: "#område-helse-dev"
       workflows: "#team-bømlo-workflow"
