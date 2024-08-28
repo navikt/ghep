@@ -25,7 +25,7 @@ data:
       pulls: "#flex-github-pullrequest-feed"
       workflows: "#spokelser"
       config:
-        externalContributersChannel: "#flex-dev"
+        externalContributorsChannel: "#flex-dev"
         workflows:
           ignoreBots: false
           branches: ["main"]
@@ -49,13 +49,13 @@ data:
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
       config:
-        externalContributersChannel: #tsm-extern-contrib
+        externalContributorsChannel: #tsm-extern-contrib
     tsm:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
       config:
-        externalContributersChannel: #tsm-extern-contrib
+        externalContributorsChannel: #tsm-extern-contrib
     teamdagpenger:
       commits: "#dp-commits"
       issues: "#dp-issues"
