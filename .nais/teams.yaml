@@ -25,6 +25,7 @@ data:
       pulls: "#flex-github-pullrequest-feed"
       workflows: "#spokelser"
       config:
+        externalContributersChannel: "#flex-dev"
         workflows:
           ignoreBots: false
           branches: ["main"]
