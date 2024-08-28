@@ -236,10 +236,10 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 		if err != nil {
 			return nil, err
 		}
-    
+
 		team.Members = members
 
-    teams[i] = team
+		teams[i] = team
 	}
 
 	return teams, nil
