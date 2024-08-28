@@ -49,13 +49,13 @@ data:
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
       config:
-        externalContributorsChannel: #tsm-extern-contrib
+        externalContributorsChannel: "#tsm-extern-contrib"
     tsm:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
       config:
-        externalContributorsChannel: #tsm-extern-contrib
+        externalContributorsChannel: "#tsm-extern-contrib"
     teamdagpenger:
       commits: "#dp-commits"
       issues: "#dp-issues"
