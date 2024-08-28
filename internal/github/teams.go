@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 	"text/template"
@@ -14,7 +15,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}/repos"
+const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}"
 
 type Workflows struct {
 	Branches   []string `yaml:"branches"`
@@ -22,7 +23,8 @@ type Workflows struct {
 }
 
 type Config struct {
-	Workflows Workflows `yaml:"workflows"`
+	ExternalContributorsChannel string    `yaml:"externalContributorsChannel"`
+	Workflows                   Workflows `yaml:"workflows"`
 }
 
 type SlackChannels struct {
@@ -35,12 +37,17 @@ type SlackChannels struct {
 type Team struct {
 	Name          string
 	Repositories  []string
+	Members       []string
 	SlackChannels SlackChannels `yaml:",inline"`
 	Config        Config        `yaml:"config"`
 }
 
+func (t Team) IsMember(user string) bool {
+	return slices.Contains(t.Members, user)
+}
+
 func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
-	req, err := http.NewRequest("GET", teamURL, nil)
+	req, err := http.NewRequest("GET", teamURL+"/repos", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +97,7 @@ func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]
 				continue
 			}
 
-			if contains(blocklist, repo.Name) {
+			if slices.Contains(blocklist, repo.Name) {
 				continue
 			}
 
@@ -107,13 +114,63 @@ func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]
 	return repos, nil
 }
 
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if strings.EqualFold(a, e) {
-			return true
-		}
+func fetchTeamMembers(teamURL, bearerToken string) ([]string, error) {
+	req, err := http.NewRequest("GET", teamURL+"/members", nil)
+	if err != nil {
+		return nil, err
 	}
-	return false
+
+	query := req.URL.Query()
+	query.Set("per_page", "100")
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearerToken))
+	req.Header.Add("Content-Type", "application/json")
+
+	httpClient := http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	type Member struct {
+		Login string `json:"login"`
+	}
+
+	var teamMembers []string
+	page := 1
+	for {
+		query.Set("page", strconv.Itoa(page))
+		req.URL.RawQuery = query.Encode()
+
+		resp, err := httpClient.Do(req)
+		if err != nil {
+			return nil, err
+		}
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, resp.Body)
+		}
+
+		var members []Member
+		if err := json.Unmarshal(body, &members); err != nil {
+			return nil, err
+		}
+
+		for _, member := range members {
+			teamMembers = append(teamMembers, member.Login)
+		}
+
+		if len(members) < 100 {
+			break
+		}
+
+		page++
+	}
+
+	return teamMembers, nil
 }
 
 func parseTeamConfig(path string) ([]Team, error) {
@@ -174,6 +231,14 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 		}
 
 		team.Repositories = repos
+
+		members, err := fetchTeamMembers(url.String(), bearerToken)
+		if err != nil {
+			return nil, err
+		}
+
+		team.Members = members
+
 		teams[i] = team
 	}
 
