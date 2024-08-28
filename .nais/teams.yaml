@@ -23,7 +23,7 @@ data:
       commits: "#flex-github-feed"
       issues: "#flex-github-feed"
       pulls: "#flex-github-pullrequest-feed"
-      workflows: "#spokelser"
+      workflows: "#spøkelser"
       config:
         externalContributorsChannel: "#flex-dev"
         workflows:
