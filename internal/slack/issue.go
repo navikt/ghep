@@ -55,7 +55,7 @@ func CreateIssueMessage(tmpl template.Template, channel, threadTimestamp string,
 	payload.Attachment.URL = event.Issue.URL
 
 	if event.Action == "closed" {
-		payload.Color = "#d02434"
+		payload.Color = "#7044c4"
 	}
 
 	var output bytes.Buffer
