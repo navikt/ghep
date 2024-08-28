@@ -175,10 +175,6 @@ func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Tea
 }
 
 func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
-	if team.SlackChannels.Issues == "" {
-		return nil, nil
-	}
-
 	if event.Action != "opened" && event.Action != "closed" {
 		return nil, nil
 	}
@@ -188,15 +184,15 @@ func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team
 		channel = team.Config.ExternalContributorsChannel
 	}
 
+	if channel == "" {
+		return nil, nil
+	}
+
 	log.Info("Received issue", "slack_channel", channel)
 	return slack.CreateIssueMessage(tmpl, channel, threadTimestamp, event)
 }
 
 func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
-	if team.SlackChannels.PullRequests == "" {
-		return nil, nil
-	}
-
 	if event.Action != "opened" && event.Action != "closed" && event.Action != "reopened" {
 		return nil, nil
 	}
@@ -204,6 +200,10 @@ func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team githu
 	channel := team.SlackChannels.PullRequests
 	if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.Sender.Login) {
 		channel = team.Config.ExternalContributorsChannel
+	}
+
+	if channel == "" {
+		return nil, nil
 	}
 
 	log.Info("Received pull request", "slack_channel", channel)
