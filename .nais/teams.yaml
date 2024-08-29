@@ -25,7 +25,7 @@ data:
       pulls: "#flex-github-pullrequest-feed"
       workflows: "#spøkelser"
       config:
-        externalContributorsChannel: "#flex-dev"
+        externalContributorsChannel: "#flex-ghep-extern-contrib"
         workflows:
           ignoreBots: false
           branches: ["main"]
