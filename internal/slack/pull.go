@@ -17,7 +17,7 @@ func CreatePullRequestMessage(tmpl template.Template, channel, threadTimestamp s
 		Action          string
 		Draft           bool
 		Number          int
-		Sender          github.Sender
+		Sender          github.User
 		Status          string
 		Color           string
 		Attachment      struct {

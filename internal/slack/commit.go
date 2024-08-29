@@ -15,7 +15,7 @@ func CreateCommitMessage(tmpl template.Template, channel string, event github.Ev
 		Channel         string
 		URL             string
 		Repository      string
-		Sender          github.Sender
+		Sender          github.User
 		NumberOfCommits int
 		AttachmentsText string
 		Compare         string

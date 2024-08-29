@@ -5,10 +5,10 @@ import (
 	"fmt"
 )
 
-type Sender struct {
+type User struct {
 	Login string `json:"login"`
-	URL   string `json:"html_url"`
 	Type  string `json:"type"`
+	URL   string `json:"html_url"`
 }
 
 type Repository struct {
@@ -62,7 +62,8 @@ type Event struct {
 	Compare     string     `json:"compare"`
 	Issue       *Issue     `json:"issue"`
 	PullRequest *Issue     `json:"pull_request"`
-	Sender      Sender     `json:"sender"`
+	Sender      User       `json:"sender"`
+	User        User       `json:"user"`
 	Team        *TeamEvent `json:"team"`
 	Workflow    *Workflow  `json:"workflow_run"`
 }

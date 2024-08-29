@@ -12,7 +12,7 @@ func CreateWorkflowMessage(tmpl template.Template, channel string, event github.
 	type text struct {
 		Channel    string
 		Repository github.Repository
-		Sender     github.Sender
+		Sender     github.User
 		Status     string
 		Workflow   *github.Workflow
 	}

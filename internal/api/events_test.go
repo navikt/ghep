@@ -111,7 +111,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 		want string
 	}{
 		{
-			name: "No external channel",
+			name: "No external channel, external sender/user",
 			args: args{
 				team: github.Team{
 					Name: "test",
@@ -123,7 +123,10 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				},
 				event: github.Event{
 					Action: "opened",
-					Sender: github.Sender{
+					Sender: github.User{
+						Login: "external",
+					},
+					User: github.User{
 						Login: "external",
 					},
 					Issue: &github.Issue{
@@ -138,7 +141,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 			want: "#internal",
 		},
 		{
-			name: "External channel",
+			name: "External channel, external sender/user",
 			args: args{
 				team: github.Team{
 					Name: "test",
@@ -153,7 +156,10 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				},
 				event: github.Event{
 					Action: "opened",
-					Sender: github.Sender{
+					Sender: github.User{
+						Login: "external",
+					},
+					User: github.User{
 						Login: "external",
 					},
 					Issue: &github.Issue{
@@ -168,7 +174,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 			want: "#external",
 		},
 		{
-			name: "External channel, internal sender",
+			name: "External channel, external sender, internal user",
 			args: args{
 				team: github.Team{
 					Name: "test",
@@ -183,7 +189,10 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				},
 				event: github.Event{
 					Action: "opened",
-					Sender: github.Sender{
+					Sender: github.User{
+						Login: "external",
+					},
+					User: github.User{
 						Login: "internal",
 					},
 					Issue: &github.Issue{
@@ -196,6 +205,39 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				},
 			},
 			want: "#internal",
+		},
+		{
+			name: "External channel, internal sender, external user",
+			args: args{
+				team: github.Team{
+					Name: "test",
+					SlackChannels: github.SlackChannels{
+						Issues:       "#internal",
+						PullRequests: "#internal",
+					},
+					Members: []string{"internal"},
+					Config: github.Config{
+						ExternalContributorsChannel: "#external",
+					},
+				},
+				event: github.Event{
+					Action: "opened",
+					Sender: github.User{
+						Login: "internal",
+					},
+					User: github.User{
+						Login: "external",
+					},
+					Issue: &github.Issue{
+						Number:      1,
+						StateReason: "external",
+					},
+					PullRequest: &github.Issue{
+						Number: 1,
+					},
+				},
+			},
+			want: "#external",
 		},
 	}
 
@@ -366,7 +408,7 @@ func TestHandleWorkflow(t *testing.T) {
 				Workflow: &github.Workflow{
 					Conclusion: "failure",
 				},
-				Sender: github.Sender{
+				Sender: github.User{
 					Type: "Bot",
 				},
 			},

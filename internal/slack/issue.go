@@ -16,7 +16,7 @@ func CreateIssueMessage(tmpl template.Template, channel, threadTimestamp string,
 		Repository      github.Repository
 		Action          string
 		Number          int
-		Sender          github.Sender
+		Sender          github.User
 		Status          string
 		Color           string
 		Attachment      struct {
