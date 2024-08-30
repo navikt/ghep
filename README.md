@@ -9,10 +9,10 @@ Alt du trenger å gjøre er å redigere `.nais/teams.yaml` og legge til ditt tea
 
 ``` yaml
 nada:
- commits: #nada-commits
- issues: #nada-issues
- pulls: #nada-pull-requests
- workflows: #nada-ci
+ commits: "#nada-commits"
+ issues: "#nada-issues"
+ pulls: "#nada-pull-requests"
+ workflows: "#nada-ci"
 ```
 
 ### Konfigurering
@@ -27,7 +27,7 @@ Disse konfigurasjonene gjelder for både issues og pull requests.
 ``` yaml
 team:
   config:
-    externalContributorsChannel: #channel
+    externalContributorsChannel: "#channel"
 ```
 
 - `externalContributorsChannel` - Bidrag fra brukere som ikke er i teamet vil havne i en egen kanal
