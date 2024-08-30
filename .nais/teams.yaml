@@ -67,10 +67,10 @@ data:
       pulls: "#dataseksjonen-github"
       workflows: "#dataseksjonen-github"
     fager:
-      issues: #team-fager-bots
-      pulls: #team-fager-bots
-      workflows: #team-fager-bots
+      issues: "#team-fager-bots"
+      pulls: "#team-fager-bots"
+      workflows: "#team-fager-bots"
     permittering-og-nedbemanning:
-      issues: #team-fager-bots
-      pulls: #team-fager-bots
-      workflows: #team-fager-bots
+      issues: "#team-fager-bots"
+      pulls: "#team-fager-bots"
+      workflows: "#team-fager-bots"
