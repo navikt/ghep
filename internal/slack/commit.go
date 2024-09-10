@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"slices"
 	"strings"
 	"text/template"
@@ -28,6 +29,30 @@ func createAttachmentsText(commits []github.Commit) (string, error) {
 	}
 
 	return strings.TrimSuffix(marshalled.String(), "\n"), nil
+}
+
+func fetchCoAuthors(commits []github.Commit) ([]string, error) {
+	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <.*>`)
+
+	var coAuthors []string
+	for _, commit := range commits {
+		coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit.Message, -1)
+
+		for _, match := range coAuthorsMatches {
+			coAuthor := match[1]
+			containsCompare := func(user string) bool {
+				return user == coAuthor
+			}
+
+			if slices.ContainsFunc(coAuthors, containsCompare) {
+				continue
+			}
+
+			coAuthors = append(coAuthors, coAuthor)
+		}
+	}
+
+	return coAuthors, nil
 }
 
 func createAuthors(event github.Event) (string, error) {
@@ -57,6 +82,23 @@ func createAuthors(event github.Event) (string, error) {
 	authorsAsString := make([]string, len(authors))
 	for i, author := range authors {
 		authorsAsString[i] = fmt.Sprintf("<%s|%s>", author.URL, author.Login)
+	}
+
+	coAuthors, err := fetchCoAuthors(event.Commits)
+	if err != nil {
+		return "", fmt.Errorf("fetching co-authors: %w", err)
+	}
+
+	for _, coAuthor := range coAuthors {
+		containsCompare := func(user github.User) bool {
+			return user.Login == coAuthor
+		}
+
+		if slices.ContainsFunc(authors, containsCompare) {
+			continue
+		}
+
+		authorsAsString = append(authorsAsString, coAuthor)
 	}
 
 	var senders string
