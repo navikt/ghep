@@ -11,6 +11,10 @@ type User struct {
 	URL   string `json:"html_url"`
 }
 
+type Author struct {
+	Username string `json:"username"`
+}
+
 type Repository struct {
 	Name          string `json:"name"`
 	URL           string `json:"html_url"`
@@ -22,6 +26,7 @@ type Commit struct {
 	ID      string `json:"id"`
 	Message string `json:"message"`
 	URL     string `json:"url"`
+	Author  Author `json:"author"`
 }
 
 // Issue is a struct for issues and pull requests
