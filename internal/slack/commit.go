@@ -10,6 +10,25 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
+func createAttachmentsText(commits []github.Commit) (string, error) {
+	var attachementText strings.Builder
+	for _, c := range commits {
+		firstLine := strings.Split(c.Message, "\n")[0]
+
+		attachementText.WriteString(fmt.Sprintf("`<%s|%s>` - %s\n", c.URL, c.ID[:8], firstLine))
+	}
+
+	var marshalled bytes.Buffer
+	enc := json.NewEncoder(&marshalled)
+	enc.SetEscapeHTML(false)
+
+	if err := enc.Encode(attachementText.String()); err != nil {
+		return "", fmt.Errorf("marshalling commit messages: %w", err)
+	}
+
+	return strings.TrimSuffix(marshalled.String(), "\n"), nil
+}
+
 func CreateCommitMessage(tmpl template.Template, channel string, event github.Event) ([]byte, error) {
 	type text struct {
 		Channel         string
@@ -30,20 +49,12 @@ func CreateCommitMessage(tmpl template.Template, channel string, event github.Ev
 		Compare:         event.Compare,
 	}
 
-	var attachementText strings.Builder
-	for _, c := range event.Commits {
-		firstLine := strings.Split(c.Message, "\n")[0]
-
-		attachementText.WriteString(fmt.Sprintf("`<%s|%s>` - %s\n", c.URL, c.ID[:8], firstLine))
+	attachmentsText, err := createAttachmentsText(event.Commits)
+	if err != nil {
+		return nil, fmt.Errorf("creating attachments text: %w", err)
 	}
 
-	var marshalled bytes.Buffer
-	enc := json.NewEncoder(&marshalled)
-	enc.SetEscapeHTML(false)
-
-	if err := enc.Encode(attachementText.String()); err != nil {
-		return nil, fmt.Errorf("marshalling commit messages: %w", err)
-	}
+	payload.AttachmentsText = attachmentsText
 
 	payload.AttachmentsText = strings.TrimSuffix(marshalled.String(), "\n")
 
