@@ -119,7 +119,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
-					Members: []string{"internal"},
+					Members: []github.User{{Login: "internal"}},
 				},
 				event: github.Event{
 					Action: "opened",
@@ -149,7 +149,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
-					Members: []string{"internal"},
+					Members: []github.User{{Login: "internal"}},
 					Config: github.Config{
 						ExternalContributorsChannel: "#external",
 					},
@@ -182,7 +182,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
-					Members: []string{"internal"},
+					Members: []github.User{{Login: "internal"}},
 					Config: github.Config{
 						ExternalContributorsChannel: "#external",
 					},
@@ -215,7 +215,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
-					Members: []string{"internal"},
+					Members: []github.User{{Login: "internal"}},
 					Config: github.Config{
 						ExternalContributorsChannel: "#external",
 					},

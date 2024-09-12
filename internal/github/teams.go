@@ -37,13 +37,17 @@ type SlackChannels struct {
 type Team struct {
 	Name          string
 	Repositories  []string
-	Members       []string
+	Members       []User
 	SlackChannels SlackChannels `yaml:",inline"`
 	Config        Config        `yaml:"config"`
 }
 
 func (t Team) IsMember(user string) bool {
-	return slices.Contains(t.Members, user)
+	contains := func(u User) bool {
+		return u.Login == user
+	}
+
+	return slices.ContainsFunc(t.Members, contains)
 }
 
 func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
@@ -114,7 +118,9 @@ func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]
 	return repos, nil
 }
 
-func fetchTeamMembers(teamURL, bearerToken string) ([]string, error) {
+// fetchTeamMembers fetches members for a Github team using the following API:
+// https://docs.github.com/en/rest/teams/members#list-team-members
+func fetchTeamMembers(teamURL, bearerToken string) ([]User, error) {
 	req, err := http.NewRequest("GET", teamURL+"/members", nil)
 	if err != nil {
 		return nil, err
@@ -130,11 +136,7 @@ func fetchTeamMembers(teamURL, bearerToken string) ([]string, error) {
 		Timeout: 10 * time.Second,
 	}
 
-	type Member struct {
-		Login string `json:"login"`
-	}
-
-	var teamMembers []string
+	var teamMembers []User
 	page := 1
 	for {
 		query.Set("page", strconv.Itoa(page))
@@ -154,14 +156,12 @@ func fetchTeamMembers(teamURL, bearerToken string) ([]string, error) {
 			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, resp.Body)
 		}
 
-		var members []Member
+		var members []User
 		if err := json.Unmarshal(body, &members); err != nil {
 			return nil, err
 		}
 
-		for _, member := range members {
-			teamMembers = append(teamMembers, member.Login)
-		}
+		teamMembers = append(teamMembers, members...)
 
 		if len(members) < 100 {
 			break
