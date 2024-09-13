@@ -50,7 +50,16 @@ func TestHandleEvent(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				got, err = slack.CreateCommitMessage(*tmpl, "#test", event)
+				team := github.Team{
+					Members: []github.User{
+						{
+							Login: "Kyrremann",
+							URL:   "https://github.com/Kyrremann",
+						},
+					},
+				}
+
+				got, err = slack.CreateCommitMessage(*tmpl, "#test", event, team)
 				if err != nil {
 					t.Fatal(err)
 				}

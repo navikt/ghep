@@ -42,6 +42,16 @@ type Team struct {
 	Config        Config        `yaml:"config"`
 }
 
+func (t Team) GetMemberByName(name string) (User, bool) {
+	for _, member := range t.Members {
+		if member.Login == name {
+			return member, true
+		}
+	}
+
+	return User{}, false
+}
+
 func (t Team) IsMember(user string) bool {
 	contains := func(u User) bool {
 		return u.Login == user

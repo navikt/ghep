@@ -6,13 +6,32 @@ import (
 )
 
 type User struct {
+	Name  string
 	Login string `json:"login"`
 	Type  string `json:"type"`
 	URL   string `json:"html_url"`
 }
 
+func (u User) ToSlack() string {
+	if u.URL == "" {
+		return u.Login
+	}
+
+	return fmt.Sprintf("<%s|%s>", u.URL, u.Login)
+}
+
 type Author struct {
+	Name     string `json:"name"`
 	Username string `json:"username"`
+}
+
+func (a Author) AsUser() User {
+	return User{
+		Name:  a.Name,
+		Login: a.Username,
+		Type:  "User",
+		URL:   "https://github.com/" + a.Username,
+	}
 }
 
 type Repository struct {

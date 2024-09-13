@@ -31,74 +31,85 @@ func createAttachmentsText(commits []github.Commit) (string, error) {
 	return strings.TrimSuffix(marshalled.String(), "\n"), nil
 }
 
-func fetchCoAuthors(commits []github.Commit) ([]string, error) {
+func fetchCoAuthors(commit github.Commit) ([]string, error) {
 	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <.*>`)
 
 	var coAuthors []string
-	for _, commit := range commits {
-		coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit.Message, -1)
+	coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit.Message, -1)
 
-		for _, match := range coAuthorsMatches {
-			coAuthor := match[1]
-			containsCompare := func(user string) bool {
-				return user == coAuthor
-			}
-
-			if slices.ContainsFunc(coAuthors, containsCompare) {
-				continue
-			}
-
-			coAuthors = append(coAuthors, coAuthor)
-		}
+	for _, match := range coAuthorsMatches {
+		author := match[1]
+		after, _ := strings.CutPrefix(author, "@")
+		coAuthor := after
+		coAuthors = append(coAuthors, coAuthor)
 	}
 
 	return coAuthors, nil
 }
 
-func createAuthors(event github.Event) (string, error) {
+func createAuthors(event github.Event, team github.Team) (string, error) {
+	compareUsernameFunc := func(username string) func(github.User) bool {
+		return func(user github.User) bool {
+			return user.Login == username
+		}
+	}
+
+	compareNameFunc := func(name string) func(github.User) bool {
+		return func(user github.User) bool {
+			return user.Name == name
+		}
+	}
+
+	// sender has login/username and url
+	// co-authors only have username or name
+	// author has name, email, and username
 	authors := []github.User{event.Sender}
 
 	for _, commit := range event.Commits {
-		if commit.Author.Username == "" {
-			continue
+		if slices.ContainsFunc(authors, compareUsernameFunc(commit.Author.Username)) {
+			i := slices.IndexFunc(authors, compareUsernameFunc(commit.Author.Username))
+			author := authors[i]
+			author.Name = commit.Author.Name
+			authors[i] = author
+		} else {
+			authors = append(authors, commit.Author.AsUser())
 		}
 
-		containsCompare := func(user github.User) bool {
-			return user.Login == commit.Author.Username
+		coAuthors, err := fetchCoAuthors(commit)
+		if err != nil {
+			// TODO: Log error, but continue
+			return "", fmt.Errorf("fetching co-authors: %w", err)
 		}
 
-		if slices.ContainsFunc(authors, containsCompare) {
-			continue
-		}
+		for _, coAuthor := range coAuthors {
+			if slices.ContainsFunc(authors, compareUsernameFunc(coAuthor)) {
+				continue
+			}
 
-		author := github.User{
-			Login: commit.Author.Username,
-			URL:   "https://github.com/" + commit.Author.Username,
-		}
+			if slices.ContainsFunc(authors, compareNameFunc(coAuthor)) {
+				continue
+			}
 
-		authors = append(authors, author)
+			if member, ok := team.GetMemberByName(coAuthor); ok {
+				authors = append(authors, member)
+				continue
+			}
+
+			url := ""
+			if !strings.Contains(coAuthor, " ") {
+				url = "https://github.com/" + coAuthor
+			}
+
+			authors = append(authors, github.User{
+				Login: coAuthor,
+				URL:   url,
+			})
+		}
 	}
 
 	authorsAsString := make([]string, len(authors))
 	for i, author := range authors {
-		authorsAsString[i] = fmt.Sprintf("<%s|%s>", author.URL, author.Login)
-	}
-
-	coAuthors, err := fetchCoAuthors(event.Commits)
-	if err != nil {
-		return "", fmt.Errorf("fetching co-authors: %w", err)
-	}
-
-	for _, coAuthor := range coAuthors {
-		containsCompare := func(user github.User) bool {
-			return user.Login == coAuthor
-		}
-
-		if slices.ContainsFunc(authors, containsCompare) {
-			continue
-		}
-
-		authorsAsString = append(authorsAsString, coAuthor)
+		authorsAsString[i] = author.ToSlack()
 	}
 
 	var senders string
@@ -112,7 +123,7 @@ func createAuthors(event github.Event) (string, error) {
 	return senders, nil
 }
 
-func CreateCommitMessage(tmpl template.Template, channel string, event github.Event) ([]byte, error) {
+func CreateCommitMessage(tmpl template.Template, channel string, event github.Event, team github.Team) ([]byte, error) {
 	type text struct {
 		Channel         string
 		URL             string
@@ -138,7 +149,7 @@ func CreateCommitMessage(tmpl template.Template, channel string, event github.Ev
 
 	payload.AttachmentsText = attachmentsText
 
-	authors, err := createAuthors(event)
+	authors, err := createAuthors(event, team)
 	payload.Senders = authors
 
 	var output bytes.Buffer

@@ -171,7 +171,7 @@ func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Tea
 	}
 
 	log.Info("Received commit event", "slack_channel", team.SlackChannels.Commits)
-	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event)
+	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event, team)
 }
 
 func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
