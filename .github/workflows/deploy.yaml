@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
+      telemetry: ${{ steps.docker-build-push.outputs.telemetry }}
     steps:
     - uses: actions/checkout@v4
     - name: Push docker image to GAR
@@ -44,3 +45,4 @@ jobs:
         CLUSTER: prod-gcp
         RESOURCE: .nais/teams.yaml,.nais/nais.yaml
         VAR: image=${{ needs.build.outputs.image }}
+        TELEMETRY: ${{ needs.build.outputs.telemetry }}
