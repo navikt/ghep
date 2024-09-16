@@ -14,6 +14,7 @@ data:
       issues: "#nada-issues"
       pulls: "#nada-pull-requests"
       workflows: "#nada-ci"
+      feil: #ikkelov
     aap:
       workflows: "#aap-github-workflows"
       config:
