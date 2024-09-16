@@ -31,17 +31,27 @@ func createAttachmentsText(commits []github.Commit) (string, error) {
 	return strings.TrimSuffix(marshalled.String(), "\n"), nil
 }
 
-func fetchCoAuthors(commit github.Commit) ([]string, error) {
+func fetchCoAuthors(commit github.Commit) ([]github.User, error) {
 	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <.*>`)
 
-	var coAuthors []string
+	var coAuthors []github.User
 	coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit.Message, -1)
 
 	for _, match := range coAuthorsMatches {
-		author := match[1]
-		after, _ := strings.CutPrefix(author, "@")
-		coAuthor := after
-		coAuthors = append(coAuthors, coAuthor)
+		name := match[1]
+
+		user := github.User{
+			Name:  name,
+			Login: name,
+		}
+
+		if strings.HasPrefix(name, "@") {
+			after, _ := strings.CutPrefix(match[1], "@")
+			user.Login = after
+			user.URL = "https://github.com/" + after
+		}
+
+		coAuthors = append(coAuthors, user)
 	}
 
 	return coAuthors, nil
@@ -82,28 +92,20 @@ func createAuthors(event github.Event, team github.Team) (string, error) {
 		}
 
 		for _, coAuthor := range coAuthors {
-			if slices.ContainsFunc(authors, compareUsernameFunc(coAuthor)) {
+			if slices.ContainsFunc(authors, compareUsernameFunc(coAuthor.Login)) {
 				continue
 			}
 
-			if slices.ContainsFunc(authors, compareNameFunc(coAuthor)) {
+			if slices.ContainsFunc(authors, compareNameFunc(coAuthor.Name)) {
 				continue
 			}
 
-			if member, ok := team.GetMemberByName(coAuthor); ok {
+			if member, ok := team.GetMemberByName(coAuthor.Login); ok {
 				authors = append(authors, member)
 				continue
 			}
 
-			url := ""
-			if !strings.Contains(coAuthor, " ") {
-				url = "https://github.com/" + coAuthor
-			}
-
-			authors = append(authors, github.User{
-				Login: coAuthor,
-				URL:   url,
-			})
+			authors = append(authors, coAuthor)
 		}
 	}
 
