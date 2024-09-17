@@ -44,6 +44,13 @@ data:
       commits: "#leesah-game-ci"
       issues: "#leesah-game-ci"
       pulls: "#leesah-game-ci"
+    teamsykefravr:
+      pulls: "#isyfo-pr"
+      workflows: "#syfo-alarm"
+      config:
+        workflows:
+          ignoreBots: true
+          branches: ["main", "master"]
     teamsykmelding:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
