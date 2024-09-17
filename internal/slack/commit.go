@@ -152,6 +152,10 @@ func CreateCommitMessage(tmpl template.Template, channel string, event github.Ev
 	payload.AttachmentsText = attachmentsText
 
 	authors, err := createAuthors(event, team)
+	if err != nil {
+		return nil, fmt.Errorf("creating authors: %w", err)
+	}
+
 	payload.Senders = authors
 
 	var output bytes.Buffer
