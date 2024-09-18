@@ -175,7 +175,7 @@ func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Tea
 }
 
 func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
-	if event.Action != "opened" && event.Action != "closed" {
+	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
 		return nil, nil
 	}
 
@@ -193,7 +193,7 @@ func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team
 }
 
 func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
-	if event.Action != "opened" && event.Action != "closed" && event.Action != "reopened" {
+	if !slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
 		return nil, nil
 	}
 
