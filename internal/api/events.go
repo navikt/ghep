@@ -25,6 +25,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		slog.Error("error reading body", "err", err.Error())
+		fmt.Fprintf(w, "error reading body: %s", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -33,6 +34,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	event, err := github.CreateEvent(body)
 	if err != nil {
 		slog.Error("error creating event", "err", err.Error())
+		fmt.Fprintf(w, "error creating event: %s", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -43,6 +45,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 		team, found = findTeam(c.teams, event.Repository.Name)
 		if !found {
+			fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
 			w.WriteHeader(http.StatusOK)
 			return
 		}
@@ -55,6 +58,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Fprintf(w, "%s event handled for team %s", event.Repository.Name, team.Name)
 	w.WriteHeader(http.StatusOK)
 }
 
