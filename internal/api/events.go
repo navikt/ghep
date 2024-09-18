@@ -46,7 +46,6 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		team, found = findTeam(c.teams, event.Repository.Name)
 		if !found {
 			fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
-			w.WriteHeader(http.StatusOK)
 			return
 		}
 	}
@@ -59,7 +58,6 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "%s event handled for team %s", event.Repository.Name, team.Name)
-	w.WriteHeader(http.StatusOK)
 }
 
 func (c *Client) handleEvent(log *slog.Logger, team github.Team, event github.Event) error {
