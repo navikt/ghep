@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/navikt/ghep/internal/api"
+	"github.com/navikt/ghep/internal/events"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/redis"
 	"github.com/navikt/ghep/internal/slack"
@@ -51,16 +52,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	api, err := api.New(
-		ctx,
-		teams,
-		slackApi,
+	eventHandler := events.NewHandler(githubClient, rdb, slackApi, teams)
+
+	api := api.New(
+		eventHandler,
 		rdb,
+		teams,
 	)
-	if err != nil {
-		slog.Error("creating API client", "err", err.Error())
-		os.Exit(1)
-	}
 
 	addr := os.Getenv("SERVER_ADDR")
 	if addr == "" {
