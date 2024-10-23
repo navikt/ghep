@@ -26,12 +26,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	teamNames := []string{}
-	for _, team := range teams {
-		teamNames = append(teamNames, team.Name)
-	}
-
-	slog.Info(fmt.Sprintf("Teams using Ghep: %v", teamNames))
+	logTeams(teams)
 
 	slackApi, err := slack.New(os.Getenv("SLACK_TOKEN"))
 	if err != nil {
@@ -61,4 +56,13 @@ func main() {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
+}
+
+func logTeams(teams []github.Team) {
+	teamNames := []string{}
+	for _, team := range teams {
+		teamNames = append(teamNames, team.Name)
+	}
+
+	slog.Info(fmt.Sprintf("Teams using Ghep: %v", teamNames))
 }
