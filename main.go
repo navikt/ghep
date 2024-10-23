@@ -8,6 +8,7 @@ import (
 
 	"github.com/navikt/ghep/internal/api"
 	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/redis"
 	"github.com/navikt/ghep/internal/slack"
 )
 
@@ -37,13 +38,24 @@ func main() {
 		os.Exit(1)
 	}
 
-	api, err := api.New(
-		context.Background(),
-		teams,
-		slackApi,
+	ctx := context.Background()
+
+	rdb, err := redis.New(
+		ctx,
 		os.Getenv("REDIS_URI_EVENTS"),
 		os.Getenv("REDIS_USERNAME_EVENTS"),
 		os.Getenv("REDIS_PASSWORD_EVENTS"),
+	)
+	if err != nil {
+		slog.Error("creating Redis client", "err", err.Error())
+		os.Exit(1)
+	}
+
+	api, err := api.New(
+		ctx,
+		teams,
+		slackApi,
+		rdb,
 	)
 	if err != nil {
 		slog.Error("creating API client", "err", err.Error())

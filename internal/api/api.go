@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -18,28 +17,12 @@ type Client struct {
 	ctx   context.Context
 }
 
-func New(ctx context.Context, teams []github.Team, slack slack.Client, redisAddr, redisUsername, redisPassword string) (Client, error) {
-	opt, err := redis.ParseURL(redisAddr)
-	if err != nil {
-		return Client{}, fmt.Errorf("parsing redis URL: %w", err)
-	}
-
-	opt.Username = redisUsername
-	opt.Password = redisPassword
-
-	rdb := redis.NewClient(opt)
-
-	rsl, err := rdb.Ping(ctx).Result()
-	if err != nil {
-		return Client{}, fmt.Errorf("pinging redis: %w", err)
-	}
-	slog.Info("Redis connection established", "response", rsl)
-
+func New(ctx context.Context, teams []github.Team, slack slack.Client, rdb *redis.Client) (Client, error) {
 	return Client{
+		ctx:   ctx,
 		slack: slack,
 		teams: teams,
 		rdb:   rdb,
-		ctx:   ctx,
 	}, nil
 }
 
