@@ -57,7 +57,7 @@ func New(token string) (Client, error) {
 		return Client{}, fmt.Errorf("missing Slack token")
 	}
 
-	templates, err := initSlackTemplates()
+	templates, err := ParseMessageTemplates()
 	if err != nil {
 		return Client{}, err
 	}
@@ -73,7 +73,7 @@ func New(token string) (Client, error) {
 	return client, nil
 }
 
-func initSlackTemplates() (map[string]template.Template, error) {
+func ParseMessageTemplates() (map[string]template.Template, error) {
 	templates := map[string]template.Template{}
 
 	files, err := templatesFS.ReadDir("templates")

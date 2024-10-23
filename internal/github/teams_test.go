@@ -1,7 +1,5 @@
 package github
 
-// Generate a test for parseTeamConfig
-
 import (
 	"testing"
 

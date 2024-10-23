@@ -6,15 +6,24 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-	"text/template"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
 )
 
+const (
+	testdataEventsPath = "testdata/events"
+	slackChannel       = "#test"
+)
+
 func TestHandleEvent(t *testing.T) {
-	dir, err := os.ReadDir("testdata/events")
+	slackTemplates, err := slack.ParseMessageTemplates()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
 		t.Error(err)
 	}
@@ -25,7 +34,7 @@ func TestHandleEvent(t *testing.T) {
 		}
 
 		t.Run(entry.Name(), func(t *testing.T) {
-			testdataPath := filepath.Join("testdata/events", entry.Name())
+			testdataPath := filepath.Join(testdataEventsPath, entry.Name())
 			testdata, err := os.ReadFile(testdataPath)
 			if err != nil {
 				t.Fatal(err)
@@ -45,11 +54,6 @@ func TestHandleEvent(t *testing.T) {
 			var got []byte
 			switch strings.Split(entry.Name(), "-")[0] {
 			case "commit":
-				tmpl, err := template.ParseFiles("../slack/templates/commit.tmpl")
-				if err != nil {
-					t.Fatal(err)
-				}
-
 				team := github.Team{
 					Members: []github.User{
 						{
@@ -59,47 +63,27 @@ func TestHandleEvent(t *testing.T) {
 					},
 				}
 
-				got, err = slack.CreateCommitMessage(*tmpl, "#test", event, team)
+				got, err = slack.CreateCommitMessage(slackTemplates["commit"], slackChannel, event, team)
 				if err != nil {
 					t.Fatal(err)
 				}
 			case "issue":
-				tmpl, err := template.ParseFiles("../slack/templates/issue.tmpl")
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				got, err = slack.CreateIssueMessage(*tmpl, "#test", "", event)
+				got, err = slack.CreateIssueMessage(slackTemplates["issue"], slackChannel, "", event)
 				if err != nil {
 					t.Fatal(err)
 				}
 			case "pull":
-				tmpl, err := template.ParseFiles("../slack/templates/pull.tmpl")
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				got, err = slack.CreatePullRequestMessage(*tmpl, "#test", "", event)
+				got, err = slack.CreatePullRequestMessage(slackTemplates["pull"], slackChannel, "", event)
 				if err != nil {
 					t.Fatal(err)
 				}
 			case "team":
-				tmpl, err := template.ParseFiles("../slack/templates/team.tmpl")
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				got, err = slack.CreateTeamMessage(*tmpl, "#test", event)
+				got, err = slack.CreateTeamMessage(slackTemplates["team"], slackChannel, event)
 				if err != nil {
 					t.Fatal(err)
 				}
 			case "workflow":
-				tmpl, err := template.ParseFiles("../slack/templates/workflow.tmpl")
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				got, err = slack.CreateWorkflowMessage(*tmpl, "#test", event)
+				got, err = slack.CreateWorkflowMessage(slackTemplates["workflow"], slackChannel, event)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -112,7 +96,7 @@ func TestHandleEvent(t *testing.T) {
 			}
 
 			if diff := cmp.Diff(string(goldenfile), string(got)); diff != "" {
-				t.Errorf("CreateCommitEvent() mismatch (-want +got):\n%s", diff)
+				t.Errorf("Create Slack message mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
