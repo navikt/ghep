@@ -15,14 +15,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type client struct {
-	apiURL            string
-	appInstallationID string
-	appID             string
-	appPrivateKey     string
-	org               string
-}
-
 const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}"
 
 type Workflows struct {
@@ -212,7 +204,7 @@ func parseTeamConfig(path string) ([]Team, error) {
 	return teams, nil
 }
 
-func (c client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, error) {
+func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, error) {
 	teams, err := parseTeamConfig(teamsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("parsing team config: %v", err)
@@ -261,14 +253,4 @@ func (c client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, 
 	}
 
 	return teams, nil
-}
-
-func New(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg string) client {
-	return client{
-		apiURL:            githubAPI,
-		appInstallationID: appInstallationID,
-		appID:             appID,
-		appPrivateKey:     appPrivateKey,
-		org:               githubOrg,
-	}
 }

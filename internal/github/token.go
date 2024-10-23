@@ -32,7 +32,7 @@ func createJWTToken(appID, appPrivateKey string) (string, error) {
 	return jwtToken, nil
 }
 
-func (c client) createBearerToken() (string, error) {
+func (c Client) createBearerToken() (string, error) {
 	url := fmt.Sprintf("%v/app/installations/%v/access_tokens", c.apiURL, c.appInstallationID)
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
