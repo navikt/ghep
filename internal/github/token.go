@@ -32,14 +32,14 @@ func createJWTToken(appID, appPrivateKey string) (string, error) {
 	return jwtToken, nil
 }
 
-func createBearerToken(githubAPI, appInstallationID, appID, appPrivateKey string) (string, error) {
-	url := fmt.Sprintf("%v/app/installations/%v/access_tokens", githubAPI, appInstallationID)
+func (c client) createBearerToken() (string, error) {
+	url := fmt.Sprintf("%v/app/installations/%v/access_tokens", c.apiURL, c.appInstallationID)
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
 		return "", err
 	}
 
-	jwtToken, err := createJWTToken(appID, appPrivateKey)
+	jwtToken, err := createJWTToken(c.appID, c.appPrivateKey)
 	if err != nil {
 		return "", err
 	}

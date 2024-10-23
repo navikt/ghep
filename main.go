@@ -12,12 +12,15 @@ import (
 )
 
 func main() {
-	teams, err := github.FetchTeams(
+	githubClient := github.New(
 		os.Getenv("GITHUB_API"),
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
 		os.Getenv("GITHUB_APP_ID"),
 		os.Getenv("GITHUB_APP_PRIVATE_KEY"),
 		os.Getenv("GITHUB_ORG"),
+	)
+
+	teams, err := githubClient.FetchTeams(
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
 	)

@@ -15,6 +15,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type client struct {
+	apiURL            string
+	appInstallationID string
+	appID             string
+	appPrivateKey     string
+	org               string
+}
+
 const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}"
 
 type Workflows struct {
@@ -204,7 +212,7 @@ func parseTeamConfig(path string) ([]Team, error) {
 	return teams, nil
 }
 
-func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, teamsFilePath, reposBlocklistString string) ([]Team, error) {
+func (c client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, error) {
 	teams, err := parseTeamConfig(teamsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("parsing team config: %v", err)
@@ -216,11 +224,11 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 	}
 
 	tmplData := map[string]string{
-		"url": githubAPI,
-		"org": githubOrg,
+		"url": c.apiURL,
+		"org": c.org,
 	}
 
-	bearerToken, err := createBearerToken(githubAPI, appInstallationID, appID, appPrivateKey)
+	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return nil, fmt.Errorf("creating bearer token: %v", err)
 	}
@@ -253,4 +261,14 @@ func FetchTeams(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg, t
 	}
 
 	return teams, nil
+}
+
+func New(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg string) client {
+	return client{
+		apiURL:            githubAPI,
+		appInstallationID: appInstallationID,
+		appID:             appID,
+		appPrivateKey:     appPrivateKey,
+		org:               githubOrg,
+	}
 }
