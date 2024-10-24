@@ -194,10 +194,6 @@ func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team githu
 }
 
 func handleTeamEvent(log *slog.Logger, tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
-	if team.SlackChannels.Commits == "" {
-		return nil, nil
-	}
-
 	if event.Action != "added_to_repository" && event.Action != "removed_from_repository" {
 		return nil, nil
 	}
@@ -212,6 +208,10 @@ func handleTeamEvent(log *slog.Logger, tmpl template.Template, team *github.Team
 				break
 			}
 		}
+	}
+
+	if team.SlackChannels.Commits == "" {
+		return nil, nil
 	}
 
 	return slack.CreateTeamMessage(tmpl, team.SlackChannels.Commits, event)
