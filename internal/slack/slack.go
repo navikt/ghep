@@ -104,25 +104,23 @@ func ParseMessageTemplates() (map[string]template.Template, error) {
 
 func (c Client) PostWorkflowReaction(log *slog.Logger, team github.Team, event github.Event, timestamp string) error {
 	reaction := "dogcited"
-	if team.SlackChannels.Commits != "" {
-		if event.Action == "requested" && event.Workflow.Status == "queued" {
-			reaction = "eyes"
-		}
-
-		if event.Action == "in_progress" && event.Workflow.Status == "in_progress" {
-			reaction = "hourglass_with_flowing_sand"
-		}
-
-		if event.Action == "completed" && event.Workflow.Conclusion == "success" {
-			reaction = "white_check_mark"
-		}
-
-		if event.Action == "completed" && event.Workflow.Conclusion == "failure" {
-			reaction = "x"
-		}
+	if event.Action == "requested" && event.Workflow.Status == "queued" {
+		reaction = "eyes"
 	}
 
-	log.Info("Posting reaction to workflow event", "reaction", reaction)
+	if event.Action == "in_progress" && event.Workflow.Status == "in_progress" {
+		reaction = "hourglass_with_flowing_sand"
+	}
+
+	if event.Action == "completed" && event.Workflow.Conclusion == "success" {
+		reaction = "white_check_mark"
+	}
+
+	if event.Action == "completed" && event.Workflow.Conclusion == "failure" {
+		reaction = "x"
+	}
+
+	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", team.SlackChannels.Commits)
 	return c.PostReaction(reaction, team.SlackChannels.Commits, timestamp)
 }
 
