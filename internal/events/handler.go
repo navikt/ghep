@@ -72,8 +72,8 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 }
 
 func saveEventSlackResponse(ts string, event github.Event) bool {
-	if ts != "" {
-		return true
+	if ts == "" {
+		return false
 	} else if event.Action != "opened" {
 		return event.Issue != nil || event.PullRequest != nil
 	} else if strings.HasPrefix(event.Ref, refHeadsPrefix) {
@@ -121,7 +121,6 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 
 		return payload, err
 	} else if event.Workflow != nil {
-		var timestamp string
 		id := event.Workflow.HeadSHA
 		timestamp, err := h.redis.Get(ctx, id).Result()
 		if err != nil && err != redis.Nil {
