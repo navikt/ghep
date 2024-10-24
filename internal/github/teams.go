@@ -42,7 +42,7 @@ type Team struct {
 	Config        Config        `yaml:"config"`
 }
 
-func (t Team) GetMemberByName(name string) (User, bool) {
+func (t *Team) GetMemberByName(name string) (User, bool) {
 	for _, member := range t.Members {
 		if member.Login == name {
 			return member, true
@@ -52,12 +52,25 @@ func (t Team) GetMemberByName(name string) (User, bool) {
 	return User{}, false
 }
 
-func (t Team) IsMember(user string) bool {
+func (t *Team) IsMember(user string) bool {
 	contains := func(u User) bool {
 		return u.Login == user
 	}
 
 	return slices.ContainsFunc(t.Members, contains)
+}
+
+func (t *Team) AddRepository(repo string) {
+	t.Repositories = append(t.Repositories, repo)
+}
+
+func (t *Team) RemoveRepository(remove string) {
+	for i, repo := range t.Repositories {
+		if repo == remove {
+			t.Repositories = append(t.Repositories[:i], t.Repositories[i+1:]...)
+			return
+		}
+	}
 }
 
 func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {

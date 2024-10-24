@@ -79,6 +79,11 @@ func TestHandleEvent(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
+			case "renamed":
+				got, err = slack.CreateRenamedMessage(slackTemplates["renamed"], slackChannel, event)
+				if err != nil {
+					t.Fatal(err)
+				}
 			case "team":
 				got, err = slack.CreateTeamMessage(slackTemplates["team"], slackChannel, event)
 				if err != nil {

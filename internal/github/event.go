@@ -34,6 +34,14 @@ func (a Author) AsUser() User {
 	}
 }
 
+type Changes struct {
+	Repository struct {
+		Name struct {
+			From string `json:"from"`
+		} `json:"name"`
+	} `json:"repository"`
+}
+
 type Repository struct {
 	Name          string `json:"name"`
 	URL           string `json:"html_url"`
@@ -82,6 +90,7 @@ type Event struct {
 	Ref         string     `json:"ref"`
 	After       string     `json:"after"`
 	Repository  Repository `json:"repository"`
+	Changes     Changes    `json:"changes"`
 	Commits     []Commit   `json:"commits"`
 	Compare     string     `json:"compare"`
 	Issue       *Issue     `json:"issue"`
