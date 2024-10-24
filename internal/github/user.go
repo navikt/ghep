@@ -109,7 +109,6 @@ func (c Client) GetUserByEmail(email string) (User, error) {
 		return User{}, fmt.Errorf("no user found")
 	}
 
-	fmt.Println(githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User)
 	return User{
 		Login: githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.Login,
 		Name:  githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.Name,
