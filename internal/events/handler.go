@@ -102,6 +102,8 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		}
 
 		return handlePullRequestEvent(log, h.slack.PullRequestTmpl(), team, threadTimestamp, event)
+	} else if event.Action == "removed" {
+		return handleRemoveRepositoryEvent(log, h.slack.RemovedTmpl(), &team, event)
 	} else if event.Action == "renamed" {
 		return handleRenamedRepository(log, h.slack.RenamedTmpl(), &team, event)
 	} else if event.Team != nil {
@@ -193,6 +195,20 @@ func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team githu
 
 	log.Info("Received pull request", "slack_channel", channel)
 	return slack.CreatePullRequestMessage(tmpl, channel, threadTimestamp, event)
+}
+
+func handleRemoveRepositoryEvent(log *slog.Logger, tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
+	log.Info("Received repository removed")
+
+	for _, repository := range event.RepositoriesRemoved {
+		team.RemoveRepository(repository.Name)
+	}
+
+	if team.SlackChannels.Commits == "" {
+		return nil, nil
+	}
+
+	return slack.CreateTeamMessage(tmpl, team.SlackChannels.Commits, event)
 }
 
 func handleRenamedRepository(log *slog.Logger, tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {

@@ -86,19 +86,20 @@ type Workflow struct {
 }
 
 type Event struct {
-	Action      string     `json:"action"`
-	Ref         string     `json:"ref"`
-	After       string     `json:"after"`
-	Repository  Repository `json:"repository"`
-	Changes     Changes    `json:"changes"`
-	Commits     []Commit   `json:"commits"`
-	Compare     string     `json:"compare"`
-	Issue       *Issue     `json:"issue"`
-	PullRequest *Issue     `json:"pull_request"`
-	Sender      User       `json:"sender"`
-	User        User       `json:"user"`
-	Team        *TeamEvent `json:"team"`
-	Workflow    *Workflow  `json:"workflow_run"`
+	Action              string       `json:"action"`
+	Ref                 string       `json:"ref"`
+	After               string       `json:"after"`
+	Repository          Repository   `json:"repository"`
+	Changes             Changes      `json:"changes"`
+	Commits             []Commit     `json:"commits"`
+	Compare             string       `json:"compare"`
+	Issue               *Issue       `json:"issue"`
+	PullRequest         *Issue       `json:"pull_request"`
+	RepositoriesRemoved []Repository `json:"repositories_removed"`
+	Sender              User         `json:"sender"`
+	User                User         `json:"user"`
+	Team                *TeamEvent   `json:"team"`
+	Workflow            *Workflow    `json:"workflow_run"`
 }
 
 func CreateEvent(body []byte) (Event, error) {

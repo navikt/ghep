@@ -44,6 +44,10 @@ func (c Client) PullRequestTmpl() template.Template {
 	return c.templates["pull"]
 }
 
+func (c Client) RemovedTmpl() template.Template {
+	return c.templates["removed"]
+}
+
 func (c Client) RenamedTmpl() template.Template {
 	return c.templates["renamed"]
 }

@@ -1,0 +1,97 @@
+{
+  "action": "removed",
+  "installation": {
+    "id": 46186369,
+    "client_id": "Iv1.31596603763a72f1",
+    "account": {
+      "login": "navikt",
+      "id": 11848947,
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjExODQ4OTQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11848947?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/navikt",
+      "html_url": "https://github.com/navikt",
+      "followers_url": "https://api.github.com/users/navikt/followers",
+      "following_url": "https://api.github.com/users/navikt/following{/other_user}",
+      "gists_url": "https://api.github.com/users/navikt/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/navikt/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/navikt/subscriptions",
+      "organizations_url": "https://api.github.com/users/navikt/orgs",
+      "repos_url": "https://api.github.com/users/navikt/repos",
+      "events_url": "https://api.github.com/users/navikt/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/navikt/received_events",
+      "type": "Organization",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "repository_selection": "all",
+    "access_tokens_url": "https://api.github.com/app/installations/46186369/access_tokens",
+    "repositories_url": "https://api.github.com/installation/repositories",
+    "html_url": "https://github.com/organizations/navikt/settings/installations/46186369",
+    "app_id": 798083,
+    "app_slug": "ghep-event-pusher",
+    "target_id": 11848947,
+    "target_type": "Organization",
+    "permissions": {
+      "issues": "read",
+      "actions": "read",
+      "members": "read",
+      "contents": "read",
+      "metadata": "read",
+      "pull_requests": "read",
+      "organization_administration": "read"
+    },
+    "events": [
+      "issues",
+      "pull_request",
+      "push",
+      "repository",
+      "team",
+      "workflow_run"
+    ],
+    "created_at": "2024-01-16T12:40:37.000Z",
+    "updated_at": "2024-10-24T10:59:16.000Z",
+    "single_file_name": null,
+    "has_multiple_single_files": false,
+    "single_file_paths": [
+
+    ],
+    "suspended_by": null,
+    "suspended_at": null
+  },
+  "repository_selection": "all",
+  "repositories_added": [
+
+  ],
+  "repositories_removed": [
+    {
+      "id": 877879331,
+      "node_id": "R_kgDONFNgIw",
+      "name": "kyrre-test-2",
+      "full_name": "navikt/kyrre-test-2",
+      "private": true
+    }
+  ],
+  "requester": null,
+  "sender": {
+    "login": "Kyrremann",
+    "id": 1830501,
+    "node_id": "MDQ6VXNlcjE4MzA1MDE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1830501?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Kyrremann",
+    "html_url": "https://github.com/Kyrremann",
+    "followers_url": "https://api.github.com/users/Kyrremann/followers",
+    "following_url": "https://api.github.com/users/Kyrremann/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Kyrremann/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Kyrremann/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Kyrremann/subscriptions",
+    "organizations_url": "https://api.github.com/users/Kyrremann/orgs",
+    "repos_url": "https://api.github.com/users/Kyrremann/repos",
+    "events_url": "https://api.github.com/users/Kyrremann/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Kyrremann/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  }
+}

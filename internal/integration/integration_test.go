@@ -79,6 +79,11 @@ func TestHandleEvent(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
+			case "removed":
+				got, err = slack.CreateRemovedMessage(slackTemplates["removed"], slackChannel, event)
+				if err != nil {
+					t.Fatal(err)
+				}
 			case "renamed":
 				got, err = slack.CreateRenamedMessage(slackTemplates["renamed"], slackChannel, event)
 				if err != nil {
