@@ -22,6 +22,8 @@ var templatesFS embed.FS
 type slackResponse struct {
 	Ok        bool   `json:"ok"`
 	Error     string `json:"error"`
+	Nedded    string `json:"needed"`
+	Provided  string `json:"provided"`
 	Warn      string `json:"warning"`
 	TimeStamp string `json:"ts"`
 }
@@ -155,12 +157,16 @@ func (c Client) PostReaction(channel, reaction, timestamp string) error {
 	}
 
 	if resp.StatusCode != 200 {
-		var slackResp slackResponse
-		if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
-			return fmt.Errorf("error unmarshal Slack response: %v, body: %v", err, body)
-		}
+		return fmt.Errorf("error talking to Slack(%v)", resp.StatusCode)
+	}
 
-		return fmt.Errorf("error posting message to Slack(%v): %v", resp.StatusCode, slackResp.Error)
+	var slackResp slackResponse
+	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
+		return fmt.Errorf("error unmarshal Slack response: %v, body: %v", err, body)
+	}
+
+	if !slackResp.Ok {
+		return fmt.Errorf("error posting message to Slack: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Nedded, slackResp.Provided)
 	}
 
 	return nil
