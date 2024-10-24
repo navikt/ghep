@@ -18,6 +18,8 @@ const (
 )
 
 func TestHandleEvent(t *testing.T) {
+	mockhub := mockHub{}
+
 	slackTemplates, err := slack.ParseMessageTemplates()
 	if err != nil {
 		t.Fatal(err)
@@ -63,7 +65,7 @@ func TestHandleEvent(t *testing.T) {
 					},
 				}
 
-				got, err = slack.CreateCommitMessage(slackTemplates["commit"], slackChannel, event, team)
+				got, err = slack.CreateCommitMessage(slackTemplates["commit"], slackChannel, event, team, mockhub)
 				if err != nil {
 					t.Fatal(err)
 				}

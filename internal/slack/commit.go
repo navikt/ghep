@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"regexp"
 	"slices"
 	"strings"
@@ -31,14 +32,18 @@ func createAttachmentsText(commits []github.Commit) (string, error) {
 	return strings.TrimSuffix(marshalled.String(), "\n"), nil
 }
 
-func fetchCoAuthors(commit github.Commit) ([]github.User, error) {
-	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <.*>`)
+func fetchCoAuthors(githubClient github.Userer, commit github.Commit) ([]github.User, error) {
+	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <(.*)>`)
 
 	var coAuthors []github.User
 	coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit.Message, -1)
 
 	for _, match := range coAuthorsMatches {
 		name := match[1]
+		email := ""
+		if len(match) > 2 {
+			email = match[2]
+		}
 
 		user := github.User{
 			Name:  name,
@@ -46,9 +51,26 @@ func fetchCoAuthors(commit github.Commit) ([]github.User, error) {
 		}
 
 		if strings.HasPrefix(name, "@") {
+			// Prefix with @ to indicate that this is a GitHub user
 			after, _ := strings.CutPrefix(match[1], "@")
 			user.Login = after
 			user.URL = "https://github.com/" + after
+		} else if strings.HasSuffix(email, "@users.noreply.github.com") {
+			// If the email is a GitHub noreply email, we can extract the username from it
+			before, _ := strings.CutSuffix(email, "@users.noreply.github.com")
+			_, after, found := strings.Cut(before, "+")
+			if found {
+				user.Login = after
+				user.URL = "https://github.com/" + after
+			}
+		} else if strings.HasSuffix(email, "@nav.no") {
+			// If the email is a NAV email, we can look up the username
+			userWithEmail, err := githubClient.GetUserByEmail(email)
+			if err != nil {
+				slog.Error("Failed to get user by email", "email", email, "error", err)
+			}
+
+			user = userWithEmail
 		}
 
 		coAuthors = append(coAuthors, user)
@@ -57,7 +79,7 @@ func fetchCoAuthors(commit github.Commit) ([]github.User, error) {
 	return coAuthors, nil
 }
 
-func createAuthors(event github.Event, team github.Team) (string, error) {
+func createAuthors(githubClient github.Userer, event github.Event, team github.Team) (string, error) {
 	compareUsernameFunc := func(username string) func(github.User) bool {
 		return func(user github.User) bool {
 			return user.Login == username
@@ -85,7 +107,7 @@ func createAuthors(event github.Event, team github.Team) (string, error) {
 			authors = append(authors, commit.Author.AsUser())
 		}
 
-		coAuthors, err := fetchCoAuthors(commit)
+		coAuthors, err := fetchCoAuthors(githubClient, commit)
 		if err != nil {
 			// TODO: Log error, but continue
 			return "", fmt.Errorf("fetching co-authors: %w", err)
@@ -125,7 +147,7 @@ func createAuthors(event github.Event, team github.Team) (string, error) {
 	return senders, nil
 }
 
-func CreateCommitMessage(tmpl template.Template, channel string, event github.Event, team github.Team) ([]byte, error) {
+func CreateCommitMessage(tmpl template.Template, channel string, event github.Event, team github.Team, githubClient github.Userer) ([]byte, error) {
 	type text struct {
 		Channel         string
 		URL             string
@@ -151,7 +173,7 @@ func CreateCommitMessage(tmpl template.Template, channel string, event github.Ev
 
 	payload.AttachmentsText = attachmentsText
 
-	authors, err := createAuthors(event, team)
+	authors, err := createAuthors(githubClient, event, team)
 	if err != nil {
 		return nil, fmt.Errorf("creating authors: %w", err)
 	}

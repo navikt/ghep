@@ -1,5 +1,9 @@
 package github
 
+type Userer interface {
+	GetUserByEmail(email string) (User, error)
+}
+
 type Client struct {
 	apiURL            string
 	appInstallationID string

@@ -208,75 +208,21 @@
       ]
     },
     {
-      "id": "302d658af2194e64020d33a00201cac3bc18a7e0",
-      "tree_id": "0e9973de4d375fd2861f84e14ecbb3d03677ca25",
+      "id": "32d6508af2194e64020d33a00201cac3bc187e0a",
+      "tree_id": "9970e3de4d375fd2861f84e14ecbb3d067c235a7",
       "distinct": true,
-      "message": "upkeep: Kyrre Havik matcher Kyrremann\n\nCo-authored-by: André Roaldseth <andre.roaldseth@nav.no>\nCo-authored-by: Kyrre Havik <Kyrre.Havik@nav.no>",
-      "timestamp": "2024-09-09T11:07:20+02:00",
-      "url": "https://github.com/navikt/ghep/commit/302d658af2194e64020d33a00201cac3bc18a7e0",
+      "message": "upkeep: enda en test av co-authored-by\n\nCo-authored-by: Kyrre Havik <Kyrre.Havik@nav.no>",
+      "timestamp": "2024-09-09T12:07:20+02:00",
+      "url": "https://github.com/navikt/ghep/commit/32d6508af2194e64020d33a00201cac3bc187e0a",
       "author": {
-        "name": "Kyrre Havik",
-        "email": "kyrremann@gmail.com",
-        "username": "Kyrremann"
+        "name": "André Roaldseth",
+        "email": "andre.roaldseth@nav.no",
+        "username": "androa"
       },
       "committer": {
-        "name": "Kyrre Havik",
-        "email": "kyrremann@gmail.com",
-        "username": "Kyrremann"
-      },
-      "added": [
-
-      ],
-      "removed": [
-
-      ],
-      "modified": [
-
-      ]
-    },
-    {
-      "id": "302d658af2194e64020d33a00201cac3bc18a7e0",
-      "tree_id": "0e9973de4d375fd2861f84e14ecbb3d03677ca25",
-      "distinct": true,
-      "message": "upkeep: Code Coders er ny\n\nCo-authored-by: André Roaldseth <andre.roaldseth@nav.no>\nCo-authored-by: @Coders <code.coders@nav.no>",
-      "timestamp": "2024-09-09T11:07:20+02:00",
-      "url": "https://github.com/navikt/ghep/commit/302d658af2194e64020d33a00201cac3bc18a7e0",
-      "author": {
-        "name": "Kyrre Havik",
-        "email": "kyrremann@gmail.com",
-        "username": "Kyrremann"
-      },
-      "committer": {
-        "name": "Kyrre Havik",
-        "email": "kyrremann@gmail.com",
-        "username": "Kyrremann"
-      },
-      "added": [
-
-      ],
-      "removed": [
-
-      ],
-      "modified": [
-
-      ]
-    },
-    {
-      "id": "302d658af2194e64020d33a00201cac3bc18a7e0",
-      "tree_id": "0e9973de4d375fd2861f84e14ecbb3d03677ca25",
-      "distinct": true,
-      "message": "upkeep: Kyrremann finnes allerede\n\nCo-authored-by: André Roaldseth <andre.roaldseth@nav.no>\nCo-authored-by: Kyrremann <Kyrremann@gmail.com>",
-      "timestamp": "2024-09-09T11:07:20+02:00",
-      "url": "https://github.com/navikt/ghep/commit/302d658af2194e64020d33a00201cac3bc18a7e0",
-      "author": {
-        "name": "Kyrre Havik",
-        "email": "kyrremann@gmail.com",
-        "username": "Kyrremann"
-      },
-      "committer": {
-        "name": "Kyrre Havik",
-        "email": "kyrremann@gmail.com",
-        "username": "Kyrremann"
+        "name": "André Roaldseth",
+        "email": "andre.roaldseth@nav.no",
+        "username": "androa"
       },
       "added": [
 

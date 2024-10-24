@@ -78,7 +78,7 @@ func TestHandleCommitEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := handleCommitEvent(slog.Default(), *tmpl, team, tt.args.event)
+			got, err := handleCommitEvent(slog.Default(), *tmpl, team, tt.args.event, github.Client{})
 			if err != nil {
 				t.Error(err)
 			}

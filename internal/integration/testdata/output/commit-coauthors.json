@@ -1,0 +1,12 @@
+{
+  "channel": "#test",
+  "text": "<https://github.com/navikt/ghep/compare/d282e61d6e03...302d658af219|1 new commits> pushed to `<https://github.com/navikt/ghep|ghep>` by <https://github.com/Kyrremann|Kyrremann>, <https://github.com/androa|androa>, <https://github.com/oydisrefsum|oydisrefsum>, <https://github.com/taniaholst|taniaholst>, and Emil Elton Nilsen",
+  "attachments": [
+     {
+       "text": "`<https://github.com/navikt/ghep/commit/302d658af2194e64020d33a00201cac3bc18a7e0|302d658a>` - upkeep: test av co-authored-by\n",
+       "color": "#000"
+     }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

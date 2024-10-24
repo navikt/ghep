@@ -85,7 +85,7 @@ func saveEventSlackResponse(ts string, event github.Event) bool {
 
 func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) ([]byte, error) {
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
-		return handleCommitEvent(log, h.slack.CommitTmpl(), team, event)
+		return handleCommitEvent(log, h.slack.CommitTmpl(), team, event, h.github)
 	} else if event.Issue != nil {
 		id := strconv.Itoa(event.Issue.ID)
 		threadTimestamp, err := h.redis.Get(ctx, id).Result()
@@ -138,7 +138,7 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 	return nil, nil
 }
 
-func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Team, event github.Event) ([]byte, error) {
+func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Team, event github.Event, githubClient github.Client) ([]byte, error) {
 	branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
 
 	if team.SlackChannels.Commits == "" {
@@ -154,7 +154,7 @@ func handleCommitEvent(log *slog.Logger, tmpl template.Template, team github.Tea
 	}
 
 	log.Info("Received commit event", "slack_channel", team.SlackChannels.Commits)
-	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event, team)
+	return slack.CreateCommitMessage(tmpl, team.SlackChannels.Commits, event, team, githubClient)
 }
 
 func handleIssueEvent(log *slog.Logger, tmpl template.Template, team github.Team, threadTimestamp string, event github.Event) ([]byte, error) {
