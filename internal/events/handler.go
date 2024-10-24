@@ -103,7 +103,7 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 
 		return handlePullRequestEvent(log, h.slack.PullRequestTmpl(), team, threadTimestamp, event)
 	} else if event.Action == "renamed" {
-		return handleRenameRepositoryEvent(log, h.slack.RenamedTmpl(), &team, event)
+		return handleRenamedRepository(log, h.slack.RenamedTmpl(), &team, event)
 	} else if event.Team != nil {
 		index := slices.IndexFunc(h.teams, func(t github.Team) bool {
 			return t.Name == event.Team.Name
@@ -195,7 +195,7 @@ func handlePullRequestEvent(log *slog.Logger, tmpl template.Template, team githu
 	return slack.CreatePullRequestMessage(tmpl, channel, threadTimestamp, event)
 }
 
-func handleRenameRepositoryEvent(log *slog.Logger, tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
+func handleRenamedRepository(log *slog.Logger, tmpl template.Template, team *github.Team, event github.Event) ([]byte, error) {
 	log.Info("Received repository renamed")
 
 	team.AddRepository(event.Repository.Name)
