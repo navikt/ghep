@@ -13,11 +13,12 @@ func (c Client) EnsureChannels(teams []github.Team) error {
 		return err
 	}
 
-	for _, team := range teams {
+	for i, team := range teams {
 		if team.SlackChannels.Commits != "" {
 			id, ok := channels[team.SlackChannels.Commits]
 			if ok {
 				c.JoinChannel(id)
+				teams[i].SlackChannels.Commits = id
 			} else {
 				slog.Warn("Commits channel not found", "channel", team.SlackChannels.Commits, "team", team.Name)
 			}
@@ -26,6 +27,7 @@ func (c Client) EnsureChannels(teams []github.Team) error {
 			id, ok := channels[team.SlackChannels.Issues]
 			if ok {
 				c.JoinChannel(id)
+				teams[i].SlackChannels.Issues = id
 			} else {
 				slog.Warn("Issues channel not found", "channel", team.SlackChannels.Issues, "team", team.Name)
 			}
@@ -34,6 +36,7 @@ func (c Client) EnsureChannels(teams []github.Team) error {
 			id, ok := channels[team.SlackChannels.PullRequests]
 			if ok {
 				c.JoinChannel(id)
+				teams[i].SlackChannels.PullRequests = id
 			} else {
 				slog.Warn("Pull requests channel not found", "channel", team.SlackChannels.PullRequests, "team", team.Name)
 			}
@@ -42,6 +45,7 @@ func (c Client) EnsureChannels(teams []github.Team) error {
 			id, ok := channels[team.SlackChannels.Workflows]
 			if ok {
 				c.JoinChannel(id)
+				teams[i].SlackChannels.Workflows = id
 			} else {
 				slog.Warn("Workflows channel not found", "channel", team.SlackChannels.Workflows, "team", team.Name)
 			}
