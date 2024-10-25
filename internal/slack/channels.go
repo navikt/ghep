@@ -98,29 +98,25 @@ func (c Client) ListChannels() ([]Channel, error) {
 						return nil, err
 					}
 
-					slog.Info("rate limited when listing channels", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter)
+					slog.Info("rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter)
 					time.Sleep(retryAfter)
 					continue
 				}
 
-				slog.Info("rate limited when listing channel, no Retry-After header set, sleeping 5 second")
+				slog.Info("rate limited and no Retry-After header set, sleeping 5 second")
 				time.Sleep(5 * time.Second)
 				continue
 			}
 
-			return nil, fmt.Errorf("error listing channels(%v): %v", resp.Status, slackResp)
+			return nil, fmt.Errorf("non 200 status code(%v): %v", resp.StatusCode, slackResp.Error)
 		}
 
 		if !slackResp.Ok {
-			return nil, fmt.Errorf("listing channels returned not ok: %v", slackResp.Error)
+			return nil, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Nedded, slackResp.Provided)
 		}
 
 		if slackResp.Warn != "" {
-			slog.Info("warning listing channels", "warn", slackResp.Warn)
-		}
-
-		if slackResp.Channels == nil && len(slackResp.Channels) == 0 {
-			return nil, fmt.Errorf("no channels found")
+			slog.Info("got a warning", "warn", slackResp.Warn)
 		}
 
 		channels = append(channels, slackResp.Channels...)
