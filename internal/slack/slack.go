@@ -37,6 +37,11 @@ type responseData struct {
 	ResponseMetadata struct {
 		NextCursor string `json:"next_cursor"`
 	} `json:"response_metadata"`
+	Message struct {
+		Reactions []struct {
+			Name string `json:"name"`
+		} `json:"reactions"`
+	} `json:"message"`
 }
 
 type Client struct {

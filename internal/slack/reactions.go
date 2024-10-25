@@ -63,8 +63,18 @@ func (c Client) GetReactions(channel, timestamp string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = c.request("reactions.get", marshalled)
-	return nil, fmt.Errorf("reactions.get: %v", err)
+
+	resp, err := c.request("reactions.get", marshalled)
+	if err != nil {
+		return nil, err
+	}
+
+	var reactions []string
+	for _, reaction := range resp.Message.Reactions {
+		reactions = append(reactions, reaction.Name)
+	}
+
+	return reactions, nil
 }
 
 func (c Client) reactionRequest(method, channel, reaction, timestamp string) error {
