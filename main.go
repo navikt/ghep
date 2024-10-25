@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	slog.Info("Starting Ghep")
 	githubClient := github.New(
 		os.Getenv("GITHUB_API"),
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
@@ -22,6 +23,7 @@ func main() {
 		os.Getenv("GITHUB_ORG"),
 	)
 
+	slog.Info("Gettings repositories from Github")
 	teams, err := githubClient.FetchTeams(
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
@@ -33,6 +35,7 @@ func main() {
 
 	logTeams(teams)
 
+	slog.Info("Creating Slack client")
 	slackApi, err := slack.New(os.Getenv("SLACK_TOKEN"))
 	if err != nil {
 		slog.Error("creating Slack client", "err", err.Error())
@@ -41,6 +44,7 @@ func main() {
 
 	ctx := context.Background()
 
+	slog.Info("Creating Redis client")
 	rdb, err := redis.New(
 		ctx,
 		os.Getenv("REDIS_URI_EVENTS"),
@@ -52,6 +56,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	slog.Info("Creating event handler")
 	eventHandler := events.NewHandler(githubClient, rdb, slackApi, teams)
 
 	api := api.New(
@@ -65,6 +70,7 @@ func main() {
 		addr = "0.0.0.0:8080"
 	}
 
+	slog.Info("Starting API server")
 	if err := api.Run(addr); err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
