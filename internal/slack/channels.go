@@ -143,5 +143,5 @@ func (c Client) JoinChannel(channel string) error {
 	}
 
 	_, err = c.request("conversations.join", marshalled)
-	return fmt.Errorf("joining channel: %w", err)
+	return err
 }

@@ -79,5 +79,5 @@ func (c Client) reactionRequest(method, channel, reaction, timestamp string) err
 		return err
 	}
 	_, err = c.request("reactions."+method, marshalled)
-	return fmt.Errorf("reactions.%s: %v", method, err)
+	return err
 }
