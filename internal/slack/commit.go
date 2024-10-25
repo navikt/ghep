@@ -32,7 +32,7 @@ func createAttachmentsText(commits []github.Commit) (string, error) {
 	return strings.TrimSuffix(marshalled.String(), "\n"), nil
 }
 
-func fetchCoAuthors(githubClient github.Userer, commit github.Commit) ([]github.User, error) {
+func fetchCoAuthors(log *slog.Logger, githubClient github.Userer, commit github.Commit) ([]github.User, error) {
 	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <(.*)>`)
 
 	var coAuthors []github.User
@@ -67,7 +67,7 @@ func fetchCoAuthors(githubClient github.Userer, commit github.Commit) ([]github.
 			// If the email is a NAV email, we can look up the username
 			userWithEmail, err := githubClient.GetUserByEmail(email)
 			if err != nil {
-				slog.Error("Failed to get user by email", "email", email, "error", err)
+				log.Error("Failed to get user by email", "email", email, "error", err)
 			}
 
 			user = userWithEmail
@@ -79,7 +79,7 @@ func fetchCoAuthors(githubClient github.Userer, commit github.Commit) ([]github.
 	return coAuthors, nil
 }
 
-func createAuthors(githubClient github.Userer, event github.Event, team github.Team) (string, error) {
+func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Event, team github.Team) (string, error) {
 	compareUsernameFunc := func(username string) func(github.User) bool {
 		return func(user github.User) bool {
 			return user.Login == username
@@ -107,7 +107,7 @@ func createAuthors(githubClient github.Userer, event github.Event, team github.T
 			authors = append(authors, commit.Author.AsUser())
 		}
 
-		coAuthors, err := fetchCoAuthors(githubClient, commit)
+		coAuthors, err := fetchCoAuthors(log, githubClient, commit)
 		if err != nil {
 			// TODO: Log error, but continue
 			return "", fmt.Errorf("fetching co-authors: %w", err)
@@ -147,7 +147,7 @@ func createAuthors(githubClient github.Userer, event github.Event, team github.T
 	return senders, nil
 }
 
-func CreateCommitMessage(tmpl template.Template, channel string, event github.Event, team github.Team, githubClient github.Userer) ([]byte, error) {
+func CreateCommitMessage(log *slog.Logger, tmpl template.Template, channel string, event github.Event, team github.Team, githubClient github.Userer) ([]byte, error) {
 	type text struct {
 		Channel         string
 		URL             string
@@ -173,7 +173,7 @@ func CreateCommitMessage(tmpl template.Template, channel string, event github.Ev
 
 	payload.AttachmentsText = attachmentsText
 
-	authors, err := createAuthors(githubClient, event, team)
+	authors, err := createAuthors(log, githubClient, event, team)
 	if err != nil {
 		return nil, fmt.Errorf("creating authors: %w", err)
 	}

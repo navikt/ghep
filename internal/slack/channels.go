@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"time"
 
@@ -32,11 +31,11 @@ func (c Client) ensureChannel(channel string, channels map[string]string) string
 		id, ok := channels[channel]
 		if ok {
 			if err := c.JoinChannel(id); err != nil {
-				slog.Error("ensuring channels", "channel", channel, "error", err)
+				c.log.Error("ensuring channels", "channel", channel, "error", err)
 			}
 			return id
 		} else {
-			slog.Warn("channel not found", "channel", channel)
+			c.log.Warn("channel not found", "channel", channel)
 		}
 	}
 
@@ -98,12 +97,12 @@ func (c Client) ListChannels() ([]Channel, error) {
 						return nil, err
 					}
 
-					slog.Info("rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter)
+					c.log.Info("rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter)
 					time.Sleep(retryAfter)
 					continue
 				}
 
-				slog.Info("rate limited and no Retry-After header set, sleeping 5 second")
+				c.log.Info("rate limited and no Retry-After header set, sleeping 5 second")
 				time.Sleep(5 * time.Second)
 				continue
 			}
@@ -116,11 +115,11 @@ func (c Client) ListChannels() ([]Channel, error) {
 		}
 
 		if slackResp.Warn != "" {
-			slog.Info("got a warning", "warn", slackResp.Warn)
+			c.log.Info("got a warning", "warn", slackResp.Warn)
 		}
 
 		channels = append(channels, slackResp.Channels...)
-		slog.Info(fmt.Sprintf("Found %d channels", len(channels)))
+		c.log.Info(fmt.Sprintf("Found %d channels", len(channels)))
 
 		if slackResp.ResponseMetadata.NextCursor == "" {
 			break

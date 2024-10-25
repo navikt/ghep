@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func New(ctx context.Context, redisAddr, redisUsername, redisPassword string) (*redis.Client, error) {
+func New(ctx context.Context, log *slog.Logger, redisAddr, redisUsername, redisPassword string) (*redis.Client, error) {
 	opt, err := redis.ParseURL(redisAddr)
 	if err != nil {
 		return nil, fmt.Errorf("parsing redis URL: %w", err)
@@ -24,7 +24,7 @@ func New(ctx context.Context, redisAddr, redisUsername, redisPassword string) (*
 		return nil, fmt.Errorf("pinging redis: %w", err)
 	}
 
-	slog.Info("Redis connection established", "response", rsl)
+	log.Info("Redis connection established", "response", rsl)
 
 	return rdb, nil
 }

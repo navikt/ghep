@@ -1,10 +1,13 @@
 package github
 
+import "log/slog"
+
 type Userer interface {
 	GetUserByEmail(email string) (User, error)
 }
 
 type Client struct {
+	log               *slog.Logger
 	apiURL            string
 	appInstallationID string
 	appID             string
@@ -12,8 +15,9 @@ type Client struct {
 	org               string
 }
 
-func New(githubAPI, appInstallationID, appID, appPrivateKey, githubOrg string) Client {
+func New(log *slog.Logger, githubAPI, appInstallationID, appID, appPrivateKey, githubOrg string) Client {
 	return Client{
+		log:               log,
 		apiURL:            githubAPI,
 		appInstallationID: appInstallationID,
 		appID:             appID,

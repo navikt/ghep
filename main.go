@@ -14,8 +14,11 @@ import (
 )
 
 func main() {
-	slog.Info("Starting Ghep")
+	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
+	log.Info("Starting Ghep")
 	githubClient := github.New(
+		log.With("component", "github"),
 		os.Getenv("GITHUB_API"),
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
 		os.Getenv("GITHUB_APP_ID"),
@@ -23,49 +26,54 @@ func main() {
 		os.Getenv("GITHUB_ORG"),
 	)
 
-	slog.Info("Gettings repositories from Github")
+	log.Info("Gettings repositories from Github")
 	teams, err := githubClient.FetchTeams(
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
 	)
 	if err != nil {
-		slog.Error("fetching teams from Github", "err", err.Error())
+		log.Error("fetching teams from Github", "err", err.Error())
 		os.Exit(1)
 	}
 
-	logTeams(teams)
+	logTeams(log, teams)
 
-	slog.Info("Creating Slack client")
-	slackApi, err := slack.New(os.Getenv("SLACK_TOKEN"))
+	log.Info("Creating Slack client")
+	slackApi, err := slack.New(
+		log.With("component", "slack"),
+		os.Getenv("SLACK_TOKEN"),
+	)
 	if err != nil {
-		slog.Error("creating Slack client", "err", err.Error())
+		log.Error("creating Slack client", "err", err.Error())
 		os.Exit(1)
 	}
 
-	slog.Info("Ensuring Slack channels")
+	log.Info("Ensuring Slack channels")
 	if err := slackApi.EnsureChannels(teams); err != nil {
-		slog.Error("ensuring Slack channels", "err", err.Error())
+		log.Error("ensuring Slack channels", "err", err.Error())
 		os.Exit(1)
 	}
 
 	ctx := context.Background()
 
-	slog.Info("Creating Redis client")
+	log.Info("Creating Redis client")
 	rdb, err := redis.New(
 		ctx,
+		log.With("component", "redis"),
 		os.Getenv("REDIS_URI_EVENTS"),
 		os.Getenv("REDIS_USERNAME_EVENTS"),
 		os.Getenv("REDIS_PASSWORD_EVENTS"),
 	)
 	if err != nil {
-		slog.Error("creating Redis client", "err", err.Error())
+		log.Error("creating Redis client", "err", err.Error())
 		os.Exit(1)
 	}
 
-	slog.Info("Creating event handler")
+	log.Info("Creating event handler")
 	eventHandler := events.NewHandler(githubClient, rdb, slackApi, teams)
 
 	api := api.New(
+		log.With("component", "api"),
 		eventHandler,
 		rdb,
 		teams,
@@ -76,18 +84,18 @@ func main() {
 		addr = "0.0.0.0:8080"
 	}
 
-	slog.Info("Starting API server")
+	log.Info("Starting API server")
 	if err := api.Run(addr); err != nil {
-		slog.Error(err.Error())
+		log.Error(err.Error())
 		os.Exit(1)
 	}
 }
 
-func logTeams(teams []github.Team) {
+func logTeams(log *slog.Logger, teams []github.Team) {
 	teamNames := []string{}
 	for _, team := range teams {
 		teamNames = append(teamNames, team.Name)
 	}
 
-	slog.Info(fmt.Sprintf("Teams using Ghep: %v", teamNames))
+	log.Info(fmt.Sprintf("Teams using Ghep: %v", teamNames))
 }

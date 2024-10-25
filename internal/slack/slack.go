@@ -45,6 +45,7 @@ type responseData struct {
 }
 
 type Client struct {
+	log        *slog.Logger
 	httpClient *http.Client
 	token      string
 	templates  map[string]template.Template
@@ -78,7 +79,7 @@ func (c Client) WorkflowTmpl() template.Template {
 	return c.templates["workflow"]
 }
 
-func New(token string) (Client, error) {
+func New(log *slog.Logger, token string) (Client, error) {
 	if token == "" {
 		return Client{}, fmt.Errorf("missing Slack token")
 	}
@@ -89,6 +90,7 @@ func New(token string) (Client, error) {
 	}
 
 	client := Client{
+		log: log,
 		httpClient: &http.Client{
 			Timeout: 10 * time.Second,
 		},
@@ -153,7 +155,7 @@ func (c Client) request(apiMethod string, payload []byte) (*responseData, error)
 	}
 
 	if slackResp.Warn != "" {
-		slog.Info("got a warning", "warn", slackResp.Warn)
+		c.log.Info("got a warning", "warn", slackResp.Warn)
 	}
 
 	return &slackResp, nil

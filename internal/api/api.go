@@ -12,13 +12,15 @@ import (
 )
 
 type Client struct {
+	log    *slog.Logger
 	events events.Handler
 	redis  *redis.Client
 	teams  []github.Team
 }
 
-func New(events events.Handler, redis *redis.Client, teams []github.Team) Client {
+func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []github.Team) Client {
 	return Client{
+		log:    log,
 		events: events,
 		redis:  redis,
 		teams:  teams,
@@ -26,7 +28,6 @@ func New(events events.Handler, redis *redis.Client, teams []github.Team) Client
 }
 
 func (c Client) Run(addr string) error {
-	slog.Info("Starting server")
 	http.HandleFunc("POST /events", c.eventsPostHandler)
 	http.HandleFunc("GET /internal/health", c.healthGetHandler)
 	return http.ListenAndServe(addr, nil)
@@ -35,7 +36,7 @@ func (c Client) Run(addr string) error {
 func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		slog.Error("error reading body", "err", err.Error())
+		c.log.Error("error reading body", "err", err.Error())
 		fmt.Fprintf(w, "error reading body: %s", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -44,7 +45,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	event, err := github.CreateEvent(body)
 	if err != nil {
-		slog.Error("error creating event", "err", err.Error())
+		c.log.Error("error creating event", "err", err.Error())
 		fmt.Fprintf(w, "error creating event: %s", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -61,7 +62,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log := slog.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
+	log := c.log.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
 	if err := c.events.Handle(r.Context(), log, team, event); err != nil {
 		log.Error("error handling event", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

@@ -2,6 +2,7 @@ package integration
 
 import (
 	"encoding/json"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
@@ -65,7 +66,7 @@ func TestHandleEvent(t *testing.T) {
 					},
 				}
 
-				got, err = slack.CreateCommitMessage(slackTemplates["commit"], slackChannel, event, team, mockhub)
+				got, err = slack.CreateCommitMessage(slog.Default(), slackTemplates["commit"], slackChannel, event, team, mockhub)
 				if err != nil {
 					t.Fatal(err)
 				}
