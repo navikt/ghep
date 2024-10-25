@@ -118,7 +118,7 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		}
 
 		if timestamp != "" && team.SlackChannels.Commits != "" {
-			if err := h.slack.PostWorkflowReaction(log, team, event, timestamp); err != nil {
+			if err := h.slack.PostWorkflowReaction(log, event, team.SlackChannels.Commits, timestamp); err != nil {
 				log.Error("error posting workflow reaction", "err", err.Error())
 			}
 		}

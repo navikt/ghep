@@ -8,7 +8,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func (c Client) PostWorkflowReaction(log *slog.Logger, team github.Team, event github.Event, timestamp string) error {
+func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, channel, timestamp string) error {
 	reaction := "dogcited"
 	if event.Action == "requested" && event.Workflow.Status == "queued" {
 		reaction = "eyes"
@@ -26,12 +26,12 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, team github.Team, event g
 		reaction = "x"
 	}
 
-	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", team.SlackChannels.Commits)
-	if err := c.reactionRequest("add", reaction, team.SlackChannels.Commits, timestamp); err != nil {
+	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", channel)
+	if err := c.reactionRequest("add", reaction, channel, timestamp); err != nil {
 		return fmt.Errorf("posting reaction to workflow event: %v", err)
 	}
 
-	return c.RemoveOtherReactions(log, team.SlackChannels.Commits, timestamp, reaction)
+	return c.RemoveOtherReactions(log, channel, timestamp, reaction)
 }
 
 func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, reaction string) error {
