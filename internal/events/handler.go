@@ -2,7 +2,6 @@ package events
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"slices"
 	"strconv"
@@ -51,18 +50,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		return err
 	}
 
-	if saveEventSlackResponse(ts, event) {
-		var id string
-		if event.Issue != nil {
-			id = strconv.Itoa(event.Issue.ID)
-		} else if event.PullRequest != nil {
-			id = strconv.Itoa(event.PullRequest.ID)
-		} else if strings.HasPrefix(event.Ref, refHeadsPrefix) {
-			id = event.After
-		} else {
-			return fmt.Errorf("unknown id string when saving timestamp")
-		}
-
+	if id := saveEventSlackResponse(ts, event); id != "" {
 		if err := h.redis.Set(ctx, id, ts, oneYear).Err(); err != nil {
 			log.Error("error setting thread timestamp", "err", err.Error(), "id", id, "ts", ts)
 		}
@@ -71,16 +59,18 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	return nil
 }
 
-func saveEventSlackResponse(ts string, event github.Event) bool {
+func saveEventSlackResponse(ts string, event github.Event) string {
 	if ts == "" {
-		return false
-	} else if event.Action != "opened" {
-		return event.Issue != nil || event.PullRequest != nil
+		return ""
+	} else if event.Issue != nil && event.Action == "opened" {
+		return strconv.Itoa(event.Issue.ID)
+	} else if event.PullRequest != nil && event.Action == "opened" {
+		return strconv.Itoa(event.PullRequest.ID)
 	} else if strings.HasPrefix(event.Ref, refHeadsPrefix) {
-		return true
+		return event.After
 	}
 
-	return false
+	return ""
 }
 
 func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) ([]byte, error) {
