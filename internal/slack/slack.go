@@ -251,13 +251,31 @@ func (c Client) ListChannels() ([]Channel, error) {
 			return nil, err
 		}
 
-		if resp.StatusCode != 200 {
-			return nil, fmt.Errorf("error listing channels(%v): %v", resp.Status, body)
-		}
-
 		var slackResp responseData
 		if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
 			return nil, err
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			if resp.StatusCode == http.StatusTooManyRequests {
+				slog.Info("rate limited when listing channels", "status", resp.Status, "error", slackResp.Error, "headers", resp.Header)
+				retryAfterHeader := resp.Header.Get("Retry-After")
+				if retryAfterHeader != "" {
+					retryAfter, err := time.ParseDuration(retryAfterHeader + "s")
+					if err != nil {
+						return nil, err
+					}
+
+					time.Sleep(retryAfter)
+					continue
+				}
+
+				slog.Info("no Retry-After header, sleeping 5 second")
+				time.Sleep(5 * time.Second)
+				continue
+			}
+
+			return nil, fmt.Errorf("error listing channels(%v): %v", resp.Status, slackResp)
 		}
 
 		if !slackResp.Ok {
