@@ -15,7 +15,7 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 	}
 
 	if event.Action == "in_progress" && event.Workflow.Status == "in_progress" {
-		reaction = "hourglass_with_flowing_sand"
+		reaction = "hourglass_flowing_sand"
 	}
 
 	if event.Action == "completed" && event.Workflow.Conclusion == "success" {
