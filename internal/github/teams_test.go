@@ -19,10 +19,10 @@ func TestParseTeamConfig(t *testing.T) {
 				{
 					Name: "nada",
 					SlackChannels: SlackChannels{
-						Commits:      "#nada-test",
-						Issues:       "#nada-test",
-						PullRequests: "#nada-test",
-						Workflows:    "#nada-test",
+						Commits:      "nada-test",
+						Issues:       "nada-test",
+						PullRequests: "nada-test",
+						Workflows:    "nada-test",
 					},
 					Config: Config{
 						Workflows: Workflows{
@@ -40,7 +40,7 @@ func TestParseTeamConfig(t *testing.T) {
 				{
 					Name: "nada",
 					SlackChannels: SlackChannels{
-						Commits: "#nada-test",
+						Commits: "nada-test",
 					},
 				},
 			},
