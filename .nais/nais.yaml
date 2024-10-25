@@ -50,7 +50,7 @@ spec:
   readiness:
     path: /internal/health
     initialDelay: 60
-    periodeSeconds: 15
+    periodSeconds: 15
   liveness:
     path: /internal/health
     initialDelay: 10
