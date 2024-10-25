@@ -211,10 +211,20 @@ func parseTeamConfig(path string) ([]Team, error) {
 	teams := make([]Team, 0, len(teamsAsMap))
 	for name, team := range teamsAsMap {
 		team.Name = name
+		team.SlackChannels = removeLeadingHash(team.SlackChannels)
 		teams = append(teams, team)
 	}
 
 	return teams, nil
+}
+
+func removeLeadingHash(channels SlackChannels) SlackChannels {
+	channels.Commits = strings.TrimPrefix(channels.Commits, "#")
+	channels.Issues = strings.TrimPrefix(channels.Issues, "#")
+	channels.PullRequests = strings.TrimPrefix(channels.PullRequests, "#")
+	channels.Workflows = strings.TrimPrefix(channels.Workflows, "#")
+
+	return channels
 }
 
 func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, error) {
