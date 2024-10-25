@@ -42,6 +42,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	slog.Info("Ensuring Slack channels")
+	if err := slackApi.EnsureChannels(teams); err != nil {
+		slog.Error("ensuring Slack channels", "err", err.Error())
+		os.Exit(1)
+	}
+
 	ctx := context.Background()
 
 	slog.Info("Creating Redis client")

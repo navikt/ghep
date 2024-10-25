@@ -19,13 +19,26 @@ import (
 //go:embed templates/*.tmpl
 var templatesFS embed.FS
 
-type slackResponse struct {
-	Ok        bool   `json:"ok"`
-	Error     string `json:"error"`
-	Nedded    string `json:"needed"`
-	Provided  string `json:"provided"`
-	Warn      string `json:"warning"`
-	TimeStamp string `json:"ts"`
+const (
+	slackApi = "https://slack.com/api"
+)
+
+type Channel struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type responseData struct {
+	Ok               bool      `json:"ok"`
+	Error            string    `json:"error"`
+	Nedded           string    `json:"needed"`
+	Provided         string    `json:"provided"`
+	Warn             string    `json:"warning"`
+	Channels         []Channel `json:"channels"`
+	TimeStamp        string    `json:"ts"`
+	ResponseMetadata struct {
+		NextCursor string `json:"next_cursor"`
+	} `json:"response_metadata"`
 }
 
 type Client struct {
@@ -138,7 +151,7 @@ func (c Client) PostReaction(channel, reaction, timestamp string) error {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", "https://slack.com/api/reactions.add", bytes.NewReader(marshalled))
+	req, err := http.NewRequest("POST", slackApi+"/reactions.add", bytes.NewReader(marshalled))
 	if err != nil {
 		return err
 	}
@@ -157,10 +170,10 @@ func (c Client) PostReaction(channel, reaction, timestamp string) error {
 	}
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("error talking to Slack(%v)", resp.StatusCode)
+		return fmt.Errorf("error reacting(%v)", resp.StatusCode)
 	}
 
-	var slackResp slackResponse
+	var slackResp responseData
 	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
 		return fmt.Errorf("error unmarshal Slack response: %v, body: %v", err, body)
 	}
@@ -173,7 +186,7 @@ func (c Client) PostReaction(channel, reaction, timestamp string) error {
 }
 
 func (c Client) PostMessage(payload []byte) (string, error) {
-	req, err := http.NewRequest("POST", "https://slack.com/api/chat.postMessage", bytes.NewReader(payload))
+	req, err := http.NewRequest("POST", slackApi+"/chat.postMessage", bytes.NewReader(payload))
 	if err != nil {
 		return "", err
 	}
@@ -195,7 +208,7 @@ func (c Client) PostMessage(payload []byte) (string, error) {
 		return "", fmt.Errorf("error posting message to Slack(%v): %v", resp.Status, body)
 	}
 
-	var slackResp slackResponse
+	var slackResp responseData
 	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
 		return "", err
 	}
@@ -209,6 +222,115 @@ func (c Client) PostMessage(payload []byte) (string, error) {
 	}
 
 	return slackResp.TimeStamp, nil
+}
+
+func (c Client) ListChannels() ([]Channel, error) {
+	req, err := http.NewRequest("POST", slackApi+"/conversations.list", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", "Bearer "+c.token)
+	req.Header.Add("Content-Type", "application/json; charset=utf-8")
+
+	query := req.URL.Query()
+	query.Set("exclude_archived", "true")
+	query.Set("limit", "200")
+
+	var channels []Channel
+	for {
+		req.URL.RawQuery = query.Encode()
+
+		resp, err := c.httpDoWithRetry(req, 3)
+		if err != nil {
+			return nil, err
+		}
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		if resp.StatusCode != 200 {
+			return nil, fmt.Errorf("error listing channels(%v): %v", resp.Status, body)
+		}
+
+		var slackResp responseData
+		if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
+			return nil, err
+		}
+
+		if !slackResp.Ok {
+			return nil, fmt.Errorf("listing channels returned not ok: %v", slackResp.Error)
+		}
+
+		if slackResp.Warn != "" {
+			slog.Info("warning listing channels", "warn", slackResp.Warn)
+		}
+
+		if slackResp.Channels == nil && len(slackResp.Channels) == 0 {
+			return nil, fmt.Errorf("no channels found")
+		}
+
+		channels = append(channels, slackResp.Channels...)
+		slog.Info(fmt.Sprintf("Found %d channels", len(channels)))
+
+		if slackResp.ResponseMetadata.NextCursor == "" {
+			break
+		}
+
+		query.Set("cursor", slackResp.ResponseMetadata.NextCursor)
+	}
+
+	return channels, nil
+}
+
+func (c Client) JoinChannel(channel string) error {
+	payload := map[string]string{
+		"channel": channel,
+	}
+
+	marshalled, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("POST", slackApi+"/conversations.join", bytes.NewReader(marshalled))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Authorization", "Bearer "+c.token)
+	req.Header.Add("Content-Type", "application/json; charset=utf-8")
+
+	resp, err := c.httpDoWithRetry(req, 3)
+	if err != nil {
+		return err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("error joining channel(%v): %v", resp.Status, body)
+	}
+
+	var slackResp responseData
+	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
+		return err
+	}
+
+	if !slackResp.Ok {
+		return fmt.Errorf("joining channel returned not ok: %v", slackResp.Error)
+	}
+
+	if slackResp.Warn != "" {
+		slog.Info("warning joining channel", "warn", slackResp.Warn, "channel", channel)
+	}
+
+	return nil
 }
 
 func (c Client) httpDoWithRetry(req *http.Request, retries int) (*http.Response, error) {
