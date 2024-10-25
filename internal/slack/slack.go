@@ -258,7 +258,6 @@ func (c Client) ListChannels() ([]Channel, error) {
 
 		if resp.StatusCode != http.StatusOK {
 			if resp.StatusCode == http.StatusTooManyRequests {
-				slog.Info("rate limited when listing channels", "status", resp.Status, "error", slackResp.Error, "headers", resp.Header)
 				retryAfterHeader := resp.Header.Get("Retry-After")
 				if retryAfterHeader != "" {
 					retryAfter, err := time.ParseDuration(retryAfterHeader + "s")
@@ -266,11 +265,12 @@ func (c Client) ListChannels() ([]Channel, error) {
 						return nil, err
 					}
 
+					slog.Info("rate limited when listing channels", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter)
 					time.Sleep(retryAfter)
 					continue
 				}
 
-				slog.Info("no Retry-After header, sleeping 5 second")
+				slog.Info("rate limited when listing channel, no Retry-After header set, sleeping 5 second")
 				time.Sleep(5 * time.Second)
 				continue
 			}
