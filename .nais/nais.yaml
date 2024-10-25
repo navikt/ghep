@@ -53,7 +53,7 @@ spec:
     periodSeconds: 15
   liveness:
     path: /internal/health
-    initialDelay: 10
+    initialDelay: 90
   redis:
     - instance: events
       access: readwrite
