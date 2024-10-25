@@ -55,7 +55,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	if event.Team == nil {
 		var found bool
 
-		team, found = findTeam(c.teams, event.Repository.Name)
+		team, found = findTeam(c.teams, event)
 		if !found {
 			fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
 			return
@@ -72,7 +72,17 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s event handled for team %s", event.Repository.Name, team.Name)
 }
 
-func findTeam(teams []github.Team, repositoryName string) (github.Team, bool) {
+func findTeam(teams []github.Team, event github.Event) (github.Team, bool) {
+	repositoryName := ""
+	switch event.Action {
+	case "renamed":
+		repositoryName = event.Changes.Repository.Name.From
+	case "removed":
+		repositoryName = event.RepositoriesRemoved[0].Name
+	default:
+		repositoryName = event.Repository.Name
+	}
+
 	for _, team := range teams {
 		for _, repo := range team.Repositories {
 			if repo == repositoryName {
