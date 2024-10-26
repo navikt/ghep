@@ -147,11 +147,11 @@ func (c Client) request(apiMethod string, payload []byte) (*responseData, error)
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("non 200 status code(%v): %v", resp.StatusCode, slackResp.Error)
+		return &slackResp, fmt.Errorf("non 200 status code(%v): %v", resp.StatusCode, slackResp.Error)
 	}
 
 	if !slackResp.Ok {
-		return nil, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Nedded, slackResp.Provided)
+		return &slackResp, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Nedded, slackResp.Provided)
 	}
 
 	if slackResp.Warn != "" {
