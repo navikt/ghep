@@ -54,18 +54,9 @@ func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, curre
 }
 
 func (c Client) GetReactions(channel, timestamp string) ([]string, error) {
-	payload := map[string]string{
-		"channel":   channel,
-		"timestamp": timestamp,
-	}
-
-	marshalled, err := json.Marshal(payload)
+	resp, err := c.getRequest("reactions.get", channel, timestamp)
 	if err != nil {
-		return nil, err
-	}
-
-	resp, err := c.request("reactions.get", marshalled)
-	if err != nil {
+		c.log.Error("Error getting reactions", "response", resp, "error", err)
 		return nil, err
 	}
 

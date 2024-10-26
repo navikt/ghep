@@ -141,6 +141,38 @@ func (c Client) postRequest(apiMethod string, payload []byte) (*responseData, er
 		return nil, err
 	}
 
+	return c.handleSlackResponse(resp, string(body))
+}
+
+func (c Client) getRequest(apiMethod, channel, timestamp string) (*responseData, error) {
+	req, err := http.NewRequest("GET", slackApi+"/"+apiMethod, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", "Bearer "+c.token)
+	req.Header.Add("Content-Type", "application/json; charset=utf-8")
+
+	query := req.URL.Query()
+	query.Set("channel", channel)
+	query.Set("timestamp", timestamp)
+	req.URL.RawQuery = query.Encode()
+
+	resp, err := c.httpDoWithRetry(req, 3)
+	if err != nil {
+		return nil, fmt.Errorf("giving up after 3 retries: %v", err)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.handleSlackResponse(resp, string(body))
+
+}
+
+func (c Client) handleSlackResponse(resp *http.Response, body string) (*responseData, error) {
 	var slackResp responseData
 	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
 		return nil, err
