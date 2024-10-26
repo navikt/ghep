@@ -57,7 +57,7 @@ func (c Client) GetChannels() (map[string]string, error) {
 }
 
 func (c Client) ListChannels() ([]Channel, error) {
-	req, err := http.NewRequest("POST", slackApi+"/conversations.list", nil)
+	req, err := http.NewRequest("GET", slackApi+"/conversations.list", nil)
 	if err != nil {
 		return nil, err
 	}
