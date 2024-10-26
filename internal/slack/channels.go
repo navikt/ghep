@@ -11,23 +11,33 @@ import (
 )
 
 func (c Client) EnsureChannels(teams []github.Team) error {
-	channels, err := c.GetChannels()
+	channels, err := c.GetAllChannels()
+	if err != nil {
+		return err
+	}
+
+	joinedChannels, err := c.GetJoinedChannels()
 	if err != nil {
 		return err
 	}
 
 	for i, team := range teams {
-		teams[i].SlackChannels.Commits = c.ensureChannel(team.SlackChannels.Commits, channels)
-		teams[i].SlackChannels.Issues = c.ensureChannel(team.SlackChannels.Issues, channels)
-		teams[i].SlackChannels.PullRequests = c.ensureChannel(team.SlackChannels.PullRequests, channels)
-		teams[i].SlackChannels.Workflows = c.ensureChannel(team.SlackChannels.Workflows, channels)
+		teams[i].SlackChannels.Commits = c.ensureChannel(team.SlackChannels.Commits, channels, joinedChannels)
+		teams[i].SlackChannels.Issues = c.ensureChannel(team.SlackChannels.Issues, channels, joinedChannels)
+		teams[i].SlackChannels.PullRequests = c.ensureChannel(team.SlackChannels.PullRequests, channels, joinedChannels)
+		teams[i].SlackChannels.Workflows = c.ensureChannel(team.SlackChannels.Workflows, channels, joinedChannels)
 	}
 
 	return nil
 }
 
-func (c Client) ensureChannel(channel string, channels map[string]string) string {
+func (c Client) ensureChannel(channel string, channels map[string]string, joinedChannels map[string]string) string {
 	if channel != "" {
+		id, joined := joinedChannels[channel]
+		if joined {
+			return id
+		}
+
 		id, ok := channels[channel]
 		if ok {
 			if err := c.JoinChannel(id); err != nil {
@@ -42,10 +52,18 @@ func (c Client) ensureChannel(channel string, channels map[string]string) string
 	return channel
 }
 
-func (c Client) GetChannels() (map[string]string, error) {
-	response, err := c.ListChannels()
+func (c Client) GetJoinedChannels() (map[string]string, error) {
+	return c.getAndParseChannels("users.conversations")
+}
+
+func (c Client) GetAllChannels() (map[string]string, error) {
+	return c.getAndParseChannels("conversations.list")
+}
+
+func (c Client) getAndParseChannels(apiMethod string) (map[string]string, error) {
+	response, err := c.ListChannels(apiMethod)
 	if err != nil {
-		return nil, fmt.Errorf("listing channels: %w", err)
+		return nil, fmt.Errorf("listing all channels: %w", err)
 	}
 
 	channels := make(map[string]string, len(response))
@@ -56,8 +74,8 @@ func (c Client) GetChannels() (map[string]string, error) {
 	return channels, nil
 }
 
-func (c Client) ListChannels() ([]Channel, error) {
-	req, err := http.NewRequest("GET", slackApi+"/conversations.list", nil)
+func (c Client) ListChannels(apiMethod string) ([]Channel, error) {
+	req, err := http.NewRequest("GET", slackApi+"/"+apiMethod, nil)
 	if err != nil {
 		return nil, err
 	}
