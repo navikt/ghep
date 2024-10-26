@@ -122,7 +122,7 @@ func ParseMessageTemplates() (map[string]template.Template, error) {
 	return templates, nil
 }
 
-func (c Client) request(apiMethod string, payload []byte) (*responseData, error) {
+func (c Client) postRequest(apiMethod string, payload []byte) (*responseData, error) {
 	req, err := http.NewRequest("POST", slackApi+"/"+apiMethod, bytes.NewReader(payload))
 	if err != nil {
 		return nil, err

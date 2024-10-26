@@ -141,6 +141,6 @@ func (c Client) JoinChannel(channel string) error {
 		return err
 	}
 
-	_, err = c.request("conversations.join", marshalled)
+	_, err = c.postRequest("conversations.join", marshalled)
 	return err
 }

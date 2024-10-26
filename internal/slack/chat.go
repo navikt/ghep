@@ -5,7 +5,7 @@ import (
 )
 
 func (c Client) PostMessage(payload []byte) (string, error) {
-	resp, err := c.request("chat.postMessage", payload)
+	resp, err := c.postRequest("chat.postMessage", payload)
 	if err != nil {
 		return "", fmt.Errorf("error posting message to Slack: %v", err)
 	}
