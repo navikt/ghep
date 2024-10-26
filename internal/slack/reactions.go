@@ -26,7 +26,7 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 		reaction = "x"
 	}
 
-	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", channel)
+	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", channel, "timestamp", timestamp)
 	if err := c.reactionRequest("add", channel, timestamp, reaction); err != nil {
 		return fmt.Errorf("posting reaction to workflow event: %v", err)
 	}
