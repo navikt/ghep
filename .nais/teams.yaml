@@ -87,3 +87,9 @@ data:
       issues: "#team-fager-bots"
       pulls: "#team-fager-bots"
       workflows: "#team-fager-bots"
+    arbeidsforhold:
+      pulls: "#team-arbeidsforhold-github"
+      workflows: "#team-arbeidsforhold-github"
+      config:
+        workflows:
+          branches: ["main"]
