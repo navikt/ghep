@@ -43,6 +43,10 @@ func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, curre
 
 	for _, reaction := range reactions {
 		if reaction != current_reaction {
+			if reaction == "x" {
+				continue
+			}
+
 			log.Info("Removing reaction", "reaction", reaction)
 			if err := c.reactionRequest("remove", channel, timestamp, reaction); err != nil {
 				return fmt.Errorf("removing reaction: %v", err)
