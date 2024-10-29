@@ -32,6 +32,7 @@ type Config struct {
 	ExternalContributorsChannel string           `yaml:"externalContributorsChannel"`
 	Workflows                   Workflows        `yaml:"workflows"`
 	silenceDepedabot            DependabotConfig `yaml:"silenceDepedabot"`
+	IgnoreRepositories          []string         `yaml:"ignoreRepositories"`
 }
 
 func (c Config) SilenceDepedabot() bool {

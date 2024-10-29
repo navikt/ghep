@@ -40,6 +40,10 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		return nil
 	}
 
+	if slices.Contains(team.Config.IgnoreRepositories, event.FindRepositoryName()) {
+		return nil
+	}
+
 	payload, err := h.handle(ctx, log, team, event)
 	if err != nil {
 		return err

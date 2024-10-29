@@ -20,6 +20,20 @@ nada:
 Vi har også støtte for litt konfigurering.
 Dette legges under `teamnavn.config` og hver sin type.
 
+#### Team configuration
+
+``` yaml
+team:
+  config:
+    ignoreRepositories:
+	  - repoA
+	  - repoB
+	silenceDependabot: always
+```
+
+- `ignoreRepositories` - En liste med repositories man ikke ønsker hendelser fra
+- `silenceDependabot` - Hvis denne blir satt til `alwyas` så ignorer man alle hendelser fra Dependabot
+
 #### Issues and pull requests
 
 Disse konfigurasjonene gjelder for både issues og pull requests.
@@ -45,18 +59,6 @@ team:
 
 - `ignoreBots` - Ikke få Slack-melding om workflows som feiler for bots (for eksempel Dependabot)
 - `branches` - Få kun Slack-melding om workflows som feiler for spesifikke branches
-
-#### Dependabot
-
-Noen ganger er man ikke interessert i hva Dependabot holder på med, og da kan man ha behov for å ignorere hendelser fra Dependabot.
-
-``` yaml
-team:
-  config:
-    silenceDependabot: always
-```
-
-- `silenceDependabot` - Hvis denne blir satt til `alwyas` så ignorer man alle hendelser fra Dependabot
 
 ## Lokal utvikling
 
