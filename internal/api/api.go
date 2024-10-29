@@ -73,15 +73,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func findTeam(teams []github.Team, event github.Event) (github.Team, bool) {
-	repositoryName := ""
-	switch event.Action {
-	case "renamed":
-		repositoryName = event.Changes.Repository.Name.From
-	case "removed":
-		repositoryName = event.RepositoriesRemoved[0].Name
-	default:
-		repositoryName = event.Repository.Name
-	}
+	repositoryName := event.FindRepositoryName()
 
 	for _, team := range teams {
 		for _, repo := range team.Repositories {
