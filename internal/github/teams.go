@@ -9,13 +9,10 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	"text/template"
 	"time"
 
 	"gopkg.in/yaml.v3"
 )
-
-const githubAPITeamEndpointTmpl = "{{ .url }}/orgs/{{ .org }}/teams/{{ .team }}"
 
 type Workflows struct {
 	Branches   []string `yaml:"branches"`
@@ -245,16 +242,6 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, 
 		return nil, fmt.Errorf("parsing team config: %v", err)
 	}
 
-	tmpl, err := template.New("github").Parse(githubAPITeamEndpointTmpl)
-	if err != nil {
-		return nil, err
-	}
-
-	tmplData := map[string]string{
-		"url": c.apiURL,
-		"org": c.org,
-	}
-
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return nil, fmt.Errorf("creating bearer token: %v", err)
@@ -262,22 +249,18 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, 
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")
 
+	url := fmt.Sprintf("https://api.github.com/orgs/%s/teams", c.org)
+
 	for i, team := range teams {
-		tmplData["team"] = team.Name
-
-		var url strings.Builder
-		if err := tmpl.Execute(&url, tmplData); err != nil {
-			return nil, err
-		}
-
-		repos, err := fetchTeamsRepositories(url.String(), bearerToken, reposBlocklist)
+		teamUrl := fmt.Sprintf("%s/%s", url, team.Name)
+		repos, err := fetchTeamsRepositories(teamUrl, bearerToken, reposBlocklist)
 		if err != nil {
 			return nil, err
 		}
 
 		team.Repositories = repos
 
-		members, err := fetchTeamMembers(url.String(), bearerToken)
+		members, err := fetchTeamMembers(teamUrl, bearerToken)
 		if err != nil {
 			return nil, err
 		}
