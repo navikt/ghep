@@ -31,12 +31,12 @@ const (
 type Config struct {
 	ExternalContributorsChannel string           `yaml:"externalContributorsChannel"`
 	Workflows                   Workflows        `yaml:"workflows"`
-	silenceDepedabot            DependabotConfig `yaml:"silenceDepedabot"`
+	SilenceDependabot           DependabotConfig `yaml:"silenceDepedabot"`
 	IgnoreRepositories          []string         `yaml:"ignoreRepositories"`
 }
 
 func (c Config) SilenceDepedabot() bool {
-	return c.silenceDepedabot == DependabotConfigAlways
+	return c.SilenceDependabot == DependabotConfigAlways
 }
 
 type SlackChannels struct {
