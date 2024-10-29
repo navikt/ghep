@@ -46,6 +46,18 @@ team:
 - `ignoreBots` - Ikke få Slack-melding om workflows som feiler for bots (for eksempel Dependabot)
 - `branches` - Få kun Slack-melding om workflows som feiler for spesifikke branches
 
+#### Dependabot
+
+Noen ganger er man ikke interessert i hva Dependabot holder på med, og da kan man ha behov for å ignorere hendelser fra Dependabot.
+
+``` yaml
+team:
+  config:
+    silenceDependabot: always
+```
+
+- `silenceDependabot` - Hvis denne blir satt til `alwyas` så ignorer man alle hendelser fra Dependabot
+
 ## Lokal utvikling
 
 Kjør opp Redis for testing med Docker.

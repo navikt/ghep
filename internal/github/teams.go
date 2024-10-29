@@ -22,9 +22,20 @@ type Workflows struct {
 	IgnoreBots bool     `yaml:"ignoreBots"`
 }
 
+type DependabotConfig string
+
+const (
+	DependabotConfigAlways DependabotConfig = "always"
+)
+
 type Config struct {
-	ExternalContributorsChannel string    `yaml:"externalContributorsChannel"`
-	Workflows                   Workflows `yaml:"workflows"`
+	ExternalContributorsChannel string           `yaml:"externalContributorsChannel"`
+	Workflows                   Workflows        `yaml:"workflows"`
+	silenceDepedabot            DependabotConfig `yaml:"silenceDepedabot"`
+}
+
+func (c Config) SilenceDepedabot() bool {
+	return c.silenceDepedabot == DependabotConfigAlways
 }
 
 type SlackChannels struct {
