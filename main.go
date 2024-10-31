@@ -19,7 +19,6 @@ func main() {
 	log.Info("Starting Ghep")
 	githubClient := github.New(
 		log.With("component", "github"),
-		os.Getenv("GITHUB_API"),
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
 		os.Getenv("GITHUB_APP_ID"),
 		os.Getenv("GITHUB_APP_PRIVATE_KEY"),
