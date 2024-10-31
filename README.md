@@ -26,9 +26,9 @@ Dette legges under `teamnavn.config` og hver sin type.
 team:
   config:
     ignoreRepositories:
-	  - repoA
-	  - repoB
-	silenceDependabot: always
+      - repoA
+      - repoB
+    silenceDependabot: always
 ```
 
 - `ignoreRepositories` - En liste med repositories man ikke ønsker hendelser fra
