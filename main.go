@@ -86,7 +86,7 @@ func main() {
 	}
 
 	log.Info("Starting API server")
-	if err := api.Run(addr); err != nil {
+	if err := api.Run(os.Getenv("API_BASE_PATH"), addr); err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}

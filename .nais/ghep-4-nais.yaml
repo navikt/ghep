@@ -45,6 +45,8 @@ spec:
       value: nais
     - name: GHEP_SUBSCRIBE_TO_ORG
       value: "true"
+    - name: API_BASE_PATH
+      value: "/nais"
   filesFrom:
     - configmap: ghep-teams-nais
       mountPath: /var/run/configmaps
