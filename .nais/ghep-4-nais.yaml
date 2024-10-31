@@ -46,7 +46,7 @@ spec:
     - name: GHEP_SUBSCRIBE_TO_ORG
       value: "true"
   filesFrom:
-    - configmap: ghep-teams
+    - configmap: ghep-teams-nais
       mountPath: /var/run/configmaps
   envFrom:
     - secret: ghep-nais
