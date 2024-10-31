@@ -24,7 +24,7 @@ spec:
     - name: GITHUB_ORG
       value: navikt
     - name: GITHUB_BLOCKLIST_REPOS
-      value: "vault-iac,aad-iac"
+      value: "vault-iac,aad-iac,nav-api-portal"
   filesFrom:
     - configmap: ghep-teams
       mountPath: /var/run/configmaps
