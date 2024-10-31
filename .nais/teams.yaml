@@ -92,6 +92,6 @@ data:
       workflows: "#team-arbeidsforhold-github"
       config:
         ignoreRepositories:
-          - arbeid-og-inntekt
+          - "arbeid-og-inntekt"
         workflows:
           branches: ["main"]
