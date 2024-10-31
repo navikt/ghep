@@ -52,7 +52,9 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var team github.Team
-	if event.Team == nil {
+	if event.Team != nil {
+		team.Name = event.Team.Name
+	} else {
 		var found bool
 
 		team, found = findTeam(c.teams, event)
