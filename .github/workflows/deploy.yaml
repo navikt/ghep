@@ -44,6 +44,6 @@ jobs:
     - uses: nais/deploy/actions/deploy@v2
       env:
         CLUSTER: prod-gcp
-        RESOURCE: .nais/teams.yaml,.nais/nais.yaml,,nais/ghep-4-nais.yaml
+        RESOURCE: .nais/teams.yaml,.nais/nais.yaml,.nais/ghep-4-nais.yaml
         VAR: image=${{ needs.build.outputs.image }}
         TELEMETRY: ${{ needs.build.outputs.telemetry }}
