@@ -29,7 +29,7 @@ func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []g
 
 func (c Client) Run(base, addr string) error {
 	http.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
-	http.HandleFunc(fmt.Sprintf("GET %s/internal/health", base), c.healthGetHandler)
+	http.HandleFunc("GET /internal/health", c.healthGetHandler)
 	return http.ListenAndServe(addr, nil)
 }
 
