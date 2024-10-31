@@ -25,5 +25,8 @@ go.work
 
 # Test environment
 *.env
+.env.nais
 teams.yaml
+teams-nais.yaml
 github.pem
+github-nais.pem

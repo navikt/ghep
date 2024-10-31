@@ -16,7 +16,8 @@ import (
 func main() {
 	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
-	log.Info("Starting Ghep")
+	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
+
 	githubClient := github.New(
 		log.With("component", "github"),
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
@@ -29,6 +30,7 @@ func main() {
 	teams, err := githubClient.FetchTeams(
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
+		os.Getenv("GHEP_SUBSCRIBE_TO_ORG"),
 	)
 	if err != nil {
 		log.Error("fetching teams from Github", "err", err.Error())

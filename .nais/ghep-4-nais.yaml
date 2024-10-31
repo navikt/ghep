@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ghep-teams-nais
+  namespace: the-g-team
+  labels:
+    team: the-g-team
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  teams.yaml: |
+    nais:
+      commits: "#nais-test-commits"
+      issues: "#nais-test-commits"
+      pulls: "#nais-test-commits"
+      workflows: "#nais-test-commits"
+      config:
+        silenceDependabot: always
+---
+
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: ghep-nais
+  namespace: the-g-team
+  labels:
+    team: the-g-team
+spec:
+  image: {{ image }}
+  ingresses:
+    - https://ghep.nav.no/nais
+  replicas:
+      max: 2
+      min: 1
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 20m
+      memory: 16Mi
+  env:
+    - name: REPOS_CONFIG_FILE_PATH
+      value: /var/run/configmaps/teams.yaml
+    - name: GITHUB_ORG
+      value: nais
+    - name: GHEP_SUBSCRIBE_TO_ORG
+      value: "true"
+  filesFrom:
+    - configmap: ghep-teams
+      mountPath: /var/run/configmaps
+  envFrom:
+    - secret: ghep-nais
+  observability:
+    logging:
+      destinations:
+        - id: loki
+  accessPolicy:
+    outbound:
+      external:
+        - host: api.github.com
+        - host: slack.com
+        - ipv4: 3.68.124.95
+        - ipv4: 52.29.238.212
+        - ipv4: 3.68.175.98
+        - ipv4: 18.159.197.225
+        - ipv4: 3.68.124.168
+        - ipv4: 3.68.170.153
+  readiness:
+    path: /internal/health
+    initialDelay: 60
+    periodSeconds: 15
+  liveness:
+    path: /internal/health
+    initialDelay: 90
+  redis:
+    - instance: events
+      access: readwrite

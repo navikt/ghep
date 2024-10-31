@@ -82,7 +82,7 @@ func (t *Team) RemoveRepository(remove string) {
 	}
 }
 
-func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
+func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
 	req, err := http.NewRequest("GET", teamURL+"/repos", nil)
 	if err != nil {
 		return nil, err
@@ -150,9 +150,10 @@ func fetchTeamsRepositories(teamURL, bearerToken string, blocklist []string) ([]
 	return repos, nil
 }
 
-// fetchTeamMembers fetches members for a Github team using the following API:
-// https://docs.github.com/en/rest/teams/members#list-team-members
-func fetchTeamMembers(teamURL, bearerToken string) ([]User, error) {
+// fetchMembers fetches members for a Github org or team using the following API:
+// Team: https://docs.github.com/en/rest/teams/members#list-team-members
+// Org: https://docs.github.com/en/rest/orgs/members#list-organization-members
+func fetchMembers(teamURL, bearerToken string) ([]User, error) {
 	req, err := http.NewRequest("GET", teamURL+"/members", nil)
 	if err != nil {
 		return nil, err
@@ -236,7 +237,7 @@ func removeLeadingHash(channels SlackChannels) SlackChannels {
 	return channels
 }
 
-func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, error) {
+func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg string) ([]Team, error) {
 	teams, err := parseTeamConfig(teamsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("parsing team config: %v", err)
@@ -249,18 +250,36 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string) ([]Team, 
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")
 
+	if subscribeToOrg == "true" {
+		url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
+		repos, err := fetchRepositories(url, bearerToken, reposBlocklist)
+		if err != nil {
+			return nil, err
+		}
+
+		teams[0].Repositories = repos
+		members, err := fetchMembers(url, bearerToken)
+		if err != nil {
+			return nil, err
+		}
+
+		teams[0].Members = members
+
+		return teams, nil
+	}
+
 	url := fmt.Sprintf("https://api.github.com/orgs/%s/teams", c.org)
 
 	for i, team := range teams {
 		teamUrl := fmt.Sprintf("%s/%s", url, team.Name)
-		repos, err := fetchTeamsRepositories(teamUrl, bearerToken, reposBlocklist)
+		repos, err := fetchRepositories(teamUrl, bearerToken, reposBlocklist)
 		if err != nil {
 			return nil, err
 		}
 
 		team.Repositories = repos
 
-		members, err := fetchTeamMembers(teamUrl, bearerToken)
+		members, err := fetchMembers(teamUrl, bearerToken)
 		if err != nil {
 			return nil, err
 		}
