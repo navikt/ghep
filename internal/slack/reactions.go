@@ -14,12 +14,19 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 		reaction = "eyes"
 	} else if event.Action == "in_progress" && event.Workflow.Status == "in_progress" {
 		reaction = "hourglass_flowing_sand"
-	} else if event.Action == "completed" && event.Workflow.Conclusion == "success" {
-		reaction = "white_check_mark"
-	} else if event.Action == "completed" && event.Workflow.Conclusion == "failure" {
-		reaction = "x"
-	} else {
-		log.Info("No reaction found for event (still reacting)", "event", event)
+	} else if event.Action == "completed" {
+		switch event.Workflow.Conclusion {
+		case "success":
+			reaction = "white_check_mark"
+		case "failure":
+			reaction = "x"
+		case "cancelled":
+			reaction = "parking"
+		}
+	}
+
+	if reaction == "dogcited" {
+		log.Info("No reaction found for event (still reacting)", "action", event.Action, "status", event.Workflow.Status, "conclusion", event.Workflow.Conclusion, "event", event)
 	}
 
 	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", channel, "timestamp", timestamp)
