@@ -35,7 +35,7 @@ jobs:
         identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # Provided as Organization Secret
         project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # Provided as Organization Variable
 
-  prod:
+  ghep:
     needs:
       - build
     runs-on: ubuntu-latest
@@ -44,6 +44,19 @@ jobs:
     - uses: nais/deploy/actions/deploy@v2
       env:
         CLUSTER: prod-gcp
-        RESOURCE: .nais/teams.yaml,.nais/nais.yaml,.nais/ghep-4-nais.yaml
+        RESOURCE: .nais/teams.yaml,.nais/nais.yaml
+        VAR: image=${{ needs.build.outputs.image }}
+        TELEMETRY: ${{ needs.build.outputs.telemetry }}
+
+  ghep-nais:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: nais/deploy/actions/deploy@v2
+      env:
+        CLUSTER: prod-gcp
+        RESOURCE: .nais/ghep-4-nais.yaml
         VAR: image=${{ needs.build.outputs.image }}
         TELEMETRY: ${{ needs.build.outputs.telemetry }}
