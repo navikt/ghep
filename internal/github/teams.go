@@ -28,7 +28,7 @@ const (
 type Config struct {
 	ExternalContributorsChannel string           `yaml:"externalContributorsChannel"`
 	Workflows                   Workflows        `yaml:"workflows"`
-	SilenceDependabot           DependabotConfig `yaml:"silenceDepedabot"`
+	SilenceDependabot           DependabotConfig `yaml:"silenceDependabot"`
 	IgnoreRepositories          []string         `yaml:"ignoreRepositories"`
 }
 
