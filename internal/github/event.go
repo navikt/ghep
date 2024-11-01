@@ -20,6 +20,10 @@ func (u User) ToSlack() string {
 	return fmt.Sprintf("<%s|%s>", u.URL, u.Login)
 }
 
+func (u User) IsDependabot() bool {
+	return u.Login == "dependabot[bot]" || u.Login == "github-actions[bot]"
+}
+
 type Author struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
