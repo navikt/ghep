@@ -93,5 +93,6 @@ data:
       config:
         ignoreRepositories:
           - "arbeid-og-inntekt"
+          - "nav-maskinporten"
         workflows:
           branches: ["main"]
