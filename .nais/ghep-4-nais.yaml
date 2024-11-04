@@ -10,10 +10,10 @@ metadata:
 data:
   teams.yaml: |
     nais:
-      commits: "#nais-test-commits"
-      issues: "#nais-test-commits"
-      pulls: "#nais-test-commits"
-      workflows: "#nais-test-commits"
+      commits: "#nais-commits"
+      issues: "#nais-issues"
+      pulls: "#nais-pull-requests"
+      workflows: "#nais-ci"
       config:
         silenceDependabot: always
 ---
