@@ -88,9 +88,13 @@ func (c Client) reactionRequest(method, channel, timestamp, reaction string) err
 	}
 
 	resp, err := c.postRequest("reactions."+method, marshalled)
-	if err != nil && resp != nil && resp.Error == "already_reacted" {
-		return nil
+	if err != nil {
+		if resp != nil && resp.Error == "already_reacted" {
+			return nil
+		}
+
+		return err
 	}
 
-	return err
+	return nil
 }
