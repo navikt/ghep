@@ -51,10 +51,10 @@ type githubResponse struct {
 	} `json:"errors"`
 }
 
-func (c Client) GetUserByEmail(email string) (User, error) {
+func (c Client) GetUserByEmail(email string) (*User, error) {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
-		return User{}, fmt.Errorf("creating bearer token: %v", err)
+		return nil, fmt.Errorf("creating bearer token: %v", err)
 	}
 
 	query := map[string]interface{}{
@@ -67,12 +67,12 @@ func (c Client) GetUserByEmail(email string) (User, error) {
 
 	body, err := json.Marshal(query)
 	if err != nil {
-		return User{}, fmt.Errorf("marshalling query: %v", err)
+		return nil, fmt.Errorf("marshalling query: %v", err)
 	}
 
 	req, err := http.NewRequest(http.MethodPost, graphqlEndpoint, bytes.NewBuffer(body))
 	if err != nil {
-		return User{}, err
+		return nil, err
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearerToken))
@@ -84,17 +84,17 @@ func (c Client) GetUserByEmail(email string) (User, error) {
 
 	httpResp, err := httpClient.Do(req)
 	if err != nil {
-		return User{}, fmt.Errorf("doing request: %v", err)
+		return nil, fmt.Errorf("doing request: %v", err)
 	}
 	defer httpResp.Body.Close()
 
 	var githubResp githubResponse
 	if err := json.NewDecoder(httpResp.Body).Decode(&githubResp); err != nil {
-		return User{}, fmt.Errorf("decoding response: %v", err)
+		return nil, fmt.Errorf("decoding response: %v", err)
 	}
 
 	if httpResp.StatusCode != http.StatusOK {
-		return User{}, fmt.Errorf("error fetching user (%v): %s", httpResp.Status, githubResp.Errors)
+		return nil, fmt.Errorf("error fetching user (%v): %s", httpResp.Status, githubResp.Errors)
 	}
 
 	if len(githubResp.Errors) > 0 {
@@ -102,14 +102,14 @@ func (c Client) GetUserByEmail(email string) (User, error) {
 		for _, err := range githubResp.Errors {
 			fmt.Fprintf(&b, "%s (type=%s, path=[%s])\n", err.Message, err.Type, strings.Join(err.Path, " "))
 		}
-		return User{}, fmt.Errorf("graphql error: %s", b.String())
+		return nil, fmt.Errorf("graphql error: %s", b.String())
 	}
 
 	if len(githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes) == 0 {
-		return User{}, fmt.Errorf("no user found")
+		return nil, nil
 	}
 
-	return User{
+	return &User{
 		Login: githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.Login,
 		Name:  githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.Name,
 		URL:   githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.URL,

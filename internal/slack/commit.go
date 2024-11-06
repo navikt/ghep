@@ -70,7 +70,9 @@ func fetchCoAuthors(log *slog.Logger, githubClient github.Userer, commit github.
 				log.Error("Failed to get user by email", "email", email, "error", err)
 			}
 
-			user = userWithEmail
+			if userWithEmail != nil {
+				user = *userWithEmail
+			}
 		}
 
 		coAuthors = append(coAuthors, user)

@@ -3,7 +3,7 @@ package github
 import "log/slog"
 
 type Userer interface {
-	GetUserByEmail(email string) (User, error)
+	GetUserByEmail(email string) (*User, error)
 }
 
 type Client struct {
