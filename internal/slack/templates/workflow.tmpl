@@ -4,7 +4,7 @@
   {{- if .FailedJob }}
   "attachments": [
      {
-       "text": "Failed job:\n- <{{ .FailedJob.URL }}|{{ .FailedJob.Name }}>",
+       "text": "Failed job:\n- <{{ .FailedJob.URL }}|{{ .FailedJob.Name }} &gt; {{ .FailedJob.Step }}>",
        "color": "#d02434"
      }
   ],{{ end }}

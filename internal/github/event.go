@@ -82,9 +82,9 @@ type TeamEvent struct {
 }
 
 type FailedJob struct {
-	Name       string `json:"name"`
-	URL        string `json:"html_url"`
-	Conclusion string `json:"conclusion"`
+	Name string
+	URL  string
+	Step string
 }
 
 type Workflow struct {
@@ -100,8 +100,16 @@ type Workflow struct {
 }
 
 func (w *Workflow) UpdateFailedJob() error {
-	type workflowJobs struct {
-		Jobs []FailedJob `json:"jobs"`
+	type Workflow struct {
+		Jobs []struct {
+			Name       string `json:"name"`
+			URL        string `json:"html_url"`
+			Conclusion string `json:"conclusion"`
+			Steps      []struct {
+				Name        string `json:"name"`
+				Conclusions string `json:"conclusion"`
+			} `json:"steps"`
+		} `json:"jobs"`
 	}
 
 	httpClient := http.Client{
@@ -115,15 +123,24 @@ func (w *Workflow) UpdateFailedJob() error {
 
 	defer resp.Body.Close()
 
-	var jobs workflowJobs
+	var jobs Workflow
 	if err := json.NewDecoder(resp.Body).Decode(&jobs); err != nil {
 		return fmt.Errorf("decoding jobs: %w", err)
 	}
 
 	for _, job := range jobs.Jobs {
 		if job.Conclusion == "failure" {
-			w.FailedJob = job
-			return nil
+			for _, step := range job.Steps {
+				if step.Conclusions == "failure" {
+					w.FailedJob = FailedJob{
+						Name: job.Name,
+						URL:  job.URL,
+						Step: step.Name,
+					}
+
+					return nil
+				}
+			}
 		}
 	}
 
