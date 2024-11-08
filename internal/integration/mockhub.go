@@ -7,8 +7,8 @@ import (
 type mockHub struct {
 }
 
-func (m mockHub) GetUserByEmail(email string) (github.User, error) {
-	return map[string]github.User{
+func (m mockHub) GetUserByEmail(email string) (*github.User, error) {
+	return map[string]*github.User{
 		"andre.roaldseth@nav.no": {
 			Login: "androa",
 			URL:   "https://github.com/androa",
