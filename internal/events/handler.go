@@ -131,6 +131,10 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			}
 		}
 
+		if err := event.Workflow.UpdateFailedJob(); err != nil {
+			log.Error("error updating failed job", "err", err.Error())
+		}
+
 		return handleWorkflowEvent(log, h.slack.WorkflowTmpl(), team, event)
 	} else {
 		log.Info("unknown event type")

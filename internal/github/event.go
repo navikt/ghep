@@ -3,6 +3,8 @@ package github
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"time"
 )
 
 type User struct {
@@ -79,6 +81,12 @@ type TeamEvent struct {
 	URL  string `json:"html_url"`
 }
 
+type FailedJob struct {
+	Name   string `json:"name"`
+	URL    string `json:"html_url"`
+	Status string `json:"status"`
+}
+
 type Workflow struct {
 	HeadBranch string `json:"head_branch"`
 	HeadSHA    string `json:"head_sha"`
@@ -87,6 +95,45 @@ type Workflow struct {
 	Title      string `json:"display_title"`
 	RunNumber  int    `json:"run_number"`
 	URL        string `json:"html_url"`
+	JobsURL    string `json:"jobs_url"`
+	FailedJob  FailedJob
+}
+
+func (w *Workflow) UpdateFailedJob() error {
+	type job struct {
+		Name       string `json:"name"`
+		Status     string `json:"status"`
+		Conclusion string `json:"conclusion"`
+	}
+
+	type workflowJobs struct {
+		Jobs []FailedJob `json:"jobs"`
+	}
+
+	httpClient := http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	resp, err := httpClient.Get(w.JobsURL)
+	if err != nil {
+		return fmt.Errorf("getting jobs: %w", err)
+	}
+
+	defer resp.Body.Close()
+
+	var jobs workflowJobs
+	if err := json.NewDecoder(resp.Body).Decode(&jobs); err != nil {
+		return fmt.Errorf("decoding jobs: %w", err)
+	}
+
+	for _, job := range jobs.Jobs {
+		if job.Status == "failure" {
+			w.FailedJob = job
+			return nil
+		}
+	}
+
+	return nil
 }
 
 type Event struct {

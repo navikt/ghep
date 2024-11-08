@@ -15,12 +15,14 @@ func CreateWorkflowMessage(tmpl template.Template, channel string, event github.
 		Sender     github.User
 		Status     string
 		Workflow   *github.Workflow
+		FailedJob  github.FailedJob
 	}
 	payload := text{
 		Channel:    channel,
 		Repository: event.Repository,
 		Sender:     event.Sender,
 		Workflow:   event.Workflow,
+		FailedJob:  event.Workflow.FailedJob,
 	}
 
 	var output bytes.Buffer
