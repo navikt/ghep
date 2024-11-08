@@ -82,9 +82,9 @@ type TeamEvent struct {
 }
 
 type FailedJob struct {
-	Name   string `json:"name"`
-	URL    string `json:"html_url"`
-	Status string `json:"status"`
+	Name       string `json:"name"`
+	URL        string `json:"html_url"`
+	Conclusion string `json:"conclusion"`
 }
 
 type Workflow struct {
@@ -100,12 +100,6 @@ type Workflow struct {
 }
 
 func (w *Workflow) UpdateFailedJob() error {
-	type job struct {
-		Name       string `json:"name"`
-		Status     string `json:"status"`
-		Conclusion string `json:"conclusion"`
-	}
-
 	type workflowJobs struct {
 		Jobs []FailedJob `json:"jobs"`
 	}
@@ -127,7 +121,7 @@ func (w *Workflow) UpdateFailedJob() error {
 	}
 
 	for _, job := range jobs.Jobs {
-		if job.Status == "failure" {
+		if job.Conclusion == "failure" {
 			w.FailedJob = job
 			return nil
 		}
