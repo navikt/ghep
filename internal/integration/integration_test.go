@@ -99,6 +99,7 @@ func TestHandleEvent(t *testing.T) {
 				event.Workflow.FailedJob = github.FailedJob{
 					Name: "job",
 					URL:  "https://url.com",
+					Step: "step",
 				}
 
 				got, err = slack.CreateWorkflowMessage(slackTemplates["workflow"], slackChannel, event)
