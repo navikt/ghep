@@ -1,7 +1,7 @@
 {
   "channel": "{{ .Channel }}",
   "text": ":x: The workflow <{{ .Workflow.URL }}|#{{ .Workflow.RunNumber }} {{ .Workflow.Title }}> triggered by <{{ .Sender.URL }}|{{ .Sender.Login }}> in the repository <{{ .Repository.URL }}|{{ .Repository.Name }}> has the status `{{ .Workflow.Conclusion }}`",
-  {{- if .FailedJob }}
+  {{- if ne .FailedJob.Name "" }}
   "attachments": [
      {
        "text": "Failed job:\n- <{{ .FailedJob.URL }}|{{ .FailedJob.Name }} &gt; {{ .FailedJob.Step }}>",
