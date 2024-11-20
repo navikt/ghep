@@ -15,8 +15,10 @@ const (
 )
 
 type Attachment struct {
-	Text  string `json:"text"`
-	Color string `json:"color"`
+	Text       string `json:"text"`
+	Color      string `json:"color"`
+	Footer     string `json:"footer,omitempty"`
+	FooterIcon string `json:"footer_icon,omitempty"`
 }
 
 type Message struct {

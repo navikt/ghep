@@ -50,6 +50,7 @@ type Changes struct {
 
 type Repository struct {
 	Name          string `json:"name"`
+	FullName      string `json:"full_name"`
 	URL           string `json:"html_url"`
 	DefaultBranch string `json:"default_branch"`
 	RoleName      string `json:"role_name"`
