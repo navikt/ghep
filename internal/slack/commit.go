@@ -1,36 +1,14 @@
 package slack
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"log/slog"
 	"regexp"
 	"slices"
 	"strings"
-	"text/template"
 
 	"github.com/navikt/ghep/internal/github"
 )
-
-func createAttachmentsText(commits []github.Commit) (string, error) {
-	var attachementText strings.Builder
-	for _, c := range commits {
-		firstLine := strings.Split(c.Message, "\n")[0]
-
-		attachementText.WriteString(fmt.Sprintf("`<%s|%s>` - %s\n", c.URL, c.ID[:8], firstLine))
-	}
-
-	var marshalled bytes.Buffer
-	enc := json.NewEncoder(&marshalled)
-	enc.SetEscapeHTML(false)
-
-	if err := enc.Encode(attachementText.String()); err != nil {
-		return "", fmt.Errorf("marshalling commit messages: %w", err)
-	}
-
-	return strings.TrimSuffix(marshalled.String(), "\n"), nil
-}
 
 func fetchCoAuthors(log *slog.Logger, githubClient github.Userer, commit github.Commit) ([]github.User, error) {
 	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <(.*)>`)
@@ -149,43 +127,38 @@ func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Ev
 	return senders, nil
 }
 
-func CreateCommitMessage(log *slog.Logger, tmpl template.Template, channel string, event github.Event, team github.Team, githubClient github.Userer) ([]byte, error) {
-	type text struct {
-		Channel         string
-		URL             string
-		Repository      string
-		Senders         string
-		NumberOfCommits int
-		AttachmentsText string
-		Compare         string
-	}
-
-	payload := text{
-		Channel:         channel,
-		URL:             event.Repository.URL,
-		Repository:      event.Repository.Name,
-		NumberOfCommits: len(event.Commits),
-		Compare:         event.Compare,
-	}
-
-	attachmentsText, err := createAttachmentsText(event.Commits)
-	if err != nil {
-		return nil, fmt.Errorf("creating attachments text: %w", err)
-	}
-
-	payload.AttachmentsText = attachmentsText
-
+func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, team github.Team, githubClient github.Userer) (*Message, error) {
 	authors, err := createAuthors(log, githubClient, event, team)
 	if err != nil {
 		return nil, fmt.Errorf("creating authors: %w", err)
 	}
 
-	payload.Senders = authors
+	text := fmt.Sprintf("<%s|%d new commits> pushed to `<%s|%s>` by %s.", event.Compare, len(event.Commits), event.Repository.URL, event.Repository.Name, authors)
 
-	var output bytes.Buffer
-	if err := tmpl.Execute(&output, payload); err != nil {
-		return nil, fmt.Errorf("executing commit template: %w", err)
+	var attachmentText strings.Builder
+	for _, c := range event.Commits {
+		firstLine := strings.Split(c.Message, "\n")[0]
+
+		attachmentText.WriteString(fmt.Sprintf("`<%s|%s>` - %s\n", c.URL, c.ID[:8], firstLine))
 	}
 
-	return output.Bytes(), nil
+	attachments := []Attachment{
+		{
+			Text:  attachmentText.String(),
+			Color: "#000",
+		},
+	}
+
+	if event.Workflow != nil && event.Workflow.FailedJob.Name != "" {
+		attachments = append(attachments, Attachment{
+			Text:  fmt.Sprintf("The job <%s|%s> failed in step `%s`.", event.Workflow.FailedJob.URL, event.Workflow.FailedJob.Name, event.Workflow.FailedJob.Step),
+			Color: "#000",
+		})
+	}
+
+	return &Message{
+		Channel:     channel,
+		Text:        text,
+		Attachments: attachments,
+	}, nil
 }

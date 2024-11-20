@@ -1,11 +1,11 @@
 {
   "channel": "#test",
-  "text": "<https://github.com/navikt/helse-spleis/compare/6e7b7d626d5a...ec9404c58375|1 new commits> pushed to `<https://github.com/navikt/helse-spleis|helse-spleis>` by <https://github.com/davidsteinsland|davidsteinsland>",
+  "text": "<https://github.com/navikt/helse-spleis/compare/6e7b7d626d5a...ec9404c58375|1 new commits> pushed to `<https://github.com/navikt/helse-spleis|helse-spleis>` by <https://github.com/davidsteinsland|davidsteinsland>.",
   "attachments": [
-     {
-       "text": "`<https://github.com/navikt/helse-spleis/commit/ec9404c58375635c568f5a88059f8f854beaeb24|ec9404c5>` - sender event når generasjoner forkastes\n",
-       "color": "#000"
-     }
+    {
+      "text": "`<https://github.com/navikt/helse-spleis/commit/ec9404c58375635c568f5a88059f8f854beaeb24|ec9404c5>` - sender event når generasjoner forkastes\n",
+      "color": "#000"
+    }
   ],
   "unfurl_links": false,
   "unfurl_media": false

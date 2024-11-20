@@ -1,11 +1,11 @@
 {
   "channel": "#test",
-  "text": "Pull request <https://github.com/navikt/datafortelling-proxy/pull/1|#1> opened in `<https://github.com/navikt/datafortelling-proxy|datafortelling-proxy>` by <https://github.com/Kyrremann|Kyrremann>",
+  "text": "Pull request <https://github.com/navikt/datafortelling-proxy/pull/1|#1> opened in `<https://github.com/navikt/datafortelling-proxy|datafortelling-proxy>` by <https://github.com/Kyrremann|Kyrremann>.",
   "attachments": [
-     {
-       "text": "*<https://github.com/navikt/datafortelling-proxy/pull/1|#1> <https://github.com/navikt/datafortelling-proxy/pull/1|doc: en liten beskrivelse>*\n",
-       "color": "#34a44c"
-     }
+    {
+      "text": "*<https://github.com/navikt/datafortelling-proxy/pull/1|#1 doc: en liten beskrivelse>*\n",
+      "color": "#34a44c"
+    }
   ],
   "unfurl_links": false,
   "unfurl_media": false

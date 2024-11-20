@@ -1,40 +1,14 @@
 package slack
 
 import (
-	"bytes"
 	"fmt"
-	"text/template"
 
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateRenamedMessage(tmpl template.Template, channel string, event github.Event) ([]byte, error) {
-	type text struct {
-		Channel string
-		From    string
-		To      struct {
-			Name string
-			URL  string
-		}
-		Sender github.User
-	}
-	payload := text{
+func CreateRenamedMessage(channel string, event github.Event) *Message {
+	return &Message{
 		Channel: channel,
-		From:    event.Changes.Repository.Name.From,
-		To: struct {
-			Name string
-			URL  string
-		}{
-			Name: event.Repository.Name,
-			URL:  event.Repository.URL,
-		},
-		Sender: event.Sender,
+		Text:    fmt.Sprintf("<%s|%s> renamed the repository `%s` to <%s|%s>.", event.Sender.URL, event.Sender.Login, event.Changes.Repository.Name.From, event.Repository.URL, event.Repository.Name),
 	}
-
-	var output bytes.Buffer
-	if err := tmpl.Execute(&output, payload); err != nil {
-		return nil, fmt.Errorf("error executing template: %w", err)
-	}
-
-	return output.Bytes(), nil
 }

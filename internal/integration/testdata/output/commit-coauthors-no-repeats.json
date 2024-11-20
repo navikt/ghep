@@ -1,11 +1,11 @@
 {
   "channel": "#test",
-  "text": "<https://github.com/navikt/ghep/compare/d282e61d6e03...302d658af219|2 new commits> pushed to `<https://github.com/navikt/ghep|ghep>` by <https://github.com/Kyrremann|Kyrremann>, and <https://github.com/androa|androa>",
+  "text": "<https://github.com/navikt/ghep/compare/d282e61d6e03...302d658af219|2 new commits> pushed to `<https://github.com/navikt/ghep|ghep>` by <https://github.com/Kyrremann|Kyrremann>, and <https://github.com/androa|androa>.",
   "attachments": [
-     {
-       "text": "`<https://github.com/navikt/ghep/commit/302d658af2194e64020d33a00201cac3bc18a7e0|302d658a>` - upkeep: test av co-authored-by\n`<https://github.com/navikt/ghep/commit/32d6508af2194e64020d33a00201cac3bc187e0a|32d6508a>` - upkeep: enda en test av co-authored-by\n",
-       "color": "#000"
-     }
+    {
+      "text": "`<https://github.com/navikt/ghep/commit/302d658af2194e64020d33a00201cac3bc18a7e0|302d658a>` - upkeep: test av co-authored-by\n`<https://github.com/navikt/ghep/commit/32d6508af2194e64020d33a00201cac3bc187e0a|32d6508a>` - upkeep: enda en test av co-authored-by\n",
+      "color": "#000"
+    }
   ],
   "unfurl_links": false,
   "unfurl_media": false

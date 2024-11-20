@@ -1,11 +1,11 @@
 {
   "channel": "#test",
-  "text": "Issue <https://github.com/navikt/nada-internal/issues/4|#4> closed as completed in `<https://github.com/navikt/nada-internal|nada-internal>` by <https://github.com/Kyrremann|Kyrremann>",
+  "text": "Issue <https://github.com/navikt/nada-internal/issues/4|#4> closed as completed in `<https://github.com/navikt/nada-internal|nada-internal>` by <https://github.com/Kyrremann|Kyrremann>.",
   "attachments": [
-     {
-       "text": "*<https://github.com/navikt/nada-internal/issues/4|#4> <https://github.com/navikt/nada-internal/issues/4|Dette er en test>*",
-       "color": "#7044c4"
-     }
+    {
+      "text": "*<https://github.com/navikt/nada-internal/issues/4|#4 Dette er en test>*",
+      "color": "#7044c4"
+    }
   ],
   "unfurl_links": false,
   "unfurl_media": false

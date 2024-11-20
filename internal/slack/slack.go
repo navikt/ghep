@@ -2,24 +2,31 @@ package slack
 
 import (
 	"bytes"
-	"embed"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
-	"path/filepath"
-	"strings"
-	"text/template"
 	"time"
 )
-
-//go:embed templates/*.tmpl
-var templatesFS embed.FS
 
 const (
 	slackApi = "https://slack.com/api"
 )
+
+type Attachment struct {
+	Text  string `json:"text"`
+	Color string `json:"color"`
+}
+
+type Message struct {
+	Channel         string       `json:"channel"`
+	Text            string       `json:"text"`
+	Attachments     []Attachment `json:"attachments,omitempty"`
+	ThreadTimestamp string       `json:"thread_ts,omitempty"`
+	UnfurlLinks     bool         `json:"unfurl_links"`
+	UnfurlMedia     bool         `json:"unfurl_media"`
+}
 
 type Channel struct {
 	ID   string `json:"id"`
@@ -48,35 +55,6 @@ type Client struct {
 	log        *slog.Logger
 	httpClient *http.Client
 	token      string
-	templates  map[string]template.Template
-}
-
-func (c Client) CommitTmpl() template.Template {
-	return c.templates["commit"]
-}
-
-func (c Client) IssueTmpl() template.Template {
-	return c.templates["issue"]
-}
-
-func (c Client) PullRequestTmpl() template.Template {
-	return c.templates["pull"]
-}
-
-func (c Client) RemovedTmpl() template.Template {
-	return c.templates["removed"]
-}
-
-func (c Client) RenamedTmpl() template.Template {
-	return c.templates["renamed"]
-}
-
-func (c Client) TeamTmpl() template.Template {
-	return c.templates["team"]
-}
-
-func (c Client) WorkflowTmpl() template.Template {
-	return c.templates["workflow"]
 }
 
 func New(log *slog.Logger, token string) (Client, error) {
@@ -84,42 +62,15 @@ func New(log *slog.Logger, token string) (Client, error) {
 		return Client{}, fmt.Errorf("missing Slack token")
 	}
 
-	templates, err := ParseMessageTemplates()
-	if err != nil {
-		return Client{}, err
-	}
-
 	client := Client{
 		log: log,
 		httpClient: &http.Client{
 			Timeout: 10 * time.Second,
 		},
-		token:     token,
-		templates: templates,
+		token: token,
 	}
 
 	return client, nil
-}
-
-func ParseMessageTemplates() (map[string]template.Template, error) {
-	templates := map[string]template.Template{}
-
-	files, err := templatesFS.ReadDir("templates")
-	if err != nil {
-		return nil, err
-	}
-
-	for _, file := range files {
-		tmpl, err := template.ParseFS(templatesFS, "templates/"+file.Name())
-		if err != nil {
-			return nil, err
-		}
-
-		name := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
-		templates[name] = *tmpl
-	}
-
-	return templates, nil
 }
 
 func (c Client) postRequest(apiMethod string, payload []byte) (*responseData, error) {

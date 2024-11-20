@@ -3,18 +3,12 @@ package events
 import (
 	"log/slog"
 	"testing"
-	"text/template"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/navikt/ghep/internal/github"
 )
 
 func TestHandleCommitEvent(t *testing.T) {
-	tmpl, err := template.New("dummy").Parse("test")
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	team := github.Team{
 		Name: "test",
 		SlackChannels: github.SlackChannels{
@@ -78,7 +72,7 @@ func TestHandleCommitEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := handleCommitEvent(slog.Default(), *tmpl, team, tt.args.event, github.Client{})
+			got, err := handleCommitEvent(slog.Default(), team, tt.args.event, github.Client{})
 			if err != nil {
 				t.Error(err)
 			}
@@ -95,11 +89,6 @@ func TestHandleCommitEvent(t *testing.T) {
 }
 
 func TestHandleIssueAndPullEvent(t *testing.T) {
-	tmpl, err := template.New("dummy").Parse("{{ .Channel }}")
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	type args struct {
 		team  github.Team
 		event github.Event
@@ -243,21 +232,21 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			issue, err := handleIssueEvent(slog.Default(), *tmpl, tt.args.team, "", tt.args.event)
+			issue, err := handleIssueEvent(slog.Default(), tt.args.team, "", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
 
-			if diff := cmp.Diff(tt.want, string(issue)); diff != "" {
+			if diff := cmp.Diff(tt.want, issue.Channel); diff != "" {
 				t.Errorf("handleIssueEvent() mismatch (-want +got):\n%s", diff)
 			}
 
-			pull, err := handlePullRequestEvent(slog.Default(), *tmpl, tt.args.team, "", tt.args.event)
+			pull, err := handlePullRequestEvent(slog.Default(), tt.args.team, "", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
 
-			if diff := cmp.Diff(tt.want, string(pull)); diff != "" {
+			if diff := cmp.Diff(tt.want, pull.Channel); diff != "" {
 				t.Errorf("handlePullRequestEvent() mismatch (-want +got):\n%s", diff)
 			}
 		})
@@ -265,11 +254,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 }
 
 func TestHandleTeamEvent(t *testing.T) {
-	tmpl, err := template.New("dummy").Parse("test")
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	type args struct {
 		team  github.Team
 		event github.Event
@@ -330,7 +314,7 @@ func TestHandleTeamEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err = handleTeamEvent(slog.Default(), *tmpl, &tt.args.team, tt.args.event)
+			_, err := handleTeamEvent(slog.Default(), &tt.args.team, tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -343,11 +327,6 @@ func TestHandleTeamEvent(t *testing.T) {
 }
 
 func TestHandleWorkflow(t *testing.T) {
-	tmpl, err := template.New("dummy").Parse("test")
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	team := github.Team{
 		Name: "test",
 		SlackChannels: github.SlackChannels{
@@ -472,7 +451,7 @@ func TestHandleWorkflow(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := handleWorkflowEvent(slog.Default(), *tmpl, tt.team, tt.event)
+			got, err := handleWorkflowEvent(slog.Default(), tt.team, tt.event)
 			if err != nil && !tt.err {
 				t.Error(err)
 			}

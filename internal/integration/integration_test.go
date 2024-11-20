@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"bytes"
 	"encoding/json"
 	"log/slog"
 	"os"
@@ -20,11 +21,6 @@ const (
 
 func TestHandleEvent(t *testing.T) {
 	mockhub := mockHub{}
-
-	slackTemplates, err := slack.ParseMessageTemplates()
-	if err != nil {
-		t.Fatal(err)
-	}
 
 	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
@@ -54,7 +50,7 @@ func TestHandleEvent(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			var got []byte
+			var message *slack.Message
 			switch strings.Split(entry.Name(), "-")[0] {
 			case "commit":
 				team := github.Team{
@@ -66,35 +62,20 @@ func TestHandleEvent(t *testing.T) {
 					},
 				}
 
-				got, err = slack.CreateCommitMessage(slog.Default(), slackTemplates["commit"], slackChannel, event, team, mockhub)
+				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, team, mockhub)
 				if err != nil {
 					t.Fatal(err)
 				}
 			case "issue":
-				got, err = slack.CreateIssueMessage(slackTemplates["issue"], slackChannel, "", event)
-				if err != nil {
-					t.Fatal(err)
-				}
+				message = slack.CreateIssueMessage(slackChannel, "", event)
 			case "pull":
-				got, err = slack.CreatePullRequestMessage(slackTemplates["pull"], slackChannel, "", event)
-				if err != nil {
-					t.Fatal(err)
-				}
+				message = slack.CreatePullRequestMessage(slackChannel, "", event)
 			case "removed":
-				got, err = slack.CreateRemovedMessage(slackTemplates["removed"], slackChannel, event)
-				if err != nil {
-					t.Fatal(err)
-				}
+				message = slack.CreateRemovedMessage(slackChannel, event)
 			case "renamed":
-				got, err = slack.CreateRenamedMessage(slackTemplates["renamed"], slackChannel, event)
-				if err != nil {
-					t.Fatal(err)
-				}
+				message = slack.CreateRenamedMessage(slackChannel, event)
 			case "team":
-				got, err = slack.CreateTeamMessage(slackTemplates["team"], slackChannel, event)
-				if err != nil {
-					t.Fatal(err)
-				}
+				message = slack.CreateTeamMessage(slackChannel, event)
 			case "workflow":
 				event.Workflow.FailedJob = github.FailedJob{
 					Name: "job",
@@ -102,7 +83,7 @@ func TestHandleEvent(t *testing.T) {
 					Step: "step",
 				}
 
-				got, err = slack.CreateWorkflowMessage(slackTemplates["workflow"], slackChannel, event)
+				message = slack.CreateWorkflowMessage(slackChannel, event)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -110,12 +91,22 @@ func TestHandleEvent(t *testing.T) {
 				t.Skipf("unknown event file: %s", entry.Name())
 			}
 
-			if ok := json.Valid(got); !ok {
+			got := new(bytes.Buffer)
+			enc := json.NewEncoder(got)
+			enc.SetEscapeHTML(false)
+			enc.SetIndent("", "  ")
+			if err := enc.Encode(message); err != nil {
+				t.Fatal(err)
+			}
+
+			if ok := json.Valid(got.Bytes()); !ok {
 				t.Fatalf("invalid json: %s", got)
 			}
 
-			if diff := cmp.Diff(string(goldenfile), string(got)); diff != "" {
+			if diff := cmp.Diff(string(goldenfile), got.String()); diff != "" {
 				t.Errorf("Create Slack message mismatch (-want +got):\n%s", diff)
+				t.Logf("Golden file: %s", goldenfile)
+				t.Logf("Got: %s", got)
 			}
 		})
 	}

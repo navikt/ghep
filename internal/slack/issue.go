@@ -1,67 +1,36 @@
 package slack
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"text/template"
 
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateIssueMessage(tmpl template.Template, channel, threadTimestamp string, event github.Event) ([]byte, error) {
-	type text struct {
-		Channel         string
-		ThreadTimestamp string
-		Repository      github.Repository
-		Action          string
-		Number          int
-		Sender          github.User
-		Status          string
-		Color           string
-		Attachment      struct {
-			Title string
-			Body  string
-			URL   string
-		}
-	}
-	payload := text{
-		Channel:         channel,
-		ThreadTimestamp: threadTimestamp,
-		Repository:      event.Repository,
-		Action:          event.Action,
-		Number:          event.Issue.Number,
-		Sender:          event.Sender,
-		Status:          event.Issue.StateReason,
-		Color:           "#34a44c",
-	}
+func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Message {
+	color := "#34a44c"
 
-	marshaledTitle, err := json.Marshal(event.Issue.Title)
-	if err != nil {
-		return nil, fmt.Errorf("marshalling issue: %w", err)
-	}
-	title := string(marshaledTitle)
-	title = title[1 : len(title)-1]
-
-	marshaledBody, err := json.Marshal(event.Issue.Body)
-	if err != nil {
-		return nil, fmt.Errorf("marshalling issue: %w", err)
-	}
-	body := string(marshaledBody)
-	body = body[1 : len(body)-1]
-
-	payload.Attachment.Title = title
-	payload.Attachment.Body = body
-	payload.Attachment.URL = event.Issue.URL
+	text := fmt.Sprintf("Issue <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 
 	if event.Action == "closed" {
-		payload.Color = "#7044c4"
+		color = "#7044c4"
+		text = fmt.Sprintf("Issue <%s|#%d> %s as %s in `<%s|%s>` by <%s|%s>.", event.Issue.URL, event.Issue.Number, event.Action, event.Issue.StateReason, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 	}
 
-	var output bytes.Buffer
-	if err := tmpl.Execute(&output, payload); err != nil {
-		return nil, fmt.Errorf("executing commit template: %w", err)
+	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.Issue.URL, event.Issue.Number, event.Issue.Title)
+
+	if event.Action == "opened" {
+		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
 	}
 
-	return output.Bytes(), nil
+	return &Message{
+		Channel:         channel,
+		ThreadTimestamp: threadTimestamp,
+		Text:            text,
+		Attachments: []Attachment{
+			{
+				Text:  attachmentText,
+				Color: color,
+			},
+		},
+	}
 }
