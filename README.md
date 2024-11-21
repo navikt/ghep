@@ -13,11 +13,11 @@ Ghep vil prøve å lenke til `Co-Authors` så godt som mulig.
 
 Hvis en `push` trigger en workflow så vil Ghep reacte på commits basert på reisen til workflowen.
 
-:eyes: - når en jobb har blitt satt i kø  
-:hourglass_flowing_sand: - når den kjører  
-:white_check_mark: - fullført vellykket  
-:x: - fullført feilet  
-:parking: - fullført kansellert  
+👀 - når en jobb har blitt satt i kø  
+⏳ - når den kjører  
+✅ - fullført vellykket  
+❌ - fullført feilet  
+🅿️ - fullført kansellert  
 
 ![Commits posted to Slack](images/commits.png)
 
