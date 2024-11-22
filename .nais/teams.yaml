@@ -96,3 +96,7 @@ data:
           - "nav-maskinporten"
         workflows:
           branches: ["main"]
+    tilleggsstonader:
+      pulls: "#tilleggsstønader-gh-pr"
+      config:
+        silenceDependabot: always
