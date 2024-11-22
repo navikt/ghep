@@ -99,4 +99,4 @@ data:
     tilleggsstonader:
       pulls: "#tilleggsstønader-gh-pr"
       config:
-        silenceDependabot: always
+        silenceDependabot: "always"
