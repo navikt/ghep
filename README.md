@@ -49,6 +49,8 @@ nada:
  workflows: "#nada-ci"
 ```
 
+PS: Hvis kanalene dine er private må du selv invitere @ghep inn i hver kanal.
+
 ### Konfigurering
 
 Vi har også støtte for litt konfigurering.
