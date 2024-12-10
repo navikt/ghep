@@ -107,7 +107,7 @@ data:
       workflows: "#moby-failed-workflows"
     k9saksbehandling:
       commits: "#k9saksbehandling-feed"
-      pulls: "#k9saksbehandling-feed""
+      pulls: "#k9saksbehandling-feed"
       workflows: "#k9saksbehandling-feed"
       config:
         silenceDependabot: "always"
