@@ -111,3 +111,8 @@ data:
       workflows: "#k9saksbehandling-feed"
       config:
         silenceDependabot: "always"
+    dolly:
+      commits: "#dolly-ghep"
+      issues: "#dolly-ghep"
+      pulls: "#dolly-ghep"
+      workflows: "#dolly-ghep"
