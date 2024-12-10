@@ -64,7 +64,7 @@ team:
     ignoreRepositories:
       - repoA
       - repoB
-    silenceDependabot: always
+    silenceDependabot: "always"
     externalContributorsChannel: "#channel"
 ```
 
