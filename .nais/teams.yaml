@@ -110,4 +110,4 @@ data:
       pulls: "#k9saksbehandling-feed""
       workflows: "#k9saksbehandling-feed"
       config:
-        silenceDependabot: always
+        silenceDependabot: "always"
