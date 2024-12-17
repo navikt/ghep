@@ -113,6 +113,22 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+    omsorgspenger:
+      commits: "#k9saksbehandling-feed"
+      pulls: "#k9saksbehandling-feed"
+      workflows: "#k9saksbehandling-feed"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          branches: ["main", "master"]
+    dusseldorf:
+      commits: "#k9saksbehandling-feed"
+      pulls: "#k9saksbehandling-feed"
+      workflows: "#k9saksbehandling-feed"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          branches: ["main", "master"]
     dolly:
       commits: "#dolly-ghep"
       issues: "#dolly-ghep"
