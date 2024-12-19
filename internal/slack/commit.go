@@ -1,6 +1,7 @@
 package slack
 
 import (
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"regexp"
@@ -154,4 +155,31 @@ func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, t
 		Text:        text,
 		Attachments: attachments,
 	}, nil
+}
+
+func (c Client) UpdateCommitMessage(msg string, event github.Event, timestamp string) error {
+	var message Message
+	if err := json.Unmarshal([]byte(msg), &message); err != nil {
+		return fmt.Errorf("unmarshalling message: %w", err)
+	}
+
+	if message.Attachments[0].Footer != "" {
+		return nil
+	}
+
+	message.Timestamp = timestamp
+	message.Attachments[0].FooterIcon = "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+	message.Attachments[0].Footer = fmt.Sprintf("<%s|%s>", event.Workflow.JobsURL, event.Workflow.Title)
+
+	marshalled, err := json.Marshal(message)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.postRequest("chat.update", marshalled)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

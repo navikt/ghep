@@ -26,6 +26,7 @@ type Message struct {
 	Text            string       `json:"text"`
 	Attachments     []Attachment `json:"attachments,omitempty"`
 	ThreadTimestamp string       `json:"thread_ts,omitempty"`
+	Timestamp       string       `json:"ts,omitempty"`
 	UnfurlLinks     bool         `json:"unfurl_links"`
 	UnfurlMedia     bool         `json:"unfurl_media"`
 }

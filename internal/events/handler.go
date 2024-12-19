@@ -138,6 +138,17 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			if err := h.slack.PostWorkflowReaction(log, event, team.SlackChannels.Commits, timestamp); err != nil {
 				log.Error("error posting workflow reaction", "err", err.Error())
 			}
+
+			msg, err := h.redis.Get(ctx, timestamp).Result()
+			if err != nil && err != redis.Nil {
+				log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
+			}
+
+			if err != redis.Nil {
+				if err := h.slack.PostUpdatedCommitMessage(msg, event, timestamp); err != nil {
+					log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+				}
+			}
 		}
 
 		if err := event.Workflow.UpdateFailedJob(); err != nil {
