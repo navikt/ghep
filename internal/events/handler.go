@@ -63,6 +63,10 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		return err
 	}
 
+	if err := h.redis.Set(ctx, ts, string(payload), oneYear).Err(); err != nil {
+		log.Error("error setting message", "err", err.Error(), "ts", ts)
+	}
+
 	if id := saveEventSlackResponse(ts, event); id != "" {
 		if err := h.redis.Set(ctx, id, ts, oneYear).Err(); err != nil {
 			log.Error("error setting thread timestamp", "err", err.Error(), "id", id, "ts", ts)
