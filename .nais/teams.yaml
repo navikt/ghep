@@ -100,11 +100,6 @@ data:
       pulls: "#tilleggsstønader-gh-pr"
       config:
         silenceDependabot: "always"
-    moby:
-      commits: "#moby-commits"
-      issues: "#moby-issues"
-      pulls: "#moby-pull-requests"
-      workflows: "#moby-failed-workflows"
     k9saksbehandling:
       commits: "#k9saksbehandling-feed"
       pulls: "#k9saksbehandling-feed"
