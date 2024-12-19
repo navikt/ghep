@@ -157,7 +157,7 @@ func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, t
 	}, nil
 }
 
-func (c Client) UpdateCommitMessage(msg string, event github.Event, timestamp string) error {
+func (c Client) PostUpdatedCommitMessage(msg string, event github.Event, timestamp string) error {
 	var message Message
 	if err := json.Unmarshal([]byte(msg), &message); err != nil {
 		return fmt.Errorf("unmarshalling message: %w", err)
