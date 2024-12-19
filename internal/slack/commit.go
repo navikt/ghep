@@ -149,13 +149,6 @@ func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, t
 		},
 	}
 
-	if event.Workflow != nil && event.Workflow.FailedJob.Name != "" {
-		attachments = append(attachments, Attachment{
-			Text:  fmt.Sprintf("The job <%s|%s> failed in step `%s`.", event.Workflow.FailedJob.URL, event.Workflow.FailedJob.Name, event.Workflow.FailedJob.Step),
-			Color: "#000",
-		})
-	}
-
 	return &Message{
 		Channel:     channel,
 		Text:        text,
