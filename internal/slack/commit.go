@@ -176,6 +176,7 @@ func (c Client) PostUpdatedCommitMessage(msg string, event github.Event, timesta
 		return err
 	}
 
+	c.log.Info("Posting update of commit", "action", event.Action, "channel", message.Channel, "timestamp", timestamp)
 	_, err = c.postRequest("chat.update", marshalled)
 	if err != nil {
 		return err
