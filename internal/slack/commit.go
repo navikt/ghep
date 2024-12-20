@@ -169,7 +169,7 @@ func (c Client) PostUpdatedCommitMessage(msg string, event github.Event, timesta
 
 	message.Timestamp = timestamp
 	message.Attachments[0].FooterIcon = "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
-	message.Attachments[0].Footer = fmt.Sprintf("<%s|%s>", event.Workflow.JobsURL, event.Workflow.Title)
+	message.Attachments[0].Footer = fmt.Sprintf("<%s|%s>", event.Workflow.URL, event.Workflow.Name)
 
 	marshalled, err := json.Marshal(message)
 	if err != nil {
