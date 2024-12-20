@@ -95,20 +95,68 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		return handleCommitEvent(log, team, event, h.github)
 	} else if event.Issue != nil {
 		id := strconv.Itoa(event.Issue.ID)
-		threadTimestamp, err := h.redis.Get(ctx, id).Result()
+		timestamp, err := h.redis.Get(ctx, id).Result()
 		if err != nil && err != redis.Nil {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
-		return handleIssueEvent(log, team, threadTimestamp, event)
+		if !slices.Contains([]string{"opened", "closed"}, event.Action) {
+			return nil, nil
+		}
+
+		channel := team.SlackChannels.Issues
+		if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.User.Login) {
+			channel = team.Config.ExternalContributorsChannel
+		}
+
+		if channel == "" {
+			return nil, nil
+		}
+
+		msg, err := h.redis.Get(ctx, timestamp).Result()
+		if err != nil && err != redis.Nil {
+			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
+		}
+
+		if err != redis.Nil {
+			if err := h.slack.PostUpdatedIssueMessage(msg, event.Action, timestamp); err != nil {
+				log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+			}
+		}
+
+		return handleIssueEvent(log, team, timestamp, event)
 	} else if event.PullRequest != nil {
 		id := strconv.Itoa(event.PullRequest.ID)
-		threadTimestamp, err := h.redis.Get(ctx, id).Result()
+		timestamp, err := h.redis.Get(ctx, id).Result()
 		if err != nil && err != redis.Nil {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
-		return handlePullRequestEvent(log, team, threadTimestamp, event)
+		if !slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
+			return nil, nil
+		}
+
+		channel := team.SlackChannels.PullRequests
+		if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.User.Login) {
+			channel = team.Config.ExternalContributorsChannel
+		}
+
+		if channel == "" {
+			return nil, nil
+		}
+
+		msg, err := h.redis.Get(ctx, timestamp).Result()
+		if err != nil && err != redis.Nil {
+			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
+		}
+
+		if err != redis.Nil {
+			if err := h.slack.PostUpdatedPullMessage(msg, event, timestamp); err != nil {
+				log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+			}
+		}
+
+		return handlePullRequestEvent(log, team, timestamp, event)
 	} else if event.Action == "removed" {
 		return handleRemoveRepositoryEvent(log, &team, event)
 	} else if event.Action == "renamed" {

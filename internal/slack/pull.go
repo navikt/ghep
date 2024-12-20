@@ -1,6 +1,7 @@
 package slack
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/navikt/ghep/internal/github"
@@ -45,4 +46,37 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 			},
 		},
 	}
+}
+
+func (c Client) PostUpdatedPullMessage(msg string, event github.Event, timestamp string) error {
+	var message Message
+	if err := json.Unmarshal([]byte(msg), &message); err != nil {
+		return fmt.Errorf("unmarshalling message: %w", err)
+	}
+
+	color := message.Attachments[0].Color
+
+	if event.PullRequest.Merged {
+		color = "#7044c4"
+	}
+
+	if event.Action == "closed" && !event.PullRequest.Merged {
+		color = "#d02434"
+	}
+
+	message.Timestamp = timestamp
+	message.Attachments[0].Color = color
+
+	marshalled, err := json.Marshal(message)
+	if err != nil {
+		return err
+	}
+
+	c.log.Info("Posting update of pull", "action", event.Action, "channel", message.Channel, "timestamp", timestamp)
+	_, err = c.postRequest("chat.update", marshalled)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

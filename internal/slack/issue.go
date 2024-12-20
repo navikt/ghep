@@ -1,6 +1,7 @@
 package slack
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/navikt/ghep/internal/github"
@@ -35,4 +36,31 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 			},
 		},
 	}
+}
+
+func (c Client) PostUpdatedIssueMessage(msg, action, timestamp string) error {
+	var message Message
+	if err := json.Unmarshal([]byte(msg), &message); err != nil {
+		return fmt.Errorf("unmarshalling message: %w", err)
+	}
+
+	if action != "closed" {
+		return nil
+	}
+
+	message.Timestamp = timestamp
+	message.Attachments[0].Color = "#7044c4"
+
+	marshalled, err := json.Marshal(message)
+	if err != nil {
+		return err
+	}
+
+	c.log.Info("Posting update of issue", "action", action, "channel", message.Channel, "timestamp", timestamp)
+	_, err = c.postRequest("chat.update", marshalled)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
