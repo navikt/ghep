@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	slackApi = "https://slack.com/api"
+	slackApi          = "https://slack.com/api"
+	netrualGithubIcon = "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
 )
 
 type Attachment struct {

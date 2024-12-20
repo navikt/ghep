@@ -38,8 +38,10 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 		Text:            text,
 		Attachments: []Attachment{
 			{
-				Text:  attachmentText,
-				Color: color,
+				Text:       attachmentText,
+				Color:      color,
+				FooterIcon: netrualGithubIcon,
+				Footer:     fmt.Sprintf("<%s|%s>", event.Repository.URL, event.Repository.FullName),
 			},
 		},
 	}

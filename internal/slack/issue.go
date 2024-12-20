@@ -28,8 +28,10 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 		Text:            text,
 		Attachments: []Attachment{
 			{
-				Text:  attachmentText,
-				Color: color,
+				Text:       attachmentText,
+				Color:      color,
+				FooterIcon: netrualGithubIcon,
+				Footer:     fmt.Sprintf("<%s|%s>", event.Repository.URL, event.Repository.FullName),
 			},
 		},
 	}
