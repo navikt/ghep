@@ -129,3 +129,12 @@ data:
       issues: "#dolly-ghep"
       pulls: "#dolly-ghep"
       workflows: "#dolly-ghep"
+    tpts:
+      commits: "#tp-github-feed"
+      issues: "#tp-github-feed"
+      pulls: "#tp-github-feed"
+      workflows: "#tp-github-feed"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          branches: ["main", "master"]
