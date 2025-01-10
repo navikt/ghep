@@ -23,6 +23,8 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 		case "cancelled":
 			reaction = "parking"
 		}
+
+		log = log.With("conclusion", event.Workflow.Conclusion)
 	}
 
 	if reaction == "dogcited" {
@@ -38,7 +40,6 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 }
 
 func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, current_reaction string) error {
-	log.Info("Removing other reactions", "channel", channel, "timestamp", timestamp, "current_reaction", current_reaction)
 	reactions, err := c.GetReactions(channel, timestamp)
 	if err != nil {
 		return fmt.Errorf("getting reactions: %v", err)
@@ -46,7 +47,7 @@ func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, curre
 
 	for _, reaction := range reactions {
 		if reaction != current_reaction {
-			log.Info("Removing reaction", "reaction", reaction)
+			log.Info("Removing reaction", "reaction", reaction, "channel", channel, "timestamp", timestamp, "current_reaction", current_reaction)
 			if err := c.reactionRequest("remove", channel, timestamp, reaction); err != nil {
 				return fmt.Errorf("removing reaction: %v", err)
 			}
