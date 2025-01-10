@@ -193,7 +193,7 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			}
 
 			if err != redis.Nil {
-				if err := h.slack.PostUpdatedCommitMessage(msg, event, timestamp); err != nil {
+				if err := h.slack.PostUpdatedCommitMessage(log, msg, event, timestamp); err != nil {
 					log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
 				}
 			}
