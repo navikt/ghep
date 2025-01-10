@@ -34,9 +34,13 @@ func (c Client) Run(base, addr string) error {
 }
 
 func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
+	deliveryID := r.Header.Get("X-GitHub-Delivery")
+	eventType := r.Header.Get("X-GitHub-Event")
+	log := c.log.With("delivery_id", deliveryID, "event_type", eventType)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		c.log.Error("error reading body", "err", err.Error())
+		log.Error("error reading body", "err", err.Error())
 		fmt.Fprintf(w, "error reading body: %s", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -45,7 +49,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	event, err := github.CreateEvent(body)
 	if err != nil {
-		c.log.Error("error creating event", "err", err.Error())
+		log.Error("error creating event", "err", err.Error())
 		fmt.Fprintf(w, "error creating event: %s", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -64,7 +68,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log := c.log.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
+	log = log.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
 	if err := c.events.Handle(r.Context(), log, team, event); err != nil {
 		log.Error("error handling event", "err", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
