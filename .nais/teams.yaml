@@ -138,3 +138,5 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+    security-champion-admin:
+      workflows: "#appsec-aktivitet"
