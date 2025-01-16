@@ -140,4 +140,3 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
-
