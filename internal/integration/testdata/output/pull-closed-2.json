@@ -4,7 +4,9 @@
   "attachments": [
     {
       "text": "*<https://github.com/navikt/spinnsyn-frontend/pull/1638|#1638 Fjernet overskriften \"Nærmere begrunnelse fra saksbehandler\">*",
-      "color": "#7044c4"
+      "color": "#7044c4",
+      "footer": "<https://github.com/navikt/spinnsyn-frontend|navikt/spinnsyn-frontend>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
     }
   ],
   "unfurl_links": false,
