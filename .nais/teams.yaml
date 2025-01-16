@@ -15,8 +15,10 @@ data:
       pulls: "#nada-pull-requests"
       workflows: "#nada-ci"
     aap:
+      commits: "#aap-github-workflows"
       workflows: "#aap-github-workflows"
       config:
+        silenceDependabot: "always"
         workflows:
           ignoreBots: true
     flex:
