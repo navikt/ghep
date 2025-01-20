@@ -39,7 +39,7 @@ Workflows som er vellykket er ikke så interessant, derfor er det kun workflows 
 
 ## Ta den i bruk
 
-Alt du trenger å gjøre er å redigere `.nais/teams.yaml` og legge til ditt team og deres kanaler.
+Alt du trenger å gjøre er å redigere [`.nais/teams.yaml`](https://github.com/navikt/ghep/blob/main/.nais/teams.yaml) og legge til ditt team og deres kanaler.
 
 ``` yaml
 nada:
