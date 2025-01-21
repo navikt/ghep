@@ -74,6 +74,8 @@ func TestHandleEvent(t *testing.T) {
 				message = slack.CreateRemovedMessage(slackChannel, event)
 			case "renamed":
 				message = slack.CreateRenamedMessage(slackChannel, event)
+			case "public":
+				message = slack.CreatePublicizedMessage(slackChannel, event)
 			case "team":
 				message = slack.CreateTeamMessage(slackChannel, event)
 			case "workflow":

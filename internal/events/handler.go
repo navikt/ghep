@@ -161,6 +161,8 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		return handleRemoveRepositoryEvent(log, &team, event)
 	} else if event.Action == "renamed" {
 		return handleRenamedRepository(log, &team, event)
+	} else if event.Action == "publicized" {
+		return handlePublicRepositoryEvent(log, &team, event)
 	} else if event.Team != nil {
 		index := slices.IndexFunc(h.teams, func(t github.Team) bool {
 			return t.Name == event.Team.Name
@@ -291,6 +293,16 @@ func handleRenamedRepository(log *slog.Logger, team *github.Team, event github.E
 	}
 
 	return slack.CreateRenamedMessage(team.SlackChannels.Commits, event), nil
+}
+
+func handlePublicRepositoryEvent(log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
+	if team.SlackChannels.Commits == "" {
+		return nil, nil
+	}
+
+	log.Info("Received repository publicized")
+
+	return slack.CreatePublicizedMessage(team.SlackChannels.Commits, event), nil
 }
 
 func handleTeamEvent(log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
