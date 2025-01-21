@@ -51,8 +51,7 @@ func TestHandleEvent(t *testing.T) {
 			}
 
 			var message *slack.Message
-			switch strings.Split(entry.Name(), "-")[0] {
-			case "commit":
+			if strings.HasPrefix(event.Ref, "refs/heads/") {
 				team := github.Team{
 					Members: []github.User{
 						{
@@ -66,19 +65,19 @@ func TestHandleEvent(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-			case "issue":
+			} else if event.Issue != nil {
 				message = slack.CreateIssueMessage(slackChannel, "", event)
-			case "pull":
+			} else if event.PullRequest != nil {
 				message = slack.CreatePullRequestMessage(slackChannel, "", event)
-			case "removed":
+			} else if event.Action == "removed" {
 				message = slack.CreateRemovedMessage(slackChannel, event)
-			case "renamed":
+			} else if event.Action == "renamed" {
 				message = slack.CreateRenamedMessage(slackChannel, event)
-			case "public":
+			} else if event.Action == "publicized" {
 				message = slack.CreatePublicizedMessage(slackChannel, event)
-			case "team":
+			} else if event.Team != nil {
 				message = slack.CreateTeamMessage(slackChannel, event)
-			case "workflow":
+			} else if event.Workflow != nil {
 				event.Workflow.FailedJob = github.FailedJob{
 					Name: "job",
 					URL:  "https://url.com",
@@ -89,7 +88,7 @@ func TestHandleEvent(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-			default:
+			} else {
 				t.Fatalf("unknown event file: %s", entry.Name())
 			}
 
