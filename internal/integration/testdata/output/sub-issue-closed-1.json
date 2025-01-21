@@ -1,0 +1,14 @@
+{
+  "channel": "#test",
+  "text": "Issue <https://github.com/navikt/ghep/issues/85|#85> closed as not_planned in `<https://github.com/navikt/ghep|ghep>` by <https://github.com/Kyrremann|Kyrremann>.",
+  "attachments": [
+    {
+      "text": "*<https://github.com/navikt/ghep/issues/85|#85 Test av sub-issue>*",
+      "color": "#7044c4",
+      "footer": "<https://github.com/navikt/ghep|navikt/ghep>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}
