@@ -90,7 +90,7 @@ func TestHandleEvent(t *testing.T) {
 					t.Fatal(err)
 				}
 			default:
-				t.Skipf("unknown event file: %s", entry.Name())
+				t.Fatalf("unknown event file: %s", entry.Name())
 			}
 
 			got := new(bytes.Buffer)
