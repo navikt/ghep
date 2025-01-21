@@ -140,3 +140,11 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+    obo:
+      pulls: "#team-obo-github-events"
+      workflows: "team-obo-github-events"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          branches: ["main", "master"]
+      
