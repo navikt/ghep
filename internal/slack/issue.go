@@ -1,7 +1,6 @@
 package slack
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/navikt/ghep/internal/github"
@@ -34,12 +33,7 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 	}
 }
 
-func (c Client) PostUpdatedIssueMessage(msg, timestamp string, event github.Event) error {
-	var message Message
-	if err := json.Unmarshal([]byte(msg), &message); err != nil {
-		return fmt.Errorf("unmarshalling message: %w", err)
-	}
-
+func CreateUpdatedIssueMessage(message Message, event github.Event) *Message {
 	color := message.Attachments[0].Color
 	text := message.Text
 	attachmentText := message.Attachments[0].Text
@@ -54,21 +48,9 @@ func (c Client) PostUpdatedIssueMessage(msg, timestamp string, event github.Even
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
 	}
 
-	message.Timestamp = timestamp
 	message.Text = text
 	message.Attachments[0].Color = color
 	message.Attachments[0].Text = attachmentText
 
-	marshalled, err := json.Marshal(message)
-	if err != nil {
-		return err
-	}
-
-	c.log.Info("Posting update of issue", "channel", message.Channel, "timestamp", timestamp)
-	_, err = c.postRequest("chat.update", marshalled)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return &message
 }

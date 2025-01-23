@@ -4,9 +4,7 @@
   "attachments": [
     {
       "text": "*<https://github.com/navikt/ghep/issues/104|#104 Oppdatere Slack-melding når man legger til/endrer beskrivelse>*\nDet hadde vært litt nice hvis Ghep kunne oppdatere PR-beskrivelsen når man endrer den på Github sånn som den offisielle Github-Slack-integrasjonen kan. Eller i hvert fall å hente inn beskrivelsen når det sendes en ny event til Slack!\n\nBildet viser en PR som gjenåpnes, så legges det til en beskrivelse og PRen lukkes igjen, og åpnes en gang til. Her hadde det vært kult å se beskrivelsen, men det er ikke det aller viktigste. :)\n<img width=\"832\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/00d0cc6f-28c5-4d5d-a6c0-5db87146081a\" />\n\nEdit: Sniker meg til å tester endring av issue i dette issuet. #meta",
-      "color": "#34a44c",
-      "footer": "<https://github.com/navikt/ghep|navikt/ghep>",
-      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+      "color": "#34a44c"
     }
   ],
   "unfurl_links": false,

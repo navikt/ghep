@@ -21,6 +21,16 @@ const (
 
 func TestHandleEvent(t *testing.T) {
 	mockhub := mockHub{}
+	oldMessage := slack.Message{
+		Channel: slackChannel,
+		Text:    "Should be updated",
+		Attachments: []slack.Attachment{
+			{
+				Text:  "Should be updated",
+				Color: "#34a44c",
+			},
+		},
+	}
 
 	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
@@ -62,13 +72,18 @@ func TestHandleEvent(t *testing.T) {
 				}
 
 				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, team, mockhub)
-				if err != nil {
-					t.Fatal(err)
-				}
 			} else if event.Issue != nil {
-				message = slack.CreateIssueMessage(slackChannel, "", event)
+				if event.Action == "edited" {
+					message = slack.CreateUpdatedIssueMessage(oldMessage, event)
+				} else {
+					message = slack.CreateIssueMessage(slackChannel, "", event)
+				}
 			} else if event.PullRequest != nil {
-				message = slack.CreatePullRequestMessage(slackChannel, "", event)
+				if event.Action == "edited" {
+					message = slack.CreateUpdatedPullRequestMessage(oldMessage, event)
+				} else {
+					message = slack.CreatePullRequestMessage(slackChannel, "", event)
+				}
 			} else if event.Action == "removed" {
 				message = slack.CreateRemovedMessage(slackChannel, event)
 			} else if event.Action == "renamed" {
@@ -85,11 +100,12 @@ func TestHandleEvent(t *testing.T) {
 				}
 
 				message = slack.CreateWorkflowMessage(slackChannel, event)
-				if err != nil {
-					t.Fatal(err)
-				}
 			} else {
 				t.Fatalf("unknown event file: %s", entry.Name())
+			}
+
+			if err != nil {
+				t.Fatalf("err should be nil, should be checked closer to action: %s", err)
 			}
 
 			got := new(bytes.Buffer)

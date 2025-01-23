@@ -105,14 +105,28 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			return nil, nil
 		}
 
-		msg, err := h.redis.Get(ctx, timestamp).Result()
+		msgBytes, err := h.redis.Get(ctx, timestamp).Result()
 		if err != nil && err != redis.Nil {
 			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
 		}
 
-		if err != redis.Nil {
-			if err := h.slack.PostUpdatedIssueMessage(msg, timestamp, event); err != nil {
-				log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+		if err != redis.Nil && event.Action != "opened" {
+			var oldMessage slack.Message
+			if err := json.Unmarshal([]byte(msgBytes), &oldMessage); err != nil {
+				return nil, err
+			}
+
+			updatedMessage := slack.CreateUpdatedIssueMessage(oldMessage, event)
+			updatedMessage.Timestamp = timestamp
+			marshalled, err := json.Marshal(updatedMessage)
+			if err != nil {
+				return nil, err
+			}
+
+			log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", timestamp)
+			_, err = h.slack.PostUpdatedMessage(marshalled)
+			if err != nil {
+				return nil, err
 			}
 
 			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
@@ -133,14 +147,29 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			return nil, nil
 		}
 
-		msg, err := h.redis.Get(ctx, timestamp).Result()
+		messageBytes, err := h.redis.Get(ctx, timestamp).Result()
 		if err != nil && err != redis.Nil {
 			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
 		}
 
-		if err != redis.Nil {
-			if err := h.slack.PostUpdatedPullMessage(msg, event, timestamp); err != nil {
-				log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+		if err != redis.Nil && event.Action != "opened" {
+			var oldMessage slack.Message
+			if err := json.Unmarshal([]byte(messageBytes), &oldMessage); err != nil {
+				return nil, err
+			}
+
+			updatedMessage := slack.CreateUpdatedPullRequestMessage(oldMessage, event)
+			updatedMessage.Timestamp = timestamp
+
+			marshalled, err := json.Marshal(updatedMessage)
+			if err != nil {
+				return nil, err
+			}
+
+			log.Info("Posting update of pull request", "channel", updatedMessage.Channel, "timestamp", timestamp)
+			_, err = h.slack.PostUpdatedMessage(marshalled)
+			if err != nil {
+				return nil, err
 			}
 
 			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
