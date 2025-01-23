@@ -8,23 +8,26 @@ import (
 )
 
 func CreatePullRequestMessage(channel, threadTimestamp string, event github.Event) *Message {
-	action := event.Action
 	color := "#34a44c"
 
 	if event.PullRequest.Merged {
-		action = "merged"
+		event.Action = "merged"
 		color = "#7044c4"
 	}
 
-	if event.Action == "closed" && !event.PullRequest.Merged {
+	if event.Action == "closed" {
 		color = "#d02434"
 	}
 
 	var text string
+	eventType := "Pull request"
 	if event.PullRequest.Draft {
-		text = fmt.Sprintf("Draft pull request <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", event.PullRequest.URL, event.PullRequest.Number, action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
-	} else {
-		text = fmt.Sprintf("Pull request <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", event.PullRequest.URL, event.PullRequest.Number, action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
+		eventType = "Draft pull request"
+	}
+
+	text = fmt.Sprintf("%s <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
+	if event.Action == "closed" {
+		text = fmt.Sprintf("%s <%s|#%d> %s as %s in `<%s|%s>` by <%s|%s>.", eventType, event.Issue.URL, event.Issue.Number, event.Action, event.Issue.StateReason, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 	}
 
 	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title)
@@ -55,24 +58,39 @@ func (c Client) PostUpdatedPullMessage(msg string, event github.Event, timestamp
 	}
 
 	color := message.Attachments[0].Color
+	text := message.Text
+	attachmentText := message.Attachments[0].Text
 
-	if event.PullRequest.Merged {
-		color = "#7044c4"
-	}
+	switch event.Action {
+	case "reopened":
+		color = "#34a44c"
+	case "closed":
+		if event.PullRequest.Merged {
+			color = "#7044c4"
+		} else {
+			color = "#d02434"
+		}
+	case "edited":
+		eventType := "Pull request"
+		if event.PullRequest.Draft {
+			eventType = "Draft pull request"
+		}
 
-	if event.Action == "closed" && !event.PullRequest.Merged {
-		color = "#d02434"
+		text = fmt.Sprintf("%s <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
+		attachmentText = fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title)
 	}
 
 	message.Timestamp = timestamp
+	message.Text = text
 	message.Attachments[0].Color = color
+	message.Attachments[0].Text = attachmentText
 
 	marshalled, err := json.Marshal(message)
 	if err != nil {
 		return err
 	}
 
-	c.log.Info("Posting update of pull", "action", event.Action, "channel", message.Channel, "timestamp", timestamp)
+	c.log.Info("Posting update of pull", "channel", message.Channel, "timestamp", timestamp)
 	_, err = c.postRequest("chat.update", marshalled)
 	if err != nil {
 		return err

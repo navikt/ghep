@@ -100,16 +100,8 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
-		if !slices.Contains([]string{"opened", "closed"}, event.Action) {
-			return nil, nil
-		}
-
-		channel := team.SlackChannels.Issues
-		if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.User.Login) {
-			channel = team.Config.ExternalContributorsChannel
-		}
-
-		if channel == "" {
+		if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
+			log.Info("unknown issue action")
 			return nil, nil
 		}
 
@@ -119,8 +111,12 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		}
 
 		if err != redis.Nil {
-			if err := h.slack.PostUpdatedIssueMessage(msg, event.Action, timestamp); err != nil {
+			if err := h.slack.PostUpdatedIssueMessage(msg, timestamp, event); err != nil {
 				log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+			}
+
+			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
+				return nil, nil
 			}
 		}
 
@@ -132,16 +128,8 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
-		if !slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
-			return nil, nil
-		}
-
-		channel := team.SlackChannels.PullRequests
-		if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.User.Login) {
-			channel = team.Config.ExternalContributorsChannel
-		}
-
-		if channel == "" {
+		if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
+			log.Info("unknown pull request action")
 			return nil, nil
 		}
 
@@ -153,6 +141,10 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		if err != redis.Nil {
 			if err := h.slack.PostUpdatedPullMessage(msg, event, timestamp); err != nil {
 				log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+			}
+
+			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
+				return nil, nil
 			}
 		}
 
