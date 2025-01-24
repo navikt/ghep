@@ -71,7 +71,7 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 		}
 
 		text = fmt.Sprintf("%s <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title)
+		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title, event.PullRequest.Body)
 	}
 
 	message.Text = text
