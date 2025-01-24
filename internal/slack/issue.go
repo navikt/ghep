@@ -46,6 +46,10 @@ func CreateUpdatedIssueMessage(message Message, event github.Event) *Message {
 	case "edited":
 		text = fmt.Sprintf("Issue <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
+
+		if event.PullRequest.State == "closed" {
+			color = "#7044c4"
+		}
 	}
 
 	message.Text = text

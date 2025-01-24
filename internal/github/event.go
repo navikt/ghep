@@ -73,6 +73,7 @@ type Issue struct {
 	Title       string `json:"title"`
 	Body        string `json:"body"`
 	Number      int    `json:"number"`
+	State       string `json:"state"`
 	StateReason string `json:"state_reason"`
 	Merged      bool   `json:"merged"`
 }

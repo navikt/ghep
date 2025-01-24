@@ -72,6 +72,12 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 
 		text = fmt.Sprintf("%s <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title, event.PullRequest.Body)
+
+		if event.PullRequest.Merged {
+			color = "#7044c4"
+		} else if event.PullRequest.State == "closed" {
+			color = "#d02434"
+		}
 	}
 
 	message.Text = text
