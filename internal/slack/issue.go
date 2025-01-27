@@ -47,7 +47,7 @@ func CreateUpdatedIssueMessage(message Message, event github.Event) *Message {
 		text = fmt.Sprintf("Issue <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
 
-		if event.PullRequest.State == "closed" {
+		if event.Issue.State == "closed" {
 			color = "#7044c4"
 		}
 	}

@@ -26,7 +26,7 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 
 	text = fmt.Sprintf("%s <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 	if event.Action == "closed" {
-		text = fmt.Sprintf("%s <%s|#%d> %s as %s in `<%s|%s>` by <%s|%s>.", eventType, event.Issue.URL, event.Issue.Number, event.Action, event.Issue.StateReason, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
+		text = fmt.Sprintf("%s <%s|#%d> %s as %s in `<%s|%s>` by <%s|%s>.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.PullRequest.StateReason, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
 	}
 
 	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title)
