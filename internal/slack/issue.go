@@ -9,12 +9,12 @@ import (
 func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Message {
 	color := "#34a44c"
 
-	text := fmt.Sprintf("Issue <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
+	text := fmt.Sprintf("Issue <%s|#%d> %s in `<%s|%s>` by %s.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.ToSlack())
 	attachmentText := fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
 
 	if event.Action == "closed" {
 		color = "#7044c4"
-		text = fmt.Sprintf("Issue <%s|#%d> %s as %s in `<%s|%s>` by <%s|%s>.", event.Issue.URL, event.Issue.Number, event.Action, event.Issue.StateReason, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
+		text = fmt.Sprintf("Issue <%s|#%d> %s as %s in `<%s|%s>` by %s.", event.Issue.URL, event.Issue.Number, event.Action, event.Issue.StateReason, event.Repository.URL, event.Repository.Name, event.Sender.ToSlack())
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*", event.Issue.URL, event.Issue.Number, event.Issue.Title)
 	}
 
@@ -44,7 +44,7 @@ func CreateUpdatedIssueMessage(message Message, event github.Event) *Message {
 	case "closed":
 		color = "#7044c4"
 	case "edited":
-		text = fmt.Sprintf("Issue <%s|#%d> %s in `<%s|%s>` by <%s|%s>.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.URL, event.Sender.Login)
+		text = fmt.Sprintf("Issue <%s|#%d> %s in `<%s|%s>` by %s.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.ToSlack())
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
 
 		if event.Issue.State == "closed" {
