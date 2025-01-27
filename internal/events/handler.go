@@ -36,7 +36,7 @@ func NewHandler(githubClient github.Client, redis *redis.Client, slackClient sla
 }
 
 func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) error {
-	if team.Config.SilenceDepedabot() && event.Sender.IsDependabot() {
+	if team.Config.SilenceDepedabot() && event.IsFromDependabot() {
 		return nil
 	}
 
