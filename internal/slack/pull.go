@@ -24,9 +24,9 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 		eventType = "Draft pull request"
 	}
 
-	text = fmt.Sprintf("%s <%s|#%d> %s in `<%s|%s>` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.ToSlack())
+	text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
 	if event.Action == "closed" {
-		text = fmt.Sprintf("%s <%s|#%d> %s as %s in `<%s|%s>` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.PullRequest.StateReason, event.Repository.URL, event.Repository.Name, event.Sender.ToSlack())
+		text = fmt.Sprintf("%s <%s|#%d> %s as %s in `%s` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.PullRequest.StateReason, event.Repository.ToSlack(), event.Sender.ToSlack())
 	}
 
 	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title)
@@ -70,7 +70,7 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 			eventType = "Draft pull request"
 		}
 
-		text = fmt.Sprintf("%s <%s|#%d> %s in `<%s|%s>` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.URL, event.Repository.Name, event.Sender.ToSlack())
+		text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title, event.PullRequest.Body)
 
 		if event.PullRequest.Merged {

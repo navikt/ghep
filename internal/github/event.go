@@ -49,6 +49,17 @@ type Changes struct {
 	} `json:"repository"`
 }
 
+// ToSlack returns a formatted string for Slack
+// If the URL is empty, it returns the repository name
+// If the URL is not empty, it returns <URL|Name>
+func (r Repository) ToSlack() string {
+	if r.URL == "" {
+		return r.Name
+	}
+
+	return fmt.Sprintf("<%s|%s>", r.URL, r.Name)
+}
+
 type Repository struct {
 	Name          string `json:"name"`
 	FullName      string `json:"full_name"`

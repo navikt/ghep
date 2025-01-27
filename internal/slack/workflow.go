@@ -7,7 +7,7 @@ import (
 )
 
 func CreateWorkflowMessage(channel string, event github.Event) *Message {
-	text := fmt.Sprintf(":x: <%s|%s> has a workflow with status `%s`, triggered by <%s|%s>.\n<%s|#%d %s>", event.Repository.URL, event.Repository.Name, event.Workflow.Conclusion, event.Sender.URL, event.Sender.Login, event.Workflow.URL, event.Workflow.RunNumber, event.Workflow.Title)
+	text := fmt.Sprintf(":x: %s has a workflow with status `%s`, triggered by %s.\n<%s|#%d %s>", event.Repository.ToSlack(), event.Workflow.Conclusion, event.Sender.ToSlack(), event.Workflow.URL, event.Workflow.RunNumber, event.Workflow.Title)
 
 	var attachments []Attachment
 	if event.Workflow.FailedJob.Name != "" {
