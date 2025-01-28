@@ -141,4 +141,8 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
-      
+    pensjon-dataprodukt:
+      workflows: "#pen-dataprodukt-github"
+      commits: "#pen-dataprodukt-github"
+      issues: "#pen-dataprodukt-github"
+      pulls: "#pen-dataprodukt-github"
