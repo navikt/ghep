@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/navikt/ghep/internal/github"
@@ -33,6 +34,7 @@ func (c Client) EnsureChannels(teams []github.Team) error {
 
 func (c Client) ensureChannel(channel string, channels map[string]string, joinedChannels map[string]string) string {
 	if channel != "" {
+		channel = strings.TrimPrefix(channel, "#")
 		id, joined := joinedChannels[channel]
 		if joined {
 			return id
