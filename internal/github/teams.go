@@ -248,7 +248,7 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg s
 		}
 		teams[0].Repositories = repos
 
-		teamUrl := fmt.Sprintf("%s/%s", url, teams[0].Name)
+		teamUrl := fmt.Sprintf("%s/teams/%s", url, teams[0].Name)
 		members, err := fetchMembers(teamUrl, bearerToken)
 		if err != nil {
 			return nil, err
