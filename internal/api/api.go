@@ -71,7 +71,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	log = log.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
 	if err := c.events.Handle(r.Context(), log, team, event); err != nil {
 		log.Error("error handling event", "err", err.Error())
-		fmt.Fprintf(w, "error handling event: %s", err.Error())
+		w.Write([]byte(fmt.Sprintf("error handling event: %s", err.Error())))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
