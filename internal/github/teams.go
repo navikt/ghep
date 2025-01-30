@@ -186,7 +186,7 @@ func fetchMembers(teamURL, bearerToken string) ([]User, error) {
 		}
 
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, resp.Body)
+			return nil, fmt.Errorf("error fetching repos using '%s' (%v): %v", teamURL, resp.Status, resp.Body)
 		}
 
 		var members []User
