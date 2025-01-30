@@ -166,7 +166,7 @@ func (w *Workflow) UpdateFailedJob() error {
 // IsFromDependabot checks if the event is from Dependabot
 // Events that are not Pull Requests are not checked
 func (e Event) IsFromDependabot() bool {
-	return e.PullRequest != nil && (slices.Contains(dependabotAliases, e.PullRequest.User.Login) || slices.Contains(dependabotAliases, e.User.Login))
+	return e.PullRequest != nil && (slices.Contains(dependabotAliases, e.PullRequest.User.Login))
 }
 
 type Event struct {
@@ -181,7 +181,6 @@ type Event struct {
 	PullRequest         *Issue       `json:"pull_request"`
 	RepositoriesRemoved []Repository `json:"repositories_removed"`
 	Sender              User         `json:"sender"`
-	User                User         `json:"user"`
 	Team                *TeamEvent   `json:"team"`
 	Workflow            *Workflow    `json:"workflow_run"`
 }

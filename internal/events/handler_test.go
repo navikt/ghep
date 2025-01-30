@@ -115,9 +115,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					Sender: github.User{
 						Login: "external",
 					},
-					User: github.User{
-						Login: "external",
-					},
 					Issue: &github.Issue{
 						Number:      1,
 						StateReason: "external",
@@ -146,9 +143,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				event: github.Event{
 					Action: "opened",
 					Sender: github.User{
-						Login: "external",
-					},
-					User: github.User{
 						Login: "external",
 					},
 					Issue: &github.Issue{
@@ -181,9 +175,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					Sender: github.User{
 						Login: "external",
 					},
-					User: github.User{
-						Login: "internal",
-					},
 					Issue: &github.Issue{
 						Number:      1,
 						StateReason: "external",
@@ -213,9 +204,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					Action: "opened",
 					Sender: github.User{
 						Login: "internal",
-					},
-					User: github.User{
-						Login: "external",
 					},
 					Issue: &github.Issue{
 						Number:      1,
