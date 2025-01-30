@@ -3,6 +3,7 @@ package events
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"slices"
 	"strconv"
@@ -36,7 +37,7 @@ func NewHandler(githubClient github.Client, redis *redis.Client, slackClient sla
 }
 
 func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) error {
-	if team.Config.SilenceDepedabot() && event.IsFromDependabot() {
+	if team.Config.ShouldSilenceDependabot() && event.IsFromDependabot() {
 		return nil
 	}
 
@@ -90,13 +91,13 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 	return ""
 }
 
-func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
+func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
 	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
 		return handleCommitEvent(log, team, event, h.github)
 	} else if event.Issue != nil {
 		id := strconv.Itoa(event.Issue.ID)
 		timestamp, err := h.redis.Get(ctx, id).Result()
-		if err != nil && err != redis.Nil {
+		if err != nil && !errors.Is(err, redis.Nil) {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
@@ -106,11 +107,11 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		}
 
 		msgBytes, err := h.redis.Get(ctx, timestamp).Result()
-		if err != nil && err != redis.Nil {
+		if err != nil && !errors.Is(err, redis.Nil) {
 			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
 		}
 
-		if err != redis.Nil && event.Action != "opened" {
+		if !errors.Is(err, redis.Nil) && event.Action != "opened" {
 			var oldMessage slack.Message
 			if err := json.Unmarshal([]byte(msgBytes), &oldMessage); err != nil {
 				return nil, err
@@ -138,7 +139,7 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 	} else if event.PullRequest != nil {
 		id := strconv.Itoa(event.PullRequest.ID)
 		timestamp, err := h.redis.Get(ctx, id).Result()
-		if err != nil && err != redis.Nil {
+		if err != nil && !errors.Is(err, redis.Nil) {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
@@ -148,11 +149,11 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 		}
 
 		messageBytes, err := h.redis.Get(ctx, timestamp).Result()
-		if err != nil && err != redis.Nil {
+		if err != nil && !errors.Is(err, redis.Nil) {
 			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
 		}
 
-		if err != redis.Nil && event.Action != "opened" {
+		if !errors.Is(err, redis.Nil) && event.Action != "opened" {
 			var oldMessage slack.Message
 			if err := json.Unmarshal([]byte(messageBytes), &oldMessage); err != nil {
 				return nil, err
@@ -201,7 +202,7 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 	} else if event.Workflow != nil {
 		id := event.Workflow.HeadSHA
 		timestamp, err := h.redis.Get(ctx, id).Result()
-		if err != nil && err != redis.Nil {
+		if err != nil && !errors.Is(err, redis.Nil) {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
@@ -211,11 +212,11 @@ func (h Handler) handle(ctx context.Context, log *slog.Logger, team github.Team,
 			}
 
 			msg, err := h.redis.Get(ctx, timestamp).Result()
-			if err != nil && err != redis.Nil {
+			if err != nil && !errors.Is(err, redis.Nil) {
 				log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
 			}
 
-			if err != redis.Nil {
+			if !errors.Is(err, redis.Nil) {
 				if err := h.slack.PostUpdatedCommitMessage(log, msg, event, timestamp); err != nil {
 					log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
 				}

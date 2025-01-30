@@ -32,7 +32,7 @@ type Config struct {
 	IgnoreRepositories          []string         `yaml:"ignoreRepositories"`
 }
 
-func (c Config) SilenceDepedabot() bool {
+func (c Config) ShouldSilenceDependabot() bool {
 	return c.SilenceDependabot == DependabotConfigAlways
 }
 
@@ -123,7 +123,7 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, resp.Body)
 		}
 
-		githubRepos := []GithubRepo{}
+		var githubRepos []GithubRepo
 		if err := json.Unmarshal(body, &githubRepos); err != nil {
 			return nil, err
 		}
@@ -186,7 +186,7 @@ func fetchMembers(teamURL, bearerToken string) ([]User, error) {
 		}
 
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("%s returned %v: %v", teamURL, resp.Status, body)
+			return nil, fmt.Errorf("%s returned %v: %s", teamURL, resp.Status, body)
 		}
 
 		var members []User

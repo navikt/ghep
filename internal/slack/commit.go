@@ -168,7 +168,7 @@ func (c Client) PostUpdatedCommitMessage(log *slog.Logger, msg string, event git
 	}
 
 	message.Timestamp = timestamp
-	message.Attachments[0].FooterIcon = netrualGithubIcon
+	message.Attachments[0].FooterIcon = neutralGithubIcon
 	message.Attachments[0].Footer = fmt.Sprintf("<%s|%s>", event.Workflow.URL, event.Workflow.Name)
 
 	marshalled, err := json.Marshal(message)

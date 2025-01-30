@@ -27,7 +27,7 @@ func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []g
 	}
 }
 
-func (c Client) Run(base, addr string) error {
+func (c *Client) Run(base, addr string) error {
 	http.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
 	http.HandleFunc("GET /internal/health", c.healthGetHandler)
 	return http.ListenAndServe(addr, nil)
@@ -41,8 +41,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Error("error reading body", "err", err.Error())
-		fmt.Fprintf(w, "error reading body: %s", err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("error reading body: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
 	defer r.Body.Close()
@@ -50,8 +49,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	event, err := github.CreateEvent(body)
 	if err != nil {
 		log.Error("error creating event", "err", err.Error())
-		fmt.Fprintf(w, "error creating event: %s", err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("error creating event: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
 

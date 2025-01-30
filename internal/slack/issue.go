@@ -26,7 +26,7 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 			{
 				Text:       attachmentText,
 				Color:      color,
-				FooterIcon: netrualGithubIcon,
+				FooterIcon: neutralGithubIcon,
 				Footer:     fmt.Sprintf("<%s|%s>", event.Repository.URL, event.Repository.FullName),
 			},
 		},

@@ -102,6 +102,7 @@ func (c Client) GetUserByEmail(email string) (*User, error) {
 		for _, err := range githubResp.Errors {
 			fmt.Fprintf(&b, "%s (type=%s, path=[%s])\n", err.Message, err.Type, strings.Join(err.Path, " "))
 		}
+
 		return nil, fmt.Errorf("graphql error: %s", b.String())
 	}
 

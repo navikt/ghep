@@ -73,7 +73,7 @@ func main() {
 	log.Info("Creating event handler")
 	eventHandler := events.NewHandler(githubClient, rdb, slackApi, teams)
 
-	api := api.New(
+	apiClient := api.New(
 		log.With("component", "api"),
 		eventHandler,
 		rdb,
@@ -86,14 +86,14 @@ func main() {
 	}
 
 	log.Info("Starting API server")
-	if err := api.Run(os.Getenv("API_BASE_PATH"), addr); err != nil {
+	if err := apiClient.Run(os.Getenv("API_BASE_PATH"), addr); err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
 }
 
 func logTeams(log *slog.Logger, teams []github.Team) {
-	teamNames := []string{}
+	var teamNames []string
 	for _, team := range teams {
 		teamNames = append(teamNames, team.Name)
 	}

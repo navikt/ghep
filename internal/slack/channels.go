@@ -105,7 +105,7 @@ func (c Client) ListChannels(apiMethod string) ([]Channel, error) {
 		}
 
 		var slackResp responseData
-		if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
+		if err := json.Unmarshal(body, &slackResp); err != nil {
 			return nil, err
 		}
 
@@ -132,7 +132,7 @@ func (c Client) ListChannels(apiMethod string) ([]Channel, error) {
 		}
 
 		if !slackResp.Ok {
-			return nil, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Nedded, slackResp.Provided)
+			return nil, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
 		}
 
 		if slackResp.Warn != "" {

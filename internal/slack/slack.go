@@ -12,7 +12,7 @@ import (
 
 const (
 	slackApi          = "https://slack.com/api"
-	netrualGithubIcon = "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+	neutralGithubIcon = "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
 )
 
 type Attachment struct {
@@ -40,7 +40,7 @@ type Channel struct {
 type responseData struct {
 	Ok               bool      `json:"ok"`
 	Error            string    `json:"error"`
-	Nedded           string    `json:"needed"`
+	Needed           string    `json:"needed"`
 	Provided         string    `json:"provided"`
 	Warn             string    `json:"warning"`
 	Channels         []Channel `json:"channels"`
@@ -138,7 +138,7 @@ func (c Client) handleSlackResponse(resp *http.Response, body string) (*response
 	}
 
 	if !slackResp.Ok {
-		return &slackResp, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Nedded, slackResp.Provided)
+		return &slackResp, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
 	}
 
 	if slackResp.Warn != "" {
