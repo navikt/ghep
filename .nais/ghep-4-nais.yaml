@@ -16,6 +16,7 @@ data:
       workflows: "#nais-ci"
       config:
         silenceDependabot: always
+        externalContributorsChannel: "#nais-external-contributors"
 ---
 
 apiVersion: nais.io/v1alpha1
