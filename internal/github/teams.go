@@ -186,7 +186,7 @@ func fetchMembers(teamURL, bearerToken string) ([]User, error) {
 		}
 
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("error fetching repos using '%s' (%v): %v", teamURL, resp.Status, body)
+			return nil, fmt.Errorf("%s returned %v: %v", teamURL, resp.Status, body)
 		}
 
 		var members []User
@@ -251,7 +251,7 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg s
 		teamUrl := fmt.Sprintf("%s/teams/%s", url, teams[0].Name)
 		members, err := fetchMembers(teamUrl, bearerToken)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("fetching members for %s: %v", teams[0].Name, err)
 		}
 		teams[0].Members = members
 
@@ -271,7 +271,7 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg s
 
 		members, err := fetchMembers(teamUrl, bearerToken)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("fetching members for %s: %v", team.Name, err)
 		}
 		team.Members = members
 
