@@ -246,15 +246,16 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg s
 		if err != nil {
 			return nil, err
 		}
-
 		teams[0].Repositories = repos
-		members, err := fetchMembers(url, bearerToken)
+
+		teamUrl := fmt.Sprintf("%s/%s", url, teams[0].Name)
+		members, err := fetchMembers(teamUrl, bearerToken)
 		if err != nil {
 			return nil, err
 		}
-
 		teams[0].Members = members
 
+		c.log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "repositories", len(repos), "members", len(members))
 		return teams, nil
 	}
 
@@ -266,14 +267,12 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg s
 		if err != nil {
 			return nil, err
 		}
-
 		team.Repositories = repos
 
 		members, err := fetchMembers(teamUrl, bearerToken)
 		if err != nil {
 			return nil, err
 		}
-
 		team.Members = members
 
 		teams[i] = team
