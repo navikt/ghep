@@ -114,6 +114,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					Action: "opened",
 					Sender: github.User{
 						Login: "external",
+						Type:  "User",
 					},
 					Issue: &github.Issue{
 						Number:      1,
@@ -144,6 +145,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					Action: "opened",
 					Sender: github.User{
 						Login: "external",
+						Type:  "User",
 					},
 					Issue: &github.Issue{
 						Number:      1,
@@ -174,6 +176,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					Action: "opened",
 					Sender: github.User{
 						Login: "internal",
+						Type:  "User",
 					},
 					Issue: &github.Issue{
 						Number:      1,
@@ -346,7 +349,8 @@ func TestHandleWorkflow(t *testing.T) {
 					Conclusion: "failure",
 				},
 				Sender: github.User{
-					Type: "Bot",
+					Login: "dependabot",
+					Type:  "Bot",
 				},
 			},
 			team: github.Team{
