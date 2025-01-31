@@ -100,7 +100,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 		want string
 	}{
 		{
-			name: "No external channel, external sender/user",
+			name: "No external channel, external sender",
 			args: args{
 				team: github.Team{
 					Name: "test",
@@ -127,7 +127,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 			want: "#internal",
 		},
 		{
-			name: "External channel, external sender/user",
+			name: "External channel, external sender",
 			args: args{
 				team: github.Team{
 					Name: "test",
@@ -157,37 +157,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 			want: "#external",
 		},
 		{
-			name: "External channel, external sender, internal user",
-			args: args{
-				team: github.Team{
-					Name: "test",
-					SlackChannels: github.SlackChannels{
-						Issues:       "#internal",
-						PullRequests: "#internal",
-					},
-					Members: []github.User{{Login: "internal"}},
-					Config: github.Config{
-						ExternalContributorsChannel: "#external",
-					},
-				},
-				event: github.Event{
-					Action: "opened",
-					Sender: github.User{
-						Login: "external",
-					},
-					Issue: &github.Issue{
-						Number:      1,
-						StateReason: "external",
-					},
-					PullRequest: &github.Issue{
-						Number: 1,
-					},
-				},
-			},
-			want: "#internal",
-		},
-		{
-			name: "External channel, internal sender, external user",
+			name: "External channel, internal sender",
 			args: args{
 				team: github.Team{
 					Name: "test",
@@ -214,7 +184,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					},
 				},
 			},
-			want: "#external",
+			want: "#internal",
 		},
 	}
 
