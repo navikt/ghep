@@ -73,7 +73,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "%s event handled for team %s", event.Repository.Name, team.Name)
+	fmt.Fprintf(w, "Event handled for team %s", team.Name)
 }
 
 func findTeam(teams []github.Team, event github.Event) (github.Team, bool) {
