@@ -73,7 +73,7 @@ func (t *Team) IsMember(user string) bool {
 // IsExternalContributor checks if a user is an external contributor to the team.
 // Bot users are not considered external contributors.
 func (t *Team) IsExternalContributor(user User) bool {
-	return t.Config.ExternalContributorsChannel != "" && user.Type == "User" && !t.IsMember(user.Login)
+	return t.Config.ExternalContributorsChannel != "" && user.IsUser() && !t.IsMember(user.Login)
 }
 
 func (t *Team) AddRepository(repo string) {

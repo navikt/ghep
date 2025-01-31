@@ -4,12 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"slices"
 	"time"
-)
-
-var (
-	dependabotAliases = []string{"dependabot[bot]", "github-actions[bot]"}
 )
 
 type User struct {
@@ -25,6 +20,18 @@ func (u User) ToSlack() string {
 	}
 
 	return fmt.Sprintf("<%s|%s>", u.URL, u.Login)
+}
+
+func (u User) IsDependabot() bool {
+	return u.IsBot() && u.Login == "dependabot[bot]"
+}
+
+func (u User) IsBot() bool {
+	return u.Type == "Bot"
+}
+
+func (u User) IsUser() bool {
+	return u.Type == "User"
 }
 
 type Author struct {
@@ -172,11 +179,6 @@ func (w *Workflow) UpdateFailedJob() error {
 	}
 
 	return nil
-}
-
-// IsFromDependabot checks if the event is from Dependabot
-func (e Event) IsFromDependabot() bool {
-	return slices.Contains(dependabotAliases, e.Sender.Login)
 }
 
 type Event struct {
