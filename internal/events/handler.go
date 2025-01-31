@@ -304,7 +304,7 @@ func handlePullRequestEvent(log *slog.Logger, team github.Team, threadTimestamp 
 }
 
 func handleReleaseEvent(log *slog.Logger, team github.Team, event github.Event, timestamp string) (*slack.Message, error) {
-	if !slices.Contains([]string{"created", "published", "edited"}, event.Action) {
+	if !slices.Contains([]string{"created", "edited"}, event.Action) {
 		return nil, nil
 	}
 
