@@ -28,6 +28,7 @@ func (c Client) EnsureChannels(teams []github.Team) error {
 		teams[i].SlackChannels.PullRequests = c.ensureChannel(team.SlackChannels.PullRequests, channels, joinedChannels)
 		teams[i].SlackChannels.Workflows = c.ensureChannel(team.SlackChannels.Workflows, channels, joinedChannels)
 		teams[i].Config.ExternalContributorsChannel = c.ensureChannel(team.Config.ExternalContributorsChannel, channels, joinedChannels)
+		teams[i].SlackChannels.Releases = c.ensureChannel(team.SlackChannels.Releases, channels, joinedChannels)
 	}
 
 	return nil

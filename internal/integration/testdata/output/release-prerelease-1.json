@@ -1,0 +1,14 @@
+{
+  "channel": "#test",
+  "text": "<https://github.com/Kyrremann|Kyrremann> created a <https://github.com/navikt/ghep/releases/tag/v0.0.1|prerelease> (`v0.0.1`).",
+  "attachments": [
+    {
+      "text": "## What's Changed\r\n* legger til tbd by @davidsteinsland in https://github.com/navikt/ghep/pull/3\r\n* Legg til flex by @heyvard in https://github.com/navikt/ghep/pull/2\r\n**Full Changelog**: https://github.com/navikt/ghep/commits/v0.0.1",
+      "color": "#000000",
+      "footer": "<https://github.com/navikt/ghep|navikt/ghep>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

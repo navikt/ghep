@@ -56,8 +56,12 @@ func TestHandleEvent(t *testing.T) {
 
 			goldnefilePath := filepath.Join("testdata/output", entry.Name())
 			goldenfile, err := os.ReadFile(goldnefilePath)
-			if err != nil && !os.IsNotExist(err) {
-				t.Fatal(err)
+			if err != nil {
+				if !os.IsNotExist(err) {
+					t.Fatal(err)
+				}
+
+				err = nil
 			}
 
 			var message *slack.Message
@@ -100,6 +104,13 @@ func TestHandleEvent(t *testing.T) {
 				}
 
 				message = slack.CreateWorkflowMessage(slackChannel, event)
+			} else if event.Release != nil {
+				var timestamp string
+				if event.Action == "edited" {
+					timestamp = "1234567890"
+				}
+
+				message = slack.CreateReleaseMessage(slackChannel, timestamp, event)
 			} else {
 				t.Fatalf("unknown event file: %s", entry.Name())
 			}

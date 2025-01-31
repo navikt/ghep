@@ -91,6 +91,17 @@ type Issue struct {
 	User        User   `json:"user"`
 }
 
+type Release struct {
+	ID         int    `json:"id"`
+	URL        string `json:"html_url"`
+	User       User   `json:"author"`
+	Tag        string `json:"tag_name"`
+	Name       string `json:"name"`
+	Draft      bool   `json:"draft"`
+	Prerelease bool   `json:"prerelease"`
+	Body       string `json:"body"`
+}
+
 type TeamEvent struct {
 	Name string `json:"name"`
 	URL  string `json:"html_url"`
@@ -178,6 +189,7 @@ type Event struct {
 	Compare             string       `json:"compare"`
 	Issue               *Issue       `json:"issue"`
 	PullRequest         *Issue       `json:"pull_request"`
+	Release             *Release     `json:"release"`
 	RepositoriesRemoved []Repository `json:"repositories_removed"`
 	Sender              User         `json:"sender"`
 	Team                *TeamEvent   `json:"team"`
