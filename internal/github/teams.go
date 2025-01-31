@@ -69,6 +69,12 @@ func (t *Team) IsMember(user string) bool {
 	return slices.ContainsFunc(t.Members, contains)
 }
 
+// IsExternalContributor checks if a user is an external contributor to the team.
+// Bot users are not considered external contributors.
+func (t *Team) IsExternalContributor(user User) bool {
+	return t.Config.ExternalContributorsChannel != "" && user.Type == "User" && !t.IsMember(user.Login)
+}
+
 func (t *Team) AddRepository(repo string) {
 	t.Repositories = append(t.Repositories, repo)
 }

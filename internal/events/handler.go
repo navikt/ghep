@@ -260,7 +260,7 @@ func handleIssueEvent(log *slog.Logger, team github.Team, threadTimestamp string
 	}
 
 	channel := team.SlackChannels.Issues
-	if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.Sender.Login) {
+	if team.IsExternalContributor(event.Sender) {
 		channel = team.Config.ExternalContributorsChannel
 	}
 
@@ -278,7 +278,7 @@ func handlePullRequestEvent(log *slog.Logger, team github.Team, threadTimestamp 
 	}
 
 	channel := team.SlackChannels.PullRequests
-	if team.Config.ExternalContributorsChannel != "" && !team.IsMember(event.Sender.Login) {
+	if team.IsExternalContributor(event.Sender) {
 		channel = team.Config.ExternalContributorsChannel
 	}
 
