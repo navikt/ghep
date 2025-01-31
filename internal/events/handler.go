@@ -61,6 +61,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 
 	ts, err := h.slack.PostMessage(payload)
 	if err != nil {
+		log.Error("error posting message", "err", err.Error(), "channel", message.Channel, "timestamp", message.Timestamp)
 		return err
 	}
 
