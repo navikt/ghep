@@ -39,6 +39,10 @@ type Author struct {
 	Username string `json:"username"`
 }
 
+func (a Author) IsDependabot() bool {
+	return a.Name == "dependabot[bot]"
+}
+
 func (a Author) AsUser() User {
 	return User{
 		Name:  a.Name,

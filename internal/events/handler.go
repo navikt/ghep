@@ -46,6 +46,14 @@ func shouldSilenceBots(team github.Team, event github.Event) bool {
 		if event.PullRequest != nil && event.PullRequest.User.IsBot() {
 			return true
 		}
+
+		if strings.HasPrefix(event.Ref, refHeadsPrefix) {
+			for _, commit := range event.Commits {
+				if commit.Author.IsDependabot() {
+					return true
+				}
+			}
+		}
 	}
 
 	return false
