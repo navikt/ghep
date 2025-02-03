@@ -48,11 +48,10 @@ func (c Client) ensureChannel(channel string, channels map[string]string, joined
 				c.log.Error("ensuring channels", "channel", channel, "error", err)
 			}
 			return id
-		} else {
-			c.log.Warn("channel not found", "channel", channel)
 		}
 	}
 
+	c.log.Warn("channel not found", "channel", channel)
 	return channel
 }
 
@@ -90,6 +89,7 @@ func (c Client) ListChannels(apiMethod string) ([]Channel, error) {
 	query := req.URL.Query()
 	query.Set("exclude_archived", "true")
 	query.Set("limit", "200")
+	query.Set("types", "public_channel,private_channel")
 
 	var channels []Channel
 	for {
