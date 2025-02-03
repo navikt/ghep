@@ -60,7 +60,9 @@ func (c Client) GetJoinedChannels() (map[string]string, error) {
 }
 
 func (c Client) GetAllChannels() (map[string]string, error) {
-	return c.getAndParseChannels("conversations.list")
+	// TODO: Dette blir heftig rate limited ved oppstart. Kan jeg løse dette på en bedre måte?
+	// return c.getAndParseChannels("conversations.list")
+	return map[string]string{}, nil
 }
 
 func (c Client) getAndParseChannels(apiMethod string) (map[string]string, error) {
