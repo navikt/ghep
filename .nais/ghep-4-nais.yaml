@@ -14,6 +14,7 @@ data:
       issues: "#nais-issues"
       pulls: "#nais-pull-requests"
       workflows: "#nais-ci"
+      releases: "#nais-releases"
       config:
         silenceDependabot: always
         externalContributorsChannel: "#nais-external-contributors"
