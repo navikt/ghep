@@ -37,6 +37,12 @@ Workflows som er vellykket er ikke så interessant, derfor er det kun workflows 
 
 ![A failed workflow will be posted to Slack](images/failed-workflow.png)
 
+### Releases
+
+Sender releases til en egen kanal, `draft`, `prerelease`, og `releases` blir sendt ut.
+
+![A release posted to Slack](images/release.png)
+
 ## Ta den i bruk
 
 Alt du trenger å gjøre er å redigere [`.nais/teams.yaml`](https://github.com/navikt/ghep/blob/main/.nais/teams.yaml) og legge til ditt team og deres kanaler.
@@ -47,6 +53,7 @@ nada:
  issues: "#nada-issues"
  pulls: "#nada-pull-requests"
  workflows: "#nada-ci"
+ releases: "#nada-releases"
 ```
 
 PS: Hvis kanalene dine er private må du selv invitere @ghep inn i hver kanal.
