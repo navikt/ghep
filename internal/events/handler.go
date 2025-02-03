@@ -36,8 +36,23 @@ func NewHandler(githubClient github.Client, redis *redis.Client, slackClient sla
 	}
 }
 
+func shouldSilenceBots(team github.Team, event github.Event) bool {
+	if team.Config.ShouldSilenceDependabot() {
+		if event.Sender.IsDependabot() {
+			return true
+		}
+
+		// Teams use different bots for merging pull requests, so we just ignore all merges from bots
+		if event.PullRequest != nil && event.PullRequest.User.IsBot() {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) error {
-	if team.Config.ShouldSilenceDependabot() && event.Sender.IsDependabot() {
+	if shouldSilenceBots(team, event) {
 		return nil
 	}
 
