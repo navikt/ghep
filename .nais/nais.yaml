@@ -45,13 +45,14 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
+  startup:
+    path: /internal/health
+    initialDelay: 120
+    periodSeconds: 30
   readiness:
     path: /internal/health
-    initialDelay: 60
-    periodSeconds: 15
   liveness:
     path: /internal/health
-    initialDelay: 90
   redis:
     - instance: events
       access: readwrite
