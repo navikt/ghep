@@ -42,8 +42,8 @@ func shouldSilenceBots(team github.Team, event github.Event) bool {
 			return true
 		}
 
-		// Teams use different bots for merging pull requests, so we just ignore all merges from bots
-		if event.PullRequest != nil && event.PullRequest.User.IsBot() {
+		// Teams use different bots for merging pull requests, so we need to check the author of the pull request
+		if event.PullRequest != nil && event.PullRequest.User.IsDependabot() {
 			return true
 		}
 
