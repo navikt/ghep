@@ -400,7 +400,7 @@ func handleWorkflowEvent(log *slog.Logger, team github.Team, event github.Event)
 		return nil, nil
 	}
 
-	if team.Config.Workflows.IgnoreBots && event.Sender.Type == "Bot" {
+	if team.Config.Workflows.IgnoreBots && event.Sender.IsBot() {
 		return nil, nil
 	}
 
