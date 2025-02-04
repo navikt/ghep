@@ -137,6 +137,7 @@ type Workflow struct {
 	FailedJob  FailedJob
 }
 
+// UpdateFailedJob finds and update the failed job in a workflow
 func (w *Workflow) UpdateFailedJob() error {
 	type Workflow struct {
 		Jobs []struct {
