@@ -8,20 +8,29 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
+const (
+	ReactionSuccess    = "white_check_mark"
+	ReactionFailure    = "x"
+	ReactionCancelled  = "parking"
+	ReactionQueued     = "eyes"
+	ReactionInProgress = "hourglass_flowing_sand"
+	ReactionDefault    = "dogcited"
+)
+
 func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, channel, timestamp string) error {
-	reaction := "dogcited"
+	reaction := ReactionDefault
 	if event.Action == "requested" && event.Workflow.Status == "queued" {
-		reaction = "eyes"
+		reaction = ReactionQueued
 	} else if event.Action == "in_progress" && event.Workflow.Status == "in_progress" {
-		reaction = "hourglass_flowing_sand"
+		reaction = ReactionInProgress
 	} else if event.Action == "completed" {
 		switch event.Workflow.Conclusion {
 		case "success":
-			reaction = "white_check_mark"
+			reaction = ReactionSuccess
 		case "failure":
-			reaction = "x"
+			reaction = ReactionFailure
 		case "cancelled":
-			reaction = "parking"
+			reaction = ReactionCancelled
 		}
 
 		log = log.With("conclusion", event.Workflow.Conclusion)
