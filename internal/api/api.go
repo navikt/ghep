@@ -71,22 +71,30 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 				event.Sender,
 			},
 		}
-	} else {
-		if event.Team != nil {
-			for _, t := range c.teams {
-				if t.Name == event.Team.Name {
-					team = t
-					break
-				}
-			}
-		} else {
-			var found bool
 
-			team, found = findTeamByRepository(c.teams, event.FindRepositoryName())
-			if !found {
-				fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
-				return
+		log := log.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
+		if err := c.events.Handle(r.Context(), log, team, event); err != nil {
+			log.Error("error handling event", "err", err.Error())
+			http.Error(w, fmt.Sprintf("Error handling event for %s", team.Name), http.StatusInternalServerError)
+			return
+		}
+
+	}
+
+	if event.Team != nil {
+		for _, t := range c.teams {
+			if t.Name == event.Team.Name {
+				team = t
+				break
 			}
+		}
+	} else {
+		var found bool
+
+		team, found = findTeamByRepository(c.teams, event.FindRepositoryName())
+		if !found {
+			fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
+			return
 		}
 	}
 
