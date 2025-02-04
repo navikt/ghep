@@ -25,6 +25,8 @@ spec:
       value: navikt
     - name: GITHUB_BLOCKLIST_REPOS
       value: "vault-iac,aad-iac,nav-api-portal"
+    - name: EXTERNAL_CONTRIBUTORS_CHANNEL
+      value: github-eksterne-bidragsytere
   filesFrom:
     - configmap: ghep-teams
       mountPath: /var/run/configmaps

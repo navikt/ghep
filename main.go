@@ -73,11 +73,20 @@ func main() {
 	log.Info("Creating event handler")
 	eventHandler := events.NewHandler(githubClient, rdb, slackApi, teams)
 
+	orgMembers, err := githubClient.FetchOrgMembers()
+	if err != nil {
+		log.Error("fetching org members", "err", err.Error())
+	}
+
+	fmt.Println(orgMembers)
+
 	apiClient := api.New(
 		log.With("component", "api"),
 		eventHandler,
 		rdb,
 		teams,
+		orgMembers,
+		os.Getenv("EXTERNAL_CONTRIBUTORS_CHANNEL"),
 	)
 
 	addr := os.Getenv("SERVER_ADDR")

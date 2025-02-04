@@ -12,18 +12,24 @@ import (
 )
 
 type Client struct {
-	log    *slog.Logger
-	events events.Handler
-	redis  *redis.Client
-	teams  []github.Team
+	log        *slog.Logger
+	events     events.Handler
+	redis      *redis.Client
+	teams      []github.Team
+	orgMembers []github.User
+
+	ExternalContributorsChannel string
 }
 
-func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []github.Team) Client {
+func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []github.Team, orgMembers []github.User, externalContributorsChannel string) Client {
 	return Client{
-		log:    log,
-		events: events,
-		redis:  redis,
-		teams:  teams,
+		log:        log,
+		events:     events,
+		redis:      redis,
+		teams:      teams,
+		orgMembers: orgMembers,
+
+		ExternalContributorsChannel: externalContributorsChannel,
 	}
 }
 
@@ -54,20 +60,33 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var team github.Team
-	if event.Team != nil {
-		for _, t := range c.teams {
-			if t.Name == event.Team.Name {
-				team = t
-				break
-			}
+	if isAnExternalContributor(event.Sender, c.orgMembers) {
+		team = github.Team{
+			Name: "external-contributors",
+			SlackChannels: github.SlackChannels{
+				PullRequests: c.ExternalContributorsChannel,
+				Issues:       c.ExternalContributorsChannel,
+			},
+			Members: []github.User{
+				event.Sender,
+			},
 		}
 	} else {
-		var found bool
+		if event.Team != nil {
+			for _, t := range c.teams {
+				if t.Name == event.Team.Name {
+					team = t
+					break
+				}
+			}
+		} else {
+			var found bool
 
-		team, found = findTeamByRepository(c.teams, event.FindRepositoryName())
-		if !found {
-			fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
-			return
+			team, found = findTeamByRepository(c.teams, event.FindRepositoryName())
+			if !found {
+				fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
+				return
+			}
 		}
 	}
 
@@ -91,4 +110,14 @@ func findTeamByRepository(teams []github.Team, repositoryName string) (github.Te
 	}
 
 	return github.Team{}, false
+}
+
+func isAnExternalContributor(user github.User, orgMembers []github.User) bool {
+	for _, member := range orgMembers {
+		if member.Login == user.Login {
+			return false
+		}
+	}
+
+	return true
 }
