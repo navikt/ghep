@@ -121,6 +121,10 @@ func findTeamByRepository(teams []github.Team, repositoryName string) (github.Te
 }
 
 func isAnExternalContributor(user github.User, orgMembers []github.User) bool {
+	if user.IsBot() {
+		return false
+	}
+
 	for _, member := range orgMembers {
 		if member.Login == user.Login {
 			return false
