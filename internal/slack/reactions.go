@@ -41,7 +41,7 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 	}
 
 	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", channel, "timestamp", timestamp)
-	if err := c.reactionRequest("add", channel, timestamp, reaction); err != nil {
+	if err := c.PostReaction(channel, timestamp, reaction); err != nil {
 		return fmt.Errorf("posting reaction to workflow event: %v", err)
 	}
 
@@ -79,6 +79,10 @@ func (c Client) GetReactions(channel, timestamp string) ([]string, error) {
 	}
 
 	return reactions, nil
+}
+
+func (c Client) PostReaction(channel, timestamp, reaction string) error {
+	return c.reactionRequest("add", channel, timestamp, reaction)
 }
 
 func (c Client) reactionRequest(method, channel, timestamp, reaction string) error {
