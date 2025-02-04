@@ -49,9 +49,10 @@ func (c Client) ensureChannel(channel string, channels map[string]string, joined
 			}
 			return id
 		}
+
+		c.log.Warn("channel not found", "channel", channel)
 	}
 
-	c.log.Warn("channel not found", "channel", channel)
 	return channel
 }
 
