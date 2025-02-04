@@ -242,19 +242,27 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 		}
 
-		if timestamp != "" && team.SlackChannels.Commits != "" {
-			if err := h.slack.PostWorkflowReaction(log, event, team.SlackChannels.Commits, timestamp); err != nil {
-				log.Error("error posting workflow reaction", "err", err.Error(), "channel", team.SlackChannels.Commits, "timestamp", timestamp)
+		if timestamp != "" {
+			if team.SlackChannels.Commits != "" {
+				if err := h.slack.PostWorkflowReaction(log, event, team.SlackChannels.Commits, timestamp); err != nil {
+					log.Error("error posting workflow reaction", "err", err.Error(), "channel", team.SlackChannels.Commits, "timestamp", timestamp)
+				}
+
+				msg, err := h.redis.Get(ctx, timestamp).Result()
+				if err != nil && !errors.Is(err, redis.Nil) {
+					log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
+				}
+
+				if !errors.Is(err, redis.Nil) {
+					if err := h.slack.PostUpdatedCommitMessage(log, msg, event, timestamp); err != nil {
+						log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+					}
+				}
 			}
 
-			msg, err := h.redis.Get(ctx, timestamp).Result()
-			if err != nil && !errors.Is(err, redis.Nil) {
-				log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
-			}
-
-			if !errors.Is(err, redis.Nil) {
-				if err := h.slack.PostUpdatedCommitMessage(log, msg, event, timestamp); err != nil {
-					log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+			if event.Action == "completed" && event.Workflow.Conclusion == "success" {
+				if err := h.slack.PostReaction(team.SlackChannels.Workflows, timestamp, slack.ReactionSuccess); err != nil {
+					log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Workflows, "timestamp", timestamp)
 				}
 			}
 		}
