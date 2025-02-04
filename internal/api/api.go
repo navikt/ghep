@@ -55,7 +55,12 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	var team github.Team
 	if event.Team != nil {
-		team.Name = event.Team.Name
+		for _, t := range c.teams {
+			if t.Name == event.Team.Name {
+				team = t
+				break
+			}
+		}
 	} else {
 		var found bool
 
