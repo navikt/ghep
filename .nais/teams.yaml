@@ -129,7 +129,7 @@ data:
     tpts:
       commits: "#tp-github-feed"
       issues: "#tp-github-feed"
-      pulls: "#tp-github-feed"
+      pulls: "#tp-pull-request"
       workflows: "#tp-github-feed"
       config:
         silenceDependabot: "always"
