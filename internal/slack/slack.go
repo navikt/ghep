@@ -17,6 +17,7 @@ const (
 
 type Attachment struct {
 	Text       string `json:"text"`
+	Type       string `json:"type,omitempty"`
 	Color      string `json:"color"`
 	Footer     string `json:"footer,omitempty"`
 	FooterIcon string `json:"footer_icon,omitempty"`

@@ -25,6 +25,7 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 		Attachments: []Attachment{
 			{
 				Text:       attachmentText,
+				Type:       "mrkdwn",
 				Color:      color,
 				FooterIcon: neutralGithubIcon,
 				Footer:     fmt.Sprintf("<%s|%s>", event.Repository.URL, event.Repository.FullName),
