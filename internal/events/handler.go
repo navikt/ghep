@@ -98,6 +98,37 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		}
 	}
 
+	// This checks if we have sent the message with channel name, and not the channel ID
+	if message.Channel != resp.Channel {
+		channels := team.SlackChannels
+		if channels.Commits == message.Channel {
+			channels.Commits = resp.Channel
+		}
+		if channels.Issues == message.Channel {
+			channels.Issues = resp.Channel
+		}
+		if channels.PullRequests == message.Channel {
+			channels.PullRequests = resp.Channel
+		}
+		if channels.Releases == message.Channel {
+			channels.Releases = resp.Channel
+		}
+		if channels.Workflows == message.Channel {
+			channels.Workflows = resp.Channel
+		}
+
+		for i, t := range h.teams {
+			if t.Name == team.Name {
+				h.teams[i].SlackChannels = channels
+				break
+			}
+		}
+
+		if err := h.slack.JoinChannel(resp.Channel); err != nil {
+			log.Error("error joining channel", "err", err.Error(), "channel", message.Channel, "channel_id", resp.Channel)
+		}
+	}
+
 	return nil
 }
 
