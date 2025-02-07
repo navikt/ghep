@@ -141,6 +141,8 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 		return strconv.Itoa(event.PullRequest.ID)
 	} else if event.IsCommit() {
 		return event.After
+	} else if event.Workflow != nil && event.Action == "completed" && event.Workflow.Conclusion == "failure" {
+		return strconv.Itoa(event.Workflow.ID)
 	}
 
 	return ""
@@ -267,33 +269,42 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 
 		return payload, err
 	} else if event.Workflow != nil {
-		id := event.Workflow.HeadSHA
-		timestamp, err := h.redis.Get(ctx, id).Result()
+		gitCommitSHA := event.Workflow.HeadSHA
+		commitTimestamp, err := h.redis.Get(ctx, gitCommitSHA).Result()
 		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+			log.Error("error getting thread timestamp", "err", err.Error(), "id", gitCommitSHA)
 		}
 
-		if timestamp != "" {
+		if commitTimestamp != "" {
 			if team.SlackChannels.Commits != "" {
-				if err := h.slack.PostWorkflowReaction(log, event, team.SlackChannels.Commits, timestamp); err != nil {
-					log.Error("error posting workflow reaction", "err", err.Error(), "channel", team.SlackChannels.Commits, "timestamp", timestamp)
+				if err := h.slack.PostWorkflowReaction(log, event, team.SlackChannels.Commits, commitTimestamp); err != nil {
+					log.Error("error posting workflow reaction", "err", err.Error(), "channel", team.SlackChannels.Commits, "timestamp", commitTimestamp)
 				}
 
-				msg, err := h.redis.Get(ctx, timestamp).Result()
+				msg, err := h.redis.Get(ctx, commitTimestamp).Result()
 				if err != nil && !errors.Is(err, redis.Nil) {
-					log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
+					log.Error("error getting message", "err", err.Error(), "timestamp", commitTimestamp)
 				}
 
 				if !errors.Is(err, redis.Nil) {
-					if err := h.slack.PostUpdatedCommitMessage(log, msg, event, timestamp); err != nil {
-						log.Error("error updating message", "err", err.Error(), "timestamp", timestamp)
+					if err := h.slack.PostUpdatedCommitMessage(log, msg, event, commitTimestamp); err != nil {
+						log.Error("error updating message", "err", err.Error(), "timestamp", commitTimestamp)
 					}
 				}
 			}
+		}
 
+		workflowID := strconv.Itoa(event.Workflow.ID)
+		workflowTimestamp, err := h.redis.Get(ctx, workflowID).Result()
+		if err != nil && !errors.Is(err, redis.Nil) {
+			log.Error("error getting workflow timestamp", "err", err.Error(), "id", workflowID)
+		}
+
+		if workflowTimestamp != "" {
+			log.Info("event", "action", event.Action, "workflow_status", event.Workflow.Status, "workflow_conclusion", event.Workflow.Conclusion)
 			if event.Action == "completed" && event.Workflow.Conclusion == "success" {
-				if err := h.slack.PostReaction(team.SlackChannels.Workflows, timestamp, slack.ReactionSuccess); err != nil {
-					log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Workflows, "timestamp", timestamp)
+				if err := h.slack.PostReaction(team.SlackChannels.Workflows, workflowTimestamp, slack.ReactionSuccess); err != nil {
+					log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Workflows, "timestamp", workflowTimestamp)
 				}
 			}
 		}

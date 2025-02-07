@@ -130,6 +130,7 @@ type FailedJob struct {
 }
 
 type Workflow struct {
+	ID         int    `json:"id"`
 	Name       string `json:"name"`
 	HeadBranch string `json:"head_branch"`
 	HeadSHA    string `json:"head_sha"`
