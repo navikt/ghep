@@ -78,8 +78,6 @@ func main() {
 		log.Error("fetching org members", "err", err.Error())
 	}
 
-	fmt.Println(orgMembers)
-
 	apiClient := api.New(
 		log.With("component", "api"),
 		eventHandler,
