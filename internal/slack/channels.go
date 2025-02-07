@@ -12,29 +12,24 @@ import (
 )
 
 func (c Client) EnsureChannels(teams []github.Team) error {
-	channels, err := c.GetAllChannels()
-	if err != nil {
-		return err
-	}
-
-	joinedChannels, err := c.GetJoinedChannels()
+	joinedChannels, err := c.getJoinedChannels()
 	if err != nil {
 		return err
 	}
 
 	for i, team := range teams {
-		teams[i].SlackChannels.Commits = c.ensureChannel(team.SlackChannels.Commits, channels, joinedChannels)
-		teams[i].SlackChannels.Issues = c.ensureChannel(team.SlackChannels.Issues, channels, joinedChannels)
-		teams[i].SlackChannels.PullRequests = c.ensureChannel(team.SlackChannels.PullRequests, channels, joinedChannels)
-		teams[i].SlackChannels.Workflows = c.ensureChannel(team.SlackChannels.Workflows, channels, joinedChannels)
-		teams[i].Config.ExternalContributorsChannel = c.ensureChannel(team.Config.ExternalContributorsChannel, channels, joinedChannels)
-		teams[i].SlackChannels.Releases = c.ensureChannel(team.SlackChannels.Releases, channels, joinedChannels)
+		teams[i].SlackChannels.Commits = c.findChannelIDByName(team.SlackChannels.Commits, joinedChannels)
+		teams[i].SlackChannels.Issues = c.findChannelIDByName(team.SlackChannels.Issues, joinedChannels)
+		teams[i].SlackChannels.PullRequests = c.findChannelIDByName(team.SlackChannels.PullRequests, joinedChannels)
+		teams[i].SlackChannels.Workflows = c.findChannelIDByName(team.SlackChannels.Workflows, joinedChannels)
+		teams[i].Config.ExternalContributorsChannel = c.findChannelIDByName(team.Config.ExternalContributorsChannel, joinedChannels)
+		teams[i].SlackChannels.Releases = c.findChannelIDByName(team.SlackChannels.Releases, joinedChannels)
 	}
 
 	return nil
 }
 
-func (c Client) ensureChannel(channel string, channels map[string]string, joinedChannels map[string]string) string {
+func (c Client) findChannelIDByName(channel string, joinedChannels map[string]string) string {
 	if channel != "" {
 		channel = strings.TrimPrefix(channel, "#")
 		id, joined := joinedChannels[channel]
@@ -42,32 +37,18 @@ func (c Client) ensureChannel(channel string, channels map[string]string, joined
 			return id
 		}
 
-		id, ok := channels[channel]
-		if ok {
-			if err := c.JoinChannel(id); err != nil {
-				c.log.Error("ensuring channels", "channel", channel, "error", err)
-			}
-			return id
-		}
-
-		c.log.Warn("channel not found", "channel", channel)
+		c.log.Warn("channel not joined", "channel", channel)
 	}
 
 	return channel
 }
 
-func (c Client) GetJoinedChannels() (map[string]string, error) {
+func (c Client) getJoinedChannels() (map[string]string, error) {
 	return c.getAndParseChannels("users.conversations")
 }
 
-func (c Client) GetAllChannels() (map[string]string, error) {
-	// TODO: Dette blir heftig rate limited ved oppstart. Kan jeg løse dette på en bedre måte?
-	// return c.getAndParseChannels("conversations.list")
-	return map[string]string{}, nil
-}
-
 func (c Client) getAndParseChannels(apiMethod string) (map[string]string, error) {
-	response, err := c.ListChannels(apiMethod)
+	response, err := c.listChannels(apiMethod)
 	if err != nil {
 		return nil, fmt.Errorf("listing all channels: %w", err)
 	}
@@ -80,7 +61,7 @@ func (c Client) getAndParseChannels(apiMethod string) (map[string]string, error)
 	return channels, nil
 }
 
-func (c Client) ListChannels(apiMethod string) ([]Channel, error) {
+func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 	req, err := http.NewRequest("GET", slackApi+"/"+apiMethod, nil)
 	if err != nil {
 		return nil, err
@@ -108,7 +89,7 @@ func (c Client) ListChannels(apiMethod string) ([]Channel, error) {
 			return nil, err
 		}
 
-		var slackResp responseData
+		var slackResp ChannelResponse
 		if err := json.Unmarshal(body, &slackResp); err != nil {
 			return nil, err
 		}
@@ -139,8 +120,8 @@ func (c Client) ListChannels(apiMethod string) ([]Channel, error) {
 			return nil, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
 		}
 
-		if slackResp.Warn != "" {
-			c.log.Info("got a warning", "warn", slackResp.Warn)
+		if slackResp.Warning != "" {
+			c.log.Info("got a warning", "warn", slackResp.Warning)
 		}
 
 		channels = append(channels, slackResp.Channels...)
@@ -163,6 +144,7 @@ func (c Client) JoinChannel(channel string) error {
 
 	marshalled, err := json.Marshal(payload)
 	if err != nil {
+		c.log.Error("Error marshalling payload", "error", err)
 		return err
 	}
 

@@ -81,11 +81,12 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		return err
 	}
 
-	ts, err := h.slack.PostMessage(payload)
+	resp, err := h.slack.PostMessage(payload)
 	if err != nil {
 		log.Error("error posting message", "err", err.Error(), "channel", message.Channel, "timestamp", message.Timestamp)
 		return err
 	}
+	ts := resp.Timestamp
 
 	if err := h.redis.Set(ctx, ts, string(payload), oneYear).Err(); err != nil {
 		log.Error("error setting message", "err", err.Error(), "ts", ts)

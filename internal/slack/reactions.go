@@ -67,9 +67,14 @@ func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, curre
 }
 
 func (c Client) GetReactions(channel, timestamp string) ([]string, error) {
-	resp, err := c.getRequest("reactions.get", channel, timestamp)
+	body, err := c.getRequest("reactions.get", channel, timestamp)
 	if err != nil {
-		c.log.Error("Error getting reactions", "response", resp, "error", err)
+		c.log.Error("Error getting reactions", "response", body, "error", err)
+		return nil, err
+	}
+
+	var resp ReactionResponse
+	if err := json.Unmarshal([]byte(body), &resp); err != nil {
 		return nil, err
 	}
 
@@ -97,10 +102,17 @@ func (c Client) reactionRequest(method, channel, timestamp, reaction string) err
 		return err
 	}
 
-	resp, err := c.postRequest("reactions."+method, marshalled)
+	body, err := c.postRequest("reactions."+method, marshalled)
 	if err != nil {
-		if resp != nil && (resp.Error == "already_reacted" || resp.Error == "no_reaction") {
-			return nil
+		if body != "" {
+			var resp ReactionResponse
+			if err := json.Unmarshal([]byte(body), &resp); err != nil {
+				return err
+			}
+
+			if resp.Error == "already_reacted" || resp.Error == "no_reaction" {
+				return nil
+			}
 		}
 
 		return err

@@ -38,22 +38,39 @@ type Channel struct {
 	Name string `json:"name"`
 }
 
-type responseData struct {
-	Ok               bool      `json:"ok"`
-	Error            string    `json:"error"`
-	Needed           string    `json:"needed"`
-	Provided         string    `json:"provided"`
-	Warn             string    `json:"warning"`
-	Channels         []Channel `json:"channels"`
-	TimeStamp        string    `json:"ts"`
+type Response struct {
+	Ok       bool   `json:"ok"`
+	Error    string `json:"error"`
+	Warning  string `json:"warning"`
+	Needed   string `json:"needed"`
+	Provided string `json:"provided"`
+
 	ResponseMetadata struct {
 		NextCursor string `json:"next_cursor"`
 	} `json:"response_metadata"`
+}
+
+type MessageResponse struct {
+	Response
+
+	Channel   string `json:"channel"`
+	Timestamp string `json:"ts"`
+}
+
+type ReactionResponse struct {
+	Response
+
 	Message struct {
 		Reactions []struct {
 			Name string `json:"name"`
 		} `json:"reactions"`
 	} `json:"message"`
+}
+
+type ChannelResponse struct {
+	Response
+
+	Channels []Channel `json:"channels"`
 }
 
 type Client struct {
@@ -78,10 +95,10 @@ func New(log *slog.Logger, token string) (Client, error) {
 	return client, nil
 }
 
-func (c Client) postRequest(apiMethod string, payload []byte) (*responseData, error) {
+func (c Client) postRequest(apiMethod string, payload []byte) (string, error) {
 	req, err := http.NewRequest("POST", slackApi+"/"+apiMethod, bytes.NewReader(payload))
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	req.Header.Add("Authorization", "Bearer "+c.token)
@@ -89,21 +106,22 @@ func (c Client) postRequest(apiMethod string, payload []byte) (*responseData, er
 
 	resp, err := c.httpDoWithRetry(req, 3)
 	if err != nil {
-		return nil, fmt.Errorf("giving up after 3 retries: %v", err)
+		return "", fmt.Errorf("giving up after 3 retries: %v", err)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		c.log.Error("error reading response body", "error", err)
+		return "", err
 	}
 
 	return c.handleSlackResponse(resp, string(body))
 }
 
-func (c Client) getRequest(apiMethod, channel, timestamp string) (*responseData, error) {
+func (c Client) getRequest(apiMethod, channel, timestamp string) (string, error) {
 	req, err := http.NewRequest("GET", slackApi+"/"+apiMethod, nil)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	req.Header.Add("Authorization", "Bearer "+c.token)
@@ -116,37 +134,38 @@ func (c Client) getRequest(apiMethod, channel, timestamp string) (*responseData,
 
 	resp, err := c.httpDoWithRetry(req, 3)
 	if err != nil {
-		return nil, fmt.Errorf("giving up after 3 retries: %v", err)
+		return "", fmt.Errorf("giving up after 3 retries: %v", err)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	return c.handleSlackResponse(resp, string(body))
 
 }
 
-func (c Client) handleSlackResponse(resp *http.Response, body string) (*responseData, error) {
-	var slackResp responseData
+func (c Client) handleSlackResponse(resp *http.Response, body string) (string, error) {
+	var slackResp Response
 	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
-		return nil, err
+		c.log.Error("error unmarshalling response", "error", err, "body", body)
+		return body, err
 	}
 
 	if resp.StatusCode != 200 {
-		return &slackResp, fmt.Errorf("non 200 status code(%v): %v", resp.StatusCode, slackResp.Error)
+		return body, fmt.Errorf("non 200 status code(%v): %v", resp.StatusCode, slackResp.Error)
 	}
 
 	if !slackResp.Ok {
-		return &slackResp, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
+		return body, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
 	}
 
-	if slackResp.Warn != "" {
-		c.log.Info("got a warning", "warn", slackResp.Warn)
+	if slackResp.Warning != "" {
+		c.log.Info("got a warning", "warn", slackResp.Warning)
 	}
 
-	return &slackResp, nil
+	return body, nil
 }
 
 func (c Client) httpDoWithRetry(req *http.Request, retries int) (*http.Response, error) {
