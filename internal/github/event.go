@@ -4,7 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
+)
+
+const (
+	RefHeadsPrefix = "refs/heads/"
 )
 
 type User struct {
@@ -184,6 +189,10 @@ func (w *Workflow) UpdateFailedJob() error {
 	}
 
 	return nil
+}
+
+func (e Event) IsCommit() bool {
+	return strings.HasPrefix(e.Ref, RefHeadsPrefix)
 }
 
 type Event struct {

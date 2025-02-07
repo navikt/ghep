@@ -16,8 +16,7 @@ import (
 )
 
 const (
-	refHeadsPrefix = "refs/heads/"
-	oneYear        = 8760 * time.Hour
+	oneYear = 8760 * time.Hour
 )
 
 type Handler struct {
@@ -47,7 +46,7 @@ func shouldSilenceBots(team github.Team, event github.Event) bool {
 			return true
 		}
 
-		if strings.HasPrefix(event.Ref, refHeadsPrefix) {
+		if event.IsCommit() {
 			for _, commit := range event.Commits {
 				if commit.Author.IsDependabot() {
 					return true
@@ -108,7 +107,7 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 		return strconv.Itoa(event.Issue.ID)
 	} else if event.PullRequest != nil && event.Action == "opened" {
 		return strconv.Itoa(event.PullRequest.ID)
-	} else if strings.HasPrefix(event.Ref, refHeadsPrefix) {
+	} else if event.IsCommit() {
 		return event.After
 	}
 
@@ -116,7 +115,7 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 }
 
 func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	if strings.HasPrefix(event.Ref, refHeadsPrefix) {
+	if event.IsCommit() {
 		return handleCommitEvent(log, team, event, h.github)
 	} else if event.Issue != nil {
 		id := strconv.Itoa(event.Issue.ID)
@@ -280,7 +279,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 }
 
 func handleCommitEvent(log *slog.Logger, team github.Team, event github.Event, githubClient github.Client) (*slack.Message, error) {
-	branch := strings.TrimPrefix(event.Ref, refHeadsPrefix)
+	branch := strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
 
 	if team.SlackChannels.Commits == "" {
 		return nil, nil
