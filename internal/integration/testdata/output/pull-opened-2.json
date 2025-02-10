@@ -4,6 +4,7 @@
   "attachments": [
     {
       "text": "*<https://github.com/navikt/knada-gcp/pull/317|#317 [NOTASK] cnpg memory spikes to ~1.7Gi memory at startup>*\n<img width=\"381\" alt=\"image\" src=\"https://github.com/navikt/knada-gcp/assets/154348/a5010285-eece-4f2d-b132-4aa1e71a11ae\">\r\n\r\nRecommend to set request first, then look at workload graph, and set limit afterwards :D",
+      "type": "mrkdwn",
       "color": "#34a44c",
       "footer": "<https://github.com/navikt/knada-gcp|navikt/knada-gcp>",
       "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"

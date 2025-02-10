@@ -4,6 +4,7 @@
   "attachments": [
     {
       "text": "*<https://github.com/navikt/knorten/pull/187|#187 feat: tag knadavm>*\nGir oss muligheten til å treffe de med brannmurer.",
+      "type": "mrkdwn",
       "color": "#34a44c",
       "footer": "<https://github.com/navikt/knorten|navikt/knorten>",
       "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"

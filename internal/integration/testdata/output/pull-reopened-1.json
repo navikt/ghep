@@ -4,6 +4,7 @@
   "attachments": [
     {
       "text": "*<https://github.com/navikt/nada-soda-service/pull/24|#24 build(deps): bump the go group with 1 update>*",
+      "type": "mrkdwn",
       "color": "#34a44c",
       "footer": "<https://github.com/navikt/nada-soda-service|navikt/nada-soda-service>",
       "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
