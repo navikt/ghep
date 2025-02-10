@@ -58,19 +58,21 @@ data:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
+      silenceDependabot: "always"
       config:
-        # externalContributorsChannel: "#tsm-extern-contrib"
+        externalContributorsChannel: "#tsm-extern-contrib"
         workflows:
-          ignoreBots: false
+          ignoreBots: true
           branches: ["main", "master"]
     tsm:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
+      silenceDependabot: "always"
       config:
-        # externalContributorsChannel: "#tsm-extern-contrib"
+        externalContributorsChannel: "#tsm-extern-contrib"
         workflows:
-          ignoreBots: false
+          ignoreBots: true
           branches: ["main"]
     teamdagpenger:
       commits: "#dp-commits"
