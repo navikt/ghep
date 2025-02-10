@@ -116,10 +116,14 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		if channels.Workflows == message.Channel {
 			channels.Workflows = resp.Channel
 		}
+		if team.Config.ExternalContributorsChannel == message.Channel {
+			team.Config.ExternalContributorsChannel = resp.Channel
+		}
 
 		for i, t := range h.teams {
 			if t.Name == team.Name {
 				h.teams[i].SlackChannels = channels
+				h.teams[i].Config.ExternalContributorsChannel = team.Config.ExternalContributorsChannel
 				break
 			}
 		}
