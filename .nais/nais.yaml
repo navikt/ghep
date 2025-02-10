@@ -55,6 +55,6 @@ spec:
     path: /internal/health
   liveness:
     path: /internal/health
-  redis:
+  valkey:
     - instance: events
       access: readwrite

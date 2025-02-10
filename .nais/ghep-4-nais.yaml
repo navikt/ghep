@@ -76,6 +76,6 @@ spec:
   liveness:
     path: /internal/health
     initialDelay: 90
-  redis:
+  valkey:
     - instance: events
       access: readwrite
