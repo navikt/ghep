@@ -49,8 +49,8 @@ spec:
         - ipv4: 3.68.170.153
   startup:
     path: /internal/health
-    initialDelay: 120
-    periodSeconds: 30
+    initialDelay: 30
+    periodSeconds: 5
   readiness:
     path: /internal/health
   liveness:

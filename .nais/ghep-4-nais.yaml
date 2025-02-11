@@ -69,13 +69,14 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
+  startup:
+    path: /internal/health
+    initialDelay: 30
+    periodSeconds: 5
   readiness:
     path: /internal/health
-    initialDelay: 60
-    periodSeconds: 15
   liveness:
     path: /internal/health
-    initialDelay: 90
   valkey:
     - instance: events
       access: readwrite
