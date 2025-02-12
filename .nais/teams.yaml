@@ -149,3 +149,11 @@ data:
       commits: "#pen-dataprodukt-github"
       issues: "#pen-dataprodukt-github"
       pulls: "#pen-dataprodukt-github"
+    cv:
+      issues: "#team-cv-github-events"
+      pulls: "#team-cv-github-events"
+      workflows: "#team-cv-github-events"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          branches: ["main", "master"]
