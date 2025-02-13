@@ -90,8 +90,7 @@ func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Ev
 
 		coAuthors, err := fetchCoAuthors(log, githubClient, commit)
 		if err != nil {
-			// TODO: Log error, but continue
-			return "", fmt.Errorf("fetching co-authors: %w", err)
+			log.Error("Failed to fetch co-authors", "error", err)
 		}
 
 		for _, coAuthor := range coAuthors {
