@@ -175,20 +175,20 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		if !errors.Is(err, redis.Nil) && event.Action != "opened" {
 			var oldMessage slack.Message
 			if err := json.Unmarshal([]byte(msgBytes), &oldMessage); err != nil {
-				return nil, err
+				log.Error("error unmarshalling message", "err", err.Error())
 			}
 
 			updatedMessage := slack.CreateUpdatedIssueMessage(oldMessage, event)
 			updatedMessage.Timestamp = timestamp
 			marshalled, err := json.Marshal(updatedMessage)
 			if err != nil {
-				return nil, err
+				log.Error("error marshalling message", "err", err.Error())
 			}
 
 			log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", timestamp)
 			_, err = h.slack.PostUpdatedMessage(marshalled)
 			if err != nil {
-				return nil, err
+				log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
 			}
 
 			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
@@ -217,7 +217,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		if !errors.Is(err, redis.Nil) && event.Action != "opened" {
 			var oldMessage slack.Message
 			if err := json.Unmarshal([]byte(messageBytes), &oldMessage); err != nil {
-				return nil, err
+				log.Error("error unmarshalling message", "err", err.Error())
 			}
 
 			updatedMessage := slack.CreateUpdatedPullRequestMessage(oldMessage, event)
@@ -225,13 +225,13 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 
 			marshalled, err := json.Marshal(updatedMessage)
 			if err != nil {
-				return nil, err
+				log.Error("error marshalling message", "err", err.Error())
 			}
 
 			log.Info("Posting update of pull request", "channel", updatedMessage.Channel, "timestamp", timestamp)
 			_, err = h.slack.PostUpdatedMessage(marshalled)
 			if err != nil {
-				return nil, err
+				log.Error("error posting updated message", "err", err.Error())
 			}
 
 			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
