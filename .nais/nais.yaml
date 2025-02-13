@@ -5,6 +5,8 @@ metadata:
   namespace: the-g-team
   labels:
     team: the-g-team
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 spec:
   image: {{ image }}
   ingresses:
