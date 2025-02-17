@@ -11,11 +11,11 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func fetchCoAuthors(log *slog.Logger, githubClient github.Userer, commit github.Commit) ([]github.User, error) {
+func fetchCoAuthors(commit string) ([]github.Author, error) {
 	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <(.*)>`)
 
-	var coAuthors []github.User
-	coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit.Message, -1)
+	var coAuthors []github.Author
+	coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit, -1)
 
 	for _, match := range coAuthorsMatches {
 		name := match[1]
@@ -24,96 +24,93 @@ func fetchCoAuthors(log *slog.Logger, githubClient github.Userer, commit github.
 			email = match[2]
 		}
 
-		user := github.User{
+		author := github.Author{
 			Name:  name,
-			Login: name,
+			Email: email,
 		}
 
 		if strings.HasPrefix(name, "@") {
 			// Prefix with @ to indicate that this is a GitHub user
 			after, _ := strings.CutPrefix(match[1], "@")
-			user.Login = after
-			user.URL = "https://github.com/" + after
+			author.Username = after
 		} else if strings.HasSuffix(email, "@users.noreply.github.com") {
 			// If the email is a GitHub noreply email, we can extract the username from it
 			before, _ := strings.CutSuffix(email, "@users.noreply.github.com")
 			_, after, found := strings.Cut(before, "+")
 			if found {
-				user.Login = after
-				user.URL = "https://github.com/" + after
-			}
-		} else if strings.HasSuffix(email, "@nav.no") {
-			// If the email is a NAV email, we can look up the username
-			userWithEmail, err := githubClient.GetUserByEmail(email)
-			if err != nil {
-				log.Error("Failed to get user by email", "email", email, "error", err)
-			}
-
-			if userWithEmail != nil {
-				user = *userWithEmail
+				author.Username = after
 			}
 		}
 
-		coAuthors = append(coAuthors, user)
+		coAuthors = append(coAuthors, author)
 	}
 
 	return coAuthors, nil
 }
 
-func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Event, team github.Team) (string, error) {
-	compareUsernameFunc := func(username string) func(github.User) bool {
-		return func(user github.User) bool {
-			return user.Login == username
-		}
-	}
-
-	compareNameFunc := func(name string) func(github.User) bool {
-		return func(user github.User) bool {
-			return user.Name == name
-		}
-	}
-
+func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Event) (string, error) {
 	// sender has login/username and url
-	// co-authors only have username or name
+	// commit co-authors only have username or name
 	// author has name, email, and username
-	authors := []github.User{event.Sender}
-
-	for _, commit := range event.Commits {
-		if slices.ContainsFunc(authors, compareUsernameFunc(commit.Author.Username)) {
-			i := slices.IndexFunc(authors, compareUsernameFunc(commit.Author.Username))
-			author := authors[i]
-			author.Name = commit.Author.Name
-			authors[i] = author
-		} else {
-			authors = append(authors, commit.Author.AsUser())
+	compareAuthorFunc := func(author github.Author) func(github.Author) bool {
+		return func(other github.Author) bool {
+			return (author.Name != "" && strings.EqualFold(author.Name, other.Name)) || (author.Username != "" && strings.EqualFold(author.Username, other.Username))
 		}
+	}
 
-		coAuthors, err := fetchCoAuthors(log, githubClient, commit)
+	// First we gather all the authors of the commits
+	commitAuthors := []github.Author{}
+	for _, commit := range event.Commits {
+		author := commit.Author
+		if !slices.ContainsFunc(commitAuthors, compareAuthorFunc(author)) {
+			commitAuthors = append(commitAuthors, author)
+		}
+	}
+
+	// Then we gather all the co-authors of the commits, since authors have the
+	// username we don't want add both of them at the same time in case an
+	// co-author is also an author in a later commit
+	commitCoAuthors := []github.Author{}
+	for _, commit := range event.Commits {
+		coAuthors, err := fetchCoAuthors(commit.Message)
 		if err != nil {
 			log.Error("Failed to fetch co-authors", "error", err)
 		}
 
 		for _, coAuthor := range coAuthors {
-			if slices.ContainsFunc(authors, compareUsernameFunc(coAuthor.Login)) {
+			if slices.ContainsFunc(commitAuthors, compareAuthorFunc(coAuthor)) {
 				continue
 			}
 
-			if slices.ContainsFunc(authors, compareNameFunc(coAuthor.Name)) {
-				continue
-			}
-
-			if member, ok := team.GetMemberByName(coAuthor.Login); ok {
-				authors = append(authors, member)
-				continue
-			}
-
-			authors = append(authors, coAuthor)
+			commitCoAuthors = append(commitCoAuthors, coAuthor)
 		}
 	}
 
-	authorsAsString := make([]string, len(authors))
-	for i, author := range authors {
-		authorsAsString[i] = author.ToSlack()
+	// If there are just a handful of co-authors without username we can try to fetch them by their Nav e-mail
+	if len(commitCoAuthors) < 6 {
+		for i, coAuthor := range commitCoAuthors {
+			if strings.HasSuffix(coAuthor.Email, "@nav.no") {
+				userWithEmail, err := githubClient.GetUserByEmail(coAuthor.Email)
+				if err != nil {
+					log.Error("Failed to get user by email", "email", coAuthor.Email, "error", err)
+				}
+
+				if userWithEmail != nil {
+					commitCoAuthors[i].Username = userWithEmail.Login
+				}
+			}
+		}
+	}
+
+	for _, coAuthor := range commitCoAuthors {
+		if !slices.ContainsFunc(commitAuthors, compareAuthorFunc(coAuthor)) {
+			commitAuthors = append(commitAuthors, coAuthor)
+		}
+	}
+
+	authorsAsString := make([]string, len(commitAuthors))
+	for i, author := range commitAuthors {
+		authorsAsString[i] = author.AsUser().ToSlack()
 	}
 
 	var senders string
@@ -128,7 +125,7 @@ func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Ev
 }
 
 func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, team github.Team, githubClient github.Userer) (*Message, error) {
-	authors, err := createAuthors(log, githubClient, event, team)
+	authors, err := createAuthors(log, githubClient, event)
 	if err != nil {
 		return nil, fmt.Errorf("creating authors: %w", err)
 	}

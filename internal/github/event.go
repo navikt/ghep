@@ -13,12 +13,14 @@ const (
 )
 
 type User struct {
-	Name  string
 	Login string `json:"login"`
 	Type  string `json:"type"`
 	URL   string `json:"html_url"`
 }
 
+// ToSlack returns a formatted string for Slack
+// If the URL is empty, it returns the login
+// If the URL is not empty, it returns <URL|Login>
 func (u User) ToSlack() string {
 	if u.URL == "" {
 		return u.Login
@@ -41,6 +43,7 @@ func (u User) IsUser() bool {
 
 type Author struct {
 	Name     string `json:"name"`
+	Email    string `json:"email"`
 	Username string `json:"username"`
 }
 
@@ -49,12 +52,24 @@ func (a Author) IsDependabot() bool {
 }
 
 func (a Author) AsUser() User {
-	return User{
-		Name:  a.Name,
-		Login: a.Username,
-		Type:  "User",
-		URL:   "https://github.com/" + a.Username,
+	var user User
+
+	if strings.HasSuffix(a.Username, "[bot]") {
+		user.Login = a.Username
+		user.Type = "Bot"
+		user.URL = "https://github.com/apps/" + strings.TrimSuffix(a.Username, "[bot]")
+	} else {
+		user.Login = a.Username
+		user.Type = "User"
+
+		if a.Username == "" {
+			user.Login = a.Name
+		} else {
+			user.URL = "https://github.com/" + a.Username
+		}
 	}
+
+	return user
 }
 
 type Changes struct {

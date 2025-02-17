@@ -1,0 +1,2677 @@
+{
+  "ref": "refs/heads/main",
+  "before": "2b5ccc2bb76a350e3e98ce4d69d078a9f8d053d0",
+  "after": "27b33ea6dc82e45b95198d337a53eec723285a44",
+  "repository": {
+    "id": 842877446,
+    "node_id": "R_kgDOMj1KBg",
+    "name": "dp-melding-om-vedtak",
+    "full_name": "navikt/dp-melding-om-vedtak",
+    "private": false,
+    "owner": {
+      "name": "navikt",
+      "email": null,
+      "login": "navikt",
+      "id": 11848947,
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjExODQ4OTQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11848947?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/navikt",
+      "html_url": "https://github.com/navikt",
+      "followers_url": "https://api.github.com/users/navikt/followers",
+      "following_url": "https://api.github.com/users/navikt/following{/other_user}",
+      "gists_url": "https://api.github.com/users/navikt/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/navikt/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/navikt/subscriptions",
+      "organizations_url": "https://api.github.com/users/navikt/orgs",
+      "repos_url": "https://api.github.com/users/navikt/repos",
+      "events_url": "https://api.github.com/users/navikt/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/navikt/received_events",
+      "type": "Organization",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "html_url": "https://github.com/navikt/dp-melding-om-vedtak",
+    "description": null,
+    "fork": false,
+    "url": "https://github.com/navikt/dp-melding-om-vedtak",
+    "forks_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/forks",
+    "keys_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/keys{/key_id}",
+    "collaborators_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/collaborators{/collaborator}",
+    "teams_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/teams",
+    "hooks_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/hooks",
+    "issue_events_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/issues/events{/number}",
+    "events_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/events",
+    "assignees_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/assignees{/user}",
+    "branches_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/branches{/branch}",
+    "tags_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/tags",
+    "blobs_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/git/blobs{/sha}",
+    "git_tags_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/git/tags{/sha}",
+    "git_refs_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/git/refs{/sha}",
+    "trees_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/git/trees{/sha}",
+    "statuses_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/statuses/{sha}",
+    "languages_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/languages",
+    "stargazers_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/stargazers",
+    "contributors_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/contributors",
+    "subscribers_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/subscribers",
+    "subscription_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/subscription",
+    "commits_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/commits{/sha}",
+    "git_commits_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/git/commits{/sha}",
+    "comments_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/comments{/number}",
+    "issue_comment_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/issues/comments{/number}",
+    "contents_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/contents/{+path}",
+    "compare_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/compare/{base}...{head}",
+    "merges_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/merges",
+    "archive_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/{archive_format}{/ref}",
+    "downloads_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/downloads",
+    "issues_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/issues{/number}",
+    "pulls_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/pulls{/number}",
+    "milestones_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/milestones{/number}",
+    "notifications_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/notifications{?since,all,participating}",
+    "labels_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/labels{/name}",
+    "releases_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/releases{/id}",
+    "deployments_url": "https://api.github.com/repos/navikt/dp-melding-om-vedtak/deployments",
+    "created_at": 1723714926,
+    "updated_at": "2025-02-03T07:48:43Z",
+    "pushed_at": 1738573431,
+    "git_url": "git://github.com/navikt/dp-melding-om-vedtak.git",
+    "ssh_url": "git@github.com:navikt/dp-melding-om-vedtak.git",
+    "clone_url": "https://github.com/navikt/dp-melding-om-vedtak.git",
+    "svn_url": "https://github.com/navikt/dp-melding-om-vedtak",
+    "homepage": null,
+    "size": 1349,
+    "stargazers_count": 0,
+    "watchers_count": 0,
+    "language": "Kotlin",
+    "has_issues": true,
+    "has_projects": true,
+    "has_downloads": true,
+    "has_wiki": true,
+    "has_pages": true,
+    "has_discussions": false,
+    "forks_count": 0,
+    "mirror_url": null,
+    "archived": false,
+    "disabled": false,
+    "open_issues_count": 0,
+    "license": {
+      "key": "other",
+      "name": "Other",
+      "spdx_id": "NOASSERTION",
+      "url": null,
+      "node_id": "MDc6TGljZW5zZTA="
+    },
+    "allow_forking": true,
+    "is_template": false,
+    "web_commit_signoff_required": false,
+    "topics": [
+
+    ],
+    "visibility": "public",
+    "forks": 0,
+    "open_issues": 0,
+    "watchers": 0,
+    "default_branch": "main",
+    "stargazers": 0,
+    "master_branch": "main",
+    "organization": "navikt",
+    "custom_properties": {
+
+    }
+  },
+  "pusher": {
+    "name": "gtcno",
+    "email": "giaothe@gmail.com"
+  },
+  "organization": {
+    "login": "navikt",
+    "id": 11848947,
+    "node_id": "MDEyOk9yZ2FuaXphdGlvbjExODQ4OTQ3",
+    "url": "https://api.github.com/orgs/navikt",
+    "repos_url": "https://api.github.com/orgs/navikt/repos",
+    "events_url": "https://api.github.com/orgs/navikt/events",
+    "hooks_url": "https://api.github.com/orgs/navikt/hooks",
+    "issues_url": "https://api.github.com/orgs/navikt/issues",
+    "members_url": "https://api.github.com/orgs/navikt/members{/member}",
+    "public_members_url": "https://api.github.com/orgs/navikt/public_members{/member}",
+    "avatar_url": "https://avatars.githubusercontent.com/u/11848947?v=4",
+    "description": "Arbeids- og velferdsdirektoratet - The Norwegian Labour and Welfare Directorate"
+  },
+  "enterprise": {
+    "id": 371,
+    "slug": "nav",
+    "name": "Nav",
+    "node_id": "MDEwOkVudGVycHJpc2UzNzE=",
+    "avatar_url": "https://avatars.githubusercontent.com/b/371?v=4",
+    "description": "",
+    "website_url": "https://nav.no",
+    "html_url": "https://github.com/enterprises/nav",
+    "created_at": "2019-06-26T11:17:54Z",
+    "updated_at": "2024-12-19T13:22:38Z"
+  },
+  "sender": {
+    "login": "gtcno",
+    "id": 3121758,
+    "node_id": "MDQ6VXNlcjMxMjE3NTg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/3121758?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/gtcno",
+    "html_url": "https://github.com/gtcno",
+    "followers_url": "https://api.github.com/users/gtcno/followers",
+    "following_url": "https://api.github.com/users/gtcno/following{/other_user}",
+    "gists_url": "https://api.github.com/users/gtcno/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/gtcno/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/gtcno/subscriptions",
+    "organizations_url": "https://api.github.com/users/gtcno/orgs",
+    "repos_url": "https://api.github.com/users/gtcno/repos",
+    "events_url": "https://api.github.com/users/gtcno/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/gtcno/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "installation": {
+    "id": 46186369,
+    "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uNDYxODYzNjk="
+  },
+  "created": false,
+  "deleted": false,
+  "forced": false,
+  "base_ref": "refs/heads/enderligHtml",
+  "compare": "https://github.com/navikt/dp-melding-om-vedtak/compare/2b5ccc2bb76a...27b33ea6dc82",
+  "commits": [
+    {
+      "id": "06b798d6372a59a9c6f1995469dc2262744b7291",
+      "tree_id": "a930f9308d8385b2a780118f270e6b4d21902362",
+      "distinct": false,
+      "message": "Lage tabeller for lagring av sanityblokker og enderlit html samt tester for lagring og henting av denne dataen\n\nCo-authored-by: Giao The Cung <giaothe@gmail.com>",
+      "timestamp": "2025-01-24T08:34:50+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/06b798d6372a59a9c6f1995469dc2262744b7291",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/main/resources/db/migration/V3__CREATE_TABLES_V2.sql"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/db/PostgresVedtaksmeldingRepository.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/db/VedtaksmeldingRepository.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/db/PostgresMigrationTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/db/PostgresVedtaksmeldingRepositoryTest.kt"
+      ]
+    },
+    {
+      "id": "ceacd07f499e1aac6aadd0222e6ee1168e1d7ab9",
+      "tree_id": "f23f6d47027574cb235a70dcb387d93e49b53e01",
+      "distinct": false,
+      "message": "Ikke hardkode måned\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/ceacd07f499e1aac6aadd0222e6ee1168e1d7ab9",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/HtmlConverter.kt"
+      ]
+    },
+    {
+      "id": "1cbdfbb6d3fa9b32d6725fd33bb5ee8e531230ca",
+      "tree_id": "b1d0e277ec555f62590c81206fb484d4cb88c07f",
+      "distinct": false,
+      "message": "Lag støtte for avslag arbeidstid. Kast ManglerBrevstøtte exception istedenfor IllegalArgument når vedtaket ikke har brevstøtte.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/1cbdfbb6d3fa9b32d6725fd33bb5ee8e531230ca",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagTest.kt"
+      ]
+    },
+    {
+      "id": "623b581bd0f3d9bc8133a5d69d81d5e806ea9a68",
+      "tree_id": "2aa80a5e47205652346e1a2cb5156c0fff1fa7ea",
+      "distinct": false,
+      "message": "wip: Start test av opplysninger som kreves for å lage brev til avslag arbeidstid.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/623b581bd0f3d9bc8133a5d69d81d5e806ea9a68",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "b42962e8347dd7cc961934d765e86830fc0b2c53",
+      "tree_id": "5798104c1203dfbb5559a03b7376f716c92d18ca",
+      "distinct": false,
+      "message": "Mapping av opplysninger for tapt arbeidstid",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/b42962e8347dd7cc961934d765e86830fc0b2c53",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "fc74ffdfe101668e5104c578fe730055f3f76d8c",
+      "tree_id": "bfee2194f01d1be18fe1cbe7fe1e0ae18a93c7fd",
+      "distinct": false,
+      "message": "Lagt til blokk for avslag tapt arbeidstid\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/fc74ffdfe101668e5104c578fe730055f3f76d8c",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "8bb73167ec689c22080d3cd276fff8b9b96b1233",
+      "tree_id": "254169c5a1a075387da705bfd01358534106d111",
+      "distinct": false,
+      "message": "Formater desimaltall riktigere etter innspill\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/8bb73167ec689c22080d3cd276fff8b9b96b1233",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapperTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/VernepliktTest.kt"
+      ]
+    },
+    {
+      "id": "4fbfa1b40682b8f1a2cc551b1ed877c4aac1012d",
+      "tree_id": "aa284cafda133348fdb710f7d5966651e4008dbd",
+      "distinct": false,
+      "message": "Ups, deploy main til dev også\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/4fbfa1b40682b8f1a2cc551b1ed877c4aac1012d",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "id": "97fe72da6d5d3221537898e6f6b078de7d44e981",
+      "tree_id": "94675204a425f6020dee26c6a9b28682a43b89aa",
+      "distinct": false,
+      "message": "Rett opp i skrivefeil i Fødselsnummer i brev\n\n\r\nCo-authored-by: Eivind Havnelid Røyrvik <eivind.havnelid.royrvik@nav.no>\r\nCo-authored-by: Morten Tholander <morten.tholander@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/97fe72da6d5d3221537898e6f6b078de7d44e981",
+      "author": {
+        "name": "André Roaldseth",
+        "email": "andre.roaldseth@nav.no",
+        "username": "androa"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/HtmlConverter.kt"
+      ]
+    },
+    {
+      "id": "ad66710dc21afad3efaa9114e4d34ea1b5352c9e",
+      "tree_id": "9fad842ab6f361ed4256a6987f21625d5f318a9f",
+      "distinct": false,
+      "message": "Legg til brevblokk om begrunnelse for innvilgelsesdato\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>\nCo-authored-by: Kathrine Normann Gunstad <kathrine.normann.gunstad@nav.no>\nCo-authored-by: Henriette Levang Kårfald <henriette.levang.karfald@nav.no>\nCo-authored-by: Henni-Karine Hesimark <henni-karine.hesimark@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/ad66710dc21afad3efaa9114e4d34ea1b5352c9e",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakHtmlTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "67ab03a1ee2ae16ec1819867241bad968f44f46e",
+      "tree_id": "35c438ce33dec286c0a21ba845e7b40640c99df0",
+      "distinct": false,
+      "message": "Lagt til opplysninger med dagsats for samordnede ytelser\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/67ab03a1ee2ae16ec1819867241bad968f44f46e",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapperTest.kt",
+        "src/test/resources/json/vedtak.json"
+      ]
+    },
+    {
+      "id": "c3f0584a9499d3c219a566167984795301ffd72e",
+      "tree_id": "01eb84616667cb2b54c9627e6d43095449f1dd37",
+      "distinct": false,
+      "message": "WIP: Legger til blokk for samordning og sykepener dagsats\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/c3f0584a9499d3c219a566167984795301ffd72e",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "83e9b81aa0c5e6d066ca42595198c6f47a9902d3",
+      "tree_id": "ddbfc269a5d167bcc68f191484a82f022b0539e1",
+      "distinct": false,
+      "message": "Lagt til brevstøtte for samordning. Ikke testet alle kriker og kroker enda.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/83e9b81aa0c5e6d066ca42595198c6f47a9902d3",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "2b78347d8d64f023e4d625f814af077fcbd05ecf",
+      "tree_id": "36d628eaf2837cd16b47f27bd785b2d97de30b61",
+      "distinct": false,
+      "message": "Rettet feil og laget nye tester for samordning.\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/2b78347d8d64f023e4d625f814af077fcbd05ecf",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "576968cbb35e4674aae746cd5232550c04880ded",
+      "tree_id": "e8855f6a1bd58fcc6f17eddf1e89656506bda6a3",
+      "distinct": false,
+      "message": "Rettet feil etter merge\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/576968cbb35e4674aae746cd5232550c04880ded",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "6b5f9e4828d1113a9fd31c9fcabd2bf1f819ffc3",
+      "tree_id": "8c05d9cde3ce591eb964891151f6cfa3bf6b7ce2",
+      "distinct": false,
+      "message": "Lagt til brevstøtte for avslag på vilkåret \"Oppfyller kravet til opphold i Norge\"\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/6b5f9e4828d1113a9fd31c9fcabd2bf1f819ffc3",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagOppholdUtlandTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagTest.kt"
+      ],
+      "removed": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagTest.kt"
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt"
+      ]
+    },
+    {
+      "id": "94354876da05e731baa9805c1a23ec604f095549",
+      "tree_id": "c57094fe5b02d829bb571dca8ae82d6ebe7dbd85",
+      "distinct": false,
+      "message": "Bruke en sanity model\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/94354876da05e731baa9805c1a23ec604f095549",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/resources/json/sanity.json"
+      ],
+      "removed": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/sanity/JsonToResponseMapper.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/sanity/ResponseDTO.kt"
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/HttpKlient.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/sanity/SanityKlient.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/sanity/SanityKlientMappingTest.kt"
+      ]
+    },
+    {
+      "id": "feb851207791cd80a7093de2a421ff6f7560e929",
+      "tree_id": "9094056757bab12bbd9486c414fce37fe1fcb3d2",
+      "distinct": false,
+      "message": "Prettier\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/feb851207791cd80a7093de2a421ff6f7560e929",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/sanity/SanityKlient.kt"
+      ]
+    },
+    {
+      "id": "115b846ea462c49415792fd5a2346e782048f2c6",
+      "tree_id": "f6b9d236def623b570dff0d134a484ba280d6b6b",
+      "distinct": false,
+      "message": "Fjerne død kode\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:40:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/115b846ea462c49415792fd5a2346e782048f2c6",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/Block.kt"
+      ]
+    },
+    {
+      "id": "47f01cbef03788653bf442c6a6523eb70d4d2596",
+      "tree_id": "db9dccc13ccfcba4719628961ea849495dc203d1",
+      "distinct": false,
+      "message": "Lag støtte for avslag arbeidstid. Kast ManglerBrevstøtte exception istedenfor IllegalArgument når vedtaket ikke har brevstøtte.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:51:02+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/47f01cbef03788653bf442c6a6523eb70d4d2596",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+
+      ]
+    },
+    {
+      "id": "c172779e0407f762cbf6e90bea18b63d87525664",
+      "tree_id": "ad1ccc217b9544e268a6e6e70264224b906a745a",
+      "distinct": false,
+      "message": "wip: Start test av opplysninger som kreves for å lage brev til avslag arbeidstid.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:51:13+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/c172779e0407f762cbf6e90bea18b63d87525664",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "3486174669980c91c3ec6e1bf508ab124a3bdb2b",
+      "tree_id": "7744baf685e22a53263cc902d5021fa5fa0be0fc",
+      "distinct": false,
+      "message": "Mapping av opplysninger for tapt arbeidstid",
+      "timestamp": "2025-01-27T11:51:13+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/3486174669980c91c3ec6e1bf508ab124a3bdb2b",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "f715a635191a701ffb40128f1a34b95bc1f03477",
+      "tree_id": "fe6085e262be9e97d6f1f29b1f6f7b4de38a91d4",
+      "distinct": false,
+      "message": "Lagt til blokk for avslag tapt arbeidstid\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-27T11:51:43+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/f715a635191a701ffb40128f1a34b95bc1f03477",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "c7b8da586551894b4d5f77343255d01fbdd76394",
+      "tree_id": "c8f81944b4a2d0a4677c070facbef7c4ebf4afa4",
+      "distinct": false,
+      "message": "Formater desimaltall riktigere etter innspill\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:52:24+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/c7b8da586551894b4d5f77343255d01fbdd76394",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "ac9aa3b55dd3680027659b5bfb1554373a44afdb",
+      "tree_id": "350bf9d40cc40aa96cf09fe4da51db51cf41362b",
+      "distinct": false,
+      "message": "Ups, deploy main til dev også\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:52:27+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/ac9aa3b55dd3680027659b5bfb1554373a44afdb",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "id": "48756f69cd8c3de33ac9e271787eb6847ea42a01",
+      "tree_id": "31f32ee9c09a514d384b59b81cc13e017b9533c0",
+      "distinct": false,
+      "message": "Lagt til brevstøtte for samordning. Ikke testet alle kriker og kroker enda.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:55:07+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/48756f69cd8c3de33ac9e271787eb6847ea42a01",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "4bed50fdd90336c7532ddbc3b9e3233bbc141950",
+      "tree_id": "a50a2285e75c67dac370bbceca46c41ed271a474",
+      "distinct": false,
+      "message": "Lagt til brevstøtte for avslag på vilkåret \"Oppfyller kravet til opphold i Norge\"\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-27T11:55:55+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/4bed50fdd90336c7532ddbc3b9e3233bbc141950",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ],
+      "modified": [
+
+      ]
+    },
+    {
+      "id": "71d7785c83aee945432efdac6d9908ebd811a263",
+      "tree_id": "fe77f66f9b4625842139a3ef976b208362c3469a",
+      "distinct": false,
+      "message": "Ktlinting\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:56:13+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/71d7785c83aee945432efdac6d9908ebd811a263",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/Block.kt"
+      ]
+    },
+    {
+      "id": "fbd9ebc5d3f2391e2eb621a87ecbefc0926e2553",
+      "tree_id": "8d6b5d652753b687d52fb96318f3be55c566edbc",
+      "distinct": false,
+      "message": "WIP\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:56:13+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/fbd9ebc5d3f2391e2eb621a87ecbefc0926e2553",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt"
+      ]
+    },
+    {
+      "id": "711cc409c2645e15dbf39fda2d2cbd22018476c5",
+      "tree_id": "4b7f1e7de6cfe95f09422c069f06f68cc85a8d68",
+      "distinct": false,
+      "message": "Fjern mediator fra vedtaksmelding for senere lettere å kunne lagre sanityInnhold og skille mellom enderlig og midlertidig html\n\nCo-authored-by: Giao The Cung <giaothe@gmail.com>",
+      "timestamp": "2025-01-27T11:57:33+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/711cc409c2645e15dbf39fda2d2cbd22018476c5",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApi.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApiTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakHtmlTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtaksmeldingTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagOppholdUtlandTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagTest.kt"
+      ]
+    },
+    {
+      "id": "9a71228f901b413bb0e1686ab6e505f21f0d17ce",
+      "tree_id": "609563444f0bb03fa89f51239de37efdcac0fe37",
+      "distinct": false,
+      "message": "Legg til vedtaksmelding endepunkt. Mangler å implementere bruk av sanitytekst fra db",
+      "timestamp": "2025-01-27T11:57:41+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/9a71228f901b413bb0e1686ab6e505f21f0d17ce",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "openapi/src/main/resources/melding-om-vedtak-api.yaml",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApi.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApiTest.kt"
+      ]
+    },
+    {
+      "id": "7879f925b3f21b519ec728c993bc5aa317b48e9e",
+      "tree_id": "07e84c8e927e043c7b27821be8d5db724b3a2938",
+      "distinct": false,
+      "message": "Fjerne ubrukt kode\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:57:41+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/7879f925b3f21b519ec728c993bc5aa317b48e9e",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt"
+      ]
+    },
+    {
+      "id": "0e1c7026696e09be992d64cd02007357bd99b2ae",
+      "tree_id": "90523b5417bd1e4730f79b8151cc169a9e04012a",
+      "distinct": false,
+      "message": "Lagt til blokker for avslag på vilkår om ikke å motta andre fulle ytelser. Litt enkel refaktorering.",
+      "timestamp": "2025-01-27T11:57:56+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/0e1c7026696e09be992d64cd02007357bd99b2ae",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagAndreFulleYtelserTest.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "fde36ef27261fa046ca095ffa696ae00507a58fc",
+      "tree_id": "817fa83665b6e03ff7c459835fab928d89e2f250",
+      "distinct": false,
+      "message": "Optimaliser\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:57:56+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/fde36ef27261fa046ca095ffa696ae00507a58fc",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt"
+      ]
+    },
+    {
+      "id": "d797e6608800717c18d8119e29157f3c24859643",
+      "tree_id": "247ad84f744e541d5060ffa9f3b2646eb887d0de",
+      "distinct": false,
+      "message": "Fix test\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:57:56+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/d797e6608800717c18d8119e29157f3c24859643",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagAndreFulleYtelserTest.kt"
+      ]
+    },
+    {
+      "id": "03b33c904fbc04d520de87d9fa5c4c0a605e27b9",
+      "tree_id": "15485715c53c04557a4337d7cc7ea05b3b722ada",
+      "distinct": false,
+      "message": "Fix test\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:57:56+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/03b33c904fbc04d520de87d9fa5c4c0a605e27b9",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagAndreFulleYtelserTest.kt"
+      ]
+    },
+    {
+      "id": "a6a90eb42ad997b87e31852ee0ce6fa25c03a23f",
+      "tree_id": "884a38405623b97638e8623f03cf194b8b09dfe7",
+      "distinct": false,
+      "message": "Optimaliser\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-27T11:57:56+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/a6a90eb42ad997b87e31852ee0ce6fa25c03a23f",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt"
+      ]
+    },
+    {
+      "id": "47c40379aece1f5a0b9d06d6f19adf858fefdbd7",
+      "tree_id": "82cbed880d5a4de1cebac5d658fd7c7a1229325e",
+      "distinct": false,
+      "message": "Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 (#26)\n\nBumps [dependabot/fetch-metadata](https://github.com/dependabot/fetch-metadata) from 2.2.0 to 2.3.0.\n- [Release notes](https://github.com/dependabot/fetch-metadata/releases)\n- [Commits](https://github.com/dependabot/fetch-metadata/compare/v2.2.0...v2.3.0)\n\n---\nupdated-dependencies:\n- dependency-name: dependabot/fetch-metadata\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+      "timestamp": "2025-01-27T11:57:56+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/47c40379aece1f5a0b9d06d6f19adf858fefdbd7",
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "username": "dependabot[bot]"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/dependabot-auto-merge.yaml"
+      ]
+    },
+    {
+      "id": "3deac10527ae7bf945db93ab8edb4258036caac1",
+      "tree_id": "11ea10dc2f4744eb1590d22f51578b1f22cc1e14",
+      "distinct": false,
+      "message": "Rette feil etter merging\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-27T12:18:34+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/3deac10527ae7bf945db93ab8edb4258036caac1",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "093e9f932416fb7d38fc2c7ee43d1f13d249156a",
+      "tree_id": "189c4885b18fbdf3c25047eebf3cfa41830bd815",
+      "distinct": false,
+      "message": "WIP: persistere sanity og html mangler testing og convertering fra JSON til List<Brevblokker>",
+      "timestamp": "2025-01-27T14:15:41+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/093e9f932416fb7d38fc2c7ee43d1f13d249156a",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApi.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApiTest.kt"
+      ]
+    },
+    {
+      "id": "d658a12ca9b91db8d172bc1099abc18cf19cccae",
+      "tree_id": "03e7579d14283ffa43e5e7f46a69aee59afdce9a",
+      "distinct": false,
+      "message": "WIP: persistering av sanity og html. Mangler litt test på bruk av hentEndeligVedtakmelding\n\nCo-authored-by: Giao The Cung <giaothe@gmail.com>",
+      "timestamp": "2025-01-28T10:59:04+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/d658a12ca9b91db8d172bc1099abc18cf19cccae",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "build.gradle.kts",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Configuration.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApi.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/apiconfig/ApiConfig.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApiTest.kt"
+      ]
+    },
+    {
+      "id": "e524cf4e8e3e2b73296e086e9d501ef78b419277",
+      "tree_id": "4d8a84b554672909cd1b502b3e4190710b1c0d3f",
+      "distinct": false,
+      "message": "Refaktoriser og fikse tester\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-28T12:36:50+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/e524cf4e8e3e2b73296e086e9d501ef78b419277",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt"
+      ]
+    },
+    {
+      "id": "b68a60def79d7a528d651128fb8534874da8810a",
+      "tree_id": "45bf530e8dfc39abf1e055a66600045cbcc6f1bc",
+      "distinct": false,
+      "message": "Test lagring av enderlig html\n\nCo-authored-by: Giao The Cung <giaothe@gmail.com>",
+      "timestamp": "2025-01-29T08:37:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/b68a60def79d7a528d651128fb8534874da8810a",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt"
+      ]
+    },
+    {
+      "id": "ca1f03890c85dcc8e68f50a3349dfd90ec481f0b",
+      "tree_id": "f92489eb30224f9b4a1c6d43f66fd3bf0bd582e0",
+      "distinct": false,
+      "message": "Lag støtte for avslag arbeidstid. Kast ManglerBrevstøtte exception istedenfor IllegalArgument når vedtaket ikke har brevstøtte.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-30T10:10:38+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/ca1f03890c85dcc8e68f50a3349dfd90ec481f0b",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+
+      ]
+    },
+    {
+      "id": "38fd6228532a3b675c8e6ff8107f8cc3b941c5ba",
+      "tree_id": "171382b8c8b9113c03720aac64f7d6f9570956f3",
+      "distinct": false,
+      "message": "wip: Start test av opplysninger som kreves for å lage brev til avslag arbeidstid.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-30T10:10:46+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/38fd6228532a3b675c8e6ff8107f8cc3b941c5ba",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "b382ffe7ebfd49c317fc3f132be786d49104e5a8",
+      "tree_id": "65f0bf27871961790d0104abc7b9a2b7ee64942c",
+      "distinct": false,
+      "message": "Mapping av opplysninger for tapt arbeidstid",
+      "timestamp": "2025-01-30T10:10:46+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/b382ffe7ebfd49c317fc3f132be786d49104e5a8",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "dfa89b3f96e5f1ac0db064538463ecf3f5430a6a",
+      "tree_id": "ee264eec99d5b38bf583169d339375796bb01c6e",
+      "distinct": false,
+      "message": "Lagt til blokk for avslag tapt arbeidstid\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-30T10:11:24+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/dfa89b3f96e5f1ac0db064538463ecf3f5430a6a",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "37e24c684d9ea67de87c3e9a64861873d874270a",
+      "tree_id": "515e4a28f579e8308fbd02890b106733c1f436c8",
+      "distinct": false,
+      "message": "Formater desimaltall riktigere etter innspill\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-30T10:12:33+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/37e24c684d9ea67de87c3e9a64861873d874270a",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "5398fc4c24392c31b32bc12eb1011083157c5eb9",
+      "tree_id": "0ca8716734f43566347a1ddb96150ab997901bba",
+      "distinct": false,
+      "message": "Ups, deploy main til dev også\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-30T10:12:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/5398fc4c24392c31b32bc12eb1011083157c5eb9",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "id": "58c7583eb8f68600e5e575c9ceb440b22dd3e178",
+      "tree_id": "dd1fe04430a65360f52dbdab885b376f1d9d7517",
+      "distinct": false,
+      "message": "Lagt til brevstøtte for avslag på vilkåret \"Oppfyller kravet til opphold i Norge\"\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-30T10:16:40+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/58c7583eb8f68600e5e575c9ceb440b22dd3e178",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/AvslagArbeidstidTest.kt"
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "6f059634612e58dc07febb797e1aade39292c081",
+      "tree_id": "dbad21219da14b1478748111318ecbee45fe2f03",
+      "distinct": false,
+      "message": "Endret hvilke blokker som brukes ved samordning, for å unngå alt for mye luft",
+      "timestamp": "2025-01-30T10:17:01+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/6f059634612e58dc07febb797e1aade39292c081",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "4d50b7eac2c8f77a448f8ef55cc3c0c1785f8793",
+      "tree_id": "93cbef1c3b090e2f183050d416e65b6a0db68d7b",
+      "distinct": false,
+      "message": "Fjern mediator fra vedtaksmelding for senere lettere å kunne lagre sanityInnhold og skille mellom enderlig og midlertidig html\n\nCo-authored-by: Giao The Cung <giaothe@gmail.com>",
+      "timestamp": "2025-01-30T10:20:29+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/4d50b7eac2c8f77a448f8ef55cc3c0c1785f8793",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "45e5c4e4aaca03b2f86405a53b485d819b7f1332",
+      "tree_id": "24754fb12a554dfbe4f416f9f006594760d1f470",
+      "distinct": false,
+      "message": "Merget inn main",
+      "timestamp": "2025-01-30T10:21:35+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/45e5c4e4aaca03b2f86405a53b485d819b7f1332",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "8b1d8073ec5fe75f5adf1561c0addda6b6398bd1",
+      "tree_id": "823bb44bba7731e9dda4149c36d33732cb3e47b4",
+      "distinct": false,
+      "message": "Merge til main. Forenkling av tekster om samordning, slik at man får en bedre tekst når man samordner med bare 1 ytelse.\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-30T10:21:35+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/8b1d8073ec5fe75f5adf1561c0addda6b6398bd1",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "id": "25c4766b80bec38904c5c5e4534c29a648268799",
+      "tree_id": "396f0d20142b1fb9d6a0996bef4155f4f563121a",
+      "distinct": false,
+      "message": "Oppdater dp-version-catalog for å få med en bugfix i R&R, slik at vi ikke mister meldinger",
+      "timestamp": "2025-01-30T10:21:35+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/25c4766b80bec38904c5c5e4534c29a648268799",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "settings.gradle.kts"
+      ]
+    },
+    {
+      "id": "0e9df4c7fc08669f486f02f35b7c787bc5f12f89",
+      "tree_id": "cc785875d13c2b2cbeeda63c8aa28d13122cf879",
+      "distinct": false,
+      "message": "Oppdater innvilgelsesVedtak.json til å inneholde de nye \"opplysningTypeId\" feltene. Må også gjøres for de andre json filene.",
+      "timestamp": "2025-01-30T10:21:35+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/0e9df4c7fc08669f486f02f35b7c787bc5f12f89",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/resources/json/innvilgelsesVedtak.json"
+      ]
+    },
+    {
+      "id": "2e09b98cb005b97421a329572b82aa5cf7df9a86",
+      "tree_id": "295fd9c5b706ff60bb3fcdaaafd9fb4bbb5021da",
+      "distinct": false,
+      "message": "Enum for å mappe faste opplysningsTypeIder til sanity opplysningTekstIder.\n\nFull liste med opplysninger og deres faste IDer: https://github.com/navikt/dp-behandling/blob/main/docs/opplysninger.approved.md\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-30T10:21:35+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/2e09b98cb005b97421a329572b82aa5cf7df9a86",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/OpplysningTyper.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+
+      ]
+    },
+    {
+      "id": "03ea7ac0c7d9da95227d935e2cb9df1a793ce08d",
+      "tree_id": "a130a13c1c7e587c43974d6a1b8584f8e1f4c223",
+      "distinct": false,
+      "message": "wip: Hent opplysninger fra opplysningTypeId istedenfor navn, da navn kan endres.\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>",
+      "timestamp": "2025-01-30T10:21:35+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/03ea7ac0c7d9da95227d935e2cb9df1a793ce08d",
+      "author": {
+        "name": "Marius Eriksen",
+        "email": "marius.eriksen@nav.no",
+        "username": "MariusEriksen"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt"
+      ]
+    },
+    {
+      "id": "7916f0835bb59cf7e4b544e540d2d3424fb7a786",
+      "tree_id": "00423492c9ae480fbf95ba4d9d650a2f4e0ebc46",
+      "distinct": false,
+      "message": "WIP: Fikser tester\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-30T10:21:35+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/7916f0835bb59cf7e4b544e540d2d3424fb7a786",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/OpplysningTyper.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtak.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapperTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagOppholdUtlandTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/VernepliktOgInntektTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/VernepliktTest.kt",
+        "src/test/resources/json/vedtak-verneplikt-og-inntekt.json",
+        "src/test/resources/json/vedtak-verneplikt.json",
+        "src/test/resources/json/vedtak.json"
+      ]
+    },
+    {
+      "id": "44a216d4bd0ba5653dd3f547442d69a67ef053b7",
+      "tree_id": "5047a70ef2c33377c7272b2ea00e41d2559d911f",
+      "distinct": false,
+      "message": "Fikset tester. Deploy til DEV.\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-30T10:21:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/44a216d4bd0ba5653dd3f547442d69a67ef053b7",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakHtmlTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapperTest.kt",
+        "src/test/resources/json/avslag.json",
+        "src/test/resources/json/vedtak.json"
+      ]
+    },
+    {
+      "id": "f788e8708c980170501815a30b4f7000812e9d7f",
+      "tree_id": "c7919051412f326ef734f9cbff7e8d66ca75f85b",
+      "distinct": false,
+      "message": "Lagt til støtte for avslag utestengt",
+      "timestamp": "2025-01-30T10:21:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/f788e8708c980170501815a30b4f7000812e9d7f",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagUtestengtTest.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt"
+      ]
+    },
+    {
+      "id": "60e91c35d317267e5985c67f38022f6badb6985c",
+      "tree_id": "e96a56942b67cbb089166e3516af100c4210ae09",
+      "distinct": false,
+      "message": "Innført egen blokk med hjemmelen om utestengelse, slik at saksbehandlers fritekst kommer før hjemmelen.",
+      "timestamp": "2025-01-30T10:21:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/60e91c35d317267e5985c67f38022f6badb6985c",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagUtestengtTest.kt"
+      ]
+    },
+    {
+      "id": "322912bc7b600075de954759792a903e9d1f4b37",
+      "tree_id": "115f082cbf46d5cbe29b03581eb2ad3172225103",
+      "distinct": false,
+      "message": "Tilgang for dp-saksbehandling\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-30T10:21:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/322912bc7b600075de954759792a903e9d1f4b37",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".nais/nais.yaml"
+      ]
+    },
+    {
+      "id": "4108360e847005aab2135c367909ecb22df8ea4f",
+      "tree_id": "97eddfc5b34d7fbcbeabb2895e161dc8523ebf04",
+      "distinct": false,
+      "message": "Merget inn main for å få med avslag utestengt",
+      "timestamp": "2025-01-30T10:21:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/4108360e847005aab2135c367909ecb22df8ea4f",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagUtestengtTest.kt"
+      ]
+    },
+    {
+      "id": "66c87bbfcaefcf31cdccbb2e09719026f2f6a149",
+      "tree_id": "1bc5d400837e1a96ffd932cc5b014eca282e7134",
+      "distinct": false,
+      "message": "Merget inn branch for refaktorering for å ta i bruk opplysningTypeId.\n\nCo-authored-by: Marius Eriksen <marius.eriksen@nav.no>",
+      "timestamp": "2025-01-30T10:21:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/66c87bbfcaefcf31cdccbb2e09719026f2f6a149",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "id": "df4efcbec840a2c9699758c3fbe2644a2216ba35",
+      "tree_id": "fcbbb6f7dddf7c0c0dc099b21a6f32f89a638824",
+      "distinct": false,
+      "message": "Lagt til mapping-tester for opplysninger som manglet dette. Slettet ubrukte opplysninger:\nantall-g-for-krav-til-12-mnd-arbeidsinntekt\nantall-g-for-krav-til-36-mnd-arbeidsinntekt\nbrukt-beregningsregel",
+      "timestamp": "2025-01-30T10:21:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/df4efcbec840a2c9699758c3fbe2644a2216ba35",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/OpplysningTyper.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapperTest.kt",
+        "src/test/resources/json/sanity.json"
+      ]
+    },
+    {
+      "id": "08cf0fbc95cefaf0b7d9c4ddf44e0d1cff0528f3",
+      "tree_id": "3629e087dbba6abb983df3902e0d4094e7dd5f11",
+      "distinct": false,
+      "message": "Feil etter merge duplikatkode",
+      "timestamp": "2025-01-30T10:23:50+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/08cf0fbc95cefaf0b7d9c4ddf44e0d1cff0528f3",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt"
+      ]
+    },
+    {
+      "id": "a23ac18898f42aaf982f9467e5ffb88f8397206b",
+      "tree_id": "ec07dbf456aacedce5cbf13ff18848dc12bbf4ac",
+      "distinct": false,
+      "message": "Bruk fagsakId fra vedtak heller en fra metadata",
+      "timestamp": "2025-01-30T10:50:44+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/a23ac18898f42aaf982f9467e5ffb88f8397206b",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtak.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/HtmlConverter.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/HtmlE2ETest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakHtmlTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapperTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtaksmeldingTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagAndreFulleYtelserTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagOppholdUtlandTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagUtestengtTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "5e78b9d657d321f7ffb8df326b2318a7acdb5ff6",
+      "tree_id": "37b57e6e3f793690a5157f7d324fbbce26670254",
+      "distinct": false,
+      "message": "Fjern sakId fra meldingOmvedtakDataDTO",
+      "timestamp": "2025-01-30T10:53:44+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/5e78b9d657d321f7ffb8df326b2318a7acdb5ff6",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "openapi/src/main/resources/melding-om-vedtak-api.yaml",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApiTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakDataDTOTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakHtmlTest.kt"
+      ]
+    },
+    {
+      "id": "9f9099e2f432b5f4cad349e3719cf0682cfe187f",
+      "tree_id": "2d12e286ca5dc5edf1351921074cbe02da34a50c",
+      "distinct": false,
+      "message": "Deploy til dev",
+      "timestamp": "2025-01-30T11:53:03+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/9f9099e2f432b5f4cad349e3719cf0682cfe187f",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "id": "42f8cbd4a8b2c1023fa628591ea2d4810d50bf37",
+      "tree_id": "233fc1f6338df88090e56d982b466a2d61bd34dd",
+      "distinct": false,
+      "message": "Deploy til dev, disable E2E test",
+      "timestamp": "2025-01-30T11:56:42+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/42f8cbd4a8b2c1023fa628591ea2d4810d50bf37",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/HtmlE2ETest.kt"
+      ]
+    },
+    {
+      "id": "52bd7a9cf398f9dc83e4178d537b08b94e900040",
+      "tree_id": "6d1668fda6052e5a5b055a6c46614573622ae784",
+      "distinct": false,
+      "message": "Merge inn main",
+      "timestamp": "2025-01-30T15:27:28+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/52bd7a9cf398f9dc83e4178d537b08b94e900040",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagMinsteinntektEllerVernepliktTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagReellArbeidssøkerTest.kt"
+      ],
+      "removed": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagTest.kt"
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApi.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtak.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtaksmeldingTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagAndreFulleYtelserTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagOppholdUtlandTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagUtestengtTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/innvilgelse/InnvilgelseTest.kt"
+      ]
+    },
+    {
+      "id": "ef1668b6c39d6f028898370fe5fc46bad4255aa7",
+      "tree_id": "a6683f673fdba86950047d48254c94eca38e04d1",
+      "distinct": false,
+      "message": "Legg til utvidet tekst i html og legg til sanity klint i mediatortest for enderligvedtak",
+      "timestamp": "2025-01-30T16:31:54+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/ef1668b6c39d6f028898370fe5fc46bad4255aa7",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApi.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/HtmlConverter.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MediatorTest.kt"
+      ]
+    },
+    {
+      "id": "96931531042a566a788d881873070374875c5812",
+      "tree_id": "ac7f385442ad4e244a8c1876dbeb3435a1089555",
+      "distinct": false,
+      "message": "Legg til vedtaksmelding kall",
+      "timestamp": "2025-01-30T16:34:49+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/96931531042a566a788d881873070374875c5812",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/HtmlE2ETest.kt"
+      ]
+    },
+    {
+      "id": "03845f76f5a0cebde46f41bfdf2ce941cf2122fc",
+      "tree_id": "1c2f97622454efba907fa6c8cff21f6142aa54a9",
+      "distinct": false,
+      "message": "test for mering av utvidet tekst",
+      "timestamp": "2025-01-30T19:41:38+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/03845f76f5a0cebde46f41bfdf2ce941cf2122fc",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/HtmlConverter.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakHtmlTest.kt"
+      ]
+    },
+    {
+      "id": "d244aba1b21c522c14a7ced7f4aa203636bf8646",
+      "tree_id": "6d59eedc4ed9f3cc8b3c2579ce38af99beb751ef",
+      "distinct": false,
+      "message": "Legg til sjekk at det finnes lagret sanityinnhold i basen ved bruk av endelig vedtak",
+      "timestamp": "2025-01-31T08:34:23+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/d244aba1b21c522c14a7ced7f4aa203636bf8646",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/MeldingOmVedtakApiTest.kt"
+      ]
+    },
+    {
+      "id": "f8e12338a545dc3530ed04b2d84126abf8743a69",
+      "tree_id": "d2e6f1b79841c959f53592f67b1c7456f70b2aa4",
+      "distinct": false,
+      "message": "Merge branch 'main' into enderligHtml",
+      "timestamp": "2025-01-31T08:35:38+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/f8e12338a545dc3530ed04b2d84126abf8743a69",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagTaptArbeidsinntektTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagTaptArbeidstidTest.kt"
+      ],
+      "removed": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagArbeidstidTest.kt"
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtak.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagAndreFulleYtelserTest.kt"
+      ]
+    },
+    {
+      "id": "194b6626ab717b4d15e0808163109e5521188f81",
+      "tree_id": "4c44da87faa3bef4475246466a44b227ef83c388",
+      "distinct": false,
+      "message": "Rettet byggefeil pga manglende fagsakId\n\nCo-authored-by: Aurora Christine Hofman <aurora.christine.hofman@nav.no>",
+      "timestamp": "2025-01-31T08:54:03+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/194b6626ab717b4d15e0808163109e5521188f81",
+      "author": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "committer": {
+        "name": "Mona Kjeldsrud",
+        "email": "mona.kjeldsrud@nav.no",
+        "username": "mkjeldsr"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagTaptArbeidsinntektTest.kt"
+      ]
+    },
+    {
+      "id": "2a8faa5eb867af6cc0ccf27a7f36047a5d3e0310",
+      "tree_id": "69536122124d52f0956b2616f21a2925bf4cff78",
+      "distinct": false,
+      "message": "FJerne unødvendig require not null",
+      "timestamp": "2025-01-31T09:07:03+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/2a8faa5eb867af6cc0ccf27a7f36047a5d3e0310",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/Mediator.kt"
+      ]
+    },
+    {
+      "id": "04a084398f38aa07419badb9a122eb2ca8a48c87",
+      "tree_id": "fd97e307e09248e774937a7e0a18acee81e76084",
+      "distinct": false,
+      "message": "Css for browser",
+      "timestamp": "2025-01-31T09:46:40+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/04a084398f38aa07419badb9a122eb2ca8a48c87",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/Css.kt"
+      ]
+    },
+    {
+      "id": "64c2df6e3d8e5ee35e4734ca23c954d0321550ee",
+      "tree_id": "d43e4e6571be4fa744f13e0b9f3d0bac0347eed3",
+      "distinct": false,
+      "message": "Bruke faktisk fagsakId\n\nCo-authored-by: Mona Kjeldsrud <mona.kjeldsrud@nav.no>\nCo-authored-by: Giao The Cung <giaothe@gmail.com>",
+      "timestamp": "2025-01-31T10:24:05+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/64c2df6e3d8e5ee35e4734ca23c954d0321550ee",
+      "author": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "committer": {
+        "name": "Aurora Christine Hofman",
+        "email": "aurora.christine.hofman@nav.no",
+        "username": "AuroraSmil"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/VedtakMapper.kt"
+      ]
+    },
+    {
+      "id": "702c2f5e0b5bc955f60dd5c865d3ad178c197c30",
+      "tree_id": "2e224bbc5970235ed5e3f2a88313868e4205da40",
+      "distinct": false,
+      "message": "Revert \"Css for browser\"\n\nThis reverts commit 04a084398f38aa07419badb9a122eb2ca8a48c87.",
+      "timestamp": "2025-01-31T10:43:09+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/702c2f5e0b5bc955f60dd5c865d3ad178c197c30",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/Css.kt"
+      ]
+    },
+    {
+      "id": "8416c2229216ead82d6b0e6771b69642d01dd364",
+      "tree_id": "d43e4e6571be4fa744f13e0b9f3d0bac0347eed3",
+      "distinct": false,
+      "message": "Reapply \"Css for browser\"\n\nThis reverts commit 702c2f5e0b5bc955f60dd5c865d3ad178c197c30.",
+      "timestamp": "2025-01-31T12:18:32+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/8416c2229216ead82d6b0e6771b69642d01dd364",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/portabletext/Css.kt"
+      ]
+    },
+    {
+      "id": "5aa67b9b9b81e917cb8b2a02bd397c964261b674",
+      "tree_id": "210d6b59c72e9eb0fa8e76626d480ad05d6241f2",
+      "distinct": false,
+      "message": "Merge branch 'main' into enderligHtml",
+      "timestamp": "2025-01-31T15:32:41+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/5aa67b9b9b81e917cb8b2a02bd397c964261b674",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagAlleVilkårTest.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagStreikLockoutTest.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtak.kt",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/model/Vedtaksmelding.kt"
+      ]
+    },
+    {
+      "id": "06805df2928ea5d4950d162596239f44ad0570f3",
+      "tree_id": "3a6d236becec7d8998c5567434b76f46727a59b5",
+      "distinct": false,
+      "message": "Deploy main",
+      "timestamp": "2025-02-03T08:20:36+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/06805df2928ea5d4950d162596239f44ad0570f3",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "id": "3c88446f1c405aa088589073220baaec9d4ff305",
+      "tree_id": "02a0b4e041cacff767c34ff12004046b5296c4d9",
+      "distinct": false,
+      "message": "Merge branch 'main' into enderligHtml",
+      "timestamp": "2025-02-03T08:54:25+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/3c88446f1c405aa088589073220baaec9d4ff305",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/metrics/Metrics.kt",
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/metrics/MetricsTest.kt"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "build.gradle.kts",
+        "src/main/kotlin/no/nav/dagpenger/vedtaksmelding/apiconfig/ApiConfig.kt"
+      ]
+    },
+    {
+      "id": "27b33ea6dc82e45b95198d337a53eec723285a44",
+      "tree_id": "5e5988a846e909a502bfe3d4a85876496c5af20a",
+      "distinct": false,
+      "message": "Fix merge feil",
+      "timestamp": "2025-02-03T08:56:05+01:00",
+      "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/27b33ea6dc82e45b95198d337a53eec723285a44",
+      "author": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "committer": {
+        "name": "Giao The Cung",
+        "email": "giaothe@gmail.com",
+        "username": "gtcno"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagStreikLockoutTest.kt"
+      ]
+    }
+  ],
+  "head_commit": {
+    "id": "27b33ea6dc82e45b95198d337a53eec723285a44",
+    "tree_id": "5e5988a846e909a502bfe3d4a85876496c5af20a",
+    "distinct": false,
+    "message": "Fix merge feil",
+    "timestamp": "2025-02-03T08:56:05+01:00",
+    "url": "https://github.com/navikt/dp-melding-om-vedtak/commit/27b33ea6dc82e45b95198d337a53eec723285a44",
+    "author": {
+      "name": "Giao The Cung",
+      "email": "giaothe@gmail.com",
+      "username": "gtcno"
+    },
+    "committer": {
+      "name": "Giao The Cung",
+      "email": "giaothe@gmail.com",
+      "username": "gtcno"
+    },
+    "added": [
+
+    ],
+    "removed": [
+
+    ],
+    "modified": [
+      "src/test/kotlin/no/nav/dagpenger/vedtaksmelding/model/avslag/AvslagStreikLockoutTest.kt"
+    ]
+  }
+}

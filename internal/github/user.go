@@ -34,11 +34,7 @@ type githubResponse struct {
 			SamlIdentityProvider struct {
 				ExternalIdentities struct {
 					Nodes []struct {
-						User struct {
-							URL   string `json:"url"`
-							Login string `json:"login"`
-							Name  string `json:"name"`
-						} `json:"user"`
+						User User `json:"user"`
 					} `json:"nodes"`
 				} `json:"externalIdentities"`
 			} `json:"samlIdentityProvider"`
@@ -58,7 +54,7 @@ func (c Client) GetUserByEmail(email string) (*User, error) {
 	}
 
 	query := map[string]interface{}{
-		"query": userGraphQL, //fmt.Sprintf(userGraphQL, email),
+		"query": userGraphQL,
 		"variables": map[string]string{
 			"org":   c.org,
 			"email": email,
@@ -110,9 +106,5 @@ func (c Client) GetUserByEmail(email string) (*User, error) {
 		return nil, nil
 	}
 
-	return &User{
-		Login: githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.Login,
-		Name:  githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.Name,
-		URL:   githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User.URL,
-	}, nil
+	return &githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User, nil
 }
