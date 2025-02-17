@@ -54,8 +54,8 @@ func TestHandleEvent(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			goldnefilePath := filepath.Join("testdata/output", entry.Name())
-			goldenfile, err := os.ReadFile(goldnefilePath)
+			goldenfilePath := filepath.Join("testdata/output", entry.Name())
+			goldenfile, err := os.ReadFile(goldenfilePath)
 			if err != nil {
 				if !os.IsNotExist(err) {
 					t.Fatal(err)
