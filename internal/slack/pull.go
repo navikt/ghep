@@ -2,6 +2,7 @@ package slack
 
 import (
 	"fmt"
+	"html"
 
 	"github.com/navikt/ghep/internal/github"
 )
@@ -29,10 +30,10 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 		text = fmt.Sprintf("%s <%s|#%d> %s as %s in `%s` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.PullRequest.StateReason, event.Repository.ToSlack(), event.Sender.ToSlack())
 	}
 
-	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title)
+	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, html.EscapeString(event.PullRequest.Title))
 
 	if event.Action == "opened" {
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title, event.PullRequest.Body)
+		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, html.EscapeString(event.PullRequest.Title), event.PullRequest.Body)
 	}
 
 	return &Message{
@@ -72,7 +73,7 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 		}
 
 		text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s.", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, event.PullRequest.Title, event.PullRequest.Body)
+		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, html.EscapeString(event.PullRequest.Title), event.PullRequest.Body)
 
 		if event.PullRequest.Merged {
 			color = "#7044c4"

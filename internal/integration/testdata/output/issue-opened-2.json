@@ -1,0 +1,15 @@
+{
+  "channel": "#test",
+  "text": "Issue <https://github.com/navikt/aksel/issues/3590|#3590> opened in `<https://github.com/navikt/aksel|aksel>` by <https://github.com/vegardjo|vegardjo>.",
+  "attachments": [
+    {
+      "text": "*<https://github.com/navikt/aksel/issues/3590|#3590 [Innspill til komponent]: &lt;Accordion /&gt;>*\n### Tilbakemelding\n\nHei, mener denne burde bruke details / summary som markup, da får man bl.a. browsersøk (CTRL + F) inne i skjult innhold med på kjøpet, samt at det er mer semantisk korrekt: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details",
+      "type": "mrkdwn",
+      "color": "#34a44c",
+      "footer": "<https://github.com/navikt/aksel|navikt/aksel>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

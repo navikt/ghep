@@ -2,6 +2,7 @@ package slack
 
 import (
 	"fmt"
+	"html"
 
 	"github.com/navikt/ghep/internal/github"
 )
@@ -10,12 +11,12 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 	color := "#34a44c"
 
 	text := fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
-	attachmentText := fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
+	attachmentText := fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title), event.Issue.Body)
 
 	if event.Action == "closed" {
 		color = "#7044c4"
 		text = fmt.Sprintf("Issue <%s|#%d> %s as %s in `%s` by %s.", event.Issue.URL, event.Issue.Number, event.Action, event.Issue.StateReason, event.Repository.ToSlack(), event.Sender.ToSlack())
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*", event.Issue.URL, event.Issue.Number, event.Issue.Title)
+		attachmentText = fmt.Sprintf("*<%s|#%d %s>*", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title))
 	}
 
 	return &Message{
@@ -46,7 +47,7 @@ func CreateUpdatedIssueMessage(message Message, event github.Event) *Message {
 		color = "#7044c4"
 	case "edited":
 		text = fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s.", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, event.Issue.Title, event.Issue.Body)
+		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title), event.Issue.Body)
 
 		if event.Issue.State == "closed" {
 			color = "#7044c4"
