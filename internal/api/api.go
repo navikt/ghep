@@ -74,11 +74,9 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 		log := log.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
 		if err := c.events.Handle(r.Context(), log, team, event); err != nil {
-			log.Error("error handling event", "err", err.Error())
-			http.Error(w, fmt.Sprintf("Error handling event for %s", team.Name), http.StatusInternalServerError)
-			return
+			log.Error("error handling event for external contributors", "err", err.Error())
+			http.Error(w, "Error handling event for external contributors", http.StatusInternalServerError)
 		}
-
 	}
 
 	if event.Team != nil {
