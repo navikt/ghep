@@ -1,6 +1,6 @@
 {
   "channel": "#test",
-  "text": "Draft pull request <https://github.com/navikt/knorten/pull/187|#187> opened in `<https://github.com/navikt/knorten|knorten>` by <https://github.com/Kyrremann|Kyrremann>.",
+  "text": "Draft pull request <https://github.com/navikt/knorten/pull/187|#187> opened in `<https://github.com/navikt/knorten|knorten>` by <https://github.com/Kyrremann|Kyrremann>",
   "attachments": [
     {
       "text": "*<https://github.com/navikt/knorten/pull/187|#187 feat: tag knadavm>*\nGir oss muligheten til å treffe de med brannmurer.",

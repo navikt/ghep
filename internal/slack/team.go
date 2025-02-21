@@ -14,6 +14,6 @@ func CreateTeamMessage(channel string, event github.Event) *Message {
 
 	return &Message{
 		Channel: channel,
-		Text:    fmt.Sprintf("Team <%s|%s> was %s the repository %s.", event.Team.URL, event.Team.Name, action, event.Repository.ToSlack()),
+		Text:    fmt.Sprintf("Team <%s|%s> was %s the repository %s", event.Team.URL, event.Team.Name, action, event.Repository.ToSlack()),
 	}
 }

@@ -1,6 +1,6 @@
 {
   "channel": "#test",
-  "text": "<https://github.com/navikt/sykepengesoknad-kafka/compare/ee3bd9939dfa...ce296b0f3c6e|1 new commits> pushed to `<https://github.com/navikt/sykepengesoknad-kafka|sykepengesoknad-kafka>` by <https://github.com/golshidb93|golshidb93>.",
+  "text": "<https://github.com/navikt/sykepengesoknad-kafka/compare/ee3bd9939dfa...ce296b0f3c6e|1 new commits> pushed to `<https://github.com/navikt/sykepengesoknad-kafka|sykepengesoknad-kafka>` by <https://github.com/golshidb93|golshidb93>",
   "attachments": [
     {
       "text": "`<https://github.com/navikt/sykepengesoknad-kafka/commit/ce296b0f3c6e865fafcf2d98f801a29389a11f00|ce296b0f>` - Revert \"Revert \"Fjerner til slutt fra ag whitelist\"\" (#68)\n",

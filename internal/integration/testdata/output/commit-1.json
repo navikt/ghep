@@ -1,6 +1,6 @@
 {
   "channel": "#test",
-  "text": "<https://github.com/navikt/knorten/compare/49042c0cc444...c08bcc4ee8c8|2 new commits> pushed to `<https://github.com/navikt/knorten|knorten>` by <https://github.com/apps/dependabot|dependabot[bot]>, and <https://github.com/Kyrremann|Kyrremann>.",
+  "text": "<https://github.com/navikt/knorten/compare/49042c0cc444...c08bcc4ee8c8|2 new commits> pushed to `<https://github.com/navikt/knorten|knorten>` by <https://github.com/apps/dependabot|dependabot[bot]>, and <https://github.com/Kyrremann|Kyrremann>",
   "attachments": [
     {
       "text": "`<https://github.com/navikt/knorten/commit/2df91bf91d56ec91e64fb8c60e779ab548b4d599|2df91bf9>` - build(deps): bump the gomod group with 4 updates\n`<https://github.com/navikt/knorten/commit/c08bcc4ee8c8b951319244c470f182496d4e0c23|c08bcc4e>` - Merge pull request #158 from navikt/dependabot/go_modules/gomod-fe79281934\n",
