@@ -1,6 +1,6 @@
 {
   "channel": "#test",
-  "text": "<https://github.com/navikt/nada-terraform/compare/7e66a2b03236...aa47bc2efde6|1 new commits> pushed to `<https://github.com/navikt/nada-terraform|nada-terraform>` by <https://github.com/erikvatt|erikvatt>.",
+  "text": "<https://github.com/navikt/nada-terraform/compare/7e66a2b03236...aa47bc2efde6|1 new commits> pushed to `<https://github.com/navikt/nada-terraform|nada-terraform>` by <https://github.com/erikvatt|erikvatt>",
   "attachments": [
     {
       "text": "`<https://github.com/navikt/nada-terraform/commit/aa47bc2efde610c026e4a719232db143de48e912|aa47bc2e>` - add bigquery dataset for knada metrics\n",

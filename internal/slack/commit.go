@@ -130,7 +130,7 @@ func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, t
 		return nil, fmt.Errorf("creating authors: %w", err)
 	}
 
-	text := fmt.Sprintf("<%s|%d new commits> pushed to `%s` by %s.", event.Compare, len(event.Commits), event.Repository.ToSlack(), authors)
+	text := fmt.Sprintf("<%s|%d new commits> pushed to `%s` by %s", event.Compare, len(event.Commits), event.Repository.ToSlack(), authors)
 
 	var attachmentText strings.Builder
 	for _, c := range event.Commits {

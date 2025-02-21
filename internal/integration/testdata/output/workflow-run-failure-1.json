@@ -3,7 +3,7 @@
   "text": ":x: <https://github.com/navikt/foreldrepengesoknad|foreldrepengesoknad> has a workflow with status `failure`, triggered by <https://github.com/johannbm|johannbm>.\n<https://github.com/navikt/foreldrepengesoknad/actions/runs/9836221528|#1457 Refaktorer API kall til Tanstack query istedenfor Axios+hjemmelaget>",
   "attachments": [
     {
-      "text": "The job <https://url.com|job>[master] failed in step `step`.",
+      "text": "The job <https://url.com|job>[master] failed in step `step`",
       "color": "#d02434",
       "footer": "<https://github.com/navikt/foreldrepengesoknad|navikt/foreldrepengesoknad>",
       "footer_icon": "https://slack.github.com/static/img/favicon-neutral.png"

@@ -1,6 +1,6 @@
 {
   "channel": "#test",
-  "text": "Pull request <https://github.com/navikt/knada-gcp/pull/317|#317> opened in `<https://github.com/navikt/knada-gcp|knada-gcp>` by <https://github.com/paulbes|paulbes>.",
+  "text": "Pull request <https://github.com/navikt/knada-gcp/pull/317|#317> opened in `<https://github.com/navikt/knada-gcp|knada-gcp>` by <https://github.com/paulbes|paulbes>",
   "attachments": [
     {
       "text": "*<https://github.com/navikt/knada-gcp/pull/317|#317 [NOTASK] cnpg memory spikes to ~1.7Gi memory at startup>*\n<img width=\"381\" alt=\"image\" src=\"https://github.com/navikt/knada-gcp/assets/154348/a5010285-eece-4f2d-b132-4aa1e71a11ae\">\r\n\r\nRecommend to set request first, then look at workload graph, and set limit afterwards :D",
