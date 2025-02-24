@@ -200,7 +200,7 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string, subscribe
 		}
 		teams[0].Members = members
 
-		c.log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "repositories", len(repos), "members", len(members))
+		c.log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "members", len(members))
 		return teams, nil
 	}
 
