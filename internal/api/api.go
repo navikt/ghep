@@ -19,9 +19,10 @@ type Client struct {
 	orgMembers []github.User
 
 	ExternalContributorsChannel string
+	SubscribeToOrg              bool
 }
 
-func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []github.Team, orgMembers []github.User, externalContributorsChannel string) Client {
+func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []github.Team, orgMembers []github.User, externalContributorsChannel string, subscribeToOrg bool) Client {
 	return Client{
 		log:        log,
 		events:     events,
@@ -30,6 +31,7 @@ func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []g
 		orgMembers: orgMembers,
 
 		ExternalContributorsChannel: externalContributorsChannel,
+		SubscribeToOrg:              subscribeToOrg,
 	}
 }
 
@@ -60,7 +62,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var team github.Team
-	if isAnExternalContributor(event.Sender, c.orgMembers) {
+	if isAnExternalContributor(event.Sender, c.orgMembers) && c.ExternalContributorsChannel != "" {
 		team = github.Team{
 			Name: "external-contributors",
 			SlackChannels: github.SlackChannels{
@@ -79,20 +81,24 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if event.Team != nil {
-		for _, t := range c.teams {
-			if t.Name == event.Team.Name {
-				team = t
-				break
-			}
-		}
+	if c.SubscribeToOrg {
+		team = c.teams[0]
 	} else {
-		var found bool
+		if event.Team != nil {
+			for _, t := range c.teams {
+				if t.Name == event.Team.Name {
+					team = t
+					break
+				}
+			}
+		} else {
+			var found bool
 
-		team, found = findTeamByRepository(c.teams, event.FindRepositoryName())
-		if !found {
-			fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
-			return
+			team, found = findTeamByRepository(c.teams, event.FindRepositoryName())
+			if !found {
+				fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
+				return
+			}
 		}
 	}
 

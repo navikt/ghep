@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strconv"
 
 	"github.com/navikt/ghep/internal/api"
 	"github.com/navikt/ghep/internal/events"
@@ -26,11 +27,13 @@ func main() {
 		os.Getenv("GITHUB_ORG"),
 	)
 
+	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
+
 	log.Info("Gettings repositories from Github")
 	teams, err := githubClient.FetchTeams(
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
-		os.Getenv("GHEP_SUBSCRIBE_TO_ORG"),
+		subscribeToOrg,
 	)
 	if err != nil {
 		log.Error("fetching teams from Github", "err", err.Error())
@@ -85,6 +88,7 @@ func main() {
 		teams,
 		orgMembers,
 		os.Getenv("EXTERNAL_CONTRIBUTORS_CHANNEL"),
+		subscribeToOrg,
 	)
 
 	addr := os.Getenv("SERVER_ADDR")

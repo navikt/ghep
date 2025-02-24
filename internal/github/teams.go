@@ -178,7 +178,7 @@ func parseTeamConfig(path string) ([]Team, error) {
 	return teams, nil
 }
 
-func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg string) ([]Team, error) {
+func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string, subscribeToOrg bool) ([]Team, error) {
 	teams, err := parseTeamConfig(teamsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("parsing team config: %v", err)
@@ -191,14 +191,8 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString, subscribeToOrg s
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")
 
-	if subscribeToOrg == "true" {
+	if subscribeToOrg {
 		url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
-		repos, err := fetchRepositories(url, bearerToken, reposBlocklist)
-		if err != nil {
-			return nil, err
-		}
-		teams[0].Repositories = repos
-
 		teamUrl := fmt.Sprintf("%s/teams/%s", url, teams[0].Name)
 		members, err := fetchMembers(teamUrl, bearerToken)
 		if err != nil {
