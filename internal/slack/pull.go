@@ -23,6 +23,7 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 	eventType := "Pull request"
 	if event.PullRequest.Draft {
 		eventType = "Draft pull request"
+		color = "#eeeeee"
 	}
 
 	text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
@@ -70,6 +71,7 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 		eventType := "Pull request"
 		if event.PullRequest.Draft {
 			eventType = "Draft pull request"
+			color = "#eeeeee"
 		}
 
 		text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
