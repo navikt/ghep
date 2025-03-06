@@ -96,7 +96,7 @@ func (t *Team) AddRepository(repo string) {
 func (t *Team) RemoveRepository(remove string) {
 	for i, repo := range t.Repositories {
 		if repo == remove {
-			t.Repositories = append(t.Repositories[:i], t.Repositories[i+1:]...)
+			t.Repositories = slices.Delete(t.Repositories, i, i+1)
 			return
 		}
 	}

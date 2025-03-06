@@ -6,6 +6,8 @@ import (
 	"log/slog"
 	"net/http"
 
+	"slices"
+
 	"github.com/navikt/ghep/internal/events"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/redis/go-redis/v9"
@@ -114,10 +116,8 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 func findTeamByRepository(teams []github.Team, repositoryName string) (github.Team, bool) {
 	for _, team := range teams {
-		for _, repo := range team.Repositories {
-			if repo == repositoryName {
-				return team, true
-			}
+		if slices.Contains(team.Repositories, repositoryName) {
+			return team, true
 		}
 	}
 
