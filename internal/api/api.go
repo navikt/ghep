@@ -63,6 +63,21 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if slices.Contains([]string{"member_added", "member_removed"}, event.Action) {
+		log.Info("Handling org event", "action", event.Action, "user", event.Membership.User.Login, "triggered_by", event.Sender.Login)
+		switch event.Action {
+		case "member_added":
+			c.orgMembers = append(c.orgMembers, event.Membership.User)
+		case "member_removed":
+			c.orgMembers = slices.DeleteFunc(c.orgMembers, func(user github.User) bool {
+				return user.Login == event.Membership.User.Login
+			})
+		}
+
+		fmt.Fprint(w, "Event handled for org")
+		return
+	}
+
 	var team github.Team
 	if isAnExternalContributor(event.Sender, c.orgMembers) && c.ExternalContributorsChannel != "" {
 		team = github.Team{

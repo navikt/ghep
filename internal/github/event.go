@@ -149,6 +149,10 @@ func (t TeamEvent) ToSlack() string {
 	return fmt.Sprintf("<%s|%s>", t.URL, t.Name)
 }
 
+type Membership struct {
+	User User `json:"user"`
+}
+
 type FailedJob struct {
 	Name string
 	URL  string
@@ -237,6 +241,7 @@ type Event struct {
 	Sender              User         `json:"sender"`
 	Team                *TeamEvent   `json:"team"`
 	Member              User         `json:"member"`
+	Membership          Membership   `json:"membership"`
 	Workflow            *Workflow    `json:"workflow_run"`
 }
 
