@@ -31,7 +31,7 @@ func TestHandleCommitEvent(t *testing.T) {
 			args: args{
 				event: github.Event{
 					Ref: "refs/heads/feature",
-					Repository: github.Repository{
+					Repository: &github.Repository{
 						DefaultBranch: "main",
 					},
 				},
@@ -43,7 +43,7 @@ func TestHandleCommitEvent(t *testing.T) {
 			args: args{
 				event: github.Event{
 					Ref: "refs/heads/main",
-					Repository: github.Repository{
+					Repository: &github.Repository{
 						DefaultBranch: "main",
 					},
 					Commits: []github.Commit{},
@@ -56,7 +56,7 @@ func TestHandleCommitEvent(t *testing.T) {
 			args: args{
 				event: github.Event{
 					Ref: "refs/heads/main",
-					Repository: github.Repository{
+					Repository: &github.Repository{
 						DefaultBranch: "main",
 					},
 					Commits: []github.Commit{
@@ -123,6 +123,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					PullRequest: &github.Issue{
 						Number: 1,
 					},
+					Repository: &github.Repository{
+						Name: "test",
+					},
 				},
 			},
 			want: "#internal",
@@ -154,6 +157,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					PullRequest: &github.Issue{
 						Number: 1,
 					},
+					Repository: &github.Repository{
+						Name: "test",
+					},
 				},
 			},
 			want: "#external",
@@ -184,6 +190,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 					},
 					PullRequest: &github.Issue{
 						Number: 1,
+					},
+					Repository: &github.Repository{
+						Name: "test",
 					},
 				},
 			},
@@ -240,7 +249,7 @@ func TestHandleTeamEvent(t *testing.T) {
 					Team: &github.TeamEvent{
 						Name: "test",
 					},
-					Repository: github.Repository{
+					Repository: &github.Repository{
 						Name:     "new-repo",
 						RoleName: "admin",
 					},
@@ -263,7 +272,7 @@ func TestHandleTeamEvent(t *testing.T) {
 					Team: &github.TeamEvent{
 						Name: "test",
 					},
-					Repository: github.Repository{
+					Repository: &github.Repository{
 						Name:     "new-repo",
 						RoleName: "admin",
 					},
@@ -317,6 +326,9 @@ func TestHandleWorkflow(t *testing.T) {
 				Workflow: &github.Workflow{
 					Conclusion: "",
 				},
+				Repository: &github.Repository{
+					Name: "test",
+				},
 			},
 			team: team,
 		},
@@ -337,6 +349,9 @@ func TestHandleWorkflow(t *testing.T) {
 				Workflow: &github.Workflow{
 					Conclusion: "failure",
 				},
+				Repository: &github.Repository{
+					Name: "test",
+				},
 			},
 			team: team,
 			want: []byte("test"),
@@ -351,6 +366,9 @@ func TestHandleWorkflow(t *testing.T) {
 				Sender: github.User{
 					Login: "dependabot",
 					Type:  "Bot",
+				},
+				Repository: &github.Repository{
+					Name: "test",
 				},
 			},
 			team: github.Team{
@@ -373,6 +391,9 @@ func TestHandleWorkflow(t *testing.T) {
 					HeadBranch: "main",
 					Conclusion: "failure",
 				},
+				Repository: &github.Repository{
+					Name: "test",
+				},
 			},
 			team: github.Team{
 				Name: "test",
@@ -394,6 +415,9 @@ func TestHandleWorkflow(t *testing.T) {
 				Workflow: &github.Workflow{
 					HeadBranch: "feature/some_feature",
 					Conclusion: "success",
+				},
+				Repository: &github.Repository{
+					Name: "test",
 				},
 			},
 			team: github.Team{

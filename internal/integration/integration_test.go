@@ -88,9 +88,9 @@ func TestHandleEvent(t *testing.T) {
 				} else {
 					message = slack.CreatePullRequestMessage(slackChannel, "", event)
 				}
-			} else if event.Action == "renamed" {
+			} else if event.Changes != nil && event.Action == "renamed" {
 				message = slack.CreateRenamedMessage(slackChannel, event)
-			} else if event.Action == "publicized" {
+			} else if event.Repository != nil && event.Action == "publicized" {
 				message = slack.CreatePublicizedMessage(slackChannel, event)
 			} else if event.Team != nil {
 				message = slack.CreateTeamMessage(slackChannel, event)

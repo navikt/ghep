@@ -226,8 +226,8 @@ type Event struct {
 	Action              string       `json:"action"`
 	Ref                 string       `json:"ref"`
 	After               string       `json:"after"`
-	Repository          Repository   `json:"repository"`
-	Changes             Changes      `json:"changes"`
+	Repository          *Repository  `json:"repository"`
+	Changes             *Changes     `json:"changes"`
 	Commits             []Commit     `json:"commits"`
 	Compare             string       `json:"compare"`
 	Issue               *Issue       `json:"issue"`

@@ -252,9 +252,9 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		}
 
 		return handleReleaseEvent(log, team, event, timestamp)
-	} else if event.Action == "renamed" {
+	} else if event.Changes != nil && event.Action == "renamed" {
 		return handleRenamedRepository(log, &team, event)
-	} else if event.Action == "publicized" {
+	} else if event.Repository != nil && event.Action == "publicized" {
 		return handlePublicRepositoryEvent(log, &team, event)
 	} else if event.Team != nil {
 		index := slices.IndexFunc(h.teams, func(t github.Team) bool {
