@@ -252,8 +252,6 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		}
 
 		return handleReleaseEvent(log, team, event, timestamp)
-	} else if event.Action == "removed" {
-		return handleRemoveRepositoryEvent(log, &team, event)
 	} else if event.Action == "renamed" {
 		return handleRenamedRepository(log, &team, event)
 	} else if event.Action == "publicized" {
@@ -391,20 +389,6 @@ func handleReleaseEvent(log *slog.Logger, team github.Team, event github.Event, 
 
 	log.Info("Received release", "slack_channel", team.SlackChannels.Releases)
 	return slack.CreateReleaseMessage(team.SlackChannels.Releases, timestamp, event), nil
-}
-
-func handleRemoveRepositoryEvent(log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
-	log.Info("Received repository removed")
-
-	for _, repository := range event.RepositoriesRemoved {
-		team.RemoveRepository(repository.Name)
-	}
-
-	if team.SlackChannels.Commits == "" {
-		return nil, nil
-	}
-
-	return slack.CreateRemovedMessage(team.SlackChannels.Commits, event), nil
 }
 
 func handleRenamedRepository(log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {

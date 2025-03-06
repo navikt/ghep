@@ -88,8 +88,6 @@ func TestHandleEvent(t *testing.T) {
 				} else {
 					message = slack.CreatePullRequestMessage(slackChannel, "", event)
 				}
-			} else if event.Action == "removed" {
-				message = slack.CreateRemovedMessage(slackChannel, event)
 			} else if event.Action == "renamed" {
 				message = slack.CreateRenamedMessage(slackChannel, event)
 			} else if event.Action == "publicized" {
