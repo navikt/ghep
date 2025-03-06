@@ -70,6 +70,19 @@ func (t *Team) IsMember(user string) bool {
 	return slices.ContainsFunc(t.Members, contains)
 }
 
+func (t *Team) AddMember(user User) {
+	t.Members = append(t.Members, user)
+}
+
+func (t *Team) RemoveMember(remove string) {
+	for i, member := range t.Members {
+		if member.Login == remove {
+			t.Members = slices.Delete(t.Members, i, i+1)
+			return
+		}
+	}
+}
+
 // IsExternalContributor checks if a user is an external contributor to the team.
 // Bot users are not considered external contributors.
 func (t *Team) IsExternalContributor(user User) bool {

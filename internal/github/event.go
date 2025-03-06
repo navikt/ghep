@@ -138,6 +138,17 @@ type TeamEvent struct {
 	URL  string `json:"html_url"`
 }
 
+// ToSlack returns a formatted string for Slack
+// If the URL is empty, it returns the repository name
+// If the URL is not empty, it returns <URL|Name>
+func (t TeamEvent) ToSlack() string {
+	if t.URL == "" {
+		return t.Name
+	}
+
+	return fmt.Sprintf("<%s|%s>", t.URL, t.Name)
+}
+
 type FailedJob struct {
 	Name string
 	URL  string
@@ -225,6 +236,7 @@ type Event struct {
 	RepositoriesRemoved []Repository `json:"repositories_removed"`
 	Sender              User         `json:"sender"`
 	Team                *TeamEvent   `json:"team"`
+	Member              User         `json:"member"`
 	Workflow            *Workflow    `json:"workflow_run"`
 }
 

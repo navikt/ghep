@@ -431,15 +431,20 @@ func handlePublicRepositoryEvent(log *slog.Logger, team *github.Team, event gith
 }
 
 func handleTeamEvent(log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
-	if event.Action != "added_to_repository" && event.Action != "removed_from_repository" {
+	if !slices.Contains([]string{"added_to_repository", "removed_from_repository", "added", "removed"}, event.Action) {
 		return nil, nil
 	}
 
-	log.Info("Received team event")
-	if event.Action == "added_to_repository" {
+	log.Info("Received team event", "triggered_by", event.Sender.Login)
+	switch event.Action {
+	case "added_to_repository":
 		team.AddRepository(event.Repository.Name)
-	} else {
+	case "removed_from_repository":
 		team.RemoveRepository(event.Repository.Name)
+	case "added":
+		team.AddMember(event.Member)
+	case "removed":
+		team.RemoveMember(event.Member.Login)
 	}
 
 	if team.SlackChannels.Commits == "" {
