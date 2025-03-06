@@ -131,8 +131,11 @@ func TestHandleEvent(t *testing.T) {
 
 			if diff := cmp.Diff(string(goldenfile), got.String()); diff != "" {
 				t.Errorf("Create Slack message mismatch (-want +got):\n%s", diff)
+				if got.String() != "" {
+					// Probably a new test, output the new golden file
+					t.Logf("Got: %s", got)
+				}
 				// t.Logf("Golden file: %s", goldenfile)
-				// t.Logf("Got: %s", got)
 			}
 		})
 	}
