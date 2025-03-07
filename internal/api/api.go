@@ -148,7 +148,11 @@ func isAnExternalContributor(user github.User, orgMembers []github.User) bool {
 		return false
 	}
 
-	return slices.ContainsFunc(orgMembers, func(member github.User) bool {
-		return member.Login == user.Login
-	})
+	for _, member := range orgMembers {
+		if member.Login == user.Login {
+			return false
+		}
+	}
+
+	return true
 }
