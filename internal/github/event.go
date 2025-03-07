@@ -245,13 +245,17 @@ type Event struct {
 	Workflow            *Workflow    `json:"workflow_run"`
 }
 
-func (e Event) FindRepositoryName() string {
+func (e Event) GetRepositoryName() string {
 	switch e.Action {
 	case "renamed":
 		return e.Changes.Repository.Name.From
 	case "removed":
 		return e.RepositoriesRemoved[0].Name
 	default:
+		if e.Repository == nil {
+			return ""
+		}
+
 		return e.Repository.Name
 	}
 }

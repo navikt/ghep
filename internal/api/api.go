@@ -111,15 +111,15 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			var found bool
 
-			team, found = findTeamByRepository(c.teams, event.FindRepositoryName())
+			team, found = findTeamByRepository(c.teams, event.GetRepositoryName())
 			if !found {
-				fmt.Fprintf(w, "No team found for repository %s", event.Repository.Name)
+				fmt.Fprintf(w, "No team found for repository %s", event.GetRepositoryName())
 				return
 			}
 		}
 	}
 
-	log = log.With("repository", event.Repository.Name, "team", team.Name, "action", event.Action)
+	log = log.With("repository", event.GetRepositoryName(), "team", team.Name, "action", event.Action)
 	if err := c.events.Handle(r.Context(), log, team, event); err != nil {
 		log.Error("error handling event", "err", err.Error())
 		http.Error(w, fmt.Sprintf("Error handling event for %s", team.Name), http.StatusInternalServerError)
@@ -130,6 +130,10 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func findTeamByRepository(teams []github.Team, repositoryName string) (github.Team, bool) {
+	if repositoryName == "" {
+		return github.Team{}, false
+	}
+
 	for _, team := range teams {
 		if slices.Contains(team.Repositories, repositoryName) {
 			return team, true
