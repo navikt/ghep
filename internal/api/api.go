@@ -5,7 +5,6 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
-
 	"slices"
 
 	"github.com/navikt/ghep/internal/events"

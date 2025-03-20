@@ -4,8 +4,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-type mockHub struct {
-}
+type mockHub struct{}
 
 func (m mockHub) GetUserByEmail(email string) (*github.User, error) {
 	return map[string]*github.User{

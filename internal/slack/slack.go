@@ -143,7 +143,6 @@ func (c Client) getRequest(apiMethod, channel, timestamp string) (string, error)
 	}
 
 	return c.handleSlackResponse(resp, string(body))
-
 }
 
 func (c Client) handleSlackResponse(resp *http.Response, body string) (string, error) {
