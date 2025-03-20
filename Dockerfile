@@ -2,8 +2,6 @@ FROM golang:1.24-alpine AS builder
 
 WORKDIR /src
 
-COPY Makefile Makefile
-
 COPY go.sum go.sum
 COPY go.mod go.mod
 RUN go mod download
@@ -11,7 +9,9 @@ RUN go mod download
 COPY internal internal
 COPY main.go main.go
 
-RUN make test
+RUN go vet
+RUN go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+RUN go test ./...
 
 RUN CGO_ENABLED=0 go build -o /src/app
 
