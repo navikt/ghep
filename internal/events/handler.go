@@ -3,7 +3,6 @@ package events
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"log/slog"
 	"slices"
 	"strconv"
@@ -158,166 +157,19 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 	case github.TypeCommit:
 		return handleCommitEvent(log, team, event, h.github)
 	case github.TypeIssue:
-		id := strconv.Itoa(event.Issue.ID)
-		timestamp, err := h.redis.Get(ctx, id).Result()
-		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
-		}
-
-		if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
-			log.Info("unknown issue action")
-			return nil, nil
-		}
-
-		msgBytes, err := h.redis.Get(ctx, timestamp).Result()
-		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
-		}
-
-		if !errors.Is(err, redis.Nil) && event.Action != "opened" {
-			var oldMessage slack.Message
-			if err := json.Unmarshal([]byte(msgBytes), &oldMessage); err != nil {
-				log.Error("error unmarshalling message", "err", err.Error())
-			}
-
-			updatedMessage := slack.CreateUpdatedIssueMessage(oldMessage, event)
-			updatedMessage.Timestamp = timestamp
-			marshalled, err := json.Marshal(updatedMessage)
-			if err != nil {
-				log.Error("error marshalling message", "err", err.Error())
-			}
-
-			log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", timestamp)
-			_, err = h.slack.PostUpdatedMessage(marshalled)
-			if err != nil {
-				log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
-			}
-
-			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
-				return nil, nil
-			}
-		}
-
-		return handleIssueEvent(log, team, timestamp, event)
+		return h.handleIssueEvent(ctx, log, team, event)
 	case github.TypePullRequest:
-		id := strconv.Itoa(event.PullRequest.ID)
-		timestamp, err := h.redis.Get(ctx, id).Result()
-		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
-		}
-
-		if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
-			log.Info("unknown pull request action")
-			return nil, nil
-		}
-
-		messageBytes, err := h.redis.Get(ctx, timestamp).Result()
-		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
-		}
-
-		if !errors.Is(err, redis.Nil) && event.Action != "opened" {
-			var oldMessage slack.Message
-			if err := json.Unmarshal([]byte(messageBytes), &oldMessage); err != nil {
-				log.Error("error unmarshalling message", "err", err.Error())
-			}
-
-			updatedMessage := slack.CreateUpdatedPullRequestMessage(oldMessage, event)
-			updatedMessage.Timestamp = timestamp
-
-			marshalled, err := json.Marshal(updatedMessage)
-			if err != nil {
-				log.Error("error marshalling message", "err", err.Error())
-			}
-
-			log.Info("Posting update of pull request", "channel", updatedMessage.Channel, "timestamp", timestamp)
-			_, err = h.slack.PostUpdatedMessage(marshalled)
-			if err != nil {
-				log.Error("error posting updated message", "err", err.Error())
-			}
-
-			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
-				return nil, nil
-			}
-		}
-
-		return handlePullRequestEvent(log, team, timestamp, event)
+		return h.handlePullRequestEvent(ctx, log, team, event)
 	case github.TypeRelease:
-		var timestamp string
-		var err error
-		if event.Action == "edited" {
-			id := strconv.Itoa(event.Release.ID)
-			timestamp, err = h.redis.Get(ctx, id).Result()
-			if err != nil && !errors.Is(err, redis.Nil) {
-				log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
-			}
-		}
-
-		return handleReleaseEvent(log, team, event, timestamp)
+		return h.handleReleaseEvent(ctx, log, team, event)
 	case github.TypeRepositoryRenamed:
 		return handleRenamedRepository(log, &team, event)
 	case github.TypeRepositoryPublic:
 		return handlePublicRepositoryEvent(log, &team, event)
 	case github.TypeTeam:
-		index := slices.IndexFunc(h.teams, func(t github.Team) bool {
-			return t.Name == event.Team.Name
-		})
-		if index == -1 {
-			return nil, nil
-		}
-
-		team := h.teams[index]
-
-		payload, err := handleTeamEvent(log, &team, event)
-		h.teams[index] = team
-
-		return payload, err
+		return h.handleTeamEvent(ctx, log, event)
 	case github.TypeWorkflow:
-		gitCommitSHA := event.Workflow.HeadSHA
-		commitTimestamp, err := h.redis.Get(ctx, gitCommitSHA).Result()
-		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting thread timestamp", "err", err.Error(), "id", gitCommitSHA)
-		}
-
-		if commitTimestamp != "" {
-			if team.SlackChannels.Commits != "" {
-				if err := h.slack.PostWorkflowReaction(log, event, team.SlackChannels.Commits, commitTimestamp); err != nil {
-					log.Error("error posting workflow reaction", "err", err.Error(), "channel", team.SlackChannels.Commits, "timestamp", commitTimestamp)
-				}
-
-				msg, err := h.redis.Get(ctx, commitTimestamp).Result()
-				if err != nil && !errors.Is(err, redis.Nil) {
-					log.Error("error getting message", "err", err.Error(), "timestamp", commitTimestamp)
-				}
-
-				if !errors.Is(err, redis.Nil) {
-					if err := h.slack.PostUpdatedCommitMessage(log, msg, event, commitTimestamp); err != nil {
-						log.Error("error updating message", "err", err.Error(), "timestamp", commitTimestamp)
-					}
-				}
-			}
-		}
-
-		workflowID := strconv.Itoa(event.Workflow.ID)
-		workflowTimestamp, err := h.redis.Get(ctx, workflowID).Result()
-		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting workflow timestamp", "err", err.Error(), "id", workflowID)
-		}
-
-		if workflowTimestamp != "" {
-			log.Info("event", "action", event.Action, "workflow_status", event.Workflow.Status, "workflow_conclusion", event.Workflow.Conclusion)
-			if event.Action == "completed" && event.Workflow.Conclusion == "success" {
-				if err := h.slack.PostReaction(team.SlackChannels.Workflows, workflowTimestamp, slack.ReactionSuccess); err != nil {
-					log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Workflows, "timestamp", workflowTimestamp)
-				}
-			}
-		}
-
-		if err := event.Workflow.UpdateFailedJob(); err != nil {
-			log.Error("error updating failed job", "err", err.Error())
-		}
-
-		return handleWorkflowEvent(log, team, event)
+		return h.handleWorkflowEvent(ctx, log, team, event)
 	default:
 		log.Info("unknown event type")
 	}
@@ -326,12 +178,11 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 }
 
 func handleCommitEvent(log *slog.Logger, team github.Team, event github.Event, githubClient github.Client) (*slack.Message, error) {
-	branch := strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
-
 	if team.SlackChannels.Commits == "" {
 		return nil, nil
 	}
 
+	branch := strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
 	if branch != event.Repository.DefaultBranch {
 		return nil, nil
 	}
@@ -340,57 +191,9 @@ func handleCommitEvent(log *slog.Logger, team github.Team, event github.Event, g
 		return nil, nil
 	}
 
-	log.Info("Received commit event", "slack_channel", team.SlackChannels.Commits)
+	log = log.With("slack_channel", team.SlackChannels.Commits)
+	log.Info("Received commit event")
 	return slack.CreateCommitMessage(log, team.SlackChannels.Commits, event, team, githubClient)
-}
-
-func handleIssueEvent(log *slog.Logger, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
-	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
-		return nil, nil
-	}
-
-	channel := team.SlackChannels.Issues
-	if team.IsExternalContributor(event.Sender) {
-		channel = team.Config.ExternalContributorsChannel
-	}
-
-	if channel == "" {
-		return nil, nil
-	}
-
-	log.Info("Received issue", "slack_channel", channel)
-	return slack.CreateIssueMessage(channel, threadTimestamp, event), nil
-}
-
-func handlePullRequestEvent(log *slog.Logger, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
-	if !slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
-		return nil, nil
-	}
-
-	channel := team.SlackChannels.PullRequests
-	if team.IsExternalContributor(event.Sender) {
-		channel = team.Config.ExternalContributorsChannel
-	}
-
-	if channel == "" {
-		return nil, nil
-	}
-
-	log.Info("Received pull request", "slack_channel", channel)
-	return slack.CreatePullRequestMessage(channel, threadTimestamp, event), nil
-}
-
-func handleReleaseEvent(log *slog.Logger, team github.Team, event github.Event, timestamp string) (*slack.Message, error) {
-	if !slices.Contains([]string{"published", "edited"}, event.Action) {
-		return nil, nil
-	}
-
-	if team.SlackChannels.Releases == "" {
-		return nil, nil
-	}
-
-	log.Info("Received release", "slack_channel", team.SlackChannels.Releases)
-	return slack.CreateReleaseMessage(team.SlackChannels.Releases, timestamp, event), nil
 }
 
 func handleRenamedRepository(log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
@@ -411,52 +214,7 @@ func handlePublicRepositoryEvent(log *slog.Logger, team *github.Team, event gith
 		return nil, nil
 	}
 
+	log = log.With("slack_channel", team.SlackChannels.Commits)
 	log.Info("Received repository publicized")
-
 	return slack.CreatePublicizedMessage(team.SlackChannels.Commits, event), nil
-}
-
-func handleTeamEvent(log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
-	if !slices.Contains([]string{"added_to_repository", "removed_from_repository", "added", "removed"}, event.Action) {
-		return nil, nil
-	}
-
-	log.Info("Received team event", "triggered_by", event.Sender.Login)
-	switch event.Action {
-	case "added_to_repository":
-		team.AddRepository(event.Repository.Name)
-	case "removed_from_repository":
-		team.RemoveRepository(event.Repository.Name)
-	case "added":
-		team.AddMember(event.Member)
-	case "removed":
-		team.RemoveMember(event.Member.Login)
-	}
-
-	if team.SlackChannels.Commits == "" {
-		return nil, nil
-	}
-
-	return slack.CreateTeamMessage(team.SlackChannels.Commits, event), nil
-}
-
-func handleWorkflowEvent(log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	if team.SlackChannels.Workflows == "" {
-		return nil, nil
-	}
-
-	if team.Config.Workflows.IgnoreBots && event.Sender.IsBot() {
-		return nil, nil
-	}
-
-	if len(team.Config.Workflows.Branches) > 0 && !slices.Contains(team.Config.Workflows.Branches, event.Workflow.HeadBranch) {
-		return nil, nil
-	}
-
-	if event.Action != "completed" || event.Workflow.Conclusion != "failure" {
-		return nil, nil
-	}
-
-	log.Info("Received workflow run", "conclusion", event.Workflow.Conclusion, "slack_channel", team.SlackChannels.Workflows)
-	return slack.CreateWorkflowMessage(team.SlackChannels.Workflows, event), nil
 }
