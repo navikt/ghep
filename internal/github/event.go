@@ -1,3 +1,5 @@
+//go:generate stringer -type=EventType
+
 package github
 
 import (
@@ -8,8 +10,20 @@ import (
 	"time"
 )
 
+type EventType int
+
 const (
 	RefHeadsPrefix = "refs/heads/"
+
+	TypeCommit EventType = iota
+	TypeIssue
+	TypePullRequest
+	TypeRelease
+	TypeRepositoryRenamed
+	TypeRepositoryPublic
+	TypeTeam
+	TypeWorkflow
+	TypeUnknown
 )
 
 type User struct {
@@ -243,6 +257,28 @@ type Event struct {
 	Member              User         `json:"member"`
 	Membership          Membership   `json:"membership"`
 	Workflow            *Workflow    `json:"workflow_run"`
+}
+
+func (e Event) GetEventType() EventType {
+	if e.IsCommit() {
+		return TypeCommit
+	} else if e.Issue != nil {
+		return TypeIssue
+	} else if e.PullRequest != nil {
+		return TypePullRequest
+	} else if e.Release != nil {
+		return TypeRelease
+	} else if e.Changes != nil && e.Action == "renamed" {
+		return TypeRepositoryRenamed
+	} else if e.Repository != nil && e.Action == "publicized" {
+		return TypeRepositoryPublic
+	} else if e.Team != nil {
+		return TypeTeam
+	} else if e.Workflow != nil {
+		return TypeWorkflow
+	}
+
+	return TypeUnknown
 }
 
 func (e Event) GetRepositoryName() string {

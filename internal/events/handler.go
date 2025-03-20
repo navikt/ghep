@@ -153,9 +153,11 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 }
 
 func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	if event.IsCommit() {
+	eventType := event.GetEventType()
+	switch eventType {
+	case github.TypeCommit:
 		return handleCommitEvent(log, team, event, h.github)
-	} else if event.Issue != nil {
+	case github.TypeIssue:
 		id := strconv.Itoa(event.Issue.ID)
 		timestamp, err := h.redis.Get(ctx, id).Result()
 		if err != nil && !errors.Is(err, redis.Nil) {
@@ -197,7 +199,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		}
 
 		return handleIssueEvent(log, team, timestamp, event)
-	} else if event.PullRequest != nil {
+	case github.TypePullRequest:
 		id := strconv.Itoa(event.PullRequest.ID)
 		timestamp, err := h.redis.Get(ctx, id).Result()
 		if err != nil && !errors.Is(err, redis.Nil) {
@@ -240,7 +242,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		}
 
 		return handlePullRequestEvent(log, team, timestamp, event)
-	} else if event.Release != nil {
+	case github.TypeRelease:
 		var timestamp string
 		var err error
 		if event.Action == "edited" {
@@ -252,11 +254,11 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		}
 
 		return handleReleaseEvent(log, team, event, timestamp)
-	} else if event.Changes != nil && event.Action == "renamed" {
+	case github.TypeRepositoryRenamed:
 		return handleRenamedRepository(log, &team, event)
-	} else if event.Repository != nil && event.Action == "publicized" {
+	case github.TypeRepositoryPublic:
 		return handlePublicRepositoryEvent(log, &team, event)
-	} else if event.Team != nil {
+	case github.TypeTeam:
 		index := slices.IndexFunc(h.teams, func(t github.Team) bool {
 			return t.Name == event.Team.Name
 		})
@@ -270,7 +272,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		h.teams[index] = team
 
 		return payload, err
-	} else if event.Workflow != nil {
+	case github.TypeWorkflow:
 		gitCommitSHA := event.Workflow.HeadSHA
 		commitTimestamp, err := h.redis.Get(ctx, gitCommitSHA).Result()
 		if err != nil && !errors.Is(err, redis.Nil) {
@@ -316,7 +318,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 		}
 
 		return handleWorkflowEvent(log, team, event)
-	} else {
+	default:
 		log.Info("unknown event type")
 	}
 
