@@ -159,6 +159,7 @@ data:
         workflows:
           branches: ["main", "master"]
     virksomhetsdatalaget:
+      commits: "#virksomhetsdatalaget-gh"
       issues: "#virksomhetsdatalaget-gh"
       pulls: "#virksomhetsdatalaget-gh"
       workflows: "#virksomhetsdatalaget-gh"
