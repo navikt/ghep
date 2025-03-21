@@ -158,3 +158,11 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+    virkshomhetsdatalaget:
+      issues: "#virksomhetsdatalaget-gh"
+      pulls: "#virksomhetsdatalaget-gh"
+      workflows: "#virksomhetsdatalaget-gh"
+      releases: "#virksomhetsdatalaget-gh"
+      config:
+        workflows:
+          branches: ["main", "master"]
