@@ -282,12 +282,11 @@ func (e Event) GetEventType() EventType {
 }
 
 func (e Event) GetRepositoryName() string {
-	switch e.Action {
-	case "renamed":
+	if e.Action == "renamed" && e.Changes != nil {
 		return e.Changes.Repository.Name.From
-	case "removed":
+	} else if e.Action == "removed" && len(e.RepositoriesRemoved) > 0 {
 		return e.RepositoriesRemoved[0].Name
-	default:
+	} else {
 		if e.Repository == nil {
 			return ""
 		}
