@@ -175,3 +175,5 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main"]
+          repos: ["nav-enonicxp-frontend"]
+          workflows: ["Deploy til prod-failover"]

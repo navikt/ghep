@@ -88,10 +88,14 @@ team:
     workflows:
       ignoreBots: bool
       branches: [string]
+      workflows: [string]
+      repositories: [string]
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om workflows som feiler for bots (for eksempel Dependabot)
 - `branches` - Få *kun* Slack-melding om workflows som feiler for spesifikke branches
+- `workflows` - Få *kun* Slack-melding om workflows som feiler for spesifikke workflows
+- `repositories` - Få *kun* Slack-melding om workflows som feiler for spesifikke repositories
 
 ## Lokal utvikling
 

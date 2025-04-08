@@ -15,8 +15,10 @@ import (
 )
 
 type Workflows struct {
-	Branches   []string `yaml:"branches"`
-	IgnoreBots bool     `yaml:"ignoreBots"`
+	Branches     []string `yaml:"branches"`
+	Repositories []string `yaml:"repositories"`
+	Workflows    []string `yaml:"workflows"`
+	IgnoreBots   bool     `yaml:"ignoreBots"`
 }
 
 type DependabotConfig string

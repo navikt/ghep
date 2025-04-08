@@ -73,6 +73,14 @@ func handleWorkflowEvent(log *slog.Logger, team github.Team, event github.Event)
 		return nil, nil
 	}
 
+	if len(team.Config.Workflows.Repositories) > 0 && !slices.Contains(team.Config.Workflows.Repositories, event.Repository.Name) {
+		return nil, nil
+	}
+
+	if len(team.Config.Workflows.Workflows) > 0 && !slices.Contains(team.Config.Workflows.Workflows, event.Workflow.Name) {
+		return nil, nil
+	}
+
 	if event.Action != "completed" || event.Workflow.Conclusion != "failure" {
 		return nil, nil
 	}

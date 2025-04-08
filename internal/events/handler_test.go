@@ -414,7 +414,7 @@ func TestHandleWorkflow(t *testing.T) {
 				Action: "completed",
 				Workflow: &github.Workflow{
 					HeadBranch: "feature/some_feature",
-					Conclusion: "success",
+					Conclusion: "failure",
 				},
 				Repository: &github.Repository{
 					Name: "test",
@@ -432,6 +432,81 @@ func TestHandleWorkflow(t *testing.T) {
 				},
 			},
 			want: nil,
+		},
+		{
+			name: "Ignore repositories not matching",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					Conclusion: "failure",
+				},
+				Repository: &github.Repository{
+					Name: "test",
+				},
+			},
+			team: github.Team{
+				Name: "test",
+				SlackChannels: github.SlackChannels{
+					Workflows: "#test",
+				},
+				Config: github.Config{
+					Workflows: github.Workflows{
+						Repositories: []string{"other-repo"},
+					},
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "Ignore workflows not matching",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					Conclusion: "failure",
+					Name:       "test",
+				},
+				Repository: &github.Repository{
+					Name: "test",
+				},
+			},
+			team: github.Team{
+				Name: "test",
+				SlackChannels: github.SlackChannels{
+					Workflows: "#test",
+				},
+				Config: github.Config{
+					Workflows: github.Workflows{
+						Workflows: []string{"other-workflow"},
+					},
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "Allow only specific repositories and workflows",
+			event: github.Event{
+				Action: "completed",
+				Workflow: &github.Workflow{
+					Conclusion: "failure",
+					Name:       "test",
+				},
+				Repository: &github.Repository{
+					Name: "test",
+				},
+			},
+			team: github.Team{
+				Name: "test",
+				SlackChannels: github.SlackChannels{
+					Workflows: "#test",
+				},
+				Config: github.Config{
+					Workflows: github.Workflows{
+						Repositories: []string{"test"},
+						Workflows:    []string{"test"},
+					},
+				},
+			},
+			want: []byte("test"),
 		},
 	}
 
