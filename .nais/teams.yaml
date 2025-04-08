@@ -167,13 +167,13 @@ data:
       config:
         workflows:
           branches: ["main", "master"]
-    team-nav-no:                                 
-      releases: "#team-navno-releases"           
-      workflows: "#team-navno-failover-prod"     
-      pulls: "#team-navno-pull-requests"         
-      config:                                    
-        silenceDependabot: "always"              
-        workflows:                               
-          branches: ["main"]                     
-          repos: ["nav-enonicxp-frontend"]       
+    team-nav-no:
+      releases: "#team-navno-releases"
+      workflows: "#team-navno-failover-prod"
+      pulls: "#team-navno-pull-requests"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          branches: ["main"]
+          repos: ["nav-enonicxp-frontend"]
           workflows: ["Deploy til prod-failover"]
