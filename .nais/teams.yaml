@@ -158,6 +158,14 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+    hubba-devs:
+      workflows: "#team-hubba-alerts"
+      config:
+        workflows:
+          ignoreBots: true
+          branches: ["main", "master"]
+          repositories: ["pam-stillingsok"]
+          workflows: ["Playwright Tests"]
     virksomhetsdatalaget:
       commits: "#virksomhetsdatalaget-gh"
       issues: "#virksomhetsdatalaget-gh"
