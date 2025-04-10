@@ -191,3 +191,13 @@ data:
     historisk:
       issues: "#historisk-github"
       pulls: "#historisk-github"
+    team-esyfo:
+      commits: "#esyfo-github-feed"
+      workflows: "#esyfo-github-feed"
+      issues: "#esyfo-github-feed"
+      pulls: "#esyfo-pull-requests"
+      silenceDependabot: "always"
+      config:
+        workflows:
+          ignoreBots: true
+          branches: ["main", "master"]
