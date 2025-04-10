@@ -185,3 +185,6 @@ data:
           branches: ["main"]
           repos: ["nav-enonicxp-frontend"]
           workflows: ["Deploy til prod-failover"]
+    allosaurus:
+      issues: "#allosaurus-github"
+      pulls: "#allosaurus-github"      
