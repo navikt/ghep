@@ -188,3 +188,6 @@ data:
     allosaurus:
       issues: "#allosaurus-github"
       pulls: "#allosaurus-github"      
+    historisk:
+      issues: "#historisk-github"
+      pulls: "#historisk-github"
