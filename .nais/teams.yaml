@@ -197,6 +197,16 @@ data:
       issues: "#esyfo-github-feed"
       pulls: "#esyfo-pull-requests"
       config:
+        ignoreRepositories:
+          - "arbeidsgiver-notifikasjon-produsenter"
+          - "isdialogmelding"
+          - "isdialogmote"
+          - "isdialogmote-schema"
+          - "isnarmesteleder"
+          - "isyfomock"
+          - "isoppfolgingstilfelle"
+          - "nav-ekstern-api-dok"
+          - "syfomodiaperson"
         silenceDependabot: "always"
         workflows:
           ignoreBots: true
