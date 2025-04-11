@@ -196,8 +196,8 @@ data:
       workflows: "#esyfo-github-feed"
       issues: "#esyfo-github-feed"
       pulls: "#esyfo-pull-requests"
-      silenceDependabot: "always"
       config:
+        silenceDependabot: "always"
         workflows:
           ignoreBots: true
           branches: ["main", "master"]
