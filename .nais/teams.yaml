@@ -58,8 +58,8 @@ data:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
-      silenceDependabot: "always"
       config:
+        silenceDependabot: "always"
         externalContributorsChannel: "#tsm-extern-contrib"
         workflows:
           ignoreBots: true
@@ -68,8 +68,8 @@ data:
       commits: "tsm-commits"
       workflows: "tsm-broken-actions"
       issues: "tsm-issues"
-      silenceDependabot: "always"
       config:
+        silenceDependabot: "always"
         externalContributorsChannel: "#tsm-extern-contrib"
         workflows:
           ignoreBots: true
