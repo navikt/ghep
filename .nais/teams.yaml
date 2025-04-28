@@ -211,3 +211,13 @@ data:
         workflows:
           ignoreBots: true
           branches: ["main", "master"]
+    speilvendt:
+      commits: "#område-helse-speilvendt-github"
+      issues: "#område-helse-speilvendt-github"
+      pulls: "#område-helse-speilvendt-github"
+      workflows: "#område-helse-speilvendt-github"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          ignoreBots: false
+          branches: ["main"]
