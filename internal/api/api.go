@@ -16,14 +16,14 @@ type Client struct {
 	log        *slog.Logger
 	events     events.Handler
 	redis      *redis.Client
-	teams      []github.Team
-	orgMembers []github.User
+	teams      []*github.Team
+	orgMembers []*github.User
 
 	ExternalContributorsChannel string
 	SubscribeToOrg              bool
 }
 
-func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []github.Team, orgMembers []github.User, externalContributorsChannel string, subscribeToOrg bool) Client {
+func New(log *slog.Logger, events events.Handler, redis *redis.Client, teams []*github.Team, orgMembers []*github.User, externalContributorsChannel string, subscribeToOrg bool) Client {
 	return Client{
 		log:        log,
 		events:     events,
@@ -66,9 +66,9 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		log.Info("Handling org event", "action", event.Action, "user", event.Membership.User.Login, "triggered_by", event.Sender.Login)
 		switch event.Action {
 		case "member_added":
-			c.orgMembers = append(c.orgMembers, event.Membership.User)
+			c.orgMembers = append(c.orgMembers, &event.Membership.User)
 		case "member_removed":
-			c.orgMembers = slices.DeleteFunc(c.orgMembers, func(user github.User) bool {
+			c.orgMembers = slices.DeleteFunc(c.orgMembers, func(user *github.User) bool {
 				return user.Login == event.Membership.User.Login
 			})
 		}
@@ -77,16 +77,16 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var team github.Team
+	var team *github.Team
 	if isAnExternalContributor(event.Sender, c.orgMembers) && c.ExternalContributorsChannel != "" {
-		team = github.Team{
+		team = &github.Team{
 			Name: "external-contributors",
 			SlackChannels: github.SlackChannels{
 				PullRequests: c.ExternalContributorsChannel,
 				Issues:       c.ExternalContributorsChannel,
 			},
-			Members: []github.User{
-				event.Sender,
+			Members: []*github.User{
+				&event.Sender,
 			},
 		}
 
@@ -128,9 +128,9 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Event handled for team %s", team.Name)
 }
 
-func findTeamByRepository(teams []github.Team, repositoryName string) (github.Team, bool) {
+func findTeamByRepository(teams []*github.Team, repositoryName string) (*github.Team, bool) {
 	if repositoryName == "" {
-		return github.Team{}, false
+		return nil, false
 	}
 
 	for _, team := range teams {
@@ -139,10 +139,10 @@ func findTeamByRepository(teams []github.Team, repositoryName string) (github.Te
 		}
 	}
 
-	return github.Team{}, false
+	return nil, false
 }
 
-func isAnExternalContributor(user github.User, orgMembers []github.User) bool {
+func isAnExternalContributor(user github.User, orgMembers []*github.User) bool {
 	if user.IsBot() {
 		return false
 	}

@@ -22,10 +22,10 @@ type Handler struct {
 	github github.Client
 	redis  *redis.Client
 	slack  slack.Client
-	teams  []github.Team
+	teams  []*github.Team
 }
 
-func NewHandler(githubClient github.Client, redis *redis.Client, slackClient slack.Client, teams []github.Team) Handler {
+func NewHandler(githubClient github.Client, redis *redis.Client, slackClient slack.Client, teams []*github.Team) Handler {
 	return Handler{
 		github: githubClient,
 		redis:  redis,
@@ -57,8 +57,8 @@ func shouldSilenceBots(team github.Team, event github.Event) bool {
 	return false
 }
 
-func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) error {
-	if shouldSilenceBots(team, event) {
+func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team *github.Team, event github.Event) error {
+	if shouldSilenceBots(*team, event) {
 		return nil
 	}
 
@@ -151,25 +151,25 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 	return ""
 }
 
-func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
+func (h *Handler) handle(ctx context.Context, log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
 	eventType := event.GetEventType()
 	switch eventType {
 	case github.TypeCommit:
-		return handleCommitEvent(log, team, event, h.github)
+		return handleCommitEvent(log, *team, event, h.github)
 	case github.TypeIssue:
-		return h.handleIssueEvent(ctx, log, team, event)
+		return h.handleIssueEvent(ctx, log, *team, event)
 	case github.TypePullRequest:
-		return h.handlePullRequestEvent(ctx, log, team, event)
+		return h.handlePullRequestEvent(ctx, log, *team, event)
 	case github.TypeRelease:
-		return h.handleReleaseEvent(ctx, log, team, event)
+		return h.handleReleaseEvent(ctx, log, *team, event)
 	case github.TypeRepositoryRenamed:
-		return handleRenamedRepository(log, &team, event)
+		return handleRenamedRepository(log, team, event)
 	case github.TypeRepositoryPublic:
-		return handlePublicRepositoryEvent(log, &team, event)
+		return handlePublicRepositoryEvent(log, team, event)
 	case github.TypeTeam:
 		return h.handleTeamEvent(ctx, log, event)
 	case github.TypeWorkflow:
-		return h.handleWorkflowEvent(ctx, log, team, event)
+		return h.handleWorkflowEvent(ctx, log, *team, event)
 	default:
 		log.Info("unknown event type")
 	}

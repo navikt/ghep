@@ -103,7 +103,7 @@ func main() {
 	}
 }
 
-func logTeams(log *slog.Logger, teams []github.Team) {
+func logTeams(log *slog.Logger, teams []*github.Team) {
 	var teamNames []string
 	for _, team := range teams {
 		teamNames = append(teamNames, team.Name)

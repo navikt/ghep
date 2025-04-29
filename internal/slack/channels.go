@@ -11,7 +11,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func (c Client) EnsureChannels(teams []github.Team) error {
+func (c Client) EnsureChannels(teams []*github.Team) error {
 	joinedChannels, err := c.getJoinedChannels()
 	if err != nil {
 		return err

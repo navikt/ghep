@@ -49,23 +49,23 @@ type SlackChannels struct {
 type Team struct {
 	Name          string
 	Repositories  []string
-	Members       []User
+	Members       []*User
 	SlackChannels SlackChannels `yaml:",inline"`
 	Config        Config        `yaml:"config"`
 }
 
-func (t *Team) GetMemberByName(name string) (User, bool) {
+func (t *Team) GetMemberByName(name string) (*User, bool) {
 	for _, member := range t.Members {
 		if member.Login == name {
 			return member, true
 		}
 	}
 
-	return User{}, false
+	return nil, false
 }
 
 func (t *Team) IsMember(user string) bool {
-	contains := func(u User) bool {
+	contains := func(u *User) bool {
 		return u.Login == user
 	}
 
@@ -73,7 +73,7 @@ func (t *Team) IsMember(user string) bool {
 }
 
 func (t *Team) AddMember(user User) {
-	t.Members = append(t.Members, user)
+	t.Members = append(t.Members, &user)
 }
 
 func (t *Team) RemoveMember(remove string) {
@@ -172,19 +172,19 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 	return repos, nil
 }
 
-func parseTeamConfig(path string) ([]Team, error) {
+func parseTeamConfig(path string) ([]*Team, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	teamsAsMap := map[string]Team{}
+	teamsAsMap := map[string]*Team{}
 	if err := yaml.NewDecoder(file).Decode(&teamsAsMap); err != nil {
 		return nil, fmt.Errorf("decoding team config: %v", err)
 	}
 
-	teams := make([]Team, 0, len(teamsAsMap))
+	teams := make([]*Team, 0, len(teamsAsMap))
 	for name, team := range teamsAsMap {
 		team.Name = name
 		teams = append(teams, team)
@@ -193,7 +193,7 @@ func parseTeamConfig(path string) ([]Team, error) {
 	return teams, nil
 }
 
-func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string, subscribeToOrg bool) ([]Team, error) {
+func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string, subscribeToOrg bool) ([]*Team, error) {
 	teams, err := parseTeamConfig(teamsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("parsing team config: %v", err)

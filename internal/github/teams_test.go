@@ -10,12 +10,12 @@ func TestParseTeamConfig(t *testing.T) {
 	tests := []struct {
 		name string
 		path string
-		want []Team
+		want []*Team
 	}{
 		{
 			name: "team with all config",
 			path: "testdata/all_config.yaml",
-			want: []Team{
+			want: []*Team{
 				{
 					Name: "nada",
 					SlackChannels: SlackChannels{
@@ -36,7 +36,7 @@ func TestParseTeamConfig(t *testing.T) {
 		{
 			name: "team with minimal config",
 			path: "testdata/minimal.yaml",
-			want: []Team{
+			want: []*Team{
 				{
 					Name: "nada",
 					SlackChannels: SlackChannels{

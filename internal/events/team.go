@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) handleTeamEvent(ctx context.Context, log *slog.Logger, event github.Event) (*slack.Message, error) {
-	index := slices.IndexFunc(h.teams, func(t github.Team) bool {
+	index := slices.IndexFunc(h.teams, func(t *github.Team) bool {
 		return t.Name == event.Team.Name
 	})
 
@@ -20,7 +20,7 @@ func (h *Handler) handleTeamEvent(ctx context.Context, log *slog.Logger, event g
 
 	team := h.teams[index]
 
-	payload, err := handleTeamEvent(log, &team, event)
+	payload, err := handleTeamEvent(log, team, event)
 	h.teams[index] = team
 
 	return payload, err

@@ -67,7 +67,7 @@ func TestHandleEvent(t *testing.T) {
 			var message *slack.Message
 			if strings.HasPrefix(event.Ref, "refs/heads/") {
 				team := github.Team{
-					Members: []github.User{
+					Members: []*github.User{
 						{
 							Login: "Kyrremann",
 							URL:   "https://github.com/Kyrremann",

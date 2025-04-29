@@ -12,7 +12,7 @@ import (
 // fetchMembers fetches members for a Github org or team using the following API:
 // Team: https://docs.github.com/en/rest/teams/members#list-team-members
 // Org: https://docs.github.com/en/rest/orgs/members#list-organization-members
-func fetchMembers(teamURL, bearerToken string) ([]User, error) {
+func fetchMembers(teamURL, bearerToken string) ([]*User, error) {
 	req, err := http.NewRequest("GET", teamURL+"/members", nil)
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func fetchMembers(teamURL, bearerToken string) ([]User, error) {
 		Timeout: 10 * time.Second,
 	}
 
-	var teamMembers []User
+	var teamMembers []*User
 	page := 1
 	for {
 		query.Set("page", strconv.Itoa(page))
@@ -48,7 +48,7 @@ func fetchMembers(teamURL, bearerToken string) ([]User, error) {
 			return nil, fmt.Errorf("%s returned %v: %s", teamURL, resp.Status, body)
 		}
 
-		var members []User
+		var members []*User
 		if err := json.Unmarshal(body, &members); err != nil {
 			return nil, err
 		}
@@ -65,10 +65,10 @@ func fetchMembers(teamURL, bearerToken string) ([]User, error) {
 	return teamMembers, nil
 }
 
-func (c *Client) FetchOrgMembers() ([]User, error) {
+func (c *Client) FetchOrgMembers() ([]*User, error) {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
-		return []User{}, fmt.Errorf("creating bearer token: %v", err)
+		return nil, fmt.Errorf("creating bearer token: %v", err)
 	}
 
 	url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
