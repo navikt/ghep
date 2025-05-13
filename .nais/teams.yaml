@@ -221,3 +221,11 @@ data:
         workflows:
           ignoreBots: false
           branches: ["main"]
+    yrkesskade:
+      workflows: "#ys-laila-og-utviklere"
+      config:
+        silenceDependabot: "always"
+        workflows:
+          ignoreBots: true
+          branches: ["main", "dev"]
+        
