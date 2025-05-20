@@ -18,8 +18,12 @@ data:
       config:
         silenceDependabot: always
         externalContributorsChannel: "#nais-external-contributors"
----
+        workflows:
+          branches:
+            - main
+            - master
 
+---
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
