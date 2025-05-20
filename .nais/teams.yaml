@@ -223,7 +223,7 @@ data:
           ignoreBots: false
           branches: ["main"]
     yrkesskade:
-      workflows: "#ys-laila-og-utviklere"
+      workflows: "#yrkesskade-workflows"
       pulls: "#yrkesskade-kodeles"
       releases: "#yrkesskade-releases"
       config:
