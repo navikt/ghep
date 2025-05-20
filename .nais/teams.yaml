@@ -224,6 +224,8 @@ data:
           branches: ["main"]
     yrkesskade:
       workflows: "#ys-laila-og-utviklere"
+      pulls: "#yrkesskade-kodeles"
+      releases: "#yrkesskade-releases"
       config:
         silenceDependabot: "always"
         workflows:
