@@ -231,4 +231,8 @@ data:
         workflows:
           ignoreBots: true
           branches: ["main", "dev"]
-        
+    utvikling-admin:
+      commits: "utvikling-admin-dev"
+      workflows: "utvikling-admin-dev"
+      issues: "utvikling-admin-dev"  
+      pulls: "utvikling-admin-dev"      
