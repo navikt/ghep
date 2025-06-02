@@ -235,4 +235,9 @@ data:
       commits: "utvikling-admin-dev"
       workflows: "utvikling-admin-dev"
       issues: "utvikling-admin-dev"  
-      pulls: "utvikling-admin-dev"      
+      pulls: "utvikling-admin-dev"  
+    pdfgen:
+      commits: "pdfgen"
+      workflows: "pdfgen"
+      issues: "pdfgen"  
+      pulls: "pdfgen"          
