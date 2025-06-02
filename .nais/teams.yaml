@@ -179,7 +179,6 @@ data:
     team-nav-no:
       releases: "#team-navno-releases"
       workflows: "#team-navno-failover-prod"
-      pulls: "#team-navno-pull-requests"
       config:
         silenceDependabot: "always"
         workflows:
