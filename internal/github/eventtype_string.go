@@ -9,20 +9,21 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[TypeCommit-1]
-	_ = x[TypeIssue-2]
-	_ = x[TypePullRequest-3]
-	_ = x[TypeRelease-4]
-	_ = x[TypeRepositoryRenamed-5]
-	_ = x[TypeRepositoryPublic-6]
-	_ = x[TypeSecretAdvisory-7]
-	_ = x[TypeTeam-8]
-	_ = x[TypeWorkflow-9]
-	_ = x[TypeUnknown-10]
+	_ = x[TypeDependabotAlert-2]
+	_ = x[TypeIssue-3]
+	_ = x[TypePullRequest-4]
+	_ = x[TypeRelease-5]
+	_ = x[TypeRepositoryRenamed-6]
+	_ = x[TypeRepositoryPublic-7]
+	_ = x[TypeSecretAdvisory-8]
+	_ = x[TypeTeam-9]
+	_ = x[TypeWorkflow-10]
+	_ = x[TypeUnknown-11]
 }
 
-const _EventType_name = "TypeCommitTypeIssueTypePullRequestTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeSecretAdvisoryTypeTeamTypeWorkflowTypeUnknown"
+const _EventType_name = "TypeCommitTypeDependabotAlertTypeIssueTypePullRequestTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeSecretAdvisoryTypeTeamTypeWorkflowTypeUnknown"
 
-var _EventType_index = [...]uint8{0, 10, 19, 34, 45, 66, 86, 104, 112, 124, 135}
+var _EventType_index = [...]uint8{0, 10, 29, 38, 53, 64, 85, 105, 123, 131, 143, 154}
 
 func (i EventType) String() string {
 	i -= 1

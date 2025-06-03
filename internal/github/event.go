@@ -16,6 +16,7 @@ const (
 	RefHeadsPrefix = "refs/heads/"
 
 	TypeCommit EventType = iota
+	TypeDependabotAlert
 	TypeIssue
 	TypePullRequest
 	TypeRelease
@@ -119,6 +120,11 @@ type Commit struct {
 	Message string `json:"message"`
 	URL     string `json:"url"`
 	Author  Author `json:"author"`
+}
+
+type DependabotAlert struct {
+	State string `json:"state"`
+	URL   string `json:"html_url"`
 }
 
 // Issue is a struct for issues and pull requests
@@ -251,6 +257,7 @@ func (e Event) IsCommit() bool {
 
 type Event struct {
 	Action              string            `json:"action"`
+	DependabotAlert     *DependabotAlert  `json:"dependabot_alert"`
 	Ref                 string            `json:"ref"`
 	After               string            `json:"after"`
 	Repository          *Repository       `json:"repository"`
@@ -272,6 +279,8 @@ type Event struct {
 func (e Event) GetEventType() EventType {
 	if e.IsCommit() {
 		return TypeCommit
+	} else if e.DependabotAlert != nil {
+		return TypeDependabotAlert
 	} else if e.SecurityAdvisory != nil {
 		return TypeSecretAdvisory
 	} else if e.Issue != nil {

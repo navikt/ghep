@@ -156,6 +156,8 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team *github.Tea
 	switch eventType {
 	case github.TypeCommit:
 		return handleCommitEvent(log, *team, event, h.github)
+	case github.TypeDependabotAlert:
+		return h.handleDependabotAlertEvent(ctx, log, *team, event)
 	case github.TypeIssue:
 		return h.handleIssueEvent(ctx, log, *team, event)
 	case github.TypePullRequest:
