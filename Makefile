@@ -14,6 +14,9 @@ vulncheck:
 deadcode:
 	go run golang.org/x/tools/cmd/deadcode@latest -test ./...
 
+generate:
+	go generate ./...
+
 vet:
 	go vet ./...
 

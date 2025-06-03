@@ -14,14 +14,15 @@ func _() {
 	_ = x[TypeRelease-4]
 	_ = x[TypeRepositoryRenamed-5]
 	_ = x[TypeRepositoryPublic-6]
-	_ = x[TypeTeam-7]
-	_ = x[TypeWorkflow-8]
-	_ = x[TypeUnknown-9]
+	_ = x[TypeSecretAdvisory-7]
+	_ = x[TypeTeam-8]
+	_ = x[TypeWorkflow-9]
+	_ = x[TypeUnknown-10]
 }
 
-const _EventType_name = "TypeCommitTypeIssueTypePullRequestTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeTeamTypeWorkflowTypeUnknown"
+const _EventType_name = "TypeCommitTypeIssueTypePullRequestTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeSecretAdvisoryTypeTeamTypeWorkflowTypeUnknown"
 
-var _EventType_index = [...]uint8{0, 10, 19, 34, 45, 66, 86, 94, 106, 117}
+var _EventType_index = [...]uint8{0, 10, 19, 34, 45, 66, 86, 104, 112, 124, 135}
 
 func (i EventType) String() string {
 	i -= 1
