@@ -21,6 +21,7 @@ const (
 	TypeRelease
 	TypeRepositoryRenamed
 	TypeRepositoryPublic
+	TypeSecretAdvisory
 	TypeTeam
 	TypeWorkflow
 	TypeUnknown
@@ -167,6 +168,14 @@ type Membership struct {
 	User User `json:"user"`
 }
 
+type SecurityAdvisory struct {
+	CVEID    string `json:"cve_id"`
+	URL      string `json:"html_url"`
+	Summary  string `json:"summary"`
+	Severity string `json:"severity"`
+	State    string `json:"state"`
+}
+
 type FailedJob struct {
 	Name string
 	URL  string
@@ -241,27 +250,30 @@ func (e Event) IsCommit() bool {
 }
 
 type Event struct {
-	Action              string       `json:"action"`
-	Ref                 string       `json:"ref"`
-	After               string       `json:"after"`
-	Repository          *Repository  `json:"repository"`
-	Changes             *Changes     `json:"changes"`
-	Commits             []Commit     `json:"commits"`
-	Compare             string       `json:"compare"`
-	Issue               *Issue       `json:"issue"`
-	PullRequest         *Issue       `json:"pull_request"`
-	Release             *Release     `json:"release"`
-	RepositoriesRemoved []Repository `json:"repositories_removed"`
-	Sender              User         `json:"sender"`
-	Team                *TeamEvent   `json:"team"`
-	Member              User         `json:"member"`
-	Membership          Membership   `json:"membership"`
-	Workflow            *Workflow    `json:"workflow_run"`
+	Action              string            `json:"action"`
+	Ref                 string            `json:"ref"`
+	After               string            `json:"after"`
+	Repository          *Repository       `json:"repository"`
+	Changes             *Changes          `json:"changes"`
+	Commits             []Commit          `json:"commits"`
+	Compare             string            `json:"compare"`
+	Issue               *Issue            `json:"issue"`
+	PullRequest         *Issue            `json:"pull_request"`
+	Release             *Release          `json:"release"`
+	RepositoriesRemoved []Repository      `json:"repositories_removed"`
+	Sender              User              `json:"sender"`
+	Team                *TeamEvent        `json:"team"`
+	Member              User              `json:"member"`
+	Membership          Membership        `json:"membership"`
+	SecurityAdvisory    *SecurityAdvisory `json:"repository_advisory"`
+	Workflow            *Workflow         `json:"workflow_run"`
 }
 
 func (e Event) GetEventType() EventType {
 	if e.IsCommit() {
 		return TypeCommit
+	} else if e.SecurityAdvisory != nil {
+		return TypeSecretAdvisory
 	} else if e.Issue != nil {
 		return TypeIssue
 	} else if e.PullRequest != nil {

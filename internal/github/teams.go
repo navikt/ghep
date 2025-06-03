@@ -43,6 +43,7 @@ type SlackChannels struct {
 	Issues       string `yaml:"issues"`
 	PullRequests string `yaml:"pulls"`
 	Releases     string `yaml:"releases"`
+	Security     string `yaml:"security"`
 	Workflows    string `yaml:"workflows"`
 }
 

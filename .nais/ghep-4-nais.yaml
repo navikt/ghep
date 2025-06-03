@@ -15,6 +15,7 @@ data:
       pulls: "#nais-pull-requests"
       workflows: "#nais-ci"
       releases: "#nais-releases"
+      security: "#nais-github-security"
       config:
         silenceDependabot: always
         externalContributorsChannel: "#nais-external-contributors"
@@ -36,8 +37,8 @@ spec:
   ingresses:
     - https://ghep.nav.no/nais
   replicas:
-      max: 2
-      min: 1
+    max: 2
+    min: 1
   resources:
     limits:
       memory: 128Mi
