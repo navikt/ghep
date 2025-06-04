@@ -156,6 +156,8 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team *github.Tea
 	switch eventType {
 	case github.TypeCommit:
 		return handleCommitEvent(log, *team, event, h.github)
+	case github.TypeCodeScanningAlert:
+		return h.handleCodeScanningAlertEvent(ctx, log, *team, event)
 	case github.TypeDependabotAlert:
 		return h.handleDependabotAlertEvent(ctx, log, *team, event)
 	case github.TypeIssue:
@@ -170,6 +172,8 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team *github.Tea
 		return handlePublicRepositoryEvent(log, team, event)
 	case github.TypeSecretAdvisory:
 		return h.handleSecurityAdvisoryEvent(ctx, log, *team, event)
+	case github.TypeSecretScanningAlert:
+		return h.handleSecretScanningAlertEvent(ctx, log, *team, event)
 	case github.TypeTeam:
 		return h.handleTeamEvent(ctx, log, event)
 	case github.TypeWorkflow:

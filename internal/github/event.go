@@ -16,6 +16,7 @@ const (
 	RefHeadsPrefix = "refs/heads/"
 
 	TypeCommit EventType = iota
+	TypeCodeScanningAlert
 	TypeDependabotAlert
 	TypeIssue
 	TypePullRequest
@@ -23,6 +24,7 @@ const (
 	TypeRepositoryRenamed
 	TypeRepositoryPublic
 	TypeSecretAdvisory
+	TypeSecretScanningAlert
 	TypeTeam
 	TypeWorkflow
 	TypeUnknown
@@ -122,9 +124,11 @@ type Commit struct {
 	Author  Author `json:"author"`
 }
 
-type DependabotAlert struct {
-	State string `json:"state"`
-	URL   string `json:"html_url"`
+type Alert struct {
+	PubliclyLeaked bool    `json:"publicly_leaked"`
+	SecretType     *string `json:"secret_type,omitempty"`
+	State          string  `json:"state"`
+	URL            string  `json:"html_url"`
 }
 
 // Issue is a struct for issues and pull requests
@@ -252,12 +256,12 @@ func (w *Workflow) UpdateFailedJob() error {
 }
 
 func (e Event) IsCommit() bool {
-	return strings.HasPrefix(e.Ref, RefHeadsPrefix)
+	return strings.HasPrefix(e.Ref, RefHeadsPrefix) && e.Alert == nil
 }
 
 type Event struct {
 	Action              string            `json:"action"`
-	DependabotAlert     *DependabotAlert  `json:"dependabot_alert"`
+	Alert               *Alert            `json:"alert"`
 	Ref                 string            `json:"ref"`
 	After               string            `json:"after"`
 	Repository          *Repository       `json:"repository"`
@@ -279,8 +283,14 @@ type Event struct {
 func (e Event) GetEventType() EventType {
 	if e.IsCommit() {
 		return TypeCommit
-	} else if e.DependabotAlert != nil {
-		return TypeDependabotAlert
+	} else if e.Alert != nil {
+		if e.Alert.SecretType != nil {
+			return TypeSecretScanningAlert
+		} else if e.Alert.State != "" {
+			return TypeDependabotAlert
+		} else if e.Ref != "" {
+			return TypeCodeScanningAlert
+		}
 	} else if e.SecurityAdvisory != nil {
 		return TypeSecretAdvisory
 	} else if e.Issue != nil {
