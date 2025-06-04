@@ -107,6 +107,7 @@ data:
       config:
         silenceDependabot: "always"
     k9saksbehandling:
+      security: "#sif-sikkerhetsvarsel"
       pulls: "#k9saksbehandling-feed"
       config:
         silenceDependabot: "always"
