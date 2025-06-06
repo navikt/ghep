@@ -138,12 +138,14 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team *github.Tea
 func saveEventSlackResponse(ts string, event github.Event) string {
 	if ts == "" {
 		return ""
+	} else if event.IsCommit() {
+		return event.After
 	} else if event.Issue != nil && event.Action == "opened" {
 		return strconv.Itoa(event.Issue.ID)
 	} else if event.PullRequest != nil && event.Action == "opened" {
 		return strconv.Itoa(event.PullRequest.ID)
-	} else if event.IsCommit() {
-		return event.After
+	} else if event.Alert != nil && event.Action == "created" {
+		return event.Alert.URL
 	} else if event.Workflow != nil && event.Action == "completed" && event.Workflow.Conclusion == "failure" {
 		return strconv.Itoa(event.Workflow.ID)
 	}
