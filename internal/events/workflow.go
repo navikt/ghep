@@ -47,8 +47,8 @@ func (h *Handler) handleWorkflowEvent(ctx context.Context, log *slog.Logger, tea
 	}
 
 	if workflowTimestamp != "" {
-		log.Info("event", "action", event.Action, "workflow_status", event.Workflow.Status, "workflow_conclusion", event.Workflow.Conclusion)
 		if event.Action == "completed" && event.Workflow.Conclusion == "success" {
+			log.Info("Reacting to workflow", "action", event.Action, "workflow_status", event.Workflow.Status, "workflow_conclusion", event.Workflow.Conclusion)
 			if err := h.slack.PostReaction(team.SlackChannels.Workflows, workflowTimestamp, slack.ReactionSuccess); err != nil {
 				log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Workflows, "timestamp", workflowTimestamp)
 			}
