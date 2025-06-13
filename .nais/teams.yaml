@@ -240,4 +240,6 @@ data:
       commits: "pdfgen"
       workflows: "pdfgen"
       issues: "pdfgen"  
-      pulls: "pdfgen"          
+      pulls: "pdfgen"
+    team-idm:
+      security: "#team-idm-security-alerts"
