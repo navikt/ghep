@@ -31,6 +31,7 @@ func main() {
 
 	log.Info("Gettings repositories from Github")
 	teams, err := githubClient.FetchTeams(
+		log.With("component", "github"),
 		os.Getenv("REPOS_CONFIG_FILE_PATH"),
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
 		subscribeToOrg,

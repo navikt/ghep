@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"os"
 	"slices"
@@ -194,7 +195,7 @@ func parseTeamConfig(path string) ([]*Team, error) {
 	return teams, nil
 }
 
-func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string, subscribeToOrg bool) ([]*Team, error) {
+func (c Client) FetchTeams(log *slog.Logger, teamsFilePath, reposBlocklistString string, subscribeToOrg bool) ([]*Team, error) {
 	teams, err := parseTeamConfig(teamsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("parsing team config: %v", err)
@@ -226,7 +227,8 @@ func (c Client) FetchTeams(teamsFilePath, reposBlocklistString string, subscribe
 		teamUrl := fmt.Sprintf("%s/%s", url, team.Name)
 		repos, err := fetchRepositories(teamUrl, bearerToken, reposBlocklist)
 		if err != nil {
-			return nil, err
+			log.Error("Failed fetching repositories", "team", team.Name, "error", err)
+			continue
 		}
 		team.Repositories = repos
 
