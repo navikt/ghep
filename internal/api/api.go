@@ -77,9 +77,8 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var team *github.Team
 	if isAnExternalContributor(event.Sender, c.orgMembers) && c.ExternalContributorsChannel != "" {
-		team = &github.Team{
+		team := &github.Team{
 			Name: "external-contributors",
 			SlackChannels: github.SlackChannels{
 				PullRequests: c.ExternalContributorsChannel,
@@ -94,37 +93,41 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		if err := c.events.Handle(r.Context(), log, team, event); err != nil {
 			log.Error("error handling event for external contributors", "err", err.Error())
 			http.Error(w, "Error handling event for external contributors", http.StatusInternalServerError)
+			return
 		}
 	}
 
+	var teams []*github.Team
 	if c.SubscribeToOrg {
-		team = c.teams[0]
+		teams = append(teams, c.teams[0])
 	} else {
 		if event.Team != nil {
-			var found bool
-			team, found = findTeamByName(c.teams, event.Team.Name)
+			team, found := findTeamByName(c.teams, event.Team.Name)
 			if !found {
 				fmt.Fprintf(w, "No team found for event %s", event.Team.Name)
 				return
 			}
+
+			teams = append(teams, team)
 		} else {
-			var found bool
-			team, found = findTeamByRepository(c.teams, event.GetRepositoryName())
-			if !found {
+			teams = findTeamsByRepository(c.teams, event.GetRepositoryName())
+			if len(teams) == 0 {
 				fmt.Fprintf(w, "No team found for repository %s", event.GetRepositoryName())
 				return
 			}
 		}
 	}
 
-	log = log.With("repository", event.GetRepositoryName(), "team", team.Name, "action", event.Action)
-	if err := c.events.Handle(r.Context(), log, team, event); err != nil {
-		log.Error("error handling event", "err", err.Error())
-		http.Error(w, fmt.Sprintf("Error handling event for %s", team.Name), http.StatusInternalServerError)
-		return
-	}
+	for _, team := range teams {
+		log = log.With("repository", event.GetRepositoryName(), "team", team.Name, "action", event.Action)
+		if err := c.events.Handle(r.Context(), log, team, event); err != nil {
+			log.Error("error handling event", "team", team.Name, "err", err.Error())
+			http.Error(w, fmt.Sprintf("Error handling event for %s", team.Name), http.StatusInternalServerError)
+			return
+		}
 
-	fmt.Fprintf(w, "Event handled for team %s", team.Name)
+		fmt.Fprintf(w, "Event handled for team %s", team.Name)
+	}
 }
 
 func findTeamByName(teams []*github.Team, teamName string) (*github.Team, bool) {
@@ -137,18 +140,19 @@ func findTeamByName(teams []*github.Team, teamName string) (*github.Team, bool) 
 	return nil, false
 }
 
-func findTeamByRepository(teams []*github.Team, repositoryName string) (*github.Team, bool) {
+func findTeamsByRepository(teams []*github.Team, repositoryName string) []*github.Team {
 	if repositoryName == "" {
-		return nil, false
+		return []*github.Team{}
 	}
 
+	found := []*github.Team{}
 	for _, team := range teams {
 		if slices.Contains(team.Repositories, repositoryName) {
-			return team, true
+			found = append(found, team)
 		}
 	}
 
-	return nil, false
+	return found
 }
 
 func isAnExternalContributor(user github.User, orgMembers []*github.User) bool {
