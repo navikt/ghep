@@ -143,7 +143,7 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 		}
 
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, resp.Body)
+			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, body)
 		}
 
 		var githubRepos []GithubRepo
