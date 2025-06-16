@@ -241,5 +241,5 @@ data:
       workflows: "pdfgen"
       issues: "pdfgen"  
       pulls: "pdfgen"
-    team-idm:
+    idm:
       security: "#team-idm-security-alerts"
