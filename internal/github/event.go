@@ -179,11 +179,11 @@ type Membership struct {
 }
 
 type SecurityAdvisory struct {
-	CVEID    string `json:"cve_id"`
-	URL      string `json:"html_url"`
-	Summary  string `json:"summary"`
-	Severity string `json:"severity"`
-	State    string `json:"state"`
+	CVEID       string `json:"cve_id"`
+	URL         string `json:"html_url"`
+	Summary     string `json:"summary"`
+	Description string `json:"description"`
+	Severity    string `json:"severity"`
 }
 
 type FailedJob struct {

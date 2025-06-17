@@ -7,7 +7,7 @@ import (
 )
 
 func CreateSecurityAdvisoryMessage(channel string, event github.Event) *Message {
-	text := fmt.Sprintf("A security advisory (%s) was just %s for the repository %s", event.SecurityAdvisory.State, event.Action, event.Repository.ToSlack())
+	text := fmt.Sprintf("A security advisory was just %s for the repository %s.", event.Action, event.Repository.ToSlack())
 
 	color := "#00ffff"
 	switch event.SecurityAdvisory.Severity {
@@ -23,7 +23,7 @@ func CreateSecurityAdvisoryMessage(channel string, event github.Event) *Message 
 
 	attachments := []Attachment{
 		{
-			Text:       event.SecurityAdvisory.Summary,
+			Text:       fmt.Sprintf("*%s*\n%s", event.SecurityAdvisory.Summary, event.SecurityAdvisory.Description),
 			Color:      color,
 			FooterIcon: neutralGithubIcon,
 			Footer:     fmt.Sprintf("<%s|%s>", event.SecurityAdvisory.URL, event.SecurityAdvisory.CVEID),
