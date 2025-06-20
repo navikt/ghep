@@ -66,7 +66,7 @@ type Author struct {
 }
 
 func (a Author) IsDependabot() bool {
-	return a.Name == "dependabot[bot]"
+	return a.Name == "dependabot[bot]" || a.Name == "naisbot"
 }
 
 func (a Author) AsUser() User {
