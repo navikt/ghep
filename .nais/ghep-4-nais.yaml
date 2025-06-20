@@ -17,6 +17,10 @@ data:
       releases: "#nais-releases"
       security: "#nais-github-security"
       config:
+        ignoreRepositories:
+          - "nur"
+          - "homebrew-tap"
+          - "scoop-bucket"
         silenceDependabot: always
         externalContributorsChannel: "#nais-external-contributors"
         workflows:
