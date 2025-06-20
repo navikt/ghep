@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -65,7 +64,9 @@ func TestHandleEvent(t *testing.T) {
 			}
 
 			var message *slack.Message
-			if strings.HasPrefix(event.Ref, "refs/heads/") {
+			eventType := event.GetEventType()
+			switch eventType {
+			case github.TypeCommit:
 				team := github.Team{
 					Members: []*github.User{
 						{
@@ -76,25 +77,25 @@ func TestHandleEvent(t *testing.T) {
 				}
 
 				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, team, mockhub)
-			} else if event.Issue != nil {
+			case github.TypeIssue:
 				if event.Action == "edited" {
 					message = slack.CreateUpdatedIssueMessage(oldMessage, event)
 				} else {
 					message = slack.CreateIssueMessage(slackChannel, "", event)
 				}
-			} else if event.PullRequest != nil {
+			case github.TypePullRequest:
 				if event.Action == "edited" {
 					message = slack.CreateUpdatedPullRequestMessage(oldMessage, event)
 				} else {
 					message = slack.CreatePullRequestMessage(slackChannel, "", event)
 				}
-			} else if event.Changes != nil && event.Action == "renamed" {
+			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)
-			} else if event.Repository != nil && event.Action == "publicized" {
+			case github.TypeRepositoryPublic:
 				message = slack.CreatePublicizedMessage(slackChannel, event)
-			} else if event.Team != nil {
+			case github.TypeTeam:
 				message = slack.CreateTeamMessage(slackChannel, event)
-			} else if event.Workflow != nil {
+			case github.TypeWorkflow:
 				event.Workflow.FailedJob = github.FailedJob{
 					Name: "job",
 					URL:  "https://url.com",
@@ -102,14 +103,14 @@ func TestHandleEvent(t *testing.T) {
 				}
 
 				message = slack.CreateWorkflowMessage(slackChannel, event)
-			} else if event.Release != nil {
+			case github.TypeRelease:
 				var timestamp string
 				if event.Action == "edited" {
 					timestamp = "1234567890"
 				}
 
 				message = slack.CreateReleaseMessage(slackChannel, timestamp, event)
-			} else {
+			default:
 				t.Fatalf("unknown event file: %s", entry.Name())
 			}
 
