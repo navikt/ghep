@@ -17,7 +17,6 @@ data:
       releases: "#nais-releases"
       security: "#nais-github-security"
       config:
-      config:
         ignoreRepositories:
           - "nur"
           - "homebrew-tap"
@@ -38,7 +37,7 @@ metadata:
   labels:
     team: the-g-team
 spec:
-  image: { { image } }
+  image: {{ image }}
   ingresses:
     - https://ghep.nav.no/nais
   replicas:
