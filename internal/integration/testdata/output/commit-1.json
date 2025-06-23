@@ -4,7 +4,7 @@
   "attachments": [
     {
       "text": "`<https://github.com/navikt/knorten/commit/2df91bf91d56ec91e64fb8c60e779ab548b4d599|2df91bf9>` - build(deps): bump the gomod group with 4 updates\n`<https://github.com/navikt/knorten/commit/c08bcc4ee8c8b951319244c470f182496d4e0c23|c08bcc4e>` - Merge pull request #158 from navikt/dependabot/go_modules/gomod-fe79281934\n",
-      "color": "#000"
+      "color": "#000000"
     }
   ],
   "unfurl_links": false,

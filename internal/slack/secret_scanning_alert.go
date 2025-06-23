@@ -19,7 +19,7 @@ func CreateSecretScanningAlertMessage(channel string, event github.Event) *Messa
 	if event.Alert.PubliclyLeaked {
 		attachment := Attachment{
 			Text:  "The secret was publicly leaked!",
-			Color: "#ff0000",
+			Color: ColorCritical,
 		}
 		attachments = append(attachments, attachment)
 	}

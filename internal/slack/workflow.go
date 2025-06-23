@@ -13,7 +13,7 @@ func CreateWorkflowMessage(channel string, event github.Event) *Message {
 	if event.Workflow.FailedJob.Name != "" {
 		attachments = append(attachments, Attachment{
 			Text:       fmt.Sprintf("The job <%s|%s>[%s] failed in step `%s`", event.Workflow.FailedJob.URL, event.Workflow.FailedJob.Name, event.Workflow.HeadBranch, event.Workflow.FailedJob.Step),
-			Color:      "#d02434",
+			Color:      ColorFailed,
 			Footer:     fmt.Sprintf("<%s|%s>", event.Repository.URL, event.Repository.FullName),
 			FooterIcon: "https://slack.github.com/static/img/favicon-neutral.png",
 		})

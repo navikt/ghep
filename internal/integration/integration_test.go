@@ -26,7 +26,7 @@ func TestHandleEvent(t *testing.T) {
 		Attachments: []slack.Attachment{
 			{
 				Text:  "Should be updated",
-				Color: "#34a44c",
+				Color: slack.ColorOpened,
 			},
 		},
 	}

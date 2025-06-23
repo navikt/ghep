@@ -4,7 +4,7 @@
   "attachments": [
     {
       "text": "*Workflow does not contain permissions*\nWorkflows should contain explicit permissions to restrict the scope of the default GITHUB_TOKEN.",
-      "color": "#ffff00"
+      "color": "#9a6700"
     }
   ],
   "unfurl_links": false,

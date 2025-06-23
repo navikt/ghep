@@ -4,7 +4,7 @@
   "attachments": [
     {
       "text": "`<https://github.com/navikt/nada-terraform/commit/aa47bc2efde610c026e4a719232db143de48e912|aa47bc2e>` - add bigquery dataset for knada metrics\n",
-      "color": "#000"
+      "color": "#000000"
     }
   ],
   "unfurl_links": false,

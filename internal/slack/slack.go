@@ -13,6 +13,17 @@ import (
 const (
 	slackApi          = "https://slack.com/api"
 	neutralGithubIcon = "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+
+	ColorCritical = "#d1242f"
+	ColorHigh     = "#bc4c00"
+	ColorMedium   = "#9a6700"
+	ColorLow      = "#34a44c"
+	ColorDefault  = "#000000"
+	ColorDraft    = "#eeeeee"
+	ColorMerged   = "#7044c4"
+	ColorOpened   = "#34a44c"
+	ColorClosed   = "#d02434"
+	ColorFailed   = "#d02434"
 )
 
 type Attachment struct {

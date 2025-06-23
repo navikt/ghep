@@ -23,7 +23,7 @@ func CreateReleaseMessage(channel, timestamp string, event github.Event) *Messag
 		Attachments: []Attachment{
 			{
 				Text:       event.Release.Body,
-				Color:      "#000000",
+				Color:      ColorDefault,
 				FooterIcon: neutralGithubIcon,
 				Footer:     fmt.Sprintf("<%s|%s>", event.Repository.URL, event.Repository.FullName),
 			},

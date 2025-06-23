@@ -4,7 +4,7 @@
   "attachments": [
     {
       "text": "`<https://github.com/navikt/dataverk-airflow/commit/9891f39e63020269e9c20a9d792742953789b2c6|9891f39e>` - python is not an neccessary input for kubernetes_operator\n",
-      "color": "#000"
+      "color": "#000000"
     }
   ],
   "unfurl_links": false,

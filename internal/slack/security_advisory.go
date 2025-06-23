@@ -9,16 +9,16 @@ import (
 func CreateSecurityAdvisoryMessage(channel string, event github.Event) *Message {
 	text := fmt.Sprintf("A security advisory was just %s for the repository %s.", event.Action, event.Repository.ToSlack())
 
-	color := "#00ffff"
+	color := ColorDefault
 	switch event.SecurityAdvisory.Severity {
 	case "critical":
-		color = "#ff0000"
+		color = ColorCritical
 	case "high":
-		color = "#ff8000"
+		color = ColorHigh
 	case "medium":
-		color = "#ffff00"
+		color = ColorMedium
 	case "low":
-		color = "#00ff00"
+		color = ColorLow
 	}
 
 	attachments := []Attachment{

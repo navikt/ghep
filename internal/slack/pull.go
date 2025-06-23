@@ -8,22 +8,22 @@ import (
 )
 
 func CreatePullRequestMessage(channel, threadTimestamp string, event github.Event) *Message {
-	color := "#34a44c"
+	color := ColorOpened
 
 	if event.PullRequest.Merged {
 		event.Action = "merged"
-		color = "#7044c4"
+		color = ColorMerged
 	}
 
 	if event.Action == "closed" {
-		color = "#d02434"
+		color = ColorClosed
 	}
 
 	var text string
 	eventType := "Pull request"
 	if event.PullRequest.Draft {
 		eventType = "Draft pull request"
-		color = "#eeeeee"
+		color = ColorDraft
 	}
 
 	text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
@@ -60,27 +60,27 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 
 	switch event.Action {
 	case "reopened":
-		color = "#34a44c"
+		color = ColorOpened
 	case "closed":
 		if event.PullRequest.Merged {
-			color = "#7044c4"
+			color = ColorMerged
 		} else {
-			color = "#d02434"
+			color = ColorClosed
 		}
 	case "edited":
 		eventType := "Pull request"
 		if event.PullRequest.Draft {
 			eventType = "Draft pull request"
-			color = "#eeeeee"
+			color = ColorDraft
 		}
 
 		text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, html.EscapeString(event.PullRequest.Title), event.PullRequest.Body)
 
 		if event.PullRequest.Merged {
-			color = "#7044c4"
+			color = ColorMerged
 		} else if event.PullRequest.State == "closed" {
-			color = "#d02434"
+			color = ColorClosed
 		}
 	}
 

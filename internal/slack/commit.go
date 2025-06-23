@@ -142,7 +142,7 @@ func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, t
 	attachments := []Attachment{
 		{
 			Text:  attachmentText.String(),
-			Color: "#000",
+			Color: ColorDefault,
 		},
 	}
 
