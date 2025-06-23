@@ -124,11 +124,26 @@ type Commit struct {
 	Author  Author `json:"author"`
 }
 
+type Rule struct {
+	Description           string `json:"description"`
+	FullDescription       string `json:"full_description"`
+	SecuritySeverityLevel string `json:"security_severity_level"`
+}
+
+type Tool struct {
+	Name string `json:"name"`
+}
+
 type Alert struct {
-	PubliclyLeaked bool    `json:"publicly_leaked"`
-	SecretType     *string `json:"secret_type,omitempty"`
-	State          string  `json:"state"`
-	URL            string  `json:"html_url"`
+	PubliclyLeaked    bool    `json:"publicly_leaked"`
+	SecretType        *string `json:"secret_type_display_name"`
+	State             string  `json:"state"`
+	URL               string  `json:"html_url"`
+	Resolution        string  `json:"resolution"`
+	ResolutionComment string  `json:"resolution_comment"`
+	ResolvedBy        User    `json:"resolved_by"`
+	Rule              Rule    `json:"rule"`
+	Tool              *Tool   `json:"tool"`
 }
 
 // Issue is a struct for issues and pull requests
@@ -286,10 +301,10 @@ func (e Event) GetEventType() EventType {
 	} else if e.Alert != nil {
 		if e.Alert.SecretType != nil {
 			return TypeSecretScanningAlert
+		} else if e.Alert.Tool != nil {
+			return TypeCodeScanningAlert
 		} else if e.Alert.State != "" {
 			return TypeDependabotAlert
-		} else if e.Ref != "" {
-			return TypeCodeScanningAlert
 		}
 	} else if e.SecurityAdvisory != nil {
 		return TypeSecurityAdvisory

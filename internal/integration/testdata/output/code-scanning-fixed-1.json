@@ -1,0 +1,6 @@
+{
+  "channel": "#test",
+  "text": "A code scanning alert was just fixed for the repository <https://github.com/nais/deploy|deploy>.\nRead more: https://github.com/nais/deploy/security/code-scanning/10",
+  "unfurl_links": false,
+  "unfurl_media": false
+}

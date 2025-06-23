@@ -1,0 +1,12 @@
+{
+  "channel": "#test",
+  "text": "A code scanning alert was just created for the repository <https://github.com/nais/deploy|deploy>.\nRead more: https://github.com/nais/deploy/security/code-scanning/27",
+  "attachments": [
+    {
+      "text": "*Workflow does not contain permissions*\nWorkflows should contain explicit permissions to restrict the scope of the default GITHUB_TOKEN.",
+      "color": "#ffff00"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}
