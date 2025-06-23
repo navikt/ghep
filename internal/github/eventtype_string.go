@@ -16,7 +16,7 @@ func _() {
 	_ = x[TypeRelease-6]
 	_ = x[TypeRepositoryRenamed-7]
 	_ = x[TypeRepositoryPublic-8]
-	_ = x[TypeSecretAdvisory-9]
+	_ = x[TypeSecurityAdvisory-9]
 	_ = x[TypeSecretScanningAlert-10]
 	_ = x[TypeTeam-11]
 	_ = x[TypeWorkflow-12]

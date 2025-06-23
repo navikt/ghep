@@ -172,7 +172,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team *github.Tea
 		return handleRenamedRepository(log, team, event)
 	case github.TypeRepositoryPublic:
 		return handlePublicRepositoryEvent(log, team, event)
-	case github.TypeSecretAdvisory:
+	case github.TypeSecurityAdvisory:
 		return h.handleSecurityAdvisoryEvent(ctx, log, *team, event)
 	case github.TypeSecretScanningAlert:
 		return h.handleSecretScanningAlertEvent(ctx, log, *team, event)

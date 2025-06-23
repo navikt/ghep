@@ -23,7 +23,7 @@ const (
 	TypeRelease
 	TypeRepositoryRenamed
 	TypeRepositoryPublic
-	TypeSecretAdvisory
+	TypeSecurityAdvisory
 	TypeSecretScanningAlert
 	TypeTeam
 	TypeWorkflow
@@ -292,7 +292,7 @@ func (e Event) GetEventType() EventType {
 			return TypeCodeScanningAlert
 		}
 	} else if e.SecurityAdvisory != nil {
-		return TypeSecretAdvisory
+		return TypeSecurityAdvisory
 	} else if e.Issue != nil {
 		return TypeIssue
 	} else if e.PullRequest != nil {
