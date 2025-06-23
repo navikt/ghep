@@ -43,5 +43,6 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 		}
 	}
 
+	log.Info("Received Dependabot alert event")
 	return slack.CreateDependabotAlertMessage(team.SlackChannels.Security, event, timestamp), nil
 }
