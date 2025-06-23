@@ -1,10 +1,22 @@
 nada:
-  commits: "#nada-test"
-  issues: "#nada-test"
-  pulls: "#nada-test"
-  workflows: "#nada-test"
+  commits: "#commits"
+  issues: "#issues"
+  pulls: "#pulls"
+  workflows: "#workflows"
+  releases: "#releases"
+  security: "#security"
   config:
+    ignoreRepositories:
+      - repoA
+    silenceDependabot: "always"
+    externalContributorsChannel: "#external"
+    security:
+      severityFilter: "high"
     workflows:
+      ignoreBots: true
       branches:
         - main
-      ignoreBots: true
+      workflows:
+        - deploy
+      repositories:
+        - my-little-repo

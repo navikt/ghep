@@ -19,15 +19,25 @@ func TestParseTeamConfig(t *testing.T) {
 				{
 					Name: "nada",
 					SlackChannels: SlackChannels{
-						Commits:      "#nada-test",
-						Issues:       "#nada-test",
-						PullRequests: "#nada-test",
-						Workflows:    "#nada-test",
+						Commits:      "#commits",
+						Issues:       "#issues",
+						PullRequests: "#pulls",
+						Workflows:    "#workflows",
+						Releases:     "#releases",
+						Security:     "#security",
 					},
 					Config: Config{
 						Workflows: Workflows{
-							Branches:   []string{"main"},
-							IgnoreBots: true,
+							Branches:     []string{"main"},
+							IgnoreBots:   true,
+							Repositories: []string{"my-little-repo"},
+							Workflows:    []string{"deploy"},
+						},
+						ExternalContributorsChannel: "#external",
+						SilenceDependabot:           "always",
+						IgnoreRepositories:          []string{"repoA"},
+						Security: Security{
+							SeverityFilter: "high",
 						},
 					},
 				},
