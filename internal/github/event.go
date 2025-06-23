@@ -10,7 +10,10 @@ import (
 	"time"
 )
 
-type EventType int
+type (
+	EventType    int
+	SeverityType int
+)
 
 const (
 	RefHeadsPrefix = "refs/heads/"
@@ -28,6 +31,11 @@ const (
 	TypeTeam
 	TypeWorkflow
 	TypeUnknown
+
+	SeverityLow SeverityType = iota
+	SeverityMedium
+	SeverityHigh
+	SeverityCritical
 )
 
 type User struct {
@@ -130,6 +138,23 @@ type Rule struct {
 	SecuritySeverityLevel string `json:"security_severity_level"`
 }
 
+func (r Rule) SeverityType() SeverityType {
+	return AsSeverityType(r.SecuritySeverityLevel)
+}
+
+func AsSeverityType(level string) SeverityType {
+	switch level {
+	case "medium":
+		return SeverityMedium
+	case "high":
+		return SeverityHigh
+	case "critical":
+		return SeverityCritical
+	default:
+		return SeverityCritical
+	}
+}
+
 type Tool struct {
 	Name string `json:"name"`
 }
@@ -199,6 +224,10 @@ type SecurityAdvisory struct {
 	Summary     string `json:"summary"`
 	Description string `json:"description"`
 	Severity    string `json:"severity"`
+}
+
+func (s SecurityAdvisory) SeverityType() SeverityType {
+	return AsSeverityType(s.Severity)
 }
 
 type FailedJob struct {

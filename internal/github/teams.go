@@ -33,10 +33,19 @@ type Config struct {
 	Workflows                   Workflows        `yaml:"workflows"`
 	SilenceDependabot           DependabotConfig `yaml:"silenceDependabot"`
 	IgnoreRepositories          []string         `yaml:"ignoreRepositories"`
+	Security                    Security         `yaml:"security"`
 }
 
 func (c Config) ShouldSilenceDependabot() bool {
 	return c.SilenceDependabot == DependabotConfigAlways
+}
+
+type Security struct {
+	SeverityFilter string `yaml:"severityFilter"`
+}
+
+func (s Security) SeverityType() SeverityType {
+	return AsSeverityType(s.SeverityFilter)
 }
 
 type SlackChannels struct {

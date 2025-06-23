@@ -13,6 +13,10 @@ func (h *Handler) handleCodeScanningAlertEvent(_ context.Context, log *slog.Logg
 		return nil, nil
 	}
 
+	if event.Alert.Rule.SeverityType() < team.Config.Security.SeverityType() {
+		return nil, nil
+	}
+
 	log.Info("Received code scanning alert")
 	return slack.CreateCodeScanningAlertMessage(team.SlackChannels.Security, event), nil
 }

@@ -73,11 +73,14 @@ team:
       - repoB
     silenceDependabot: "always"
     externalContributorsChannel: "#channel"
+    security:
+      severityFilter: "high"
 ```
 
 - `ignoreRepositories` - En liste med repositories man ikke ønsker hendelser fra
 - `silenceDependabot` - Hvis denne blir satt til `always` så ignorer man alle hendelser fra Dependabot
 - `externalContributorsChannel` - Issues og pull requests fra brukere som ikke er i teamet ditt vil havne i en egen kanal
+- ``security.severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
 
 #### Workflows
 
