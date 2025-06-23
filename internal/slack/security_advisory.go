@@ -15,10 +15,12 @@ func CreateSecurityAdvisoryMessage(channel string, event github.Event) *Message 
 		color = ColorCritical
 	case "high":
 		color = ColorHigh
-	case "medium":
+	case "moderate":
 		color = ColorMedium
 	case "low":
 		color = ColorLow
+	default:
+		color = ColorDefault
 	}
 
 	attachments := []Attachment{
