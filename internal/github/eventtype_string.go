@@ -23,9 +23,9 @@ func _() {
 	_ = x[TypeUnknown-13]
 }
 
-const _EventType_name = "TypeCommitTypeCodeScanningAlertTypeDependabotAlertTypeIssueTypePullRequestTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeSecretAdvisoryTypeSecretScanningAlertTypeTeamTypeWorkflowTypeUnknown"
+const _EventType_name = "TypeCommitTypeCodeScanningAlertTypeDependabotAlertTypeIssueTypePullRequestTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeSecurityAdvisoryTypeSecretScanningAlertTypeTeamTypeWorkflowTypeUnknown"
 
-var _EventType_index = [...]uint8{0, 10, 31, 50, 59, 74, 85, 106, 126, 144, 167, 175, 187, 198}
+var _EventType_index = [...]uint8{0, 10, 31, 50, 59, 74, 85, 106, 126, 146, 169, 177, 189, 200}
 
 func (i EventType) String() string {
 	i -= 1

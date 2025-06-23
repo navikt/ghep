@@ -44,7 +44,7 @@ func main() {
 	logTeams(log, teams)
 
 	log.Info("Creating Slack client")
-	slackApi, err := slack.New(
+	slackAPI, err := slack.New(
 		log.With("component", "slack"),
 		os.Getenv("SLACK_TOKEN"),
 	)
@@ -54,7 +54,7 @@ func main() {
 	}
 
 	log.Info("Ensuring Slack channels")
-	if err := slackApi.EnsureChannels(teams); err != nil {
+	if err := slackAPI.EnsureChannels(teams); err != nil {
 		log.Error("ensuring Slack channels", "err", err.Error())
 		os.Exit(1)
 	}
@@ -75,7 +75,7 @@ func main() {
 	}
 
 	log.Info("Creating event handler")
-	eventHandler := events.NewHandler(githubClient, rdb, slackApi, teams)
+	eventHandler := events.NewHandler(githubClient, rdb, slackAPI, teams)
 
 	orgMembers, err := githubClient.FetchOrgMembers()
 	if err != nil {
