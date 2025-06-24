@@ -43,6 +43,11 @@ Sender releases til en egen kanal, `draft`, `prerelease`, og `releases` blir sen
 
 ![A release posted to Slack](images/release.png)
 
+### Security
+
+Sender code scanning, secret scanning, Dependabot, og security advisory til egen kanal.
+Noen av disse hendelsene kan man filtrere på alvorlighetsgrad.
+
 ## Ta den i bruk
 
 Alt du trenger å gjøre er å redigere [`.nais/teams.yaml`](https://github.com/navikt/ghep/blob/main/.nais/teams.yaml) og legge til ditt team og deres kanaler.
@@ -54,6 +59,7 @@ nada:
  pulls: "#nada-pull-requests"
  workflows: "#nada-ci"
  releases: "#nada-releases"
+ security: "#nada-security"
 ```
 
 PS: Hvis kanalene dine er private må du selv invitere @ghep inn i hver kanal.
