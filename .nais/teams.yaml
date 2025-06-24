@@ -157,8 +157,9 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
-    pensjon-dataprodukt:
+    wendelboe:
       workflows: "#pen-dataprodukt-github"
+      security: "#pen-dataprodukt-github"
       commits: "#pen-dataprodukt-github"
       issues: "#pen-dataprodukt-github"
       pulls: "#pen-dataprodukt-github"
