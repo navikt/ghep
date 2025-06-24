@@ -207,6 +207,9 @@ data:
       workflows: "#historisk-github"
       releases: "#historisk-github"
       security: "#historisk-github"
+      config:
+        workflows:
+          branches: ["main"]
     team-esyfo:
       commits: "#esyfo-github-feed"
       workflows: "#esyfo-github-feed"
