@@ -55,12 +55,8 @@ func (u User) ToSlack() string {
 	return fmt.Sprintf("<%s|%s>", u.URL, u.Login)
 }
 
-func (u User) IsDependabot() bool {
-	return u.IsBot() && u.Login == "dependabot[bot]"
-}
-
 func (u User) IsBot() bool {
-	return u.Type == "Bot"
+	return u.Type == "Bot" || isBot(u.Login)
 }
 
 func (u User) IsUser() bool {
@@ -73,14 +69,18 @@ type Author struct {
 	Username string `json:"username"`
 }
 
-func (a Author) IsDependabot() bool {
-	return a.Name == "dependabot[bot]" || a.Name == "naisbot"
+func (a Author) IsBot() bool {
+	return isBot(a.Username)
+}
+
+func isBot(username string) bool {
+	return strings.HasSuffix(username, "[bot]") || strings.HasSuffix(username, "bot")
 }
 
 func (a Author) AsUser() User {
 	var user User
 
-	if strings.HasSuffix(a.Username, "[bot]") {
+	if a.IsBot() {
 		user.Login = a.Username
 		user.Type = "Bot"
 		user.URL = "https://github.com/apps/" + strings.TrimSuffix(a.Username, "[bot]")

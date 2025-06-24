@@ -36,18 +36,18 @@ func NewHandler(githubClient github.Client, redis *redis.Client, slackClient sla
 
 func shouldSilenceBots(team github.Team, event github.Event) bool {
 	if team.Config.ShouldSilenceDependabot() {
-		if event.Sender.IsDependabot() {
+		if event.Sender.IsBot() {
 			return true
 		}
 
 		// Teams use different bots for merging pull requests, so we need to check the author of the pull request
-		if event.PullRequest != nil && event.PullRequest.User.IsDependabot() {
+		if event.PullRequest != nil && event.PullRequest.User.IsBot() {
 			return true
 		}
 
 		if event.IsCommit() {
 			for _, commit := range event.Commits {
-				if commit.Author.IsDependabot() {
+				if commit.Author.IsBot() {
 					return true
 				}
 			}
