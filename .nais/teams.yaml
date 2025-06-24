@@ -257,3 +257,9 @@ data:
       pulls: "pdfgen"
     idm:
       security: "#team-idm-security-alerts"
+    team-mulighetsrommet:
+      workflows: "#team-valp-monitorering-dev"
+      config:
+        workflows:
+          ignoreBots: true
+          branches: ["main"]
