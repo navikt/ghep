@@ -40,6 +40,8 @@ data:
       commits: "#dv-a-team-commits"
       issues: "#dv-a-team-pull-requests"
       pulls: "#dv-a-team-pull-requests"
+      workflows: "#dv-a-team-ops"
+      security: "#dv-a-team-ops"
     spenn:
       commits: "#spenn-commits"
       issues: "#spenn-pull-requests"
