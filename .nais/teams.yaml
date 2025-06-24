@@ -113,18 +113,26 @@ data:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+        security:
+          severityFilter: "high"
     omsorgspenger:
+      security: "#sif-sikkerhetsvarsel"
       pulls: "#k9saksbehandling-feed"
       config:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+        security:
+          severityFilter: "high"
     dusseldorf:
+      security: "#sif-sikkerhetsvarsel"
       pulls: "#k9saksbehandling-feed"
       config:
         silenceDependabot: "always"
         workflows:
           branches: ["main", "master"]
+        security:
+          severityFilter: "high"
     dolly:
       commits: "#dolly-ghep"
       issues: "#dolly-ghep"
