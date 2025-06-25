@@ -10,9 +10,13 @@ func CreateSecretScanningAlertMessage(channel string, event github.Event) *Messa
 	var text string
 	switch event.Action {
 	case "created":
-		text = fmt.Sprintf("A secret scanning alert was just %s for the repository %s.\nThe secret was of type `%s`.\nRead more: %s", event.Action, event.Repository.ToSlack(), *event.Alert.SecretType, event.Alert.URL)
+		text = fmt.Sprintf("A secret scanning alert was just created for the repository %s.\nThe secret was of type `%s`.\nRead more: %s", event.Repository.ToSlack(), *event.Alert.SecretType, event.Alert.URL)
 	case "resolved":
-		text = fmt.Sprintf("A secret scanning alert was just %s for the repository %s. It was resolved as `%s` by %s.\n> %s", event.Action, event.Repository.ToSlack(), event.Alert.Resolution, event.Alert.ResolvedBy.ToSlack(), event.Alert.ResolutionComment)
+		if event.Alert.PubliclyLeaked {
+			text = fmt.Sprintf("A public secret scanning alert was just resolved for the repository %s. It was resolved as `%s` by %s.\n> %s", event.Repository.ToSlack(), event.Alert.Resolution, event.Alert.ResolvedBy.ToSlack(), event.Alert.ResolutionComment)
+		} else {
+			text = fmt.Sprintf("A secret scanning alert was just resolved for the repository %s. It was resolved as `%s` by %s.\n> %s", event.Repository.ToSlack(), event.Alert.Resolution, event.Alert.ResolvedBy.ToSlack(), event.Alert.ResolutionComment)
+		}
 	}
 
 	var attachments []Attachment
