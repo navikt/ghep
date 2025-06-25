@@ -160,15 +160,16 @@ type Tool struct {
 }
 
 type Alert struct {
-	PubliclyLeaked    bool    `json:"publicly_leaked"`
-	SecretType        *string `json:"secret_type_display_name"`
-	State             string  `json:"state"`
-	URL               string  `json:"html_url"`
-	Resolution        string  `json:"resolution"`
-	ResolutionComment string  `json:"resolution_comment"`
-	ResolvedBy        User    `json:"resolved_by"`
-	Rule              Rule    `json:"rule"`
-	Tool              *Tool   `json:"tool"`
+	PubliclyLeaked    bool              `json:"publicly_leaked"`
+	SecretType        *string           `json:"secret_type_display_name"`
+	State             string            `json:"state"`
+	URL               string            `json:"html_url"`
+	Resolution        string            `json:"resolution"`
+	ResolutionComment string            `json:"resolution_comment"`
+	ResolvedBy        User              `json:"resolved_by"`
+	Rule              Rule              `json:"rule"`
+	Tool              *Tool             `json:"tool"`
+	SecurityAdvisory  *SecurityAdvisory `json:"security_advisory"`
 }
 
 // Issue is a struct for issues and pull requests
@@ -332,7 +333,7 @@ func (e Event) GetEventType() EventType {
 			return TypeSecretScanningAlert
 		} else if e.Alert.Tool != nil {
 			return TypeCodeScanningAlert
-		} else if e.Alert.State != "" {
+		} else if e.Alert.SecurityAdvisory != nil {
 			return TypeDependabotAlert
 		}
 	} else if e.SecurityAdvisory != nil {

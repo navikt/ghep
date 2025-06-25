@@ -1,0 +1,12 @@
+{
+  "channel": "#test",
+  "text": "A Dependabot alert was just created for the repository <https://github.com/navikt/k9-sak-web|k9-sak-web>.\nRead more: https://github.com/navikt/k9-sak-web/security/dependabot/168",
+  "attachments": [
+    {
+      "text": "pbkdf2 returns predictable uninitialized/zero-filled memory for non-normalized or unimplemented algos",
+      "color": "#000000"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

@@ -1,0 +1,6 @@
+{
+  "channel": "#test",
+  "text": "A Dependabot alert was just fixed for the repository <https://github.com/navikt/k9-sak-web|k9-sak-web>.\nRead more: https://github.com/navikt/k9-sak-web/security/dependabot/168",
+  "unfurl_links": false,
+  "unfurl_media": false
+}
