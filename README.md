@@ -48,6 +48,8 @@ Sender releases til en egen kanal, `draft`, `prerelease`, og `releases` blir sen
 Sender code scanning, secret scanning, Dependabot, og security advisory til egen kanal.
 Noen av disse hendelsene kan man filtrere på alvorlighetsgrad.
 
+![A secret scanning alert posted to Slack](images/secret-scanning.png)
+
 ## Ta den i bruk
 
 Alt du trenger å gjøre er å redigere [`.nais/teams.yaml`](https://github.com/navikt/ghep/blob/main/.nais/teams.yaml) og legge til ditt team og deres kanaler.
