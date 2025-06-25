@@ -219,8 +219,8 @@ func (c Client) FetchTeams(log *slog.Logger, teamsFilePath, reposBlocklistString
 
 	if subscribeToOrg {
 		url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
-		teamUrl := fmt.Sprintf("%s/teams/%s", url, teams[0].Name)
-		members, err := fetchMembers(teamUrl, bearerToken)
+		teamURL := fmt.Sprintf("%s/teams/%s", url, teams[0].Name)
+		members, err := fetchMembers(teamURL, bearerToken)
 		if err != nil {
 			return nil, fmt.Errorf("fetching members for %s: %v", teams[0].Name, err)
 		}
@@ -233,15 +233,15 @@ func (c Client) FetchTeams(log *slog.Logger, teamsFilePath, reposBlocklistString
 	url := fmt.Sprintf("https://api.github.com/orgs/%s/teams", c.org)
 
 	for i, team := range teams {
-		teamUrl := fmt.Sprintf("%s/%s", url, team.Name)
-		repos, err := fetchRepositories(teamUrl, bearerToken, reposBlocklist)
+		teamURL := fmt.Sprintf("%s/%s", url, team.Name)
+		repos, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
 		if err != nil {
 			log.Error("Failed fetching repositories", "team", team.Name, "error", err)
 			continue
 		}
 		team.Repositories = repos
 
-		members, err := fetchMembers(teamUrl, bearerToken)
+		members, err := fetchMembers(teamURL, bearerToken)
 		if err != nil {
 			return nil, fmt.Errorf("fetching members for %s: %v", team.Name, err)
 		}
