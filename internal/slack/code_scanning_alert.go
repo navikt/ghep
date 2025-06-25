@@ -9,17 +9,7 @@ import (
 func CreateCodeScanningAlertMessage(channel string, event github.Event) *Message {
 	var attachments []Attachment
 	if event.Action == "created" {
-		color := ColorDefault
-		switch event.Alert.Rule.SeverityType() {
-		case github.SeverityCritical:
-			color = ColorCritical
-		case github.SeverityHigh:
-			color = ColorHigh
-		case github.SeverityMedium:
-			color = ColorMedium
-		case github.SeverityLow:
-			color = ColorLow
-		}
+		color := getColorBySeverity(event.Alert.Rule.SeverityType())
 
 		attachments = []Attachment{
 			{

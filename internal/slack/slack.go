@@ -8,6 +8,8 @@ import (
 	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/navikt/ghep/internal/github"
 )
 
 const (
@@ -25,6 +27,21 @@ const (
 	ColorClosed   = "#d02434"
 	ColorFailed   = "#d02434"
 )
+
+func getColorBySeverity(severity github.SeverityType) string {
+	switch severity {
+	case github.SeverityCritical:
+		return ColorCritical
+	case github.SeverityHigh:
+		return ColorHigh
+	case github.SeverityMedium:
+		return ColorMedium
+	case github.SeverityLow:
+		return ColorLow
+	default:
+		return ColorDefault
+	}
+}
 
 type Attachment struct {
 	Text       string `json:"text"`
