@@ -1,0 +1,14 @@
+{
+  "channel": "#test",
+  "text": "A <https://github.com/advisories/GHSA-wc4r-xq3c-5cf3|security advisory> was just published.",
+  "attachments": [
+    {
+      "text": "*Apache Tomcat - Security constraint bypass for pre/post-resources*\nAuthentication Bypass Using an Alternate Path or Channel vulnerability in Apache Tomcat.  When using PreResources or PostResources mounted other than at the root of the web application, it was possible to access those resources via an unexpected path. That path was likely not to be protected by the same security constraints as the expected path, allowing those security constraints to be bypassed.\n\nThis issue affects Apache Tomcat: from 11.0.0-M1 through 11.0.7, from 10.1.0-M1 through 10.1.41, from 9.0.0.M1 through 9.0.105.\n\nUsers are recommended to upgrade to version 11.0.8, 10.1.42 or 9.0.106, which fix the issue.",
+      "color": "#9a6700",
+      "footer": "<https://github.com/advisories/GHSA-wc4r-xq3c-5cf3|Github Advisories>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

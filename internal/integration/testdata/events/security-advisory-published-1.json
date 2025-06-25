@@ -1,0 +1,140 @@
+{
+  "action": "published",
+  "security_advisory": {
+    "ghsa_id": "GHSA-wc4r-xq3c-5cf3",
+    "cve_id": "CVE-2025-49125",
+    "summary": "Apache Tomcat - Security constraint bypass for pre/post-resources",
+    "description": "Authentication Bypass Using an Alternate Path or Channel vulnerability in Apache Tomcat.  When using PreResources or PostResources mounted other than at the root of the web application, it was possible to access those resources via an unexpected path. That path was likely not to be protected by the same security constraints as the expected path, allowing those security constraints to be bypassed.\n\nThis issue affects Apache Tomcat: from 11.0.0-M1 through 11.0.7, from 10.1.0-M1 through 10.1.41, from 9.0.0.M1 through 9.0.105.\n\nUsers are recommended to upgrade to version 11.0.8, 10.1.42 or 9.0.106, which fix the issue.",
+    "severity": "moderate",
+    "identifiers": [
+      {
+        "value": "GHSA-wc4r-xq3c-5cf3",
+        "type": "GHSA"
+      },
+      {
+        "value": "CVE-2025-49125",
+        "type": "CVE"
+      }
+    ],
+    "references": [
+      {
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-49125"
+      },
+      {
+        "url": "https://lists.apache.org/thread/m66cytbfrty9k7dc4cg6tl1czhsnbywk"
+      },
+      {
+        "url": "https://github.com/apache/tomcat/commit/7617b9c247bc77ed0444dd69adcd8aa48777886c"
+      },
+      {
+        "url": "https://github.com/apache/tomcat/commit/9418e3ff9f1f4c006b4661311ae9376c52d162b9"
+      },
+      {
+        "url": "https://github.com/apache/tomcat/commit/d94bd36fb7eb32e790dae0339bc249069649a637"
+      },
+      {
+        "url": "https://tomcat.apache.org/security-10.html"
+      },
+      {
+        "url": "https://tomcat.apache.org/security-11.html"
+      },
+      {
+        "url": "https://tomcat.apache.org/security-9.html"
+      },
+      {
+        "url": "https://github.com/advisories/GHSA-wc4r-xq3c-5cf3"
+      }
+    ],
+    "published_at": "2025-06-16T15:32:28Z",
+    "updated_at": "2025-06-16T18:02:15Z",
+    "withdrawn_at": null,
+    "vulnerabilities": [
+      {
+        "package": {
+          "ecosystem": "maven",
+          "name": "org.apache.tomcat:tomcat-catalina"
+        },
+        "severity": "moderate",
+        "vulnerable_version_range": ">= 11.0.0-M1, <= 11.0.7",
+        "first_patched_version": {
+          "identifier": "11.0.8"
+        }
+      },
+      {
+        "package": {
+          "ecosystem": "maven",
+          "name": "org.apache.tomcat:tomcat-catalina"
+        },
+        "severity": "moderate",
+        "vulnerable_version_range": ">= 10.1.0-M1, <= 10.1.41",
+        "first_patched_version": {
+          "identifier": "10.1.42"
+        }
+      },
+      {
+        "package": {
+          "ecosystem": "maven",
+          "name": "org.apache.tomcat:tomcat-catalina"
+        },
+        "severity": "moderate",
+        "vulnerable_version_range": ">= 9.0.0.M1, <= 9.0.105",
+        "first_patched_version": {
+          "identifier": "9.0.106"
+        }
+      },
+      {
+        "package": {
+          "ecosystem": "maven",
+          "name": "org.apache.tomcat.embed:tomcat-embed-core"
+        },
+        "severity": "moderate",
+        "vulnerable_version_range": ">= 11.0.0-M1, <= 11.0.7",
+        "first_patched_version": {
+          "identifier": "11.0.8"
+        }
+      },
+      {
+        "package": {
+          "ecosystem": "maven",
+          "name": "org.apache.tomcat.embed:tomcat-embed-core"
+        },
+        "severity": "moderate",
+        "vulnerable_version_range": ">= 10.1.0-M1, <= 10.1.41",
+        "first_patched_version": {
+          "identifier": "10.1.42"
+        }
+      },
+      {
+        "package": {
+          "ecosystem": "maven",
+          "name": "org.apache.tomcat.embed:tomcat-embed-core"
+        },
+        "severity": "moderate",
+        "vulnerable_version_range": ">= 9.0.0.M1, <= 9.0.105",
+        "first_patched_version": {
+          "identifier": "9.0.106"
+        }
+      }
+    ],
+    "cvss_severities": {
+      "cvss_v3": {
+        "vector_string": null,
+        "score": 0.0
+      },
+      "cvss_v4": {
+        "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+        "score": 6.3
+      }
+    },
+    "cvss": {
+      "vector_string": null,
+      "score": 0.0
+    },
+    "cwes": [
+      {
+        "cwe_id": "CWE-288",
+        "name": "Authentication Bypass Using an Alternate Path or Channel"
+      }
+    ]
+  }
+}

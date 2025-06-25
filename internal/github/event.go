@@ -221,10 +221,12 @@ type Membership struct {
 
 type SecurityAdvisory struct {
 	CVEID       string `json:"cve_id"`
-	URL         string `json:"html_url"`
 	Summary     string `json:"summary"`
 	Description string `json:"description"`
 	Severity    string `json:"severity"`
+	References  []struct {
+		URL string `json:"url"`
+	} `json:"references"`
 }
 
 func (s SecurityAdvisory) SeverityType() SeverityType {
@@ -321,7 +323,7 @@ type Event struct {
 	Team                *TeamEvent        `json:"team"`
 	Member              User              `json:"member"`
 	Membership          Membership        `json:"membership"`
-	SecurityAdvisory    *SecurityAdvisory `json:"repository_advisory"`
+	SecurityAdvisory    *SecurityAdvisory `json:"security_advisory"`
 	Workflow            *Workflow         `json:"workflow_run"`
 }
 

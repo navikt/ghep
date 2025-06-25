@@ -77,7 +77,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if isAnExternalContributor(event.Sender, c.orgMembers) && c.ExternalContributorsChannel != "" {
+	if (isAnExternalContributor(event.Sender, c.orgMembers) && c.ExternalContributorsChannel != "") || event.SecurityAdvisory != nil {
 		team := &github.Team{
 			Name: "external-contributors",
 			SlackChannels: github.SlackChannels{
@@ -96,6 +96,12 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error handling event for external contributors", http.StatusInternalServerError)
 			return
 		}
+
+		if event.SecurityAdvisory != nil {
+			fmt.Fprintf(w, "Security advisory event handled")
+			return
+		}
+
 	}
 
 	var teams []*github.Team

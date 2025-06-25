@@ -1,0 +1,14 @@
+{
+  "channel": "#test",
+  "text": "A <https://github.com/advisories/GHSA-g3r5-72hf-p7p2|security advisory> was just updated.",
+  "attachments": [
+    {
+      "text": "*zenml Session Fixation vulnerability*\nA session fixation vulnerability exists in the zenml-io/zenml application, where JWT tokens used for user authentication are not invalidated upon logout. This flaw allows an attacker to bypass authentication mechanisms by reusing a victim's JWT token.",
+      "color": "#9a6700",
+      "footer": "<https://github.com/advisories/GHSA-g3r5-72hf-p7p2|Github Advisories>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

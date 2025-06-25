@@ -1,0 +1,77 @@
+{
+  "action": "updated",
+  "security_advisory": {
+    "ghsa_id": "GHSA-g3r5-72hf-p7p2",
+    "cve_id": "CVE-2024-2260",
+    "summary": "zenml Session Fixation vulnerability",
+    "description": "A session fixation vulnerability exists in the zenml-io/zenml application, where JWT tokens used for user authentication are not invalidated upon logout. This flaw allows an attacker to bypass authentication mechanisms by reusing a victim's JWT token.",
+    "severity": "moderate",
+    "identifiers": [
+      {
+        "value": "GHSA-g3r5-72hf-p7p2",
+        "type": "GHSA"
+      },
+      {
+        "value": "CVE-2024-2260",
+        "type": "CVE"
+      }
+    ],
+    "references": [
+      {
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-2260"
+      },
+      {
+        "url": "https://github.com/zenml-io/zenml/commit/68bcb3ba60cba9729c9713a49c39502d40fb945e"
+      },
+      {
+        "url": "https://huntr.com/bounties/2d0856ec-ed73-477a-8ea2-d5d4f15cf167"
+      },
+      {
+        "url": "https://github.com/pypa/advisory-database/tree/main/vulns/zenml/PYSEC-2024-254.yaml"
+      },
+      {
+        "url": "https://github.com/advisories/GHSA-g3r5-72hf-p7p2"
+      }
+    ],
+    "published_at": "2024-04-16T00:30:33Z",
+    "updated_at": "2025-06-13T04:12:40Z",
+    "withdrawn_at": null,
+    "vulnerabilities": [
+      {
+        "package": {
+          "ecosystem": "pip",
+          "name": "zenml"
+        },
+        "severity": "moderate",
+        "vulnerable_version_range": "< 0.56.2",
+        "first_patched_version": {
+          "identifier": "0.56.2"
+        }
+      }
+    ],
+    "cvss_severities": {
+      "cvss_v3": {
+        "vector_string": "CVSS:3.0/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:N",
+        "score": 4.2
+      },
+      "cvss_v4": {
+        "vector_string": null,
+        "score": 0.0
+      }
+    },
+    "epss": {
+      "percentage": 0.00061,
+      "percentile": 0.19353
+    },
+    "cvss": {
+      "vector_string": "CVSS:3.0/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:N",
+      "score": 4.2
+    },
+    "cwes": [
+      {
+        "cwe_id": "CWE-384",
+        "name": "Session Fixation"
+      }
+    ]
+  }
+}
