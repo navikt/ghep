@@ -273,3 +273,9 @@ data:
       config:
         security:
           severityFilter: "high"
+    pensjonskalkulator:
+      pulls: "#pensjonskalkulator-teknisk"
+      security: "#pensjonskalkulator-teknisk"
+      config:
+        security:
+          severityFilter: "high"
