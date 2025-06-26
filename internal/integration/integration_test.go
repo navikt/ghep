@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -78,16 +79,16 @@ func TestHandleEvent(t *testing.T) {
 
 				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, team, mockhub)
 			case github.TypeIssue:
-				if event.Action == "edited" {
-					message = slack.CreateUpdatedIssueMessage(oldMessage, event)
-				} else {
+				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
 					message = slack.CreateIssueMessage(slackChannel, "", event)
+				} else {
+					message = slack.CreateUpdatedIssueMessage(oldMessage, event)
 				}
 			case github.TypePullRequest:
-				if event.Action == "edited" {
-					message = slack.CreateUpdatedPullRequestMessage(oldMessage, event)
-				} else {
+				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
 					message = slack.CreatePullRequestMessage(slackChannel, "", event)
+				} else {
+					message = slack.CreateUpdatedPullRequestMessage(oldMessage, event)
 				}
 			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)
