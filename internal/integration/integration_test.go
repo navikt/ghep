@@ -31,6 +31,16 @@ func TestHandleEvent(t *testing.T) {
 			},
 		},
 	}
+	oldMessageWithReviewers := slack.Message{
+		Channel: slackChannel,
+		Text:    "Should be updated",
+		Attachments: []slack.Attachment{
+			{
+				Text:  "There should be no reviewers\n*Requested reviewers:* @Kyrremann",
+				Color: slack.ColorOpened,
+			},
+		},
+	}
 
 	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
@@ -88,7 +98,11 @@ func TestHandleEvent(t *testing.T) {
 				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
 					message = slack.CreatePullRequestMessage(slackChannel, "", event)
 				} else {
-					message = slack.CreateUpdatedPullRequestMessage(oldMessage, event)
+					if event.Action == "review_request_removed" {
+						message = slack.CreateUpdatedPullRequestMessage(oldMessageWithReviewers, event)
+					} else {
+						message = slack.CreateUpdatedPullRequestMessage(oldMessage, event)
+					}
 				}
 			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)

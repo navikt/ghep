@@ -172,20 +172,27 @@ type Alert struct {
 	SecurityAdvisory  *SecurityAdvisory `json:"security_advisory"`
 }
 
+type RequestTeam struct {
+	Description string `json:"description"`
+	Slug        string `json:"slug"`
+}
+
 // Issue is a struct for issues and pull requests
 // Every pull request is an issue, but not every issue is a pull request
 type Issue struct {
-	Action      string `json:"action"`
-	Draft       bool   `json:"draft"`
-	ID          int    `json:"id"`
-	URL         string `json:"html_url"`
-	Title       string `json:"title"`
-	Body        string `json:"body"`
-	Number      int    `json:"number"`
-	State       string `json:"state"`
-	StateReason string `json:"state_reason"`
-	Merged      bool   `json:"merged"`
-	User        User   `json:"user"`
+	Action             string        `json:"action"`
+	Draft              bool          `json:"draft"`
+	ID                 int           `json:"id"`
+	URL                string        `json:"html_url"`
+	Title              string        `json:"title"`
+	Body               string        `json:"body"`
+	Number             int           `json:"number"`
+	State              string        `json:"state"`
+	StateReason        string        `json:"state_reason"`
+	Merged             bool          `json:"merged"`
+	User               User          `json:"user"`
+	RequestedReviewers []User        `json:"requested_reviewers"`
+	RequestedTeams     []RequestTeam `json:"requested_teams"`
 }
 
 type Release struct {

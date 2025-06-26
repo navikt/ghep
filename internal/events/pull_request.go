@@ -20,7 +20,7 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 		log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 	}
 
-	if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
+	if !slices.Contains([]string{"opened", "closed", "reopened", "edited", "review_requested", "review_request_removed"}, event.Action) {
 		return nil, nil
 	}
 

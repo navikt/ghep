@@ -1,0 +1,12 @@
+{
+  "channel": "#test",
+  "text": "Pull request <https://github.com/nais/up/pull/14|#14> review_request_removed in `<https://github.com/nais/up|up>` by <https://github.com/Kyrremann|Kyrremann>",
+  "attachments": [
+    {
+      "text": "*<https://github.com/nais/up/pull/14|#14 Bump docker/login-action from 2.2.0 to 3.0.0>*\nBumps [docker/login-action](https://github.com/docker/login-action) from 2.2.0 to 3.0.0.",
+      "color": "#34a44c"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

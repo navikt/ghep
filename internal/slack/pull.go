@@ -3,6 +3,7 @@ package slack
 import (
 	"fmt"
 	"html"
+	"strings"
 
 	"github.com/navikt/ghep/internal/github"
 )
@@ -37,6 +38,19 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, html.EscapeString(event.PullRequest.Title), event.PullRequest.Body)
 	}
 
+	if len(event.PullRequest.RequestedReviewers) > 0 {
+		var reviewers strings.Builder
+		for i, reviewer := range event.PullRequest.RequestedReviewers {
+			fmt.Fprintf(&reviewers, "@%s", reviewer.Login)
+
+			if i < len(event.PullRequest.RequestedReviewers)-1 {
+				reviewers.WriteString(", ")
+			}
+		}
+
+		attachmentText += fmt.Sprintf("\n*Requested reviewers:* %s", reviewers.String())
+	}
+
 	return &Message{
 		Channel:         channel,
 		ThreadTimestamp: threadTimestamp,
@@ -67,7 +81,7 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 		} else {
 			color = ColorClosed
 		}
-	case "edited":
+	default:
 		eventType := "Pull request"
 		if event.PullRequest.Draft {
 			eventType = "Draft pull request"
@@ -82,6 +96,19 @@ func CreateUpdatedPullRequestMessage(message Message, event github.Event) *Messa
 		} else if event.PullRequest.State == "closed" {
 			color = ColorClosed
 		}
+	}
+
+	if len(event.PullRequest.RequestedReviewers) > 0 {
+		var reviewers strings.Builder
+		for i, reviewer := range event.PullRequest.RequestedReviewers {
+			fmt.Fprintf(&reviewers, "@%s", reviewer.Login)
+
+			if i < len(event.PullRequest.RequestedReviewers)-1 {
+				reviewers.WriteString(", ")
+			}
+		}
+
+		attachmentText += fmt.Sprintf("\n*Requested reviewers:* %s", reviewers.String())
 	}
 
 	message.Text = text
