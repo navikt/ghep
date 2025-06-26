@@ -155,6 +155,8 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 
 func (h *Handler) handle(ctx context.Context, log *slog.Logger, team *github.Team, event github.Event) (*slack.Message, error) {
 	eventType := event.GetEventType()
+	log = log.With("event_type", eventType)
+
 	switch eventType {
 	case github.TypeCommit:
 		return handleCommitEvent(log, *team, event, h.github)
