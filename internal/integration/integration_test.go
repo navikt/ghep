@@ -41,6 +41,16 @@ func TestHandleEvent(t *testing.T) {
 			},
 		},
 	}
+	oldMessageWithAssignees := slack.Message{
+		Channel: slackChannel,
+		Text:    "Should be updated",
+		Attachments: []slack.Attachment{
+			{
+				Text:  "There should be no assignees\n*Assignees:* @Kyrremann",
+				Color: slack.ColorOpened,
+			},
+		},
+	}
 
 	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
@@ -92,7 +102,11 @@ func TestHandleEvent(t *testing.T) {
 				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
 					message = slack.CreateIssueMessage(slackChannel, "", event)
 				} else {
-					message = slack.CreateUpdatedIssueMessage(oldMessage, event)
+					if event.Action == "unassigned" {
+						message = slack.CreateUpdatedIssueMessage(oldMessageWithAssignees, event)
+					} else {
+						message = slack.CreateUpdatedIssueMessage(oldMessage, event)
+					}
 				}
 			case github.TypePullRequest:
 				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {

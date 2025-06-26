@@ -193,6 +193,7 @@ type Issue struct {
 	User               User          `json:"user"`
 	RequestedReviewers []User        `json:"requested_reviewers"`
 	RequestedTeams     []RequestTeam `json:"requested_teams"`
+	Assignees          []User        `json:"assignees"`
 }
 
 type Release struct {

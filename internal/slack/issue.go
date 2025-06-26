@@ -3,6 +3,7 @@ package slack
 import (
 	"fmt"
 	"html"
+	"strings"
 
 	"github.com/navikt/ghep/internal/github"
 )
@@ -45,13 +46,26 @@ func CreateUpdatedIssueMessage(message Message, event github.Event) *Message {
 		color = ColorOpened
 	case "closed":
 		color = ColorMerged
-	case "edited":
+	default:
 		text = fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
 		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title), event.Issue.Body)
 
 		if event.Issue.State == "closed" {
 			color = ColorMerged
 		}
+	}
+
+	if len(event.Issue.Assignees) > 0 {
+		var assignees strings.Builder
+		for i, assignee := range event.Issue.Assignees {
+			fmt.Fprintf(&assignees, "@%s", assignee.Login)
+
+			if i < len(event.Issue.Assignees)-1 {
+				assignees.WriteString(", ")
+			}
+		}
+
+		attachmentText += fmt.Sprintf("\n*Assignees:* %s", assignees.String())
 	}
 
 	message.Text = text

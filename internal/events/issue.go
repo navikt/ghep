@@ -20,7 +20,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 		log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 	}
 
-	if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
+	if !slices.Contains([]string{"opened", "closed", "reopened", "edited", "assigned", "unassigned"}, event.Action) {
 		return nil, nil
 	}
 
