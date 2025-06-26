@@ -21,7 +21,6 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 	}
 
 	if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
-		log.Info("unknown issue action")
 		return nil, nil
 	}
 

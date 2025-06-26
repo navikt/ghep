@@ -180,8 +180,6 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team *github.Tea
 		return h.handleTeamEvent(ctx, log, event)
 	case github.TypeWorkflow:
 		return h.handleWorkflowEvent(ctx, log, *team, event)
-	default:
-		log.Info("unknown event type")
 	}
 
 	return nil, nil

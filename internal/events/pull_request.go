@@ -21,7 +21,6 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 	}
 
 	if !slices.Contains([]string{"opened", "closed", "reopened", "edited"}, event.Action) {
-		log.Info("unknown pull request action")
 		return nil, nil
 	}
 
