@@ -267,3 +267,8 @@ data:
         workflows:
           ignoreBots: true
           branches: ["main"]
+    pdl:
+      security: "#pdl-teknisk"
+      config:
+        security:
+          severityFilter: "high"
