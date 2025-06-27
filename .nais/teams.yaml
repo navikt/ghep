@@ -274,8 +274,16 @@ data:
         security:
           severityFilter: "high"
     pensjonskalkulator:
+      commits: "#pensjonskalkulator-teknisk"
       pulls: "#pensjonskalkulator-teknisk"
       security: "#pensjonskalkulator-teknisk"
+      workflows: "#pensjonskalkulator-teknisk"
       config:
+        ignoreRepositories:
+          - "pensjon-pen"
         security:
           severityFilter: "high"
+        workflows:
+          ignoreBots: true
+          branches: ["main", "sandbox"]
+  
