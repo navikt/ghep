@@ -37,6 +37,11 @@ func NewHandler(githubClient github.Client, redis *redis.Client, slackClient sla
 func shouldSilenceBots(team github.Team, event github.Event) bool {
 	if team.Config.ShouldSilenceDependabot() {
 		if event.Sender.IsBot() {
+			// We don't want to ignore pull request merges from Atlantis
+			if event.PullRequest != nil && event.PullRequest.Action == "closed" && strings.Contains(event.Sender.Login, "atlantis") {
+				return false
+			}
+
 			return true
 		}
 
