@@ -244,6 +244,7 @@ data:
       workflows: "#yrkesskade-workflows"
       pulls: "#yrkesskade-kodeles"
       releases: "#yrkesskade-releases"
+      security: "#yrkesskade-sikkerhet"
       config:
         silenceDependabot: "always"
         workflows:
@@ -286,4 +287,4 @@ data:
         workflows:
           ignoreBots: true
           branches: ["main", "sandbox"]
-  
+          
