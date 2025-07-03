@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ghep-teams-nais
+  name: gnep
   namespace: the-g-team
   labels:
     team: the-g-team
@@ -32,12 +32,12 @@ data:
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: ghep-nais
+  name: gnep
   namespace: the-g-team
   labels:
     team: the-g-team
 spec:
-  image: {{ image }}
+  image: "{{ image }}"
   ingresses:
     - https://ghep.nav.no/nais
   replicas:
@@ -59,10 +59,10 @@ spec:
     - name: API_BASE_PATH
       value: "/nais"
   filesFrom:
-    - configmap: ghep-teams-nais
+    - configmap: gnep
       mountPath: /var/run/configmaps
   envFrom:
-    - secret: ghep-nais
+    - secret: gnep
   observability:
     logging:
       destinations:
