@@ -78,6 +78,15 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
+  postgres:
+    cluster:
+      majorVersion: "17"
+      resources:
+        cpu: 100m
+        diskSize: 1Gi
+        memory: 2G
+    database:
+      collation: nb_NO
   startup:
     path: /internal/health
     initialDelay: 30
