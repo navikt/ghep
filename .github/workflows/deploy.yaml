@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - 'internal/**'
-      - 'go.mod'
-      - 'go.sum'
-      - 'main.go'
-      - '.nais/nais.yaml'
-      - '.nais/ghep-4-nais.yaml'
-      - '.github/workflows/deploy.yaml'
-      - 'Dockerfile'
+      - "internal/**"
+      - "go.mod"
+      - "go.sum"
+      - "main.go"
+      - ".nais/nais.yaml"
+      - ".nais/ghep-4-nais.yaml"
+      - ".github/workflows/deploy.yaml"
+      - "Dockerfile"
 
 permissions:
   id-token: write
@@ -26,35 +26,35 @@ jobs:
       image: ${{ steps.docker-build-push.outputs.image }}
       telemetry: ${{ steps.docker-build-push.outputs.telemetry }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Push docker image to GAR
-      uses: nais/docker-build-push@v0
-      id: docker-build-push
-      with:
-        team: the-g-team
+      - uses: actions/checkout@v4
+      - name: Push docker image to GAR
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: the-g-team
 
   ghep:
     needs:
       - build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: nais/deploy/actions/deploy@v2
-      env:
-        CLUSTER: prod-gcp
-        RESOURCE: .nais/teams.yaml,.nais/nais.yaml
-        VAR: image=${{ needs.build.outputs.image }}
-        TELEMETRY: ${{ needs.build.outputs.telemetry }}
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/teams.yaml,.nais/ghep.yaml
+          VAR: image=${{ needs.build.outputs.image }}
+          TELEMETRY: ${{ needs.build.outputs.telemetry }}
 
   ghep-nais:
     needs:
       - build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: nais/deploy/actions/deploy@v2
-      env:
-        CLUSTER: prod-gcp
-        RESOURCE: .nais/ghep-4-nais.yaml
-        VAR: image=${{ needs.build.outputs.image }}
-        TELEMETRY: ${{ needs.build.outputs.telemetry }}
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/gnep.yaml
+          VAR: image=${{ needs.build.outputs.image }}
+          TELEMETRY: ${{ needs.build.outputs.telemetry }}
