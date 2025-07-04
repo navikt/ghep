@@ -11,19 +11,20 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func (c Client) EnsureChannels(teams []*github.Team) error {
+func (c Client) EnsureChannels(teams map[string]github.Team) error {
 	joinedChannels, err := c.getJoinedChannels()
 	if err != nil {
 		return err
 	}
 
-	for i, team := range teams {
-		teams[i].SlackChannels.Commits = c.findChannelIDByName(team.SlackChannels.Commits, joinedChannels)
-		teams[i].SlackChannels.Issues = c.findChannelIDByName(team.SlackChannels.Issues, joinedChannels)
-		teams[i].SlackChannels.PullRequests = c.findChannelIDByName(team.SlackChannels.PullRequests, joinedChannels)
-		teams[i].SlackChannels.Workflows = c.findChannelIDByName(team.SlackChannels.Workflows, joinedChannels)
-		teams[i].Config.ExternalContributorsChannel = c.findChannelIDByName(team.Config.ExternalContributorsChannel, joinedChannels)
-		teams[i].SlackChannels.Releases = c.findChannelIDByName(team.SlackChannels.Releases, joinedChannels)
+	for name, team := range teams {
+		team.SlackChannels.Commits = c.findChannelIDByName(team.SlackChannels.Commits, joinedChannels)
+		team.SlackChannels.Issues = c.findChannelIDByName(team.SlackChannels.Issues, joinedChannels)
+		team.SlackChannels.PullRequests = c.findChannelIDByName(team.SlackChannels.PullRequests, joinedChannels)
+		team.SlackChannels.Workflows = c.findChannelIDByName(team.SlackChannels.Workflows, joinedChannels)
+		team.Config.ExternalContributorsChannel = c.findChannelIDByName(team.Config.ExternalContributorsChannel, joinedChannels)
+		team.SlackChannels.Releases = c.findChannelIDByName(team.SlackChannels.Releases, joinedChannels)
+		teams[name] = team
 	}
 
 	return nil

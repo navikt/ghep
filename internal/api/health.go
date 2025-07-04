@@ -17,7 +17,7 @@ func (c *Client) healthGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var teams []string
-	for _, team := range c.teams {
+	for _, team := range c.teamConfig {
 		teams = append(teams, team.Name)
 	}
 

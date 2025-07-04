@@ -88,16 +88,7 @@ func TestHandleEvent(t *testing.T) {
 			eventType := event.GetEventType()
 			switch eventType {
 			case github.TypeCommit:
-				team := github.Team{
-					Members: []*github.User{
-						{
-							Login: "Kyrremann",
-							URL:   "https://github.com/Kyrremann",
-						},
-					},
-				}
-
-				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, team, mockhub)
+				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, mockhub)
 			case github.TypeIssue:
 				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
 					message = slack.CreateIssueMessage(slackChannel, "", event)

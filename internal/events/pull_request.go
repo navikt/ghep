@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strconv"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/redis/go-redis/v9"
@@ -54,17 +55,19 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 		}
 	}
 
-	return handlePullRequestEvent(log, team, timestamp, event)
-}
-
-func handlePullRequestEvent(log *slog.Logger, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
-	if !slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
-		return nil, nil
+	channel := team.SlackChannels.PullRequests
+	if _, err := h.db.GetUser(ctx, event.Sender.Login); err != nil {
+		if err != pgx.ErrNoRows {
+			channel = team.Config.ExternalContributorsChannel
+		}
 	}
 
-	channel := team.SlackChannels.PullRequests
-	if team.IsExternalContributor(event.Sender) {
-		channel = team.Config.ExternalContributorsChannel
+	return handlePullRequestEvent(log, team, timestamp, channel, event)
+}
+
+func handlePullRequestEvent(log *slog.Logger, team github.Team, threadTimestamp, channel string, event github.Event) (*slack.Message, error) {
+	if !slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
+		return nil, nil
 	}
 
 	if channel == "" {

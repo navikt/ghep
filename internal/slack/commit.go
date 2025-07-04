@@ -124,7 +124,7 @@ func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Ev
 	return senders, nil
 }
 
-func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, team github.Team, githubClient github.Userer) (*Message, error) {
+func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, githubClient github.Userer) (*Message, error) {
 	authors, err := createAuthors(log, githubClient, event)
 	if err != nil {
 		return nil, fmt.Errorf("creating authors: %w", err)

@@ -13,6 +13,7 @@ import (
 	"github.com/navikt/ghep/internal/redis"
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/navikt/ghep/internal/sql"
+	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
 func main() {
@@ -29,27 +30,32 @@ func main() {
 
 	githubClient := github.New(
 		log.With("component", "github"),
+		db,
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
 		os.Getenv("GITHUB_APP_ID"),
 		os.Getenv("GITHUB_APP_PRIVATE_KEY"),
 		os.Getenv("GITHUB_ORG"),
 	)
 
-	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
+	teamConfig, err := githubClient.ParseTeamConfig(ctx, os.Getenv("REPOS_CONFIG_FILE_PATH"))
+	if err != nil {
+		log.Error("parsing team config", "err", err.Error())
+		os.Exit(1)
+	}
 
 	log.Info("Gettings repositories from Github")
-	teams, err := githubClient.FetchTeams(
-		log.With("component", "github"),
-		os.Getenv("REPOS_CONFIG_FILE_PATH"),
+	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
+	if err := githubClient.FetchTeams(
+		ctx,
 		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
+		os.Getenv("GITHUB_ORG"),
 		subscribeToOrg,
-	)
-	if err != nil {
+	); err != nil {
 		log.Error("fetching teams from Github", "err", err.Error())
 		os.Exit(1)
 	}
 
-	logTeams(log, teams)
+	logTeams(ctx, log, db)
 
 	log.Info("Creating Slack client")
 	slackAPI, err := slack.New(
@@ -62,7 +68,7 @@ func main() {
 	}
 
 	log.Info("Ensuring Slack channels")
-	if err := slackAPI.EnsureChannels(teams); err != nil {
+	if err := slackAPI.EnsureChannels(teamConfig); err != nil {
 		log.Error("ensuring Slack channels", "err", err.Error())
 		os.Exit(1)
 	}
@@ -81,19 +87,18 @@ func main() {
 	}
 
 	log.Info("Creating event handler")
-	eventHandler := events.NewHandler(githubClient, rdb, slackAPI, teams)
+	eventHandler := events.NewHandler(githubClient, rdb, db, slackAPI, teamConfig)
 
-	orgMembers, err := githubClient.FetchOrgMembers()
-	if err != nil {
+	if err := githubClient.FetchOrgMembers(ctx); err != nil {
 		log.Error("fetching org members", "err", err.Error())
 	}
 
 	apiClient := api.New(
 		log.With("component", "api"),
+		db,
 		eventHandler,
 		rdb,
-		teams,
-		orgMembers,
+		teamConfig,
 		os.Getenv("EXTERNAL_CONTRIBUTORS_CHANNEL"),
 		subscribeToOrg,
 	)
@@ -110,11 +115,12 @@ func main() {
 	}
 }
 
-func logTeams(log *slog.Logger, teams []*github.Team) {
-	var teamNames []string
-	for _, team := range teams {
-		teamNames = append(teamNames, team.Name)
+func logTeams(ctx context.Context, log *slog.Logger, db *gensql.Queries) {
+	teams, err := db.ListTeams(ctx)
+	if err != nil {
+		log.Error("listing teams from database", "err", err.Error())
+		return
 	}
 
-	log.Info(fmt.Sprintf("Teams using Ghep: %v", teamNames))
+	log.Info(fmt.Sprintf("Teams using Ghep: %v", teams))
 }

@@ -1,6 +1,7 @@
 package github
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -65,12 +66,24 @@ func fetchMembers(teamURL, bearerToken string) ([]*User, error) {
 	return teamMembers, nil
 }
 
-func (c *Client) FetchOrgMembers() ([]*User, error) {
+func (c *Client) FetchOrgMembers(ctx context.Context) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
-		return nil, fmt.Errorf("creating bearer token: %v", err)
+		return fmt.Errorf("creating bearer token: %v", err)
 	}
 
 	url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
-	return fetchMembers(url, bearerToken)
+	members, err := fetchMembers(url, bearerToken)
+	if err != nil {
+		return fmt.Errorf("fetching org members: %v", err)
+	}
+
+	c.log.Info(fmt.Sprintf("Fetched %d members from org %s", len(members), c.org))
+	for _, member := range members {
+		if err := c.db.CreateUser(ctx, member.Login); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

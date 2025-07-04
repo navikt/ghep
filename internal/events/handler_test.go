@@ -14,7 +14,6 @@ func TestHandleCommitEvent(t *testing.T) {
 		SlackChannels: github.SlackChannels{
 			Commits: "#test",
 		},
-		Repositories: []string{"test"},
 	}
 
 	type args struct {
@@ -108,7 +107,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
-					Members: []*github.User{{Login: "internal"}},
 				},
 				event: github.Event{
 					Action: "opened",
@@ -139,7 +137,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
-					Members: []*github.User{{Login: "internal"}},
 					Config: github.Config{
 						ExternalContributorsChannel: "#external",
 					},
@@ -173,7 +170,6 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
-					Members: []*github.User{{Login: "internal"}},
 					Config: github.Config{
 						ExternalContributorsChannel: "#external",
 					},
@@ -202,7 +198,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			issue, err := handleIssueEvent(slog.Default(), tt.args.team, "", tt.args.event)
+			issue, err := handleIssueEvent(slog.Default(), tt.args.team, "timestamp", "channel", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -211,7 +207,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				t.Errorf("handleIssueEvent() mismatch (-want +got):\n%s", diff)
 			}
 
-			pull, err := handlePullRequestEvent(slog.Default(), tt.args.team, "", tt.args.event)
+			pull, err := handlePullRequestEvent(slog.Default(), tt.args.team, "timestamp", "channel", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -242,7 +238,6 @@ func TestHandleTeamEvent(t *testing.T) {
 					SlackChannels: github.SlackChannels{
 						Commits: "#test",
 					},
-					Repositories: []string{"test"},
 				},
 				event: github.Event{
 					Action: "added_to_repository",
@@ -265,7 +260,6 @@ func TestHandleTeamEvent(t *testing.T) {
 					SlackChannels: github.SlackChannels{
 						Commits: "#test",
 					},
-					Repositories: []string{"test", "new-repo"},
 				},
 				event: github.Event{
 					Action: "removed_from_repository",
@@ -284,12 +278,12 @@ func TestHandleTeamEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := handleTeamEvent(slog.Default(), &tt.args.team, tt.args.event)
+			_, err := handleTeamEvent(slog.Default(), "", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
 
-			if diff := cmp.Diff(tt.want, tt.args.team.Repositories); diff != "" {
+			if diff := cmp.Diff(tt.want, tt.args.team.Name); diff != "" {
 				t.Errorf("repositories mismatch (-want +got):\n%s", diff)
 			}
 		})

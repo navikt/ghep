@@ -1,10 +1,10 @@
 package github
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"os"
 	"slices"
@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/navikt/ghep/internal/sql"
 	"gopkg.in/yaml.v3"
 )
 
@@ -59,60 +60,8 @@ type SlackChannels struct {
 
 type Team struct {
 	Name          string
-	Repositories  []string
-	Members       []*User
 	SlackChannels SlackChannels `yaml:",inline"`
 	Config        Config        `yaml:"config"`
-}
-
-func (t *Team) GetMemberByName(name string) (*User, bool) {
-	for _, member := range t.Members {
-		if member.Login == name {
-			return member, true
-		}
-	}
-
-	return nil, false
-}
-
-func (t *Team) IsMember(user string) bool {
-	contains := func(u *User) bool {
-		return u.Login == user
-	}
-
-	return slices.ContainsFunc(t.Members, contains)
-}
-
-func (t *Team) AddMember(user User) {
-	t.Members = append(t.Members, &user)
-}
-
-func (t *Team) RemoveMember(remove string) {
-	for i, member := range t.Members {
-		if member.Login == remove {
-			t.Members = slices.Delete(t.Members, i, i+1)
-			return
-		}
-	}
-}
-
-// IsExternalContributor checks if a user is an external contributor to the team.
-// Bot users are not considered external contributors.
-func (t *Team) IsExternalContributor(user User) bool {
-	return t.Config.ExternalContributorsChannel != "" && user.IsUser() && !t.IsMember(user.Login)
-}
-
-func (t *Team) AddRepository(repo string) {
-	t.Repositories = append(t.Repositories, repo)
-}
-
-func (t *Team) RemoveRepository(remove string) {
-	for i, repo := range t.Repositories {
-		if repo == remove {
-			t.Repositories = slices.Delete(t.Repositories, i, i+1)
-			return
-		}
-	}
 }
 
 func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
@@ -183,72 +132,102 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 	return repos, nil
 }
 
-func parseTeamConfig(path string) ([]*Team, error) {
+func parseTeamConfig(path string) (map[string]Team, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	teamsAsMap := map[string]*Team{}
-	if err := yaml.NewDecoder(file).Decode(&teamsAsMap); err != nil {
+	teams := map[string]Team{}
+	if err := yaml.NewDecoder(file).Decode(&teams); err != nil {
 		return nil, fmt.Errorf("decoding team config: %v", err)
-	}
-
-	teams := make([]*Team, 0, len(teamsAsMap))
-	for name, team := range teamsAsMap {
-		team.Name = name
-		teams = append(teams, team)
 	}
 
 	return teams, nil
 }
 
-func (c Client) FetchTeams(log *slog.Logger, teamsFilePath, reposBlocklistString string, subscribeToOrg bool) ([]*Team, error) {
+func (c Client) ParseTeamConfig(ctx context.Context, teamsFilePath string) (map[string]Team, error) {
 	teams, err := parseTeamConfig(teamsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("parsing team config: %v", err)
 	}
 
+	for name := range teams {
+		if err := c.db.CreateTeam(ctx, name); err != nil {
+			return nil, fmt.Errorf("creating team %s: %v", name, err)
+		}
+	}
+
+	return teams, nil
+}
+
+func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, orgTeam string, subscribeToOrg bool) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
-		return nil, fmt.Errorf("creating bearer token: %v", err)
+		return fmt.Errorf("creating bearer token: %v", err)
 	}
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")
 
 	if subscribeToOrg {
+		team, err := c.db.GetTeam(ctx, orgTeam)
+		if err != nil {
+			return fmt.Errorf("getting team %s: %v", orgTeam, err)
+		}
+
 		url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
-		teamURL := fmt.Sprintf("%s/teams/%s", url, teams[0].Name)
+		teamURL := fmt.Sprintf("%s/teams/%s", url, team)
 		members, err := fetchMembers(teamURL, bearerToken)
 		if err != nil {
-			return nil, fmt.Errorf("fetching members for %s: %v", teams[0].Name, err)
+			return fmt.Errorf("fetching members for %s: %v", team, err)
 		}
-		teams[0].Members = members
+
+		for _, member := range members {
+			if err := sql.AddMemberToTeam(ctx, c.db, orgTeam, member.Login); err != nil {
+				c.log.Error("Failed to add member to team", "team", orgTeam, "member", member.Login, "error", err)
+				continue
+			}
+		}
 
 		c.log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "members", len(members))
-		return teams, nil
+		return nil
 	}
 
 	url := fmt.Sprintf("https://api.github.com/orgs/%s/teams", c.org)
 
-	for i, team := range teams {
-		teamURL := fmt.Sprintf("%s/%s", url, team.Name)
-		repos, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
+	teams, err := c.db.ListTeams(ctx)
+	if err != nil {
+		return fmt.Errorf("listing teams from database: %v", err)
+	}
+
+	for _, team := range teams {
+		teamURL := fmt.Sprintf("%s/%s", url, team)
+		repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
 		if err != nil {
-			log.Error("Failed fetching repositories", "team", team.Name, "error", err)
+			c.log.Error("Failed fetching repositories", "team", team, "error", err)
 			continue
 		}
-		team.Repositories = repos
+
+		for _, name := range repositories {
+			if err := sql.AddRepositoryToTeam(ctx, c.db, team, name); err != nil {
+				c.log.Error("Failed to add repository to team", "team", team, "repository", name, "error", err)
+				continue
+			}
+		}
 
 		members, err := fetchMembers(teamURL, bearerToken)
 		if err != nil {
-			return nil, fmt.Errorf("fetching members for %s: %v", team.Name, err)
+			return fmt.Errorf("fetching members for %s: %v", team, err)
 		}
-		team.Members = members
 
-		teams[i] = team
+		for _, member := range members {
+			if err := sql.AddMemberToTeam(ctx, c.db, team, member.Login); err != nil {
+				c.log.Error("Failed to add member to team", "team", team, "member", member.Login, "error", err)
+				continue
+			}
+		}
 	}
 
-	return teams, nil
+	return nil
 }
