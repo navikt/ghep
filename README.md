@@ -114,6 +114,9 @@ Kjør opp Redis for testing med Docker.
 
 ``` shell
 docker run --name redis -p 6379:6379 -d redis
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+docker run --link postgres:db -p 8081:8080 -d adminer
+psql -h localhost -U postgres -c 'CREATE DATABASE ghep;'
 ```
 
 ## Kontakt oss

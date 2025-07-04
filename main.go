@@ -12,12 +12,20 @@ import (
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/redis"
 	"github.com/navikt/ghep/internal/slack"
+	"github.com/navikt/ghep/internal/sql"
 )
 
 func main() {
+	ctx := context.Background()
 	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
+
+	db, err := sql.New(ctx, log.With("component", "db"), "postgres://postgres:postgres@localhost:5432/ghep")
+	if err != nil {
+		log.Error("creating SQL client", "err", err.Error())
+		os.Exit(1)
+	}
 
 	githubClient := github.New(
 		log.With("component", "github"),
@@ -58,8 +66,6 @@ func main() {
 		log.Error("ensuring Slack channels", "err", err.Error())
 		os.Exit(1)
 	}
-
-	ctx := context.Background()
 
 	log.Info("Creating Redis client")
 	rdb, err := redis.New(
