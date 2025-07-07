@@ -144,6 +144,11 @@ func parseTeamConfig(path string) (map[string]Team, error) {
 		return nil, fmt.Errorf("decoding team config: %v", err)
 	}
 
+	for name, team := range teams {
+		team.Name = name
+		teams[name] = team
+	}
+
 	return teams, nil
 }
 
