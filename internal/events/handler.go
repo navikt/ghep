@@ -127,8 +127,8 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 			team.Config.ExternalContributorsChannel = resp.Channel
 		}
 
-		for _, t := range h.teamsConfig {
-			if t.Name == team.Name {
+		for name, t := range h.teamsConfig {
+			if name == team.Name {
 				t.SlackChannels = channels
 				t.Config.ExternalContributorsChannel = team.Config.ExternalContributorsChannel
 				h.teamsConfig[t.Name] = t

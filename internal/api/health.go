@@ -17,8 +17,8 @@ func (c *Client) healthGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var teams []string
-	for _, team := range c.teamConfig {
-		teams = append(teams, team.Name)
+	for name := range c.teamConfig {
+		teams = append(teams, name)
 	}
 
 	payload := struct {
