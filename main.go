@@ -22,7 +22,12 @@ func main() {
 
 	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
 
-	db, err := sql.New(ctx, log.With("component", "db"), "postgres://postgres:postgres@localhost:5432/ghep")
+	dbURL := os.Getenv("PGURL")
+	if dbURL == "" {
+		dbURL = "postgres://postgres:postgres@localhost:5432/ghep"
+	}
+
+	db, err := sql.New(ctx, log.With("component", "db"), dbURL)
 	if err != nil {
 		log.Error("creating SQL client", "err", err.Error())
 		os.Exit(1)
