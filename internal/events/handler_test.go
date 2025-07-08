@@ -1,11 +1,13 @@
 package events
 
 import (
+	"context"
 	"log/slog"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/mock"
 )
 
 func TestHandleCommitEvent(t *testing.T) {
@@ -89,8 +91,9 @@ func TestHandleCommitEvent(t *testing.T) {
 
 func TestHandleIssueAndPullEvent(t *testing.T) {
 	type args struct {
-		team  github.Team
-		event github.Event
+		team    github.Team
+		mockSQL mock.TeamMock
+		event   github.Event
 	}
 
 	tests := []struct {
@@ -107,6 +110,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						Issues:       "#internal",
 						PullRequests: "#internal",
 					},
+				},
+				mockSQL: mock.TeamMock{
+					Members: []string{"internal"},
 				},
 				event: github.Event{
 					Action: "opened",
@@ -141,6 +147,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						ExternalContributorsChannel: "#external",
 					},
 				},
+				mockSQL: mock.TeamMock{
+					Members: []string{"internal"},
+				},
 				event: github.Event{
 					Action: "opened",
 					Sender: github.User{
@@ -174,6 +183,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						ExternalContributorsChannel: "#external",
 					},
 				},
+				mockSQL: mock.TeamMock{
+					Members: []string{"internal"},
+				},
 				event: github.Event{
 					Action: "opened",
 					Sender: github.User{
@@ -198,7 +210,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			issue, err := handleIssueEvent(slog.Default(), tt.args.team, "timestamp", "channel", tt.args.event)
+			issue, err := handleIssueEvent(context.Background(), slog.Default(), &tt.args.mockSQL, tt.args.team, "timestamp", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -207,7 +219,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				t.Errorf("handleIssueEvent() mismatch (-want +got):\n%s", diff)
 			}
 
-			pull, err := handlePullRequestEvent(slog.Default(), tt.args.team, "timestamp", "channel", tt.args.event)
+			pull, err := handlePullRequestEvent(context.Background(), slog.Default(), &tt.args.mockSQL, tt.args.team, "timestamp", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}

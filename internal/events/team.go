@@ -47,7 +47,7 @@ func (h *Handler) handleTeamEvent(ctx context.Context, log *slog.Logger, event g
 	return handleTeamEvent(log, h.teamsConfig[team].SlackChannels.Commits, event)
 }
 
-func handleTeamEvent(log *slog.Logger, channel string, event github.Event) (*slack.Message, error) {
+func handleTeamEvent(_ *slog.Logger, channel string, event github.Event) (*slack.Message, error) {
 	if channel == "" {
 		return nil, nil
 	}

@@ -11,6 +11,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
+	"github.com/navikt/ghep/internal/sql"
+	"github.com/navikt/ghep/internal/sql/gensql"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -54,23 +56,27 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 		}
 	}
 
-	channel := team.SlackChannels.PullRequests
-	if _, err := h.db.GetUser(ctx, event.Sender.Login); err != nil {
-		if err != pgx.ErrNoRows {
-			channel = team.Config.ExternalContributorsChannel
-		}
-	}
-
-	return handleIssueEvent(log, team, timestamp, channel, event)
+	return handleIssueEvent(ctx, log, h.db, team, timestamp, event)
 }
 
-func handleIssueEvent(log *slog.Logger, team github.Team, threadTimestamp, channel string, event github.Event) (*slack.Message, error) {
+func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.TeamQuery, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
 	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
 		return nil, nil
 	}
-
-	if channel == "" {
+	if team.SlackChannels.PullRequests == "" {
 		return nil, nil
+	}
+
+	channel := team.SlackChannels.Issues
+	if _, err := db.GetTeamMember(ctx, gensql.GetTeamMemberParams{
+		TeamSlug:  team.Name,
+		UserLogin: event.Sender.Login,
+	}); err != nil {
+		if err == pgx.ErrNoRows && team.Config.ExternalContributorsChannel != "" {
+			channel = team.Config.ExternalContributorsChannel
+		} else {
+			log.Error("error getting team member", "err", err.Error(), "user", event.Sender.Login)
+		}
 	}
 
 	log.Info("Received issue", "slack_channel", channel)
