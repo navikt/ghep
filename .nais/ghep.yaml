@@ -8,7 +8,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 spec:
-  image: "{{ image }}"
   ingresses:
     - https://ghep.nav.no
   replicas:

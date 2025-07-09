@@ -37,7 +37,6 @@ metadata:
   labels:
     team: the-g-team
 spec:
-  image: "{{ image }}"
   ingresses:
     - https://ghep.nav.no/nais
   replicas:

@@ -27,7 +27,15 @@ jobs:
       telemetry: ${{ steps.docker-build-push.outputs.telemetry }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for what-changed action
+      - name: Determine what to do
+        id: changed-files
+        uses: "nais/what-changed@main"
+        with:
+          files: .nais/teams.yaml,.nais/ghep.yaml,.nais/gnep.yaml
       - name: Push docker image to GAR
+        if: steps.changed-files.outputs.changed != 'only-inputs'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -43,10 +51,9 @@ jobs:
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/teams.yaml,.nais/ghep.yaml
-          VAR: image=${{ needs.build.outputs.image }}
-          TELEMETRY: ${{ needs.build.outputs.telemetry }}
+          WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}
 
-  ghep-nais:
+  gnep:
     needs:
       - build
     runs-on: ubuntu-latest
@@ -56,5 +63,4 @@ jobs:
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/gnep.yaml
-          VAR: image=${{ needs.build.outputs.image }}
-          TELEMETRY: ${{ needs.build.outputs.telemetry }}
+          WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}
