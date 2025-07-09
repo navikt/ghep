@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -120,7 +121,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Team != nil {
 			team, err := c.db.GetTeam(r.Context(), event.Team.Name)
 			if err != nil {
-				if err == pgx.ErrNoRows {
+				if errors.Is(err, pgx.ErrNoRows) {
 					log.Warn("team not found in database", "team", event.Team.Name)
 				} else {
 					log.Error("error getting team from database", "team", event.Team.Name, "err", err.Error())
@@ -134,7 +135,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			teamsFromDB, err := c.db.ListTeamsByRepository(r.Context(), event.GetRepositoryName())
 			if err != nil {
-				if err == pgx.ErrNoRows {
+				if errors.Is(err, pgx.ErrNoRows) {
 					log.Warn("no teams found for repository in database", "repository", event.GetRepositoryName())
 				} else {
 					log.Error("error listing teams by repository", "repository", event.GetRepositoryName(), "err", err.Error())
@@ -167,7 +168,7 @@ func (c *Client) isAnExternalContributor(ctx context.Context, user github.User) 
 
 	_, err := c.db.GetUser(ctx, user.Login)
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return false
 		}
 

@@ -2,6 +2,7 @@ package sql
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/sql/gensql"
@@ -15,7 +16,7 @@ type TeamQuery interface {
 func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, name string) error {
 	repository, err := db.GetRepository(ctx, name)
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			result, err := db.CreateRepository(ctx, gensql.CreateRepositoryParams{
 				Name: name,
 			})
@@ -37,7 +38,7 @@ func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, name str
 // AddMemberToTeam adds a user to a team, creating the user if it does not exist.
 func AddMemberToTeam(ctx context.Context, db *gensql.Queries, team, userLogin string) error {
 	if _, err := db.GetUser(ctx, userLogin); err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			if err := db.CreateUser(ctx, userLogin); err != nil {
 				return err
 			}
