@@ -51,7 +51,7 @@ jobs:
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/teams.yaml,.nais/ghep.yaml
-          WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}
+          WORKLOAD_IMAGE: ${{ needs.build.outputs.image }}
 
   gnep:
     needs:
@@ -63,4 +63,4 @@ jobs:
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/gnep.yaml
-          WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}
+          WORKLOAD_IMAGE: ${{ needs.build.outputs.image }}
