@@ -23,9 +23,9 @@ func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, name str
 				return err
 			}
 			repository.ID = result
+		} else {
+			return err
 		}
-
-		return err
 	}
 
 	return db.AddTeamRepository(ctx, gensql.AddTeamRepositoryParams{
