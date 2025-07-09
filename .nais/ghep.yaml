@@ -54,6 +54,7 @@ spec:
         tier: db-custom-1-3840
         databases:
           - name: ghep
+            envVarPrefix: DB
   postgres:
     cluster:
       majorVersion: "17"

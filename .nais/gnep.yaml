@@ -83,7 +83,7 @@ spec:
         tier: db-custom-1-3840
         databases:
           - name: gnep
-            EnvVarPrefix: DB
+            envVarPrefix: DB
   postgres:
     cluster:
       majorVersion: "17"
