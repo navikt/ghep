@@ -24,7 +24,8 @@ func main() {
 
 	dbURL := os.Getenv("DB_URL")
 	if dbURL == "" {
-		dbURL = "postgres://postgres:postgres@localhost:5432/ghep"
+		log.Error("DB_URL environment variable is not set")
+		os.Exit(1)
 	}
 
 	db, err := sql.New(ctx, log.With("component", "db"), dbURL)
