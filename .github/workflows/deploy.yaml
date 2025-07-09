@@ -9,8 +9,8 @@ on:
       - "go.mod"
       - "go.sum"
       - "main.go"
-      - ".nais/nais.yaml"
-      - ".nais/ghep-4-nais.yaml"
+      - ".nais/ghep.yaml"
+      - ".nais/gnep.yaml"
       - ".github/workflows/deploy.yaml"
       - "Dockerfile"
 
