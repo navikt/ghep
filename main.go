@@ -22,7 +22,7 @@ func main() {
 
 	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
 
-	dbURL := os.Getenv("PGURL")
+	dbURL := os.Getenv("DB_URL")
 	if dbURL == "" {
 		dbURL = "postgres://postgres:postgres@localhost:5432/ghep"
 	}
