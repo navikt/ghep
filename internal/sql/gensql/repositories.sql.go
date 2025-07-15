@@ -10,18 +10,13 @@ import (
 )
 
 const createRepository = `-- name: CreateRepository :one
-INSERT INTO repositories (id, name) VALUES ($1, $2)
-ON CONFLICT (id) DO NOTHING
+INSERT INTO repositories (name) VALUES ($1)
+ON CONFLICT (name) DO NOTHING
 RETURNING id
 `
 
-type CreateRepositoryParams struct {
-	ID   int32
-	Name string
-}
-
-func (q *Queries) CreateRepository(ctx context.Context, arg CreateRepositoryParams) (int32, error) {
-	row := q.db.QueryRow(ctx, createRepository, arg.ID, arg.Name)
+func (q *Queries) CreateRepository(ctx context.Context, name string) (int32, error) {
+	row := q.db.QueryRow(ctx, createRepository, name)
 	var id int32
 	err := row.Scan(&id)
 	return id, err

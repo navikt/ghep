@@ -1,6 +1,6 @@
 -- name: CreateRepository :one
-INSERT INTO repositories (id, name) VALUES ($1, $2)
-ON CONFLICT (id) DO NOTHING
+INSERT INTO repositories (name) VALUES ($1)
+ON CONFLICT (name) DO NOTHING
 RETURNING id;
 
 -- name: GetRepository :one
