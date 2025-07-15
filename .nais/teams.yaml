@@ -37,6 +37,8 @@ data:
       commits: "#område-helse-dev"
       workflows: "#team-bømlo-workflow"
       security: "#område-helse-dev"
+      pulls: "team-bømlo-pull-requests"
+      issues: "team-bømlo-pull-requests"
     dv-a-team:
       commits: "#dv-a-team-commits"
       issues: "#dv-a-team-pull-requests"
