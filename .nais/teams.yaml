@@ -91,6 +91,7 @@ data:
       issues: "#dataseksjonen-github"
       pulls: "#dataseksjonen-github"
       workflows: "#dataseksjonen-github"
+      security: "#dataseksjonen-github"
     fager:
       issues: "#team-fager-bots"
       pulls: "#team-fager-bots"
