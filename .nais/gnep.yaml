@@ -77,13 +77,6 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
-  gcp:
-    sqlInstances:
-      - type: POSTGRES_17
-        tier: db-custom-1-3840
-        databases:
-          - name: gnep
-            envVarPrefix: DB
   postgres:
     cluster:
       majorVersion: "17"

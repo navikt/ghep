@@ -22,7 +22,7 @@ func main() {
 
 	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
 
-	dbURL := os.Getenv("DB_URL")
+	dbURL := os.Getenv("PGURL")
 	if dbURL == "" {
 		log.Error("DB_URL environment variable is not set")
 		os.Exit(1)
