@@ -36,7 +36,7 @@ func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, er
 		return nil, err
 	}
 
-	db, err := goose.OpenDBWithDriver("pgx", url)
+	db, err := goose.OpenDBWithDriver("pgx", fmt.Sprintf("%s?prepareThreshold=0", url))
 	if err != nil {
 		return nil, err
 	}
