@@ -64,6 +64,11 @@ type Team struct {
 	Config        Config        `yaml:"config"`
 }
 
+type githubError struct {
+	Message string `json:"message"`
+	Status  string `json:"status"`
+}
+
 func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
 	req, err := http.NewRequest("GET", teamURL+"/repos", nil)
 	if err != nil {
@@ -102,7 +107,12 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 		}
 
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("error fetching repos (%v): %v", resp.Status, body)
+			var ghErr githubError
+			if err := json.Unmarshal(body, &ghErr); err != nil {
+				return nil, fmt.Errorf("error fetching repos (%v): %s", resp.Status, body)
+			}
+
+			return nil, fmt.Errorf("error fetching repos (%v): %s (%s)", resp.Status, ghErr.Message, ghErr.Status)
 		}
 
 		var githubRepos []GithubRepo
@@ -167,6 +177,58 @@ func (c Client) ParseTeamConfig(ctx context.Context, teamsFilePath string) (map[
 	return teams, nil
 }
 
+func validateOrgExists(url, bearerToken string) error {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return fmt.Errorf("creating request: %v", err)
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearerToken))
+	req.Header.Add("Content-Type", "application/json")
+
+	httpClient := http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("making request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("%s", resp.Status)
+	}
+
+	return nil
+}
+
+func validateTeamExists(teamURL, bearerToken string) error {
+	req, err := http.NewRequest("GET", teamURL, nil)
+	if err != nil {
+		return fmt.Errorf("creating request: %v", err)
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearerToken))
+	req.Header.Add("Content-Type", "application/json")
+
+	httpClient := http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("making request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("%s", resp.Status)
+	}
+
+	return nil
+}
+
 func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, orgTeam string, subscribeToOrg bool) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
@@ -182,6 +244,10 @@ func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, orgTeam st
 		}
 
 		url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
+		if err := validateOrgExists(url, bearerToken); err != nil {
+			return fmt.Errorf("validating organization %s: %v", c.org, err)
+		}
+
 		teamURL := fmt.Sprintf("%s/teams/%s", url, team)
 		members, err := fetchMembers(teamURL, bearerToken)
 		if err != nil {
@@ -208,16 +274,19 @@ func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, orgTeam st
 
 	for _, team := range teams {
 		teamURL := fmt.Sprintf("%s/%s", url, team)
-		repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
-		if err != nil {
-			c.log.Error("Failed fetching repositories", "team", team, "error", err)
+		if err := validateTeamExists(teamURL, bearerToken); err != nil {
+			c.log.Error("Team does not exist", "team", team, "error", err)
 			continue
 		}
 
-		for _, name := range repositories {
-			if err := sql.AddRepositoryToTeam(ctx, c.db, team, name); err != nil {
-				c.log.Error("Failed to add repository to team", "team", team, "repository", name, "error", err)
-				continue
+		repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
+		if err != nil {
+			return fmt.Errorf("fetching repositories for %s: %v", team, err)
+		}
+
+		for _, repository := range repositories {
+			if err := sql.AddRepositoryToTeam(ctx, c.db, team, repository); err != nil {
+				return fmt.Errorf("adding repository %s to team %s: %v", repository, team, err)
 			}
 		}
 
@@ -228,8 +297,7 @@ func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, orgTeam st
 
 		for _, member := range members {
 			if err := sql.AddMemberToTeam(ctx, c.db, team, member.Login); err != nil {
-				c.log.Error("Failed to add member to team", "team", team, "member", member.Login, "error", err)
-				continue
+				return fmt.Errorf("adding member %s to team %s: %v", member.Login, team, err)
 			}
 		}
 	}
