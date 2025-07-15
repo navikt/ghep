@@ -36,8 +36,9 @@ CREATE TABLE team_repositories (
 );
 
 -- +goose Down
-DROP TABLE teams;
-DROP TABLE users;
+DROP TABLE team_repositories;
 DROP TABLE team_members;
-DROP TABLE emails;
 DROP TABLE repositories;
+DROP TABLE emails;
+DROP TABLE users;
+DROP TABLE teams;
