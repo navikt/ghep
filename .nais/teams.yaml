@@ -34,9 +34,9 @@ data:
           ignoreBots: false
           branches: ["main"]
     tbd:
-      commits: "#område-helse-dev"
+      commits: "#helseytelser-dev"
       workflows: "#team-bømlo-workflow"
-      security: "#område-helse-dev"
+      security: "#helseytelser-dev"
       pulls: "team-bømlo-pull-requests"
       issues: "team-bømlo-pull-requests"
     dv-a-team:
