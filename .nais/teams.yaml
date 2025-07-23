@@ -165,7 +165,7 @@ data:
     wendelboe:
       workflows: "#pen-dataprodukt-github"
       security: "#pen-dataprodukt-github"
-      commits: "#pen-dataprodukt-github"
+      commits: "#pen-dataprodukt-commits"
       issues: "#pen-dataprodukt-github"
       pulls: "#pen-dataprodukt-github"
     cv:
