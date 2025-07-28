@@ -38,11 +38,11 @@ func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, er
 
 	db, err := goose.OpenDBWithDriver("pgx", url)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to open database with driver: %w", err)
 	}
 
 	if err := goose.Up(db, "migrations"); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to run migrations: %w", err)
 	}
 
 	config, err := pgx.ParseConfig(url)
@@ -53,7 +53,7 @@ func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, er
 
 	conn, err := pgx.ConnectConfig(ctx, config)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	return gensql.New(conn), nil
