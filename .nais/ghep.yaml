@@ -59,7 +59,7 @@ spec:
       collation: nb_NO
   startup:
     path: /internal/health
-    initialDelay: 180
+    initialDelay: 90
     periodSeconds: 5
   readiness:
     path: /internal/health
