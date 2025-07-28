@@ -87,7 +87,14 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if (c.isAnExternalContributor(r.Context(), event.Sender) && c.ExternalContributorsChannel != "") || event.SecurityAdvisory != nil {
+	isAnExternalContributor, err := c.isAnExternalContributor(r.Context(), event.Sender)
+	if err != nil {
+		log.Error("error checking if user is an external contributor", "user", event.Sender.Login, "err", err.Error())
+		http.Error(w, fmt.Sprintf("Error checking if user is an external contributor: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	if (isAnExternalContributor && c.ExternalContributorsChannel != "") || event.SecurityAdvisory != nil {
 		team := github.Team{
 			Name: "external-contributors",
 			SlackChannels: github.SlackChannels{
@@ -139,6 +146,8 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 					log.Warn("no teams found for repository in database", "repository", event.GetRepositoryName())
 				} else {
 					log.Error("error listing teams by repository", "repository", event.GetRepositoryName(), "err", err.Error())
+					http.Error(w, fmt.Sprintf("Error listing teams by repository: %s", err.Error()), http.StatusInternalServerError)
+					return
 				}
 
 				fmt.Fprintf(w, "No team found for repository %s", event.GetRepositoryName())
@@ -161,20 +170,19 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c *Client) isAnExternalContributor(ctx context.Context, user github.User) bool {
+func (c *Client) isAnExternalContributor(ctx context.Context, user github.User) (bool, error) {
 	if user.IsBot() {
-		return false
+		return false, nil
 	}
 
 	_, err := c.db.GetUser(ctx, user.Login)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return false
+			return false, nil
 		}
 
-		c.log.Error("error checking if user exists in database", "user", user.Login, "err", err.Error())
-		return false
+		return false, err
 	}
 
-	return true
+	return true, nil
 }
