@@ -24,7 +24,7 @@ func main() {
 
 	dbURL := os.Getenv("PGURL")
 	if dbURL == "" {
-		log.Error("DB_URL environment variable is not set")
+		log.Error("PGURL environment variable is not set")
 		os.Exit(1)
 	}
 
