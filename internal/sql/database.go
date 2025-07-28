@@ -45,7 +45,13 @@ func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, er
 		return nil, err
 	}
 
-	conn, err := pgx.Connect(ctx, url)
+	config, err := pgx.ParseConfig(url)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse database URL: %w", err)
+	}
+	config.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
+
+	conn, err := pgx.ConnectConfig(ctx, config)
 	if err != nil {
 		return nil, err
 	}
