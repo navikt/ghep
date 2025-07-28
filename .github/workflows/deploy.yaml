@@ -61,6 +61,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v2
         env:
-          CLUSTER: prod-gcp
+          CLUSTER: dev-gcp
           RESOURCE: .nais/gnep.yaml
           WORKLOAD_IMAGE: ${{ needs.build.outputs.image }}
