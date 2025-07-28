@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gnep
+  name: gnep-teams
   namespace: the-g-team
   labels:
     team: the-g-team
@@ -58,7 +58,7 @@ spec:
     - name: API_BASE_PATH
       value: "/nais"
   filesFrom:
-    - configmap: gnep
+    - configmap: gnep-teams
       mountPath: /var/run/configmaps
   envFrom:
     - secret: gnep
