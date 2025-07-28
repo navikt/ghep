@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/navikt/ghep/internal/sql/gensql"
 	"github.com/pressly/goose/v3"
 
@@ -46,10 +46,10 @@ func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, er
 		return nil, fmt.Errorf("failed to run migrations: %w", err)
 	}
 
-	conn, err := pgx.Connect(ctx, url)
+	pool, err := pgxpool.New(ctx, url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	return gensql.New(conn), nil
+	return gensql.New(pool), nil
 }
