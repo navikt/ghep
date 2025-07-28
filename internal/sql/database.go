@@ -31,6 +31,7 @@ func (g *gooseLogger) Printf(format string, v ...any) {
 func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, error) {
 	goose.SetBaseFS(embedMigrations)
 	goose.SetLogger(&gooseLogger{log: log})
+	url = fmt.Sprintf("%s?statement_cache_mode=describe", url)
 
 	if err := goose.SetDialect("postgres"); err != nil {
 		return nil, err
