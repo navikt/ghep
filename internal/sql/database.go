@@ -45,14 +45,7 @@ func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, er
 		return nil, fmt.Errorf("failed to run migrations: %w", err)
 	}
 
-	config, err := pgx.ParseConfig(url)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse database URL: %w", err)
-	}
-
-	config.DefaultQueryExecMode = pgx.QueryExecModeCacheDescribe
-
-	conn, err := pgx.ConnectConfig(ctx, config)
+	conn, err := pgx.Connect(ctx, url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
