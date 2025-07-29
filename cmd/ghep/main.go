@@ -22,13 +22,7 @@ func main() {
 
 	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
 
-	dbURL := os.Getenv("PGURL")
-	if dbURL == "" {
-		log.Error("PGURL environment variable is not set")
-		os.Exit(1)
-	}
-
-	db, err := sql.New(ctx, log.With("component", "db"), dbURL)
+	db, err := sql.New(ctx, log.With("component", "db"), true)
 	if err != nil {
 		log.Error("creating SQL client", "err", err.Error())
 		os.Exit(1)
@@ -43,26 +37,6 @@ func main() {
 		os.Getenv("GITHUB_ORG"),
 	)
 
-	teamConfig, err := githubClient.ParseTeamConfig(ctx, os.Getenv("REPOS_CONFIG_FILE_PATH"))
-	if err != nil {
-		log.Error("parsing team config", "err", err.Error())
-		os.Exit(1)
-	}
-
-	log.Info("Gettings repositories from Github")
-	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
-	if err := githubClient.FetchTeams(
-		ctx,
-		os.Getenv("GITHUB_BLOCKLIST_REPOS"),
-		os.Getenv("GITHUB_ORG"),
-		subscribeToOrg,
-	); err != nil {
-		log.Error("fetching teams from Github", "err", err.Error())
-		os.Exit(1)
-	}
-
-	logTeams(ctx, log, db)
-
 	log.Info("Creating Slack client")
 	slackAPI, err := slack.New(
 		log.With("component", "slack"),
@@ -72,6 +46,13 @@ func main() {
 		log.Error("creating Slack client", "err", err.Error())
 		os.Exit(1)
 	}
+
+	teamConfig, err := github.ParseTeamConfig(os.Getenv("REPOS_CONFIG_FILE_PATH"))
+	if err != nil {
+		log.Error("parsing team config", "err", err.Error())
+		os.Exit(1)
+	}
+	logTeams(ctx, log, db)
 
 	log.Info("Ensuring Slack channels")
 	if err := slackAPI.EnsureChannels(teamConfig); err != nil {
@@ -98,6 +79,8 @@ func main() {
 	if err := githubClient.FetchOrgMembers(ctx); err != nil {
 		log.Error("fetching org members", "err", err.Error())
 	}
+
+	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
 
 	apiClient := api.New(
 		log.With("component", "api"),

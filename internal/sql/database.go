@@ -5,12 +5,12 @@ import (
 	"embed"
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/navikt/ghep/internal/sql/gensql"
 	"github.com/pressly/goose/v3"
-
-	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 //go:embed migrations/*.sql
@@ -28,27 +28,31 @@ func (g *gooseLogger) Printf(format string, v ...any) {
 	g.log.Info(fmt.Sprintf(format, v...))
 }
 
-func New(ctx context.Context, log *slog.Logger, url string) (*gensql.Queries, error) {
-	goose.SetBaseFS(embedMigrations)
-	goose.SetLogger(&gooseLogger{log: log})
+func New(ctx context.Context, log *slog.Logger, runMigrations bool) (*gensql.Queries, error) {
+	url := os.Getenv("PGURL")
+	if url == "" {
+		return nil, fmt.Errorf("PGURL environment variable is not set")
+	}
 	url = fmt.Sprintf("%s?default_query_exec_mode=cache_describe", url)
-
-	if err := goose.SetDialect("postgres"); err != nil {
-		return nil, err
-	}
-
-	db, err := goose.OpenDBWithDriver("pgx", url)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open database with driver: %w", err)
-	}
-
-	if err := goose.Up(db, "migrations"); err != nil {
-		return nil, fmt.Errorf("failed to run migrations: %w", err)
-	}
 
 	pool, err := pgxpool.New(ctx, url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
+	}
+
+	if runMigrations {
+		goose.SetBaseFS(embedMigrations)
+		goose.SetLogger(&gooseLogger{log: log})
+
+		if err := goose.SetDialect("postgres"); err != nil {
+			return nil, err
+		}
+
+		db := stdlib.OpenDBFromPool(pool)
+
+		if err := goose.Up(db, "migrations"); err != nil {
+			return nil, fmt.Errorf("failed to run migrations: %w", err)
+		}
 	}
 
 	return gensql.New(pool), nil

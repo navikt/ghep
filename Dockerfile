@@ -7,15 +7,16 @@ COPY go.mod go.mod
 RUN go mod download
 
 COPY internal internal
-COPY main.go main.go
+COPY cmd cmd
 
-RUN go vet
+RUN go vet ./...
 RUN go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 RUN go test ./...
 
-RUN CGO_ENABLED=0 go build -o /src/app
+RUN CGO_ENABLED=0 go build -o /src/ghep ./cmd/ghep
+RUN CGO_ENABLED=0 go build -o /src/fetch-teams ./cmd/fetch-teams
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
-COPY --from=builder /src/app /
-CMD ["/app"]
+COPY --from=builder /src/ghep /
+COPY --from=builder /src/fetch-teams /

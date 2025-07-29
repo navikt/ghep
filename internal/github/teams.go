@@ -142,7 +142,7 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 	return repos, nil
 }
 
-func parseTeamConfig(path string) (map[string]Team, error) {
+func ParseTeamConfig(path string) (map[string]Team, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -157,21 +157,6 @@ func parseTeamConfig(path string) (map[string]Team, error) {
 	for name, team := range teams {
 		team.Name = name
 		teams[name] = team
-	}
-
-	return teams, nil
-}
-
-func (c Client) ParseTeamConfig(ctx context.Context, teamsFilePath string) (map[string]Team, error) {
-	teams, err := parseTeamConfig(teamsFilePath)
-	if err != nil {
-		return nil, fmt.Errorf("parsing team config: %v", err)
-	}
-
-	for name := range teams {
-		if err := c.db.CreateTeam(ctx, name); err != nil {
-			return nil, fmt.Errorf("creating team %s: %v", name, err)
-		}
 	}
 
 	return teams, nil
@@ -300,6 +285,8 @@ func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, orgTeam st
 				return fmt.Errorf("adding member %s to team %s: %v", member.Login, team, err)
 			}
 		}
+
+		c.log.Info(fmt.Sprintf("Processed team %s with %d repositories and %d members", team, len(repositories), len(members)))
 	}
 
 	return nil
