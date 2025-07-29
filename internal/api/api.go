@@ -178,11 +178,11 @@ func (c *Client) isAnExternalContributor(ctx context.Context, user github.User) 
 	_, err := c.db.GetUser(ctx, user.Login)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return false, nil
+			return true, nil
 		}
 
 		return false, err
 	}
 
-	return true, nil
+	return false, nil
 }
