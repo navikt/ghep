@@ -64,10 +64,6 @@ spec:
       mountPath: /var/run/configmaps
   envFrom:
     - secret: gnep
-  observability:
-    logging:
-      destinations:
-        - id: loki
   accessPolicy:
     outbound:
       external:
