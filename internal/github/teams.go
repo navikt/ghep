@@ -46,6 +46,12 @@ type Security struct {
 	SeverityFilter string `yaml:"severityFilter"`
 }
 
+// IgnoreThreshold checks if the severity is below the configured threshold.
+// Example: if the severity filter is "high", it will ignore "medium" and "low" severities.
+func (s Security) IgnoreThreshold(severity string) bool {
+	return AsSeverityType(severity) < s.SeverityType()
+}
+
 func (s Security) SeverityType() SeverityType {
 	return AsSeverityType(s.SeverityFilter)
 }

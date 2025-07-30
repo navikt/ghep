@@ -15,6 +15,10 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 		return nil, nil
 	}
 
+	if team.Config.Security.IgnoreThreshold(event.SecurityAdvisory.Severity) {
+		return nil, nil
+	}
+
 	var timestamp string
 	if event.Alert.State != "open" {
 		var err error
