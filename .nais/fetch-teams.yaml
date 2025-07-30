@@ -12,7 +12,7 @@ spec:
     limits:
       memory: 128Mi
     requests:
-      cpu: 20m
+      cpu: 500m
       memory: 16Mi
   env:
     - name: REPOS_CONFIG_FILE_PATH
@@ -21,11 +21,15 @@ spec:
       value: navikt
     - name: GITHUB_BLOCKLIST_REPOS
       value: "vault-iac,aad-iac,nav-api-portal"
+    - name: PGURL
+      value: "postgresql://$(PGUSER):$(PGPASSWORD)@ghep-pooler.pg-the-g-team:5432/app"
   filesFrom:
     - configmap: ghep-teams
       mountPath: /var/run/configmaps
   envFrom:
     - secret: ghep
+  envFrom:
+    - secret: app-writer-user.ghep.credentials.postgresql.acid.zalan.do
   accessPolicy:
     outbound:
       external:

@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
-      - '.nais/teams.yaml'
-      - '.github/workflows/update_teams.yaml'
+      - ".nais/fetch-teams.yaml"
+      - ".nais/teams.yaml"
+      - ".github/workflows/update_teams.yaml"
 
 permissions:
   id-token: write
@@ -16,8 +17,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: nais/deploy/actions/deploy@v2
-      env:
-        CLUSTER: prod-gcp
-        RESOURCE: .nais/teams.yaml
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/teams.yaml,.nais/fetch-teams.yaml

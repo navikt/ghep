@@ -80,5 +80,5 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
-          RESOURCE: .nais/fetch-teams.yaml
+          RESOURCE: ./nais/netpol.yaml,.nais/fetch-teams.yaml
           WORKLOAD_IMAGE: ${{ needs.build.outputs.image }}
