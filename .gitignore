@@ -20,7 +20,7 @@
 go.work
 
 # editors
-.idea
+.idea/
 .tool-versions
 
 # Test environment
