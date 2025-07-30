@@ -37,27 +37,20 @@ func NewHandler(githubClient github.Client, redis *redis.Client, db *gensql.Quer
 	}
 }
 
-func shouldSilenceBots(team github.Team, event github.Event) bool {
-	if team.Config.ShouldSilenceDependabot() {
-		if event.Sender.IsBot() {
-			// We don't want to ignore pull request merges from Atlantis
-			if event.PullRequest != nil && event.PullRequest.Action == "closed" && strings.Contains(event.Sender.Login, "atlantis") {
-				return false
-			}
+func eventIsFromDependabot(event github.Event) bool {
+	if event.Sender.IsDependabot() {
+		return true
+	}
 
-			return true
-		}
+	// Teams use different bots for merging pull requests, so we need to check the author of the pull request
+	if event.PullRequest != nil && event.PullRequest.User.IsDependabot() {
+		return true
+	}
 
-		// Teams use different bots for merging pull requests, so we need to check the author of the pull request
-		if event.PullRequest != nil && event.PullRequest.User.IsBot() {
-			return true
-		}
-
-		if event.IsCommit() {
-			for _, commit := range event.Commits {
-				if commit.Author.IsBot() {
-					return true
-				}
+	if event.IsCommit() {
+		for _, commit := range event.Commits {
+			if commit.Author.IsDependabot() {
+				return true
 			}
 		}
 	}
@@ -66,7 +59,7 @@ func shouldSilenceBots(team github.Team, event github.Event) bool {
 }
 
 func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) error {
-	if shouldSilenceBots(team, event) {
+	if team.Config.ShouldSilenceDependabot() && eventIsFromDependabot(event) {
 		return nil
 	}
 

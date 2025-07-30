@@ -59,6 +59,10 @@ func (u User) IsBot() bool {
 	return u.Type == "Bot" || isBot(u.Login)
 }
 
+func (u User) IsDependabot() bool {
+	return u.Login == "dependabot[bot]"
+}
+
 func (u User) IsUser() bool {
 	return u.Type == "User"
 }
@@ -71,6 +75,10 @@ type Author struct {
 
 func (a Author) IsBot() bool {
 	return isBot(a.Username)
+}
+
+func (a Author) IsDependabot() bool {
+	return a.Username == "dependabot[bot]"
 }
 
 func isBot(username string) bool {
