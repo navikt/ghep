@@ -128,10 +128,10 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Team != nil {
 			team, err := c.db.GetTeam(r.Context(), event.Team.Name)
 			if err != nil {
-				if errors.Is(err, pgx.ErrNoRows) {
-					log.Warn("team not found in database", "team", event.Team.Name)
-				} else {
+				if !errors.Is(err, pgx.ErrNoRows) {
 					log.Error("error getting team from database", "team", event.Team.Name, "err", err.Error())
+					http.Error(w, fmt.Sprintf("Error getting team from database: %s", err.Error()), http.StatusInternalServerError)
+					return
 				}
 
 				fmt.Fprintf(w, "No team found for event %s", event.Team.Name)
