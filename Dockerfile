@@ -13,10 +13,10 @@ RUN go vet ./...
 RUN go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 RUN go test ./...
 
-RUN CGO_ENABLED=0 go build -o /src/ghep .
+RUN CGO_ENABLED=0 go build -o /src/ghep
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
 COPY --from=builder /src/ghep /
 
-CMD ["./ghep"]
+CMD ["/ghep"]
