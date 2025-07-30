@@ -53,7 +53,7 @@ func (c Client) GetUserByEmail(email string) (*User, error) {
 		return nil, fmt.Errorf("creating bearer token: %v", err)
 	}
 
-	query := map[string]interface{}{
+	query := map[string]any{
 		"query": userGraphQL,
 		"variables": map[string]string{
 			"org":   c.org,
