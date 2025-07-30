@@ -1,89 +1,59 @@
-package main
+package ghep
 
 import (
 	"context"
 	"fmt"
 	"log/slog"
 	"os"
-	"strconv"
 
 	"github.com/navikt/ghep/internal/api"
 	"github.com/navikt/ghep/internal/events"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/redis"
 	"github.com/navikt/ghep/internal/slack"
-	"github.com/navikt/ghep/internal/sql"
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func main() {
-	ctx := context.Background()
-	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-
+func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, subscribeToOrg bool) error {
 	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
-
-	db, err := sql.New(ctx, log.With("component", "db"), true)
-	if err != nil {
-		log.Error("creating SQL client", "err", err.Error())
-		os.Exit(1)
-	}
-
-	githubClient := github.New(
-		log.With("component", "github"),
-		db,
-		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
-		os.Getenv("GITHUB_APP_ID"),
-		os.Getenv("GITHUB_APP_PRIVATE_KEY"),
-		os.Getenv("GITHUB_ORG"),
-	)
 
 	log.Info("Creating Slack client")
 	slackAPI, err := slack.New(
-		log.With("component", "slack"),
+		log.With("client", "slack"),
 		os.Getenv("SLACK_TOKEN"),
 	)
 	if err != nil {
-		log.Error("creating Slack client", "err", err.Error())
-		os.Exit(1)
+		return fmt.Errorf("creating Slack client: %w", err)
 	}
 
-	teamConfig, err := github.ParseTeamConfig(os.Getenv("REPOS_CONFIG_FILE_PATH"))
-	if err != nil {
-		log.Error("parsing team config", "err", err.Error())
-		os.Exit(1)
-	}
 	logTeams(ctx, log, db)
 
 	log.Info("Ensuring Slack channels")
 	if err := slackAPI.EnsureChannels(teamConfig); err != nil {
-		log.Error("ensuring Slack channels", "err", err.Error())
-		os.Exit(1)
+		return fmt.Errorf("ensuring Slack channels: %w", err)
 	}
 
 	log.Info("Creating Redis client")
 	rdb, err := redis.New(
 		ctx,
-		log.With("component", "redis"),
+		log.With("client", "redis"),
 		os.Getenv("REDIS_URI_EVENTS"),
 		os.Getenv("REDIS_USERNAME_EVENTS"),
 		os.Getenv("REDIS_PASSWORD_EVENTS"),
 	)
 	if err != nil {
-		log.Error("creating Redis client", "err", err.Error())
-		os.Exit(1)
+		return fmt.Errorf("creating Redis client: %w", err)
 	}
 
 	log.Info("Creating event handler")
 	eventHandler := events.NewHandler(githubClient, rdb, db, slackAPI, teamConfig)
 
 	if err := githubClient.FetchOrgMembers(ctx); err != nil {
-		log.Error("fetching org members", "err", err.Error())
+		return fmt.Errorf("fetching org members: %w", err)
 	}
 
-	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
-
 	apiClient := api.New(
-		log.With("component", "api"),
+		log.With("client", "api"),
 		db,
 		eventHandler,
 		rdb,
@@ -99,9 +69,10 @@ func main() {
 
 	log.Info("Starting API server")
 	if err := apiClient.Run(os.Getenv("API_BASE_PATH"), addr); err != nil {
-		log.Error(err.Error())
-		os.Exit(1)
+		return fmt.Errorf("starting API server: %w", err)
 	}
+
+	return nil
 }
 
 func logTeams(ctx context.Context, log *slog.Logger, db *gensql.Queries) {

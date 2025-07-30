@@ -1,0 +1,47 @@
+package ghep
+
+import (
+	"context"
+	"log/slog"
+	"os"
+	"slices"
+
+	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/sql/gensql"
+)
+
+func FetchTeams(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, subscribeToOrg bool) {
+	log.Info("Fetching data from Github")
+
+	storedTeams, err := db.ListTeams(ctx)
+	if err != nil {
+		log.Error("listing teams from database", "err", err.Error())
+		os.Exit(1)
+	}
+
+	for name := range teamConfig {
+		if slices.Contains(storedTeams, name) {
+			continue
+		}
+
+		log.Info("Adding team to database", "team", name)
+		if err := db.CreateTeam(ctx, name); err != nil {
+			log.Error("creating team in database", "team", name, "err", err.Error())
+			os.Exit(1)
+		}
+	}
+
+	log.Info("Getting info about teams from Github")
+
+	if subscribeToOrg {
+		if err := githubClient.FetchOrgMembersAsTeam(ctx, os.Getenv("GITHUB_ORG")); err != nil {
+			log.Error("fetching org members from Github", "err", err.Error())
+			os.Exit(1)
+		}
+	} else {
+		if err := githubClient.FetchTeams(ctx, os.Getenv("GITHUB_BLOCKLIST_REPOS"), os.Getenv("GITHUB_ORG")); err != nil {
+			log.Error("fetching teams from Github", "err", err.Error())
+			os.Exit(1)
+		}
+	}
+}

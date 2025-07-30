@@ -214,42 +214,47 @@ func validateTeamExists(teamURL, bearerToken string) error {
 	return nil
 }
 
-func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, orgTeam string, subscribeToOrg bool) error {
+func (c Client) FetchOrgMembersAsTeam(ctx context.Context, org string) error {
+	bearerToken, err := c.createBearerToken()
+	if err != nil {
+		return fmt.Errorf("creating bearer token: %v", err)
+	}
+
+	team, err := c.db.GetTeam(ctx, org)
+	if err != nil {
+		return fmt.Errorf("getting team %s: %v", org, err)
+	}
+
+	url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
+	if err := validateOrgExists(url, bearerToken); err != nil {
+		return fmt.Errorf("validating organization %s: %v", c.org, err)
+	}
+
+	teamURL := fmt.Sprintf("%s/teams/%s", url, team)
+	members, err := fetchMembers(teamURL, bearerToken)
+	if err != nil {
+		return fmt.Errorf("fetching members for %s: %v", team, err)
+	}
+
+	for _, member := range members {
+		if err := sql.AddMemberToTeam(ctx, c.db, org, member.Login); err != nil {
+			c.log.Error("Failed to add member to team", "team", org, "member", member.Login, "error", err)
+			continue
+		}
+	}
+
+	c.log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "members", len(members))
+
+	return nil
+}
+
+func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, org string) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)
 	}
 
 	reposBlocklist := strings.Split(reposBlocklistString, ",")
-
-	if subscribeToOrg {
-		team, err := c.db.GetTeam(ctx, orgTeam)
-		if err != nil {
-			return fmt.Errorf("getting team %s: %v", orgTeam, err)
-		}
-
-		url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
-		if err := validateOrgExists(url, bearerToken); err != nil {
-			return fmt.Errorf("validating organization %s: %v", c.org, err)
-		}
-
-		teamURL := fmt.Sprintf("%s/teams/%s", url, team)
-		members, err := fetchMembers(teamURL, bearerToken)
-		if err != nil {
-			return fmt.Errorf("fetching members for %s: %v", team, err)
-		}
-
-		for _, member := range members {
-			if err := sql.AddMemberToTeam(ctx, c.db, orgTeam, member.Login); err != nil {
-				c.log.Error("Failed to add member to team", "team", orgTeam, "member", member.Login, "error", err)
-				continue
-			}
-		}
-
-		c.log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "members", len(members))
-		return nil
-	}
-
 	url := fmt.Sprintf("https://api.github.com/orgs/%s/teams", c.org)
 
 	teams, err := c.db.ListTeams(ctx)
