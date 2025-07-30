@@ -70,15 +70,3 @@ jobs:
           CLUSTER: prod-gcp
           RESOURCE: .nais/gnep.yaml
           WORKLOAD_IMAGE: ${{ needs.build.outputs.image }}
-
-  fetch-teams:
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: prod-gcp
-          RESOURCE: ./nais/netpol.yaml,.nais/fetch-teams.yaml
-          WORKLOAD_IMAGE: ${{ needs.build.outputs.image }}
