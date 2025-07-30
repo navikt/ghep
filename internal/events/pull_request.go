@@ -74,8 +74,10 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.TeamQu
 		TeamSlug:  team.Name,
 		UserLogin: event.Sender.Login,
 	}); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) && team.Config.ExternalContributorsChannel != "" {
-			channel = team.Config.ExternalContributorsChannel
+		if errors.Is(err, pgx.ErrNoRows) {
+			if team.Config.ExternalContributorsChannel != "" {
+				channel = team.Config.ExternalContributorsChannel
+			}
 		} else {
 			log.Error("error getting team member", "err", err.Error(), "user", event.Sender.Login)
 		}
