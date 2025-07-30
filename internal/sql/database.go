@@ -42,7 +42,7 @@ func New(ctx context.Context, log *slog.Logger, runMigrations bool) (*gensql.Que
 
 	if runMigrations {
 		goose.SetBaseFS(embedMigrations)
-		goose.SetLogger(&gooseLogger{log: log})
+		goose.SetLogger(&gooseLogger{log: log.With("component", "goose")})
 
 		if err := goose.SetDialect("postgres"); err != nil {
 			return nil, err

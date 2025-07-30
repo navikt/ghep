@@ -1,8 +1,6 @@
 package github
 
 import (
-	"log/slog"
-
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
@@ -11,7 +9,6 @@ type Userer interface {
 }
 
 type Client struct {
-	log               *slog.Logger
 	db                *gensql.Queries
 	appInstallationID string
 	appID             string
@@ -19,9 +16,8 @@ type Client struct {
 	org               string
 }
 
-func New(log *slog.Logger, db *gensql.Queries, appInstallationID, appID, appPrivateKey, githubOrg string) Client {
+func New(db *gensql.Queries, appInstallationID, appID, appPrivateKey, githubOrg string) Client {
 	return Client{
-		log:               log,
 		db:                db,
 		appInstallationID: appInstallationID,
 		appID:             appID,

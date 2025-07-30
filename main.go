@@ -29,7 +29,6 @@ func main() {
 	}
 
 	githubClient := github.New(
-		log.With("client", "github"),
 		db,
 		os.Getenv("GITHUB_APP_INSTALLATION_ID"),
 		os.Getenv("GITHUB_APP_ID"),

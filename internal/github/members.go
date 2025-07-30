@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -66,7 +67,7 @@ func fetchMembers(teamURL, bearerToken string) ([]*User, error) {
 	return teamMembers, nil
 }
 
-func (c *Client) FetchOrgMembers(ctx context.Context) error {
+func (c *Client) FetchOrgMembers(ctx context.Context, log *slog.Logger) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)
@@ -78,7 +79,7 @@ func (c *Client) FetchOrgMembers(ctx context.Context) error {
 		return fmt.Errorf("fetching org members: %v", err)
 	}
 
-	c.log.Info(fmt.Sprintf("Fetched %d members from org %s", len(members), c.org))
+	log.Info(fmt.Sprintf("Fetched %d members from org %s", len(members), c.org))
 	for _, member := range members {
 		if err := c.db.CreateUser(ctx, member.Login); err != nil {
 			return err

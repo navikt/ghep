@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"os"
 	"slices"
@@ -214,15 +215,15 @@ func validateTeamExists(teamURL, bearerToken string) error {
 	return nil
 }
 
-func (c Client) FetchOrgMembersAsTeam(ctx context.Context, org string) error {
+func (c Client) FetchOrgMembersAsTeam(ctx context.Context, log *slog.Logger) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)
 	}
 
-	team, err := c.db.GetTeam(ctx, org)
+	team, err := c.db.GetTeam(ctx, c.org)
 	if err != nil {
-		return fmt.Errorf("getting team %s: %v", org, err)
+		return fmt.Errorf("getting team %s: %v", c.org, err)
 	}
 
 	url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
@@ -237,18 +238,18 @@ func (c Client) FetchOrgMembersAsTeam(ctx context.Context, org string) error {
 	}
 
 	for _, member := range members {
-		if err := sql.AddMemberToTeam(ctx, c.db, org, member.Login); err != nil {
-			c.log.Error("Failed to add member to team", "team", org, "member", member.Login, "error", err)
+		if err := sql.AddMemberToTeam(ctx, c.db, c.org, member.Login); err != nil {
+			log.Error("Failed to add member to team", "team", c.org, "member", member.Login, "error", err)
 			continue
 		}
 	}
 
-	c.log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "members", len(members))
+	log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "members", len(members))
 
 	return nil
 }
 
-func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, org string) error {
+func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklistString string) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)
@@ -265,7 +266,7 @@ func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, org string
 	for _, team := range teams {
 		teamURL := fmt.Sprintf("%s/%s", url, team)
 		if err := validateTeamExists(teamURL, bearerToken); err != nil {
-			c.log.Error("Team does not exist", "team", team, "error", err)
+			log.Error("Team does not exist", "team", team, "error", err)
 			continue
 		}
 
@@ -291,7 +292,7 @@ func (c Client) FetchTeams(ctx context.Context, reposBlocklistString, org string
 			}
 		}
 
-		c.log.Info(fmt.Sprintf("Processed team %s with %d repositories and %d members", team, len(repositories), len(members)))
+		log.Info(fmt.Sprintf("Processed team %s with %d repositories and %d members", team, len(repositories), len(members)))
 	}
 
 	return nil

@@ -34,12 +34,12 @@ func FetchTeams(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamC
 	log.Info("Getting info about teams from Github")
 
 	if subscribeToOrg {
-		if err := githubClient.FetchOrgMembersAsTeam(ctx, os.Getenv("GITHUB_ORG")); err != nil {
+		if err := githubClient.FetchOrgMembersAsTeam(ctx, log); err != nil {
 			log.Error("fetching org members from Github", "err", err.Error())
 			os.Exit(1)
 		}
 	} else {
-		if err := githubClient.FetchTeams(ctx, os.Getenv("GITHUB_BLOCKLIST_REPOS"), os.Getenv("GITHUB_ORG")); err != nil {
+		if err := githubClient.FetchTeams(ctx, log, os.Getenv("GITHUB_BLOCKLIST_REPOS")); err != nil {
 			log.Error("fetching teams from Github", "err", err.Error())
 			os.Exit(1)
 		}
