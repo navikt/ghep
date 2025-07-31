@@ -14,6 +14,11 @@ data:
       issues: "#nada-issues"
       pulls: "#nada-pull-requests"
       workflows: "#nada-ci"
+    tilgangsmaskin:
+      issues: "#tilgangsmaskinen-alerts"
+      pulls: "#tilgangsmaskinen-alerts"
+      workflows: "#tilgangsmaskinen-alerts"
+      security: "#tilgangsmaskinen-alerts"
     aap:
       commits: "#aap-github-workflows"
       releases: "#aap-github-workflows"
