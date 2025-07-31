@@ -150,6 +150,8 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 		return event.Alert.URL
 	} else if event.Workflow != nil && event.Action == "completed" && event.Workflow.Conclusion == "failure" {
 		return strconv.Itoa(event.Workflow.ID)
+	} else if event.Release != nil && event.Action == "published" {
+		return strconv.Itoa(event.Release.ID)
 	}
 
 	return ""

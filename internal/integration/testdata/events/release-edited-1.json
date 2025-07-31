@@ -40,7 +40,7 @@
     ],
     "tarball_url": "https://api.github.com/repos/navikt/ghep/tarball/v0.0.1",
     "zipball_url": "https://api.github.com/repos/navikt/ghep/zipball/v0.0.1",
-    "body": "## What's Changed\r\n* legger til tbd by @davidsteinsland in https://github.com/navikt/ghep/pull/3\r\n* Legg til flex by @heyvard in https://github.com/navikt/ghep/pull/2\r\n**Full Changelog**: https://github.com/navikt/ghep/commits/v0.0.1",
+    "body": "## What's Changed\r\n* legger til nytt team tbd by @davidsteinsland in https://github.com/navikt/ghep/pull/3\r\n* Legg til flex by @heyvard in https://github.com/navikt/ghep/pull/2\r\n**Full Changelog**: https://github.com/navikt/ghep/commits/v0.0.1",
     "mentions_count": 23
   },
   "repository": {

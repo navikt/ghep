@@ -129,7 +129,7 @@ func TestHandleEvent(t *testing.T) {
 					timestamp = "1234567890"
 				}
 
-				message = slack.CreateReleaseMessage(slackChannel, timestamp, event)
+				message = slack.CreateReleaseMessage(slackChannel, event)
 			case github.TypeCodeScanningAlert:
 				message = slack.CreateCodeScanningAlertMessage(slackChannel, event)
 			case github.TypeDependabotAlert:

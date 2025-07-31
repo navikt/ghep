@@ -32,8 +32,15 @@ func (h *Handler) handleWorkflowEvent(ctx context.Context, log *slog.Logger, tea
 				}
 
 				if !errors.Is(err, redis.Nil) {
-					if err := h.slack.PostUpdatedCommitMessage(log, msg, event, commitTimestamp); err != nil {
+					updatedMessage, err := slack.CreateUpdatedCommitMessage([]byte(msg), event)
+					if err != nil {
 						log.Error("error updating message", "err", err.Error(), "timestamp", commitTimestamp)
+					}
+					updatedMessage.Timestamp = commitTimestamp
+
+					log.Info("Posting update of commit", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
+					if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
+						log.Error("error posting updated message", "err", err.Error())
 					}
 				}
 			}

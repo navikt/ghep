@@ -55,8 +55,8 @@ type Message struct {
 	Channel         string       `json:"channel"`
 	Text            string       `json:"text"`
 	Attachments     []Attachment `json:"attachments,omitempty"`
-	ThreadTimestamp string       `json:"thread_ts,omitempty"`
-	Timestamp       string       `json:"ts,omitempty"`
+	ThreadTimestamp string       `json:"thread_ts,omitempty"` // ThreadTimestamp is used to reply to a thread in Slack.
+	Timestamp       string       `json:"ts,omitempty"`        // Timestamp is used to update a message in Slack.
 	UnfurlLinks     bool         `json:"unfurl_links"`
 	UnfurlMedia     bool         `json:"unfurl_media"`
 }

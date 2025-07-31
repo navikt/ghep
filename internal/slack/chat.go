@@ -19,16 +19,21 @@ func (c Client) PostMessage(payload []byte) (*MessageResponse, error) {
 	return &resp, nil
 }
 
-func (c Client) PostUpdatedMessage(payload []byte) (string, error) {
+func (c Client) PostUpdatedMessage(message Message) error {
+	payload, err := json.Marshal(message)
+	if err != nil {
+		return fmt.Errorf("error marshalling message: %v", err)
+	}
+
 	body, err := c.postRequest("chat.update", payload)
 	if err != nil {
-		return "", fmt.Errorf("error updating message in Slack: %v", err)
+		return fmt.Errorf("error updating message in Slack: %v", err)
 	}
 
 	var resp MessageResponse
 	if err := json.Unmarshal([]byte(body), &resp); err != nil {
-		return "", err
+		return err
 	}
 
-	return resp.Timestamp, nil
+	return nil
 }

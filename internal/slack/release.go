@@ -6,7 +6,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateReleaseMessage(channel, timestamp string, event github.Event) *Message {
+func CreateReleaseMessage(channel string, event github.Event) *Message {
 	releaseType := "release"
 	if event.Release.Draft {
 		releaseType = "draft release"
@@ -17,9 +17,8 @@ func CreateReleaseMessage(channel, timestamp string, event github.Event) *Messag
 	text := fmt.Sprintf("%s created a <%s|%s> (`%s`)", event.Sender.ToSlack(), event.Release.URL, releaseType, event.Release.Tag)
 
 	return &Message{
-		Channel:   channel,
-		Text:      text,
-		Timestamp: timestamp,
+		Channel: channel,
+		Text:    text,
 		Attachments: []Attachment{
 			{
 				Text:       event.Release.Body,

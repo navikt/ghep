@@ -153,30 +153,19 @@ func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, g
 	}, nil
 }
 
-func (c Client) PostUpdatedCommitMessage(log *slog.Logger, msg string, event github.Event, timestamp string) error {
+// CreateUpdatedCommitMessage sets the footer of the commit message to the workflow URL and name if it is not already set.
+func CreateUpdatedCommitMessage(payload []byte, event github.Event) (*Message, error) {
 	var message Message
-	if err := json.Unmarshal([]byte(msg), &message); err != nil {
-		return fmt.Errorf("unmarshalling message: %w", err)
+	if err := json.Unmarshal(payload, &message); err != nil {
+		return nil, fmt.Errorf("unmarshalling message: %w", err)
 	}
 
 	if message.Attachments[0].Footer != "" {
-		return nil
+		return nil, nil
 	}
 
-	message.Timestamp = timestamp
 	message.Attachments[0].FooterIcon = neutralGithubIcon
 	message.Attachments[0].Footer = fmt.Sprintf("<%s|%s>", event.Workflow.URL, event.Workflow.Name)
 
-	marshalled, err := json.Marshal(message)
-	if err != nil {
-		return err
-	}
-
-	log.Info("Posting update of commit", "channel", message.Channel, "timestamp", timestamp)
-	_, err = c.postRequest("chat.update", marshalled)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return &message, nil
 }

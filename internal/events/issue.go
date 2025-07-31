@@ -40,14 +40,9 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 
 		updatedMessage := slack.CreateUpdatedIssueMessage(oldMessage, event)
 		updatedMessage.Timestamp = timestamp
-		marshalled, err := json.Marshal(updatedMessage)
-		if err != nil {
-			log.Error("error marshalling message", "err", err.Error())
-		}
 
-		log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", timestamp)
-		_, err = h.slack.PostUpdatedMessage(marshalled)
-		if err != nil {
+		log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
+		if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
 			log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
 		}
 
