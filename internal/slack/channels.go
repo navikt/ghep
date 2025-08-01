@@ -12,7 +12,7 @@ import (
 )
 
 func (c Client) EnsureChannels(teams map[string]github.Team) error {
-	joinedChannels, err := c.getJoinedChannels()
+	joinedChannels, err := c.listJoinedChannels()
 	if err != nil {
 		return err
 	}
@@ -44,12 +44,8 @@ func (c Client) findChannelIDByName(channel string, joinedChannels map[string]st
 	return channel
 }
 
-func (c Client) getJoinedChannels() (map[string]string, error) {
-	return c.getAndParseChannels("users.conversations")
-}
-
-func (c Client) getAndParseChannels(apiMethod string) (map[string]string, error) {
-	response, err := c.listChannels(apiMethod)
+func (c Client) listJoinedChannels() (map[string]string, error) {
+	response, err := c.listChannels("users.conversations")
 	if err != nil {
 		return nil, fmt.Errorf("listing all channels: %w", err)
 	}
@@ -57,6 +53,20 @@ func (c Client) getAndParseChannels(apiMethod string) (map[string]string, error)
 	channels := make(map[string]string, len(response))
 	for index := range response {
 		channels[response[index].Name] = response[index].ID
+	}
+
+	return channels, nil
+}
+
+func (c Client) ListConversations() (map[string]string, error) {
+	response, err := c.listChannels("users.conversations")
+	if err != nil {
+		return nil, fmt.Errorf("listing all channels: %w", err)
+	}
+
+	channels := make(map[string]string, len(response))
+	for index := range response {
+		channels[response[index].ID] = response[index].Name
 	}
 
 	return channels, nil
