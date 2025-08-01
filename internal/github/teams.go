@@ -243,7 +243,7 @@ func (c Client) FetchOrgMembersAsTeam(ctx context.Context, log *slog.Logger) err
 		return fmt.Errorf("validating organization %s: %v", c.org, err)
 	}
 
-	teamURL := fmt.Sprintf("%s/teams/%s", url, "the-g-team")
+	teamURL := fmt.Sprintf("%s/teams/%s", url, c.org)
 	members, err := fetchMembers(teamURL, bearerToken)
 	if err != nil {
 		return fmt.Errorf("fetching members for %s: %v", c.org, err)
