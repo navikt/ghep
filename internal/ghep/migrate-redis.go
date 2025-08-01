@@ -121,13 +121,13 @@ func MigrateRedis(ctx context.Context, log *slog.Logger, db *gensql.Queries, tea
 		}
 
 		if err := db.CreateSlackMessage(ctx, gensql.CreateSlackMessageParams{
-			TeamSlug: "",
+			TeamSlug: team,
 			EventID:  eventID,
 			ThreadTs: timestamp,
 			Channel:  message.Channel,
 			Payload:  payload,
 		}); err != nil {
-			log.Error("inserting message into PostgreSQL", "key", eventID, "err", err.Error())
+			log.Error("inserting message into PostgreSQL", "key", eventID, "err", err.Error(), "team", team, "channel", channel, "timestamp", timestamp)
 			continue
 		}
 
