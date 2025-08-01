@@ -152,6 +152,8 @@ func (r Rule) SeverityType() SeverityType {
 
 func AsSeverityType(level string) SeverityType {
 	switch strings.ToLower(level) {
+	case "low":
+		return SeverityLow
 	case "medium", "moderate":
 		return SeverityMedium
 	case "high":
@@ -159,7 +161,7 @@ func AsSeverityType(level string) SeverityType {
 	case "critical":
 		return SeverityCritical
 	default:
-		return SeverityCritical
+		return SeverityLow
 	}
 }
 

@@ -15,35 +15,33 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 		return nil, nil
 	}
 
-	if team.Config.Security.IgnoreThreshold(event.SecurityAdvisory.Severity) {
+	if team.Config.Security.IgnoreThreshold(event.Alert.SecurityAdvisory.Severity) {
 		return nil, nil
 	}
 
 	var timestamp string
-	if event.Alert.State != "open" {
+	if event.Action != "created" {
 		var err error
 		timestamp, err = h.redis.Get(ctx, event.Alert.URL).Result()
-		if err != nil {
-			if errors.Is(err, redis.Nil) {
-				return nil, nil
-			}
-
+		if err != nil && !errors.Is(err, redis.Nil) {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", event.Alert.URL)
 
 			return nil, nil
 		}
 
-		reaction := slack.ReactionDefault
-		switch event.Alert.State {
-		case "dismissed", "auto_dismissed":
-			reaction = slack.ReactionCancelled
-		case "fixed":
-			reaction = slack.ReactionSuccess
-		}
+		if timestamp != "" {
+			reaction := slack.ReactionDefault
+			switch event.Action {
+			case "dismissed", "auto_dismissed":
+				reaction = slack.ReactionCancelled
+			case "fixed":
+				reaction = slack.ReactionSuccess
+			}
 
-		log.Info("Posting reaction to Dependabot alert", "action", event.Action, "alert_state", event.Alert.State, "timestamp", timestamp, "reaction", reaction)
-		if err := h.slack.PostReaction(team.SlackChannels.Workflows, timestamp, reaction); err != nil {
-			log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Security, "timestamp", timestamp, "reaction", reaction)
+			log.Info("Posting reaction to Dependabot alert", "action", event.Action, "alert_state", event.Alert.State, "timestamp", timestamp, "reaction", reaction)
+			if err := h.slack.PostReaction(team.SlackChannels.Workflows, timestamp, reaction); err != nil {
+				log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Security, "timestamp", timestamp, "reaction", reaction)
+			}
 		}
 	}
 
