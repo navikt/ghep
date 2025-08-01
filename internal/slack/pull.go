@@ -20,22 +20,17 @@ func CreatePullRequestMessage(channel, threadTimestamp string, event github.Even
 		color = ColorClosed
 	}
 
-	var text string
 	eventType := "Pull request"
 	if event.PullRequest.Draft {
 		eventType = "Draft pull request"
 		color = ColorDraft
 	}
 
-	text = fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
-	if event.Action == "closed" {
-		text = fmt.Sprintf("%s <%s|#%d> %s as %s in `%s` by %s", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.PullRequest.State, event.Repository.ToSlack(), event.Sender.ToSlack())
-	}
-
+	text := fmt.Sprintf("%s <%s|#%d> %s in `%s` by %s", eventType, event.PullRequest.URL, event.PullRequest.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
 	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.PullRequest.URL, event.PullRequest.Number, html.EscapeString(event.PullRequest.Title))
 
 	if event.Action == "opened" {
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.PullRequest.URL, event.PullRequest.Number, html.EscapeString(event.PullRequest.Title), event.PullRequest.Body)
+		attachmentText = fmt.Sprintf("%s\n%s", attachmentText, event.PullRequest.Body)
 	}
 
 	if len(event.PullRequest.RequestedReviewers) > 0 {
