@@ -119,10 +119,13 @@ func MigrateRedis(ctx context.Context, log *slog.Logger, db *gensql.Queries, tea
 				log.Info("Skipping message in nais-* channel", "channel", channel, "org", org)
 				continue
 			} else {
-				team := findTeamByChannel(channel, teams)
+				team = findTeamByChannel(channel, teams)
 				if team == "" {
-					log.Error("team not found for channel", "channel", channel, "key", eventID)
-					continue
+					team := findTeamByChannel(message.Channel, teams)
+					if team == "" {
+						log.Error("team not found for channel", "channel", channel, "key", eventID)
+						continue
+					}
 				}
 			}
 		}
