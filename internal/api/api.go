@@ -80,7 +80,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		fmt.Fprint(w, "Member event handled for org")
+		fmt.Fprint(w, "Member event handled for org\n")
 		return
 	}
 
@@ -109,7 +109,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if event.SecurityAdvisory != nil {
-			fmt.Fprintf(w, "Security advisory event handled for org")
+			fmt.Fprintf(w, "Security advisory event handled for org\n")
 			return
 		}
 
@@ -131,7 +131,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				fmt.Fprintf(w, "No team found for event %s", event.Team.Name)
+				fmt.Fprintf(w, "No team found for event %s\n", event.Team.Name)
 				return
 			}
 
@@ -147,7 +147,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				fmt.Fprintf(w, "No team found for repository %s", event.GetRepositoryName())
+				fmt.Fprintf(w, "No team found for repository %s\n", event.GetRepositoryName())
 				return
 			}
 
@@ -163,7 +163,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Fprintf(w, "Event handled for team %s", name)
+		fmt.Fprintf(w, "Event handled for team %s\n", name)
 	}
 }
 
