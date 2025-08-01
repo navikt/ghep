@@ -163,7 +163,7 @@ func (h *Handler) storeEvent(ctx context.Context, log *slog.Logger, event github
 
 func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
 	eventType := event.GetEventType()
-	log = log.With("event_type", eventType)
+	log = log.With("event_type", eventType.String())
 
 	switch eventType {
 	case github.TypeCommit:
