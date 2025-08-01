@@ -87,14 +87,14 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isAnExternalContributor, err := c.isAnExternalContributor(r.Context(), event.Sender)
+	isAnExternalContributorEvent, err := c.isAnExternalContributorEvent(r.Context(), event)
 	if err != nil {
 		log.Error("error checking if user is an external contributor", "user", event.Sender.Login, "err", err.Error())
 		http.Error(w, fmt.Sprintf("Error checking if user is an external contributor: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	if (isAnExternalContributor && c.ExternalContributorsChannel != "") || event.SecurityAdvisory != nil {
+	if isAnExternalContributorEvent {
 		team := github.Team{
 			Name: "external-contributors",
 			SlackChannels: github.SlackChannels{
@@ -170,19 +170,32 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c *Client) isAnExternalContributor(ctx context.Context, user github.User) (bool, error) {
-	if user.IsBot() {
+func (c *Client) isAnExternalContributorEvent(ctx context.Context, event github.Event) (bool, error) {
+	// If the external contributors channel is not set, we do not handle external contributors as a special case.
+	if c.ExternalContributorsChannel == "" {
 		return false, nil
 	}
 
-	_, err := c.db.GetUser(ctx, user.Login)
-	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return true, nil
-		}
-
-		return false, err
+	// If the event is an alert, we do not handled it as an external contributor event.
+	if event.Alert != nil {
+		return false, nil
 	}
 
-	return false, nil
+	// If the sender is a bot, we do not handle it as an external contributor event.
+	if event.Sender.IsBot() {
+		return false, nil
+	}
+
+	// Security advisories not "under" an alert are global for the organization, so they are external.
+	if event.SecurityAdvisory != nil {
+		return true, nil
+	}
+
+	// Check if the user is in the database, if not, we consider them an external contributor.
+	_, err := c.db.GetUser(ctx, event.Sender.Login)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return true, nil
+	}
+
+	return false, err
 }
