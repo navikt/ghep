@@ -121,7 +121,7 @@ func MigrateRedis(ctx context.Context, log *slog.Logger, db *gensql.Queries, tea
 			} else {
 				team = findTeamByChannel(channel, teams)
 				if team == "" {
-					team := findTeamByChannel(message.Channel, teams)
+					team = findTeamByChannel(message.Channel, teams)
 					if team == "" {
 						log.Warn("team not found for channel", "channel", channel, "key", eventID)
 						continue
