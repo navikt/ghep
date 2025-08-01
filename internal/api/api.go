@@ -46,7 +46,7 @@ func (c *Client) Run(base, addr string) error {
 func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	deliveryID := r.Header.Get("X-GitHub-Delivery")
 	eventType := r.Header.Get("X-GitHub-Event")
-	log := c.log.With("delivery_id", deliveryID, "event_type", eventType)
+	log := c.log.With("delivery_id", deliveryID, "header_event_type", eventType)
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
