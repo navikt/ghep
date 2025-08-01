@@ -31,7 +31,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 	}
 
 	if message.ThreadTs != "" {
-		timestamp := message.ThreadTs
+		timestamp = message.ThreadTs
 
 		if message.Payload != nil && event.Action != "opened" {
 			var oldMessage slack.Message
