@@ -124,11 +124,6 @@ func TestHandleEvent(t *testing.T) {
 
 				message = slack.CreateWorkflowMessage(slackChannel, event)
 			case github.TypeRelease:
-				var timestamp string
-				if event.Action == "edited" {
-					timestamp = "1234567890"
-				}
-
 				message = slack.CreateReleaseMessage(slackChannel, event)
 			case github.TypeCodeScanningAlert:
 				message = slack.CreateCodeScanningAlertMessage(slackChannel, event)

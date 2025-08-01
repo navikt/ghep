@@ -1,0 +1,14 @@
+{
+  "channel": "#test",
+  "text": "<https://github.com/apps/github-actions|github-actions[bot]> created a <https://github.com/nais/cloudsql-migrator/releases/tag/2025-07-31-205819-85ff09e|release> (`2025-07-31-205819-85ff09e`)",
+  "attachments": [
+    {
+      "text": "## What's Changed\n* build(deps): bump github.com/GoogleCloudPlatform/k8s-config-connector from 1.132.1 to 1.133.0 by @dependabot[bot] in https://github.com/nais/cloudsql-migrator/pull/198\n* build(deps): bump google.golang.org/api from 0.243.0 to 0.244.0 by @dependabot[bot] in https://github.com/nais/cloudsql-migrator/pull/199\n\n\n**Full Changelog**: https://github.com/nais/cloudsql-migrator/compare/2025-07-24-205823-fd73124...2025-07-31-205819-85ff09e",
+      "color": "#000000",
+      "footer": "<https://github.com/nais/cloudsql-migrator|nais/cloudsql-migrator>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}
