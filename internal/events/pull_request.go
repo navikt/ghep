@@ -33,7 +33,7 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 	if message.ThreadTs != "" {
 		timestamp = message.ThreadTs
 
-		if message.Payload != nil && event.Action != "opened" {
+		if message.Payload != nil && event.Action != "edited" {
 			var oldMessage slack.Message
 			if err := json.Unmarshal(message.Payload, &oldMessage); err != nil {
 				log.Error("error unmarshalling message", "err", err.Error())
