@@ -39,13 +39,13 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 				log.Error("error unmarshalling message", "err", err.Error())
 			}
 
-		updatedMessage := slack.CreateUpdatedIssueMessage(oldMessage, event)
-		updatedMessage.Timestamp = timestamp
+			updatedMessage := slack.CreateUpdatedIssueMessage(oldMessage, event)
+			updatedMessage.Timestamp = timestamp
 
-		log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
-		if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
-			log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
-		}
+			log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
+			if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
+				log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
+			}
 
 			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
 				return nil, nil
