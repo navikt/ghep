@@ -8,26 +8,19 @@ import (
 )
 
 func (c *Client) healthGetHandler(w http.ResponseWriter, r *http.Request) {
-	pong, err := c.redis.Ping(r.Context()).Result()
+	teams, err := c.db.ListTeams(r.Context())
 	if err != nil {
-		c.log.Error("error pinging redis", "error", err)
-		http.Error(w, fmt.Sprintf("error pinging redis: %s", err.Error()), http.StatusInternalServerError)
+		c.log.Error("error listing teams from database", "error", err)
+		http.Error(w, fmt.Sprintf("error listing teams from database: %s", err.Error()), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	var teams []string
-	for name := range c.teamConfig {
-		teams = append(teams, name)
-	}
-
 	payload := struct {
 		Health string `json:"health"`
-		Redis  string `json:"redis"`
 		Teams  string `json:"teams"`
 	}{
 		Health: "ok",
-		Redis:  pong,
 		Teams:  strings.Join(teams, ", "),
 	}
 

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 
 	"github.com/navikt/ghep/internal/api"
 	"github.com/navikt/ghep/internal/events"
 	"github.com/navikt/ghep/internal/github"
-	"github.com/navikt/ghep/internal/redis"
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
@@ -26,27 +26,20 @@ func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig m
 		return fmt.Errorf("creating Slack client: %w", err)
 	}
 
-	logTeams(ctx, log, db)
+	teams := make([]string, 0, len(teamConfig))
+	for name := range teamConfig {
+		teams = append(teams, name)
+	}
+
+	log.Info(fmt.Sprintf("Teams using Ghep: %s", strings.Join(teams, ", ")))
 
 	log.Info("Ensuring Slack channels")
 	if err := slackAPI.EnsureChannels(teamConfig); err != nil {
 		return fmt.Errorf("ensuring Slack channels: %w", err)
 	}
 
-	log.Info("Creating Redis client")
-	rdb, err := redis.New(
-		ctx,
-		log.With("client", "redis"),
-		os.Getenv("REDIS_URI_EVENTS"),
-		os.Getenv("REDIS_USERNAME_EVENTS"),
-		os.Getenv("REDIS_PASSWORD_EVENTS"),
-	)
-	if err != nil {
-		return fmt.Errorf("creating Redis client: %w", err)
-	}
-
 	log.Info("Creating event handler")
-	eventHandler := events.NewHandler(githubClient, rdb, db, slackAPI, teamConfig)
+	eventHandler := events.NewHandler(githubClient, db, slackAPI, teamConfig)
 
 	if err := githubClient.FetchOrgMembers(ctx, log); err != nil {
 		return fmt.Errorf("fetching org members: %w", err)
@@ -56,7 +49,6 @@ func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig m
 		log.With("client", "api"),
 		db,
 		eventHandler,
-		rdb,
 		teamConfig,
 		os.Getenv("EXTERNAL_CONTRIBUTORS_CHANNEL"),
 		subscribeToOrg,
@@ -73,14 +65,4 @@ func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig m
 	}
 
 	return nil
-}
-
-func logTeams(ctx context.Context, log *slog.Logger, db *gensql.Queries) {
-	teams, err := db.ListTeams(ctx)
-	if err != nil {
-		log.Error("listing teams from database", "err", err.Error())
-		return
-	}
-
-	log.Info(fmt.Sprintf("Teams using Ghep: %v", teams))
 }

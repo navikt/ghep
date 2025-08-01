@@ -14,6 +14,14 @@ type Repository struct {
 	Name string
 }
 
+type SlackMessage struct {
+	TeamSlug string
+	EventID  string
+	ThreadTs string
+	Channel  string
+	Payload  []byte
+}
+
 type Team struct {
 	Slug string
 }

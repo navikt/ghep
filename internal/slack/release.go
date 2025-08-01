@@ -18,7 +18,7 @@ func CreateReleaseMessage(channel string, event github.Event) *Message {
 
 	return &Message{
 		Channel: channel,
-		Text:    text,
+		Text:    text, // TODO: Må bruke chat.update for å oppdatere meldingen
 		Attachments: []Attachment{
 			{
 				Text:       event.Release.Body,

@@ -13,13 +13,16 @@ import (
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/navikt/ghep/internal/sql"
 	"github.com/navikt/ghep/internal/sql/gensql"
-	"github.com/redis/go-redis/v9"
 )
 
 func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
+	var timestamp string
 	id := strconv.Itoa(event.PullRequest.ID)
-	timestamp, err := h.redis.Get(ctx, id).Result()
-	if err != nil && !errors.Is(err, redis.Nil) {
+	message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
+		TeamSlug: team.Name,
+		EventID:  id,
+	})
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
 	}
 
@@ -27,27 +30,26 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 		return nil, nil
 	}
 
-	messageBytes, err := h.redis.Get(ctx, timestamp).Result()
-	if err != nil && !errors.Is(err, redis.Nil) {
-		log.Error("error getting message", "err", err.Error(), "timestamp", timestamp)
-	}
+	if message.ThreadTs != "" {
+		timestamp := message.ThreadTs
 
-	if !errors.Is(err, redis.Nil) && event.Action != "opened" {
-		var oldMessage slack.Message
-		if err := json.Unmarshal([]byte(messageBytes), &oldMessage); err != nil {
-			log.Error("error unmarshalling message", "err", err.Error())
-		}
+		if message.Payload != nil && event.Action != "opened" {
+			var oldMessage slack.Message
+			if err := json.Unmarshal(message.Payload, &oldMessage); err != nil {
+				log.Error("error unmarshalling message", "err", err.Error())
+			}
 
-		updatedMessage := slack.CreateUpdatedPullRequestMessage(oldMessage, event)
-		updatedMessage.Timestamp = timestamp
+			updatedMessage := slack.CreateUpdatedPullRequestMessage(oldMessage, event)
+			updatedMessage.Timestamp = timestamp
 
-		log.Info("Posting update of pull request", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
-		if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
-			log.Error("error posting updated message", "err", err.Error())
-		}
+			log.Info("Posting update of pull request", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
+			if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
+				log.Error("error posting updated message", "err", err.Error())
+			}
 
-		if slices.Contains([]string{"reopened", "edited"}, event.Action) {
-			return nil, nil
+			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
+				return nil, nil
+			}
 		}
 	}
 

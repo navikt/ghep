@@ -28,6 +28,8 @@ type DependabotConfig string
 
 const (
 	DependabotConfigAlways DependabotConfig = "always"
+
+	TeamNameExternalContributors = "external-contributors"
 )
 
 type Config struct {
@@ -63,6 +65,10 @@ type SlackChannels struct {
 	Releases     string `yaml:"releases"`
 	Security     string `yaml:"security"`
 	Workflows    string `yaml:"workflows"`
+}
+
+func (t Team) IsExternalContributor() bool {
+	return t.Name == "external-contributors"
 }
 
 type Team struct {
@@ -227,9 +233,9 @@ func (c Client) FetchOrgMembersAsTeam(ctx context.Context, log *slog.Logger) err
 		return fmt.Errorf("creating bearer token: %v", err)
 	}
 
-	team, err := c.db.GetTeam(ctx, c.org)
-	if err != nil {
-		return fmt.Errorf("getting team %s: %v", c.org, err)
+	// Ensure team exists in the database
+	if err := c.db.CreateTeam(ctx, c.org); err != nil {
+		return fmt.Errorf("creating team for organization %s: %v", c.org, err)
 	}
 
 	url := fmt.Sprintf("https://api.github.com/orgs/%s", c.org)
@@ -237,10 +243,10 @@ func (c Client) FetchOrgMembersAsTeam(ctx context.Context, log *slog.Logger) err
 		return fmt.Errorf("validating organization %s: %v", c.org, err)
 	}
 
-	teamURL := fmt.Sprintf("%s/teams/%s", url, team)
+	teamURL := fmt.Sprintf("%s/teams/%s", url, "the-g-team")
 	members, err := fetchMembers(teamURL, bearerToken)
 	if err != nil {
-		return fmt.Errorf("fetching members for %s: %v", team, err)
+		return fmt.Errorf("fetching members for %s: %v", c.org, err)
 	}
 
 	for _, member := range members {

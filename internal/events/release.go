@@ -7,27 +7,33 @@ import (
 	"slices"
 	"strconv"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
-	"github.com/redis/go-redis/v9"
+	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
 func (h *Handler) handleReleaseEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	var timestamp string
-	var err error
 	if event.Action == "edited" {
 		id := strconv.Itoa(event.Release.ID)
-		timestamp, err = h.redis.Get(ctx, id).Result()
-		if err != nil && !errors.Is(err, redis.Nil) {
-			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
+			TeamSlug: team.Name,
+			EventID:  id,
+		})
+		if err != nil {
+			if !errors.Is(err, pgx.ErrNoRows) {
+				log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+			}
+
+			return nil, nil
 		}
 
 		updatedMessage := slack.CreateReleaseMessage(team.SlackChannels.Releases, event)
-		updatedMessage.Timestamp = timestamp
+		updatedMessage.Timestamp = message.ThreadTs
 
 		log.Info("Posting update of release", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
 		if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
-			log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
+			log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
 		}
 
 		return nil, nil

@@ -7,30 +7,22 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/navikt/ghep/internal/sql/gensql"
-	"github.com/redis/go-redis/v9"
-)
-
-const (
-	oneYear = 8760 * time.Hour
 )
 
 type Handler struct {
 	github      github.Client
-	redis       *redis.Client
 	db          *gensql.Queries
 	slack       slack.Client
 	teamsConfig map[string]github.Team
 }
 
-func NewHandler(githubClient github.Client, redis *redis.Client, db *gensql.Queries, slackClient slack.Client, teamsConfig map[string]github.Team) Handler {
+func NewHandler(githubClient github.Client, db *gensql.Queries, slackClient slack.Client, teamsConfig map[string]github.Team) Handler {
 	return Handler{
 		github:      githubClient,
-		redis:       redis,
 		db:          db,
 		slack:       slackClient,
 		teamsConfig: teamsConfig,
@@ -83,19 +75,12 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 
 	resp, err := h.slack.PostMessage(payload)
 	if err != nil {
-		log.Error("error posting message", "err", err.Error(), "channel", message.Channel, "timestamp", message.Timestamp)
+		log.Error("error posting message", "err", err.Error(), "channel", message.Channel, "timestamp", message.ThreadTimestamp)
 		return err
 	}
-	ts := resp.Timestamp
 
-	if err := h.redis.Set(ctx, ts, string(payload), oneYear).Err(); err != nil {
-		log.Error("error setting message", "err", err.Error(), "ts", ts)
-	}
-
-	if id := saveEventSlackResponse(ts, event); id != "" {
-		if err := h.redis.Set(ctx, id, ts, oneYear).Err(); err != nil {
-			log.Error("error setting thread timestamp", "err", err.Error(), "id", id, "ts", ts)
-		}
+	if err := h.storeEvent(ctx, log, event, team, resp, payload); err != nil {
+		log.Error("error storing event", "err", err.Error(), "event_id", getEventID(event), "team", team.Name)
 	}
 
 	// This checks if we have sent the message with channel name, and not the channel ID
@@ -137,10 +122,10 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	return nil
 }
 
-func saveEventSlackResponse(ts string, event github.Event) string {
-	if ts == "" {
-		return ""
-	} else if event.IsCommit() {
+// getEventID returns the event ID based on the type of event.
+// Some events are not supported, so we return an empty string for those.
+func getEventID(event github.Event) string {
+	if event.IsCommit() {
 		return event.After
 	} else if event.Issue != nil && event.Action == "opened" {
 		return strconv.Itoa(event.Issue.ID)
@@ -155,6 +140,25 @@ func saveEventSlackResponse(ts string, event github.Event) string {
 	}
 
 	return ""
+}
+
+func (h *Handler) storeEvent(ctx context.Context, log *slog.Logger, event github.Event, team github.Team, resp *slack.MessageResponse, payload []byte) error {
+	id := getEventID(event)
+	if id == "" {
+		return nil
+	}
+
+	if err := h.db.CreateSlackMessage(ctx, gensql.CreateSlackMessageParams{
+		TeamSlug: team.Name,
+		EventID:  id,
+		ThreadTs: resp.Timestamp,
+		Channel:  resp.Channel,
+		Payload:  payload,
+	}); err != nil {
+		log.Error("error storing message", "err", err.Error(), "ts", resp.Timestamp)
+	}
+
+	return nil
 }
 
 func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {

@@ -6,9 +6,12 @@ package gensql
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/redis/go-redis/v9"
 )
 
 type DBTX interface {
@@ -18,11 +21,22 @@ type DBTX interface {
 }
 
 func New(db DBTX) *Queries {
-	return &Queries{db: db}
+	// TODO: Remove Redis once we have migrated to PostgreSQL
+	opt, err := redis.ParseURL(os.Getenv("REDIS_URI_EVENTS"))
+	if err != nil {
+		panic(fmt.Errorf("creating Redis client: %w", err))
+	}
+
+	opt.Username = os.Getenv("REDIS_USERNAME_EVENTS")
+	opt.Password = os.Getenv("REDIS_PASSWORD_EVENTS")
+	rdb := redis.NewClient(opt)
+
+	return &Queries{db: db, redis: rdb}
 }
 
 type Queries struct {
-	db DBTX
+	db    DBTX
+	redis *redis.Client
 }
 
 func (q *Queries) WithTx(tx pgx.Tx) *Queries {

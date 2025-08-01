@@ -13,26 +13,23 @@ import (
 	"github.com/navikt/ghep/internal/events"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/sql/gensql"
-	"github.com/redis/go-redis/v9"
 )
 
 type Client struct {
 	log        *slog.Logger
 	db         *gensql.Queries
 	events     events.Handler
-	redis      *redis.Client
 	teamConfig map[string]github.Team
 
 	ExternalContributorsChannel string
 	SubscribeToOrg              bool
 }
 
-func New(log *slog.Logger, db *gensql.Queries, events events.Handler, redis *redis.Client, teamConfig map[string]github.Team, externalContributorsChannel string, subscribeToOrg bool) Client {
+func New(log *slog.Logger, db *gensql.Queries, events events.Handler, teamConfig map[string]github.Team, externalContributorsChannel string, subscribeToOrg bool) Client {
 	return Client{
 		log:        log,
 		db:         db,
 		events:     events,
-		redis:      redis,
 		teamConfig: teamConfig,
 
 		ExternalContributorsChannel: externalContributorsChannel,
@@ -83,7 +80,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		fmt.Fprint(w, "Event handled for org")
+		fmt.Fprint(w, "Member event handled for org")
 		return
 	}
 
@@ -96,7 +93,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	if isAnExternalContributorEvent {
 		team := github.Team{
-			Name: "external-contributors",
+			Name: github.TeamNameExternalContributors,
 			SlackChannels: github.SlackChannels{
 				PullRequests: c.ExternalContributorsChannel,
 				Issues:       c.ExternalContributorsChannel,
@@ -112,7 +109,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if event.SecurityAdvisory != nil {
-			fmt.Fprintf(w, "Security advisory event handled")
+			fmt.Fprintf(w, "Security advisory event handled for org")
 			return
 		}
 

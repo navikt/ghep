@@ -24,9 +24,9 @@ func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, reposito
 			}
 
 			repository.ID = result
-		} else {
-			return err
 		}
+
+		return err
 	}
 
 	return db.AddTeamRepository(ctx, gensql.AddTeamRepositoryParams{
@@ -42,9 +42,9 @@ func AddMemberToTeam(ctx context.Context, db *gensql.Queries, team, userLogin st
 			if err := db.CreateUser(ctx, userLogin); err != nil {
 				return fmt.Errorf("failed to create user %s: %w", userLogin, err)
 			}
-		} else {
-			return err
 		}
+
+		return err
 	}
 
 	return db.AddTeamMember(ctx, gensql.AddTeamMemberParams{
