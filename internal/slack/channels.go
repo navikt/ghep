@@ -83,7 +83,7 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 
 	query := req.URL.Query()
 	query.Set("exclude_archived", "true")
-	query.Set("limit", "1000")
+	query.Set("limit", "200")
 	query.Set("types", "public_channel,private_channel")
 
 	var channels []Channel
