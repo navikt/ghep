@@ -108,14 +108,14 @@ func MigrateRedis(ctx context.Context, log *slog.Logger, db *gensql.Queries, tea
 
 		var team string
 		if org == "nais" {
-			if strings.HasPrefix(channel, "nais-") {
+			if strings.HasPrefix(channel, "nais-") || strings.HasPrefix(channel, "#nais-") {
 				team = org
 			} else {
 				log.Info("Skipping message in non-nais channel", "channel", channel, "org", org)
 				continue
 			}
 		} else {
-			if strings.HasPrefix(channel, "nais-") {
+			if strings.HasPrefix(channel, "nais-") || strings.HasPrefix(channel, "#nais-") {
 				log.Info("Skipping message in nais-* channel", "channel", channel, "org", org)
 				continue
 			} else {
