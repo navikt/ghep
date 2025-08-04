@@ -143,6 +143,7 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 		}
 
 		query.Set("cursor", slackResp.ResponseMetadata.NextCursor)
+		time.Sleep(3 * time.Second)
 	}
 
 	return channels, nil
