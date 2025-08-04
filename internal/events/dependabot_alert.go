@@ -17,6 +17,10 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 		return nil, nil
 	}
 
+	if !slices.Contains([]string{"created", "fixed", "dismissed", "reintroduced", "reopened"}, event.Action) {
+		return nil, nil
+	}
+
 	if team.Config.Security.IgnoreThreshold(event.Alert.SecurityAdvisory.Severity) {
 		return nil, nil
 	}
