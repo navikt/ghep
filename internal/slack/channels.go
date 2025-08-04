@@ -59,7 +59,7 @@ func (c Client) listJoinedChannels() (map[string]string, error) {
 }
 
 func (c Client) ListConversations() (map[string]string, error) {
-	response, err := c.listChannels("users.conversations")
+	response, err := c.listChannels("conversations.list")
 	if err != nil {
 		return nil, fmt.Errorf("listing all channels: %w", err)
 	}
