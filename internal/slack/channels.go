@@ -114,7 +114,7 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 						return nil, err
 					}
 
-					c.log.Info("rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter)
+					c.log.Info("rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter.Seconds())
 					time.Sleep(retryAfter)
 					continue
 				}
