@@ -102,8 +102,6 @@ func MigrateRedis(ctx context.Context, log *slog.Logger, db *gensql.Queries, tea
 		channel, ok := channels[message.Channel]
 		if !ok {
 			log.Info("channel not found in Slack conversations", "channel", message.Channel)
-			// TODO: Delete the key if channel is not found?
-			continue
 		}
 
 		var team string
