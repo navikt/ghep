@@ -54,7 +54,7 @@ data:
       commits: "#spenn-commits"
       issues: "#spenn-pull-requests"
       pulls: "#spenn-pull-requests"
-      security: "#spenn-security"
+      security: "#team-spenn-security"
     leesah-quiz:
       commits: "#leesah-game-ci"
       issues: "#leesah-game-ci"
