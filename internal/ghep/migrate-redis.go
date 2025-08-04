@@ -62,7 +62,7 @@ func MigrateRedis(ctx context.Context, log *slog.Logger, db *gensql.Queries, tea
 
 	log.Info(fmt.Sprintf("Found %d keys in Redis", len(keys)))
 
-	threadRegexp := regexp.MustCompile(`\d*\.\d*`)
+	threadRegexp := regexp.MustCompile(`\d+\.\d+`)
 	for _, eventID := range keys {
 		if threadRegexp.MatchString(eventID) {
 			// We found a thread key, skip it
