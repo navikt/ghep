@@ -24,6 +24,7 @@ data:
         silenceDependabot: always
         externalContributorsChannel: "#nais-external-contributors"
         workflows:
+          ignoreBots: true
           branches:
             - main
             - master
