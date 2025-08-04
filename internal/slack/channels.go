@@ -136,7 +136,7 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 		}
 
 		channels = append(channels, slackResp.Channels...)
-		c.log.Info(fmt.Sprintf("Found %d channels", len(channels)))
+		c.log.Info(fmt.Sprintf("Found %d channels", len(channels)), "new_channels", len(slackResp.Channels))
 
 		if slackResp.ResponseMetadata.NextCursor == "" {
 			break
