@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log/slog"
+	"slices"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/github"
@@ -34,7 +35,6 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 
 		timestamp = message.ThreadTs
 		if timestamp != "" {
-			channel = message.Channel
 			reaction := slack.ReactionDefault
 			switch event.Action {
 			case "dismissed", "auto_dismissed":
@@ -45,8 +45,12 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 
 			log.Info("Posting reaction to Dependabot alert", "action", event.Action, "alert_state", event.Alert.State, "timestamp", timestamp, "reaction", reaction)
 			if err := h.slack.PostReaction(team.SlackChannels.Workflows, timestamp, reaction); err != nil {
-				log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Security, "timestamp", timestamp, "reaction", reaction)
+				log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Workflows, "timestamp", timestamp, "reaction", reaction)
 			}
+		}
+
+		if message.Channel != "" {
+			channel = message.Channel
 		}
 	}
 
