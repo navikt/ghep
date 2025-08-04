@@ -39,7 +39,6 @@ func main() {
 	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
 
 	go ghep.FetchTeams(ctx, log.With("component", "fetch-teams"), db, teamConfig, githubClient, subscribeToOrg)
-	go ghep.MigrateRedis(ctx, log.With("component", "migrate-redis"), db, teamConfig)
 
 	glog := log.With("component", "ghep")
 	if err := ghep.Run(ctx, glog, db, teamConfig, githubClient, subscribeToOrg); err != nil {

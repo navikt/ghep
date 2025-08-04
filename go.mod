@@ -7,7 +7,6 @@ toolchain go1.24.4
 require (
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/go-cmp v0.7.0
-	github.com/redis/go-redis/v9 v9.11.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -25,8 +24,6 @@ require (
 )
 
 require (
-	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/jackc/pgx/v5 v5.7.5
 	github.com/pressly/goose/v3 v3.24.3
 )

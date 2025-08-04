@@ -85,12 +85,9 @@ spec:
       collation: nb_NO
   startup:
     path: /internal/health
-    initialDelay: 90
+    initialDelay: 10
     periodSeconds: 5
   readiness:
     path: /internal/health
   liveness:
     path: /internal/health
-  valkey:
-    - instance: events
-      access: readwrite

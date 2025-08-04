@@ -7,9 +7,6 @@ package gensql
 
 import (
 	"context"
-	"errors"
-
-	"github.com/redis/go-redis/v9"
 )
 
 const createSlackMessage = `-- name: CreateSlackMessage :exec
@@ -57,23 +54,10 @@ type GetSlackMessageRow struct {
 }
 
 func (q *Queries) GetSlackMessage(ctx context.Context, arg GetSlackMessageParams) (GetSlackMessageRow, error) {
-	res, err := q.redis.Get(ctx, arg.EventID).Result()
-	if errors.Is(err, redis.Nil) {
-		// Cache miss, proceed to database query
-		row := q.db.QueryRow(ctx, getSlackMessage, arg.TeamSlug, arg.EventID)
-		var i GetSlackMessageRow
-		err := row.Scan(&i.ThreadTs, &i.Channel, &i.Payload)
-		return i, err
-	}
-	if err != nil {
-		return GetSlackMessageRow{}, err
-	}
-
-	paylod, err := q.redis.Get(ctx, res).Result()
-	return GetSlackMessageRow{
-		ThreadTs: res,
-		Payload:  []byte(paylod),
-	}, err
+	row := q.db.QueryRow(ctx, getSlackMessage, arg.TeamSlug, arg.EventID)
+	var i GetSlackMessageRow
+	err := row.Scan(&i.ThreadTs, &i.Channel, &i.Payload)
+	return i, err
 }
 
 const updateSlackMessage = `-- name: UpdateSlackMessage :exec
