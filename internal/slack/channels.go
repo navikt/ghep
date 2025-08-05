@@ -58,20 +58,6 @@ func (c Client) listJoinedChannels() (map[string]string, error) {
 	return channels, nil
 }
 
-func (c Client) ListConversations() (map[string]string, error) {
-	response, err := c.listChannels("users.conversations")
-	if err != nil {
-		return nil, fmt.Errorf("listing all channels: %w", err)
-	}
-
-	channels := make(map[string]string, len(response))
-	for index := range response {
-		channels[response[index].ID] = response[index].Name
-	}
-
-	return channels, nil
-}
-
 func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 	req, err := http.NewRequest("GET", slackApi+"/"+apiMethod, nil)
 	if err != nil {
