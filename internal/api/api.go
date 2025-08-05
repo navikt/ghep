@@ -146,8 +146,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if len(teamsFromDB) == 0 {
-				log.Warn("no teams found for repository in database", "repository", event.GetRepositoryName())
-				fmt.Fprintf(w, "No team found for repository %s\n", event.GetRepositoryName())
+				fmt.Fprintf(w, "%s is not tied to a team using Ghep\n", event.GetRepositoryName())
 				return
 			}
 
