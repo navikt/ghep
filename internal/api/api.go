@@ -132,11 +132,14 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				fmt.Fprintf(w, "No team found for event %s\n", event.Team.Name)
+				fmt.Fprintf(w, "%s is not using Ghep\n", event.Team.Name)
 				return
 			}
 
-			teams = append(teams, team)
+			_, ok := c.teamConfig[team]
+			if ok {
+				teams = append(teams, team)
+			}
 		} else {
 			teamsFromDB, err := c.db.ListTeamsByRepository(r.Context(), event.GetRepositoryName())
 			if err != nil {
@@ -145,13 +148,18 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			if len(teamsFromDB) == 0 {
-				fmt.Fprintf(w, "%s is not tied to a team using Ghep\n", event.GetRepositoryName())
-				return
+			for _, name := range teamsFromDB {
+				_, ok := c.teamConfig[name]
+				if ok {
+					teams = append(teams, name)
+				}
 			}
-
-			teams = teamsFromDB
 		}
+	}
+
+	if len(teams) == 0 {
+		fmt.Fprintf(w, "Event is not tied to a team using Ghep\n")
+		return
 	}
 
 	for _, name := range teams {
