@@ -140,14 +140,13 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			teamsFromDB, err := c.db.ListTeamsByRepository(r.Context(), event.GetRepositoryName())
 			if err != nil {
-				if errors.Is(err, pgx.ErrNoRows) {
-					log.Warn("no teams found for repository in database", "repository", event.GetRepositoryName())
-				} else {
-					log.Error("error listing teams by repository", "repository", event.GetRepositoryName(), "err", err.Error())
-					http.Error(w, fmt.Sprintf("Error listing teams by repository: %s", err.Error()), http.StatusInternalServerError)
-					return
-				}
+				log.Error("error listing teams by repository", "repository", event.GetRepositoryName(), "err", err.Error())
+				http.Error(w, fmt.Sprintf("Error listing teams by repository: %s", err.Error()), http.StatusInternalServerError)
+				return
+			}
 
+			if len(teamsFromDB) == 0 {
+				log.Warn("no teams found for repository in database", "repository", event.GetRepositoryName())
 				fmt.Fprintf(w, "No team found for repository %s\n", event.GetRepositoryName())
 				return
 			}

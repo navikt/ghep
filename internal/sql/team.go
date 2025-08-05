@@ -17,16 +17,16 @@ type TeamQuery interface {
 func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, repositoryName string) error {
 	repository, err := db.GetRepository(ctx, repositoryName)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			result, err := db.CreateRepository(ctx, repositoryName)
-			if err != nil {
-				return fmt.Errorf("failed to create repository %s: %w", repositoryName, err)
-			}
-
-			repository.ID = result
+		if !errors.Is(err, pgx.ErrNoRows) {
+			return err
 		}
 
-		return err
+		result, err := db.CreateRepository(ctx, repositoryName)
+		if err != nil {
+			return fmt.Errorf("failed to create repository %s: %w", repositoryName, err)
+		}
+
+		repository.ID = result
 	}
 
 	return db.AddTeamRepository(ctx, gensql.AddTeamRepositoryParams{
@@ -38,13 +38,13 @@ func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, reposito
 // AddMemberToTeam adds a user to a team, creating the user if it does not exist.
 func AddMemberToTeam(ctx context.Context, db *gensql.Queries, team, userLogin string) error {
 	if _, err := db.GetUser(ctx, userLogin); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			if err := db.CreateUser(ctx, userLogin); err != nil {
-				return fmt.Errorf("failed to create user %s: %w", userLogin, err)
-			}
+		if !errors.Is(err, pgx.ErrNoRows) {
+			return err
 		}
 
-		return err
+		if err := db.CreateUser(ctx, userLogin); err != nil {
+			return fmt.Errorf("failed to create user %s: %w", userLogin, err)
+		}
 	}
 
 	return db.AddTeamMember(ctx, gensql.AddTeamMemberParams{
