@@ -12,12 +12,28 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 	color := ColorOpened
 
 	text := fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
-	attachmentText := fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title), event.Issue.Body)
+	attachmentText := fmt.Sprintf("*<%s|#%d %s>*", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title))
 
 	if event.Action == "closed" {
 		color = ColorMerged
 		text = fmt.Sprintf("Issue <%s|#%d> %s as %s in `%s` by %s", event.Issue.URL, event.Issue.Number, event.Action, event.Issue.StateReason, event.Repository.ToSlack(), event.Sender.ToSlack())
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title))
+	}
+
+	if event.Action != "closed" && event.Issue.Body != "" {
+		attachmentText = fmt.Sprintf("%s\n%s", attachmentText, event.Issue.Body)
+	}
+
+	if len(event.Issue.Assignees) > 0 {
+		var assignees strings.Builder
+		for i, assignee := range event.Issue.Assignees {
+			fmt.Fprintf(&assignees, "@%s", assignee.Login)
+
+			if i < len(event.Issue.Assignees)-1 {
+				assignees.WriteString(", ")
+			}
+		}
+
+		attachmentText += fmt.Sprintf("\n*Assignees:* %s", assignees.String())
 	}
 
 	return &Message{
@@ -34,43 +50,4 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 			},
 		},
 	}
-}
-
-func CreateUpdatedIssueMessage(message Message, event github.Event) *Message {
-	color := message.Attachments[0].Color
-	text := message.Text
-	attachmentText := message.Attachments[0].Text
-
-	switch event.Action {
-	case "reopened":
-		color = ColorOpened
-	case "closed":
-		color = ColorMerged
-	default:
-		text = fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
-		attachmentText = fmt.Sprintf("*<%s|#%d %s>*\n%s", event.Issue.URL, event.Issue.Number, html.EscapeString(event.Issue.Title), event.Issue.Body)
-
-		if event.Issue.State == "closed" {
-			color = ColorMerged
-		}
-	}
-
-	if len(event.Issue.Assignees) > 0 {
-		var assignees strings.Builder
-		for i, assignee := range event.Issue.Assignees {
-			fmt.Fprintf(&assignees, "@%s", assignee.Login)
-
-			if i < len(event.Issue.Assignees)-1 {
-				assignees.WriteString(", ")
-			}
-		}
-
-		attachmentText += fmt.Sprintf("\n*Assignees:* %s", assignees.String())
-	}
-
-	message.Text = text
-	message.Attachments[0].Color = color
-	message.Attachments[0].Text = attachmentText
-
-	return &message
 }

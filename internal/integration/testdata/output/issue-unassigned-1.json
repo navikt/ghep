@@ -4,7 +4,10 @@
   "attachments": [
     {
       "text": "*<https://github.com/navikt/ghep/issues/159|#159 Få med navn til reviewers på PR>*\n## Ønske\nFå med navnet på reviewers for at de skal få en ping om at en PR er tagget med de som reviewer. \n\nI Github integration så får reviewers en ping når de er satt som reviewer på en PR. \n![Image](https://github.com/user-attachments/assets/ad09c34c-5451-4eaf-8ba5-54d7912da39d)\n\nDet er mulig dette er mulig for github integration fordi den har kontroll på hvem jeg er, og hva mitt username på github er, og at det blir vanskelig i ghep-kontekst.\nDet hadde vært supert om man kunde få til noe liknende her. \n\nDiskusjon på slack https://nav-it.slack.com/archives/C06HK9752KA/p1733305311044609\n",
-      "color": "#34a44c"
+      "type": "mrkdwn",
+      "color": "#34a44c",
+      "footer": "<https://github.com/navikt/ghep|navikt/ghep>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
     }
   ],
   "unfurl_links": false,

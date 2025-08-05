@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
-	"slices"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -21,37 +20,6 @@ const (
 
 func TestHandleEvent(t *testing.T) {
 	mockhub := mockHub{}
-	oldMessage := slack.Message{
-		Channel: slackChannel,
-		Text:    "Should be updated",
-		Attachments: []slack.Attachment{
-			{
-				Text:  "Should be updated",
-				Color: slack.ColorOpened,
-			},
-		},
-	}
-	oldMessageWithReviewers := slack.Message{
-		Channel: slackChannel,
-		Text:    "Should be updated",
-		Attachments: []slack.Attachment{
-			{
-				Text:  "There should be no reviewers\n*Requested reviewers:* @Kyrremann",
-				Color: slack.ColorOpened,
-			},
-		},
-	}
-	oldMessageWithAssignees := slack.Message{
-		Channel: slackChannel,
-		Text:    "Should be updated",
-		Attachments: []slack.Attachment{
-			{
-				Text:  "There should be no assignees\n*Assignees:* @Kyrremann",
-				Color: slack.ColorOpened,
-			},
-		},
-	}
-
 	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
 		t.Error(err)
@@ -90,25 +58,9 @@ func TestHandleEvent(t *testing.T) {
 			case github.TypeCommit:
 				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, mockhub)
 			case github.TypeIssue:
-				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
-					message = slack.CreateIssueMessage(slackChannel, "", event)
-				} else {
-					if event.Action == "unassigned" {
-						message = slack.CreateUpdatedIssueMessage(oldMessageWithAssignees, event)
-					} else {
-						message = slack.CreateUpdatedIssueMessage(oldMessage, event)
-					}
-				}
+				message = slack.CreateIssueMessage(slackChannel, "", event)
 			case github.TypePullRequest:
-				if slices.Contains([]string{"opened", "closed", "reopened"}, event.Action) {
-					message = slack.CreatePullRequestMessage(slackChannel, "", event)
-				} else {
-					if event.Action == "review_request_removed" {
-						message = slack.CreateUpdatedPullRequestMessage(oldMessageWithReviewers, event)
-					} else {
-						message = slack.CreateUpdatedPullRequestMessage(oldMessage, event)
-					}
-				}
+				message = slack.CreatePullRequestMessage(slackChannel, "", event)
 			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)
 			case github.TypeRepositoryPublic:

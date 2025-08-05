@@ -17,37 +17,33 @@ import (
 
 func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
 	var timestamp string
-	id := strconv.Itoa(event.Issue.ID)
-	message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
-		TeamSlug: team.Name,
-		EventID:  id,
-	})
-	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-		log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
-	}
+	if slices.Contains([]string{"closed", "reopened", "edited", "assigned", "unassigned"}, event.Action) {
+		id := strconv.Itoa(event.Issue.ID)
+		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
+			TeamSlug: team.Name,
+			EventID:  id,
+		})
+		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+		}
 
-	if !slices.Contains([]string{"opened", "closed", "reopened", "edited", "assigned", "unassigned"}, event.Action) {
-		return nil, nil
-	}
+		if message.ThreadTs != "" {
+			timestamp = message.ThreadTs
 
-	if message.ThreadTs != "" {
-		timestamp = message.ThreadTs
+			if message.Payload != nil && event.Action != "closed" {
+				var oldMessage slack.Message
+				if err := json.Unmarshal(message.Payload, &oldMessage); err != nil {
+					log.Error("error unmarshalling message", "err", err.Error())
+				}
 
-		if message.Payload != nil && event.Action != "edited" {
-			var oldMessage slack.Message
-			if err := json.Unmarshal(message.Payload, &oldMessage); err != nil {
-				log.Error("error unmarshalling message", "err", err.Error())
-			}
+				updatedMessage := slack.CreateIssueMessage(oldMessage.Channel, timestamp, event)
+				updatedMessage.Timestamp = timestamp
 
-			updatedMessage := slack.CreateUpdatedIssueMessage(oldMessage, event)
-			updatedMessage.Timestamp = timestamp
+				log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
+				if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
+					log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
+				}
 
-			log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
-			if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
-				log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
-			}
-
-			if slices.Contains([]string{"reopened", "edited"}, event.Action) {
 				return nil, nil
 			}
 		}
