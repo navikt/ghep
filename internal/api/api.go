@@ -84,6 +84,13 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Global security advisories are not interesting for the teams
+	// https://docs.github.com/en/webhooks/webhook-events-and-payloads#security_advisory
+	if event.SecurityAdvisory != nil {
+		fmt.Fprintf(w, "Security advisory event handled for org\n")
+		return
+	}
+
 	isAnExternalContributorEvent, err := c.isAnExternalContributorEvent(r.Context(), event)
 	if err != nil {
 		log.Error("error checking if user is an external contributor", "user", event.Sender.Login, "err", err.Error())
@@ -107,12 +114,6 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error handling event for external contributors", http.StatusInternalServerError)
 			return
 		}
-
-		if event.SecurityAdvisory != nil {
-			fmt.Fprintf(w, "Security advisory event handled for org\n")
-			return
-		}
-
 	}
 
 	var teams []string
@@ -181,11 +182,6 @@ func (c *Client) isAnExternalContributorEvent(ctx context.Context, event github.
 	// If the sender is a bot, we do not handle it as an external contributor event.
 	if event.Sender.IsBot() {
 		return false, nil
-	}
-
-	// Security advisories not "under" an alert are global for the organization, so they are external.
-	if event.SecurityAdvisory != nil {
-		return true, nil
 	}
 
 	// Check if the user is in the database, if not, we consider them an external contributor.
