@@ -162,8 +162,12 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Error handling event for %s", name), http.StatusInternalServerError)
 			return
 		}
+	}
 
-		fmt.Fprintf(w, "Event handled for team %s\n", name)
+	if len(teams) > 1 {
+		fmt.Fprintf(w, "Event handled for teams %s\n", teams)
+	} else {
+		fmt.Fprintf(w, "Event handled for team %s\n", teams[0])
 	}
 }
 
