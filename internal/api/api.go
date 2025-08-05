@@ -119,13 +119,17 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	var teams []string
 	if c.SubscribeToOrg {
 		if event.Team != nil {
-			fmt.Fprintf(w, "Event has team but org subscription is enabled, ignoring the team %s\n", event.Team.Name)
-			return
-		}
+			if _, ok := c.teamConfig[event.Team.Name]; !ok {
+				fmt.Fprintf(w, "Event has team, but org subscription is enabled, ignoring events for %s\n", event.Team.Name)
+				return
+			}
 
-		for name := range c.teamConfig {
-			teams = append(teams, name)
-			break
+			teams = append(teams, event.Team.Name)
+		} else {
+			for name := range c.teamConfig {
+				teams = append(teams, name)
+				break
+			}
 		}
 	} else {
 		if event.Team != nil {
