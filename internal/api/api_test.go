@@ -18,7 +18,7 @@ func TestIsAnExternalContributorEvent(t *testing.T) {
 	}
 	defer mock.Close()
 
-	mock.ExpectQuery(gensql.ExistsUser).
+	mock.ExpectQuery("EXISTS").
 		WithArgs("InternalUser").
 		WillReturnRows(pgxmock.NewRows([]string{"exists"}).AddRow(true))
 	mock.ExpectQuery("EXISTS").
