@@ -43,14 +43,15 @@ func (q *Queries) DeleteUser(ctx context.Context, login string) error {
 	return err
 }
 
-const getUser = `-- name: GetUser :one
-SELECT login FROM users WHERE login = $1
+const existsUser = `-- name: ExistsUser :one
+SELECT EXISTS (SELECT login FROM users WHERE login = $1)
 `
 
-func (q *Queries) GetUser(ctx context.Context, login string) (string, error) {
-	row := q.db.QueryRow(ctx, getUser, login)
-	err := row.Scan(&login)
-	return login, err
+func (q *Queries) ExistsUser(ctx context.Context, login string) (bool, error) {
+	row := q.db.QueryRow(ctx, existsUser, login)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one

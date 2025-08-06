@@ -37,11 +37,12 @@ func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, reposito
 
 // AddMemberToTeam adds a user to a team, creating the user if it does not exist.
 func AddMemberToTeam(ctx context.Context, db *gensql.Queries, team, userLogin string) error {
-	if _, err := db.GetUser(ctx, userLogin); err != nil {
-		if !errors.Is(err, pgx.ErrNoRows) {
-			return err
-		}
+	exists, err := db.ExistsUser(ctx, userLogin)
+	if err != nil {
+		return err
+	}
 
+	if !exists {
 		if err := db.CreateUser(ctx, userLogin); err != nil {
 			return fmt.Errorf("failed to create user %s: %w", userLogin, err)
 		}

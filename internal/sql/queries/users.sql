@@ -2,8 +2,8 @@
 INSERT INTO users (login) VALUES ($1)
 ON CONFLICT (login) DO NOTHING;
 
--- name: GetUser :one
-SELECT login FROM users WHERE login = $1;
+-- name: ExistsUser :one
+SELECT EXISTS (SELECT login FROM users WHERE login = $1);
 
 -- name: DeleteUser :exec
 DELETE FROM users WHERE login = $1;
