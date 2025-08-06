@@ -1,14 +1,19 @@
 package slack
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"html"
+	"log/slog"
 	"strings"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/sql"
 )
 
-func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Message {
+func CreateIssueMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, event github.Event) *Message {
 	color := ColorOpened
 
 	text := fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
@@ -26,7 +31,16 @@ func CreateIssueMessage(channel, threadTimestamp string, event github.Event) *Me
 	if len(event.Issue.Assignees) > 0 {
 		var assignees strings.Builder
 		for i, assignee := range event.Issue.Assignees {
-			fmt.Fprintf(&assignees, "@%s", assignee.Login)
+			userID, err := db.GetUserSlackID(ctx, assignee.Login)
+			if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+				log.Error("error getting user Slack ID", "user", assignee.Login, "err", err.Error())
+			}
+
+			if userID != "" {
+				fmt.Fprintf(&assignees, "<@%s>", userID)
+			} else {
+				fmt.Fprintf(&assignees, "@%s", assignee.Login)
+			}
 
 			if i < len(event.Issue.Assignees)-1 {
 				assignees.WriteString(", ")

@@ -9,6 +9,21 @@ import (
 	"context"
 )
 
+const CreateSlackID = `-- name: CreateSlackID :exec
+INSERT INTO slack_ids (login, id) VALUES ($1, $2)
+ON CONFLICT (login, id) DO NOTHING
+`
+
+type CreateSlackIDParams struct {
+	Login string
+	ID    string
+}
+
+func (q *Queries) CreateSlackID(ctx context.Context, arg CreateSlackIDParams) error {
+	_, err := q.db.Exec(ctx, CreateSlackID, arg.Login, arg.ID)
+	return err
+}
+
 const CreateSlackMessage = `-- name: CreateSlackMessage :exec
 INSERT INTO slack_messages (team_slug, event_id, thread_ts, channel, payload) VALUES ($1, $2, $3, $4, $5)
 ON CONFLICT (team_slug, event_id) DO UPDATE
@@ -58,6 +73,19 @@ func (q *Queries) GetSlackMessage(ctx context.Context, arg GetSlackMessageParams
 	var i GetSlackMessageRow
 	err := row.Scan(&i.ThreadTs, &i.Channel, &i.Payload)
 	return i, err
+}
+
+const GetUserSlackID = `-- name: GetUserSlackID :one
+SELECT id
+FROM slack_ids
+WHERE login = $1
+`
+
+func (q *Queries) GetUserSlackID(ctx context.Context, login string) (string, error) {
+	row := q.db.QueryRow(ctx, GetUserSlackID, login)
+	var id string
+	err := row.Scan(&id)
+	return id, err
 }
 
 const UpdateSlackMessage = `-- name: UpdateSlackMessage :exec

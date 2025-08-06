@@ -31,14 +31,52 @@
       "type": "User",
       "site_admin": false
     },
-    "labels": [
-
-    ],
+    "labels": [],
     "state": "open",
     "locked": false,
-    "assignee": null,
+    "assignee": {
+      "login": "Kyrremann",
+      "id": 1830501,
+      "node_id": "MDQ6VXNlcjE4MzA1MDE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1830501?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Kyrremann",
+      "html_url": "https://github.com/Kyrremann",
+      "followers_url": "https://api.github.com/users/Kyrremann/followers",
+      "following_url": "https://api.github.com/users/Kyrremann/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Kyrremann/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Kyrremann/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Kyrremann/subscriptions",
+      "organizations_url": "https://api.github.com/users/Kyrremann/orgs",
+      "repos_url": "https://api.github.com/users/Kyrremann/repos",
+      "events_url": "https://api.github.com/users/Kyrremann/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Kyrremann/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
     "assignees": [
-
+      {
+        "login": "Kyrremann",
+        "id": 1830501,
+        "node_id": "MDQ6VXNlcjE4MzA1MDE=",
+        "avatar_url": "https://avatars.githubusercontent.com/u/1830501?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Kyrremann",
+        "html_url": "https://github.com/Kyrremann",
+        "followers_url": "https://api.github.com/users/Kyrremann/followers",
+        "following_url": "https://api.github.com/users/Kyrremann/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Kyrremann/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Kyrremann/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Kyrremann/subscriptions",
+        "organizations_url": "https://api.github.com/users/Kyrremann/orgs",
+        "repos_url": "https://api.github.com/users/Kyrremann/repos",
+        "events_url": "https://api.github.com/users/Kyrremann/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Kyrremann/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      }
     ],
     "milestone": null,
     "comments": 0,
@@ -163,17 +201,13 @@
     "allow_forking": false,
     "is_template": false,
     "web_commit_signoff_required": false,
-    "topics": [
-
-    ],
+    "topics": [],
     "visibility": "internal",
     "forks": 0,
     "open_issues": 2,
     "watchers": 0,
     "default_branch": "main",
-    "custom_properties": {
-
-    }
+    "custom_properties": {}
   },
   "organization": {
     "login": "navikt",

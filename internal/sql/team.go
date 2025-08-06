@@ -9,10 +9,6 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-type TeamQuery interface {
-	GetTeamMember(ctx context.Context, arg gensql.GetTeamMemberParams) (string, error)
-}
-
 // AddRepositoryToTeam adds a repository to a team, creating the repository if it does not exist.
 func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, repositoryName string) error {
 	repository, err := db.GetRepository(ctx, repositoryName)

@@ -11,6 +11,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/mock"
 	"github.com/navikt/ghep/internal/slack"
 )
 
@@ -20,7 +21,9 @@ const (
 )
 
 func TestHandleEvent(t *testing.T) {
-	mockDB := mockDB{}
+	ctx := context.Background()
+	log := slog.Default()
+	mockDB := &mock.Database{}
 	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
 		t.Error(err)
@@ -57,11 +60,11 @@ func TestHandleEvent(t *testing.T) {
 			eventType := event.GetEventType()
 			switch eventType {
 			case github.TypeCommit:
-				message, err = slack.CreateCommitMessage(context.Background(), slog.Default(), slackChannel, event, mockDB)
+				message, err = slack.CreateCommitMessage(ctx, log, mockDB, slackChannel, event)
 			case github.TypeIssue:
-				message = slack.CreateIssueMessage(slackChannel, "", event)
+				message = slack.CreateIssueMessage(ctx, log, mockDB, slackChannel, "", event)
 			case github.TypePullRequest:
-				message = slack.CreatePullRequestMessage(slackChannel, "", event)
+				message = slack.CreatePullRequestMessage(ctx, log, mockDB, slackChannel, "", event)
 			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)
 			case github.TypeRepositoryPublic:

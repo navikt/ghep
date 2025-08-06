@@ -18,6 +18,8 @@ var embedMigrations embed.FS
 
 type Userer interface {
 	GetUserByEmail(ctx context.Context, email string) (string, error)
+	GetUserSlackID(ctx context.Context, login string) (string, error)
+	GetTeamMember(ctx context.Context, arg gensql.GetTeamMemberParams) (string, error)
 }
 
 type gooseLogger struct {

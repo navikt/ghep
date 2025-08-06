@@ -92,9 +92,9 @@ func TestHandleCommitEvent(t *testing.T) {
 
 func TestHandleIssueAndPullEvent(t *testing.T) {
 	type args struct {
-		team    github.Team
-		mockSQL mock.TeamMock
-		event   github.Event
+		team   github.Team
+		mockDB mock.Database
+		event  github.Event
 	}
 
 	tests := []struct {
@@ -112,7 +112,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						PullRequests: "#internal",
 					},
 				},
-				mockSQL: mock.TeamMock{
+				mockDB: mock.Database{
 					Members: []string{"internal"},
 				},
 				event: github.Event{
@@ -148,7 +148,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						ExternalContributorsChannel: "#external",
 					},
 				},
-				mockSQL: mock.TeamMock{
+				mockDB: mock.Database{
 					Members: []string{"internal"},
 				},
 				event: github.Event{
@@ -184,7 +184,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 						ExternalContributorsChannel: "#external",
 					},
 				},
-				mockSQL: mock.TeamMock{
+				mockDB: mock.Database{
 					Members: []string{"internal"},
 				},
 				event: github.Event{
@@ -211,7 +211,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			issue, err := handleIssueEvent(context.Background(), slog.Default(), &tt.args.mockSQL, tt.args.team, "timestamp", tt.args.event)
+			issue, err := handleIssueEvent(context.Background(), slog.Default(), &tt.args.mockDB, tt.args.team, "timestamp", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -220,7 +220,7 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				t.Errorf("handleIssueEvent() mismatch (-want +got):\n%s", diff)
 			}
 
-			pull, err := handlePullRequestEvent(context.Background(), slog.Default(), &tt.args.mockSQL, tt.args.team, "timestamp", tt.args.event)
+			pull, err := handlePullRequestEvent(context.Background(), slog.Default(), &tt.args.mockDB, tt.args.team, "timestamp", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}

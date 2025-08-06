@@ -3,7 +3,7 @@
   "text": "Pull request <https://github.com/nais/up/pull/14|#14> review_requested in `<https://github.com/nais/up|up>` by <https://github.com/Kyrremann|Kyrremann>",
   "attachments": [
     {
-      "text": "*<https://github.com/nais/up/pull/14|#14 Bump docker/login-action from 2.2.0 to 3.0.0>*\nBumps [docker/login-action](https://github.com/docker/login-action) from 2.2.0 to 3.0.0.\n*Requested reviewers:* @Kyrremann",
+      "text": "*<https://github.com/nais/up/pull/14|#14 Bump docker/login-action from 2.2.0 to 3.0.0>*\nBumps [docker/login-action](https://github.com/docker/login-action) from 2.2.0 to 3.0.0.\n*Requested reviewers:* <@U8PL7CR4K>",
       "type": "mrkdwn",
       "color": "#34a44c",
       "footer": "<https://github.com/nais/up|nais/up>",

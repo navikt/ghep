@@ -14,3 +14,12 @@ WHERE team_slug = $1 AND event_id = $2;
 SELECT thread_ts, channel, payload
 FROM slack_messages
 WHERE team_slug = $1 AND event_id = $2;
+
+-- name: CreateSlackID :exec
+INSERT INTO slack_ids (login, id) VALUES ($1, $2)
+ON CONFLICT (login, id) DO NOTHING;
+
+-- name: GetUserSlackID :one
+SELECT id
+FROM slack_ids
+WHERE login = $1;

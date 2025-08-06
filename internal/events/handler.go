@@ -211,7 +211,7 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, team github.Team, 
 
 	log = log.With("slack_channel", team.SlackChannels.Commits)
 	log.Info("Received commit event")
-	return slack.CreateCommitMessage(ctx, log, team.SlackChannels.Commits, event, db)
+	return slack.CreateCommitMessage(ctx, log, db, team.SlackChannels.Commits, event)
 }
 
 func (h *Handler) handleRenamedRepository(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {

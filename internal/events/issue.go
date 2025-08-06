@@ -36,7 +36,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 					log.Error("error unmarshalling message", "err", err.Error())
 				}
 
-				updatedMessage := slack.CreateIssueMessage(oldMessage.Channel, timestamp, event)
+				updatedMessage := slack.CreateIssueMessage(ctx, log, h.db, oldMessage.Channel, timestamp, event)
 				updatedMessage.Timestamp = timestamp
 
 				log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
@@ -52,7 +52,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 	return handleIssueEvent(ctx, log, h.db, team, timestamp, event)
 }
 
-func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.TeamQuery, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
+func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
 	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
 		return nil, nil
 	}
@@ -75,5 +75,5 @@ func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.TeamQuery, t
 	}
 
 	log.Info("Received issue", "slack_channel", channel)
-	return slack.CreateIssueMessage(channel, threadTimestamp, event), nil
+	return slack.CreateIssueMessage(ctx, log, db, channel, threadTimestamp, event), nil
 }

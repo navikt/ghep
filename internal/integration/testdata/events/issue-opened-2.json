@@ -73,9 +73,7 @@
     "state": "open",
     "locked": false,
     "assignee": null,
-    "assignees": [
-
-    ],
+    "assignees": [],
     "milestone": null,
     "comments": 0,
     "created_at": "2025-02-14T12:49:30Z",
@@ -109,8 +107,8 @@
   "repository": {
     "id": 92277707,
     "node_id": "MDEwOlJlcG9zaXRvcnk5MjI3NzcwNw==",
-    "name": "aksel",
-    "full_name": "navikt/aksel",
+    "name": "ghep",
+    "full_name": "navikt/ghep",
     "private": false,
     "owner": {
       "login": "navikt",
@@ -225,9 +223,7 @@
     "open_issues": 33,
     "watchers": 160,
     "default_branch": "main",
-    "custom_properties": {
-
-    }
+    "custom_properties": {}
   },
   "organization": {
     "login": "navikt",
