@@ -16,6 +16,10 @@ import (
 //go:embed migrations/*.sql
 var embedMigrations embed.FS
 
+type Userer interface {
+	GetUserByEmail(ctx context.Context, email string) (string, error)
+}
+
 type gooseLogger struct {
 	log *slog.Logger
 }

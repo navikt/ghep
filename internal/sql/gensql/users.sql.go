@@ -57,7 +57,7 @@ func (q *Queries) ExistsUser(ctx context.Context, login string) (bool, error) {
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT e.login
 FROM emails e
-WHERE e.email = $1
+WHERE e.email ilike $1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (string, error) {

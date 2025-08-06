@@ -4,10 +4,6 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-type Userer interface {
-	GetUserByEmail(email string) (*User, error)
-}
-
 type Client struct {
 	db                *gensql.Queries
 	appInstallationID string

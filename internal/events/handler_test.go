@@ -8,6 +8,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/mock"
+	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
 func TestHandleCommitEvent(t *testing.T) {
@@ -73,7 +74,7 @@ func TestHandleCommitEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := handleCommitEvent(slog.Default(), team, tt.args.event, github.Client{})
+			got, err := handleCommitEvent(context.Background(), slog.Default(), team, tt.args.event, &gensql.Queries{})
 			if err != nil {
 				t.Error(err)
 			}

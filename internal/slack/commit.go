@@ -1,14 +1,18 @@
 package slack
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"regexp"
 	"slices"
 	"strings"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/sql"
 )
 
 func fetchCoAuthors(commit string) ([]github.Author, error) {
@@ -48,13 +52,15 @@ func fetchCoAuthors(commit string) ([]github.Author, error) {
 	return coAuthors, nil
 }
 
-func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Event) (string, error) {
-	// sender has login/username and url
-	// commit co-authors only have username or name
-	// author has name, email, and username
+func createAuthors(ctx context.Context, log *slog.Logger, db sql.Userer, event github.Event) (string, error) {
+	// event sender has login/username and url
+	// commit co-authors only have a name and e-mail
+	// commit author has name, e-mail, and login/username
 	compareAuthorFunc := func(author github.Author) func(github.Author) bool {
 		return func(other github.Author) bool {
-			return (author.Name != "" && strings.EqualFold(author.Name, other.Name)) || (author.Username != "" && strings.EqualFold(author.Username, other.Username))
+			return (author.Name != "" && strings.EqualFold(author.Name, other.Name)) ||
+				(author.Username != "" && strings.EqualFold(author.Username, other.Username)) ||
+				(author.Email != "" && strings.EqualFold(author.Email, other.Email))
 		}
 	}
 
@@ -68,7 +74,7 @@ func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Ev
 	}
 
 	// Then we gather all the co-authors of the commits, since authors have the
-	// username we don't want add both of them at the same time in case an
+	// username, we don't want add both of them at the same time, in case an
 	// co-author is also an author in a later commit
 	commitCoAuthors := []github.Author{}
 	for _, commit := range event.Commits {
@@ -86,18 +92,15 @@ func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Ev
 		}
 	}
 
-	// If there are just a handful of co-authors without username we can try to fetch them by their Nav e-mail
-	if len(commitCoAuthors) < 6 {
-		for i, coAuthor := range commitCoAuthors {
-			if strings.HasSuffix(coAuthor.Email, "@nav.no") {
-				userWithEmail, err := githubClient.GetUserByEmail(coAuthor.Email)
-				if err != nil {
-					log.Error("Failed to get user by email", "email", coAuthor.Email, "error", err)
-				}
+	for i, coAuthor := range commitCoAuthors {
+		if strings.HasSuffix(coAuthor.Email, "@nav.no") {
+			username, err := db.GetUserByEmail(ctx, coAuthor.Email)
+			if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+				log.Error("Failed to get user by email", "email", coAuthor.Email, "error", err)
+			}
 
-				if userWithEmail != nil {
-					commitCoAuthors[i].Username = userWithEmail.Login
-				}
+			if username != "" {
+				commitCoAuthors[i].Username = username
 			}
 		}
 	}
@@ -124,8 +127,8 @@ func createAuthors(log *slog.Logger, githubClient github.Userer, event github.Ev
 	return senders, nil
 }
 
-func CreateCommitMessage(log *slog.Logger, channel string, event github.Event, githubClient github.Userer) (*Message, error) {
-	authors, err := createAuthors(log, githubClient, event)
+func CreateCommitMessage(ctx context.Context, log *slog.Logger, channel string, event github.Event, db sql.Userer) (*Message, error) {
+	authors, err := createAuthors(ctx, log, db, event)
 	if err != nil {
 		return nil, fmt.Errorf("creating authors: %w", err)
 	}

@@ -15,4 +15,4 @@ ON CONFLICT (login, email) DO NOTHING;
 -- name: GetUserByEmail :one
 SELECT e.login
 FROM emails e
-WHERE e.email = $1;
+WHERE e.email ilike $1;

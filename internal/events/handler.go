@@ -167,7 +167,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 
 	switch eventType {
 	case github.TypeCommit:
-		return handleCommitEvent(log, team, event, h.github)
+		return handleCommitEvent(ctx, log, team, event, h.db)
 	case github.TypeCodeScanningAlert:
 		return h.handleCodeScanningAlertEvent(ctx, log, team, event)
 	case github.TypeDependabotAlert:
@@ -195,7 +195,7 @@ func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team
 	return nil, nil
 }
 
-func handleCommitEvent(log *slog.Logger, team github.Team, event github.Event, githubClient github.Client) (*slack.Message, error) {
+func handleCommitEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event, db *gensql.Queries) (*slack.Message, error) {
 	if team.SlackChannels.Commits == "" {
 		return nil, nil
 	}
@@ -211,7 +211,7 @@ func handleCommitEvent(log *slog.Logger, team github.Team, event github.Event, g
 
 	log = log.With("slack_channel", team.SlackChannels.Commits)
 	log.Info("Received commit event")
-	return slack.CreateCommitMessage(log, team.SlackChannels.Commits, event, githubClient)
+	return slack.CreateCommitMessage(ctx, log, team.SlackChannels.Commits, event, db)
 }
 
 func (h *Handler) handleRenamedRepository(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {

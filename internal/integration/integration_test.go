@@ -2,6 +2,7 @@ package integration
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"log/slog"
 	"os"
@@ -19,7 +20,7 @@ const (
 )
 
 func TestHandleEvent(t *testing.T) {
-	mockhub := mockHub{}
+	mockDB := mockDB{}
 	dir, err := os.ReadDir(testdataEventsPath)
 	if err != nil {
 		t.Error(err)
@@ -56,7 +57,7 @@ func TestHandleEvent(t *testing.T) {
 			eventType := event.GetEventType()
 			switch eventType {
 			case github.TypeCommit:
-				message, err = slack.CreateCommitMessage(slog.Default(), slackChannel, event, mockhub)
+				message, err = slack.CreateCommitMessage(context.Background(), slog.Default(), slackChannel, event, mockDB)
 			case github.TypeIssue:
 				message = slack.CreateIssueMessage(slackChannel, "", event)
 			case github.TypePullRequest:
