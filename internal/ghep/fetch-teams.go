@@ -45,7 +45,7 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 		}
 	}
 
-	if err := githubClient.FetchOrgMembersWithEmail(ctx); err != nil {
+	if err := githubClient.FetchOrgUsersWithEmail(ctx); err != nil {
 		log.Error("fetching org members from Github", "err", err.Error())
 		return
 	}
