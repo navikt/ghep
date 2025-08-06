@@ -14,15 +14,35 @@ const (
 	userGraphQL     = `query($org: String!, $email: String!) {
 	 organization(login: $org) {
 	   samlIdentityProvider {
-	     externalIdentities(first: 1, userName: $email) {
-	       nodes {
-	         user {
-	           url
-	           login
-	           name
-	         }
-	       }
-	     }
+		 externalIdentities(first: 1, userName: $email) {
+		   nodes {
+			 user {
+			   url
+			   login
+			   name
+			 }
+		   }
+		 }
+	   }
+	 }
+	}`
+	allUserGraphQL = `query FetchUsersWithEmail($org: String!, $cursor: String) {
+	 organization(login: $org) {
+	   samlIdentityProvider {
+		 externalIdentities(first: 100, after: $cursor) {
+		   nodes {
+			 user {
+			   login
+               email
+			 }
+			 samlIdentity {
+			   username
+			 }
+		   }
+           pageInfo {
+             endCursor
+           }
+		 }
 	   }
 	 }
 	}`
@@ -34,8 +54,17 @@ type githubResponse struct {
 			SamlIdentityProvider struct {
 				ExternalIdentities struct {
 					Nodes []struct {
-						User User `json:"user"`
+						User struct {
+							Login string `json:"login"`
+							Email string `json:"email"`
+						} `json:"user"`
+						SamlIdentity struct {
+							Email string `json:"username"`
+						} `json:"samlIdentity"`
 					} `json:"nodes"`
+					PageInfo struct {
+						EndCursor string `json:"endCursor"`
+					} `json:"pageInfo"`
 				} `json:"externalIdentities"`
 			} `json:"samlIdentityProvider"`
 		} `json:"organization"`
@@ -106,5 +135,8 @@ func (c Client) GetUserByEmail(email string) (*User, error) {
 		return nil, nil
 	}
 
-	return &githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User, nil
+	user := githubResp.Data.Organization.SamlIdentityProvider.ExternalIdentities.Nodes[0].User
+	return &User{
+		Login: user.Login,
+	}, nil
 }
