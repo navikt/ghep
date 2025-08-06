@@ -44,4 +44,9 @@ func FetchTeams(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamC
 			os.Exit(1)
 		}
 	}
+
+	if err := githubClient.FetchOrgMembers(ctx, log); err != nil {
+		log.Error("fetching org members from Github", "err", err.Error())
+		os.Exit(1)
+	}
 }

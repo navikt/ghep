@@ -41,10 +41,6 @@ func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig m
 	log.Info("Creating event handler")
 	eventHandler := events.NewHandler(githubClient, db, slackAPI, teamConfig)
 
-	if err := githubClient.FetchOrgMembers(ctx, log); err != nil {
-		return fmt.Errorf("fetching org members: %w", err)
-	}
-
 	apiClient := api.New(
 		log.With("client", "api"),
 		db,
