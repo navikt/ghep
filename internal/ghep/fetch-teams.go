@@ -10,7 +10,7 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func FetchTeams(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, subscribeToOrg bool) {
+func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, subscribeToOrg bool) {
 	log.Info("Fetching data from Github")
 
 	storedTeams, err := db.ListTeams(ctx)
