@@ -83,12 +83,14 @@ team:
     externalContributorsChannel: "#channel"
     security:
       severityFilter: "high"
+    pingSlackUsers: true
 ```
 
 - `ignoreRepositories` - En liste med repositories man ikke ønsker hendelser fra
 - `silenceDependabot` - Hvis denne blir satt til `always` så ignorer man alle hendelser fra Dependabot
 - `externalContributorsChannel` - Issues og pull requests fra brukere som ikke er i teamet ditt vil havne i en egen kanal
-- ``security.severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
+- `security.severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
+- `pingSlackUsers`- Pinger Slack-brukere som er tildelt issues eller pull requests
 
 #### Workflows
 

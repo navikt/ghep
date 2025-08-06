@@ -13,7 +13,7 @@ import (
 	"github.com/navikt/ghep/internal/sql"
 )
 
-func CreatePullRequestMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, event github.Event) *Message {
+func CreatePullRequestMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, pingSlack bool, event github.Event) *Message {
 	color := ColorOpened
 	if event.Action == "closed" {
 		color = ColorClosed
@@ -39,13 +39,17 @@ func CreatePullRequestMessage(ctx context.Context, log *slog.Logger, db sql.User
 	if len(event.PullRequest.RequestedReviewers) > 0 {
 		var reviewers strings.Builder
 		for i, reviewer := range event.PullRequest.RequestedReviewers {
-			userID, err := db.GetUserSlackID(ctx, reviewer.Login)
-			if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-				log.Error("error getting user Slack ID", "user", reviewer.Login, "err", err.Error())
-			}
+			if pingSlack {
+				userID, err := db.GetUserSlackID(ctx, reviewer.Login)
+				if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+					log.Error("error getting user Slack ID", "user", reviewer.Login, "err", err.Error())
+				}
 
-			if userID != "" {
-				fmt.Fprintf(&reviewers, "<@%s>", userID)
+				if userID != "" {
+					fmt.Fprintf(&reviewers, "<@%s>", userID)
+				} else {
+					fmt.Fprintf(&reviewers, "@%s", reviewer.Login)
+				}
 			} else {
 				fmt.Fprintf(&reviewers, "@%s", reviewer.Login)
 			}

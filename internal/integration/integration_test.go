@@ -62,9 +62,9 @@ func TestHandleEvent(t *testing.T) {
 			case github.TypeCommit:
 				message, err = slack.CreateCommitMessage(ctx, log, mockDB, slackChannel, event)
 			case github.TypeIssue:
-				message = slack.CreateIssueMessage(ctx, log, mockDB, slackChannel, "", event)
+				message = slack.CreateIssueMessage(ctx, log, mockDB, slackChannel, "", true, event)
 			case github.TypePullRequest:
-				message = slack.CreatePullRequestMessage(ctx, log, mockDB, slackChannel, "", event)
+				message = slack.CreatePullRequestMessage(ctx, log, mockDB, slackChannel, "", true, event)
 			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)
 			case github.TypeRepositoryPublic:

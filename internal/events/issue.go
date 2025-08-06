@@ -36,7 +36,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 					log.Error("error unmarshalling message", "err", err.Error())
 				}
 
-				updatedMessage := slack.CreateIssueMessage(ctx, log, h.db, oldMessage.Channel, timestamp, event)
+				updatedMessage := slack.CreateIssueMessage(ctx, log, h.db, oldMessage.Channel, timestamp, team.Config.PingSlackUsers, event)
 				updatedMessage.Timestamp = timestamp
 
 				log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
@@ -75,5 +75,5 @@ func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team
 	}
 
 	log.Info("Received issue", "slack_channel", channel)
-	return slack.CreateIssueMessage(ctx, log, db, channel, threadTimestamp, event), nil
+	return slack.CreateIssueMessage(ctx, log, db, channel, threadTimestamp, team.Config.PingSlackUsers, event), nil
 }

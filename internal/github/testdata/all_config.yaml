@@ -12,6 +12,7 @@ nada:
     externalContributorsChannel: "#external"
     security:
       severityFilter: "high"
+    pingSlackUsers: true
     workflows:
       ignoreBots: true
       branches:

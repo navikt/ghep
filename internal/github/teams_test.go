@@ -39,6 +39,7 @@ func TestParseTeamConfig(t *testing.T) {
 						Security: Security{
 							SeverityFilter: "high",
 						},
+						PingSlackUsers: true,
 					},
 				},
 			},

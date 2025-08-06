@@ -37,7 +37,7 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 					log.Error("error unmarshalling message", "err", err.Error())
 				}
 
-				updatedMessage := slack.CreatePullRequestMessage(ctx, log, h.db, oldMessage.Channel, timestamp, event)
+				updatedMessage := slack.CreatePullRequestMessage(ctx, log, h.db, oldMessage.Channel, timestamp, team.Config.PingSlackUsers, event)
 				updatedMessage.Timestamp = timestamp
 
 				log.Info("Posting update of pull request", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
@@ -77,5 +77,5 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 	}
 
 	log.Info("Received pull request", "slack_channel", channel)
-	return slack.CreatePullRequestMessage(ctx, log, db, channel, threadTimestamp, event), nil
+	return slack.CreatePullRequestMessage(ctx, log, db, channel, threadTimestamp, team.Config.PingSlackUsers, event), nil
 }

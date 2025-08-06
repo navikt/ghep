@@ -3,7 +3,7 @@
   "text": "Issue <https://github.com/navikt/nada-internal/issues/4|#4> opened in `<https://github.com/navikt/nada-internal|nada-internal>` by <https://github.com/Kyrremann|Kyrremann>",
   "attachments": [
     {
-      "text": "*<https://github.com/navikt/nada-internal/issues/4|#4 Dette er en test>*\nHei, Kyrre tester issues.",
+      "text": "*<https://github.com/navikt/nada-internal/issues/4|#4 Dette er en test>*\nHei, Kyrre tester issues.\n*Assignees:* <@U8PL7CR4K>",
       "type": "mrkdwn",
       "color": "#34a44c",
       "footer": "<https://github.com/navikt/nada-internal|navikt/nada-internal>",

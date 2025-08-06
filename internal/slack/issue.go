@@ -13,7 +13,7 @@ import (
 	"github.com/navikt/ghep/internal/sql"
 )
 
-func CreateIssueMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, event github.Event) *Message {
+func CreateIssueMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, pingSlack bool, event github.Event) *Message {
 	color := ColorOpened
 
 	text := fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
@@ -31,13 +31,17 @@ func CreateIssueMessage(ctx context.Context, log *slog.Logger, db sql.Userer, ch
 	if len(event.Issue.Assignees) > 0 {
 		var assignees strings.Builder
 		for i, assignee := range event.Issue.Assignees {
-			userID, err := db.GetUserSlackID(ctx, assignee.Login)
-			if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-				log.Error("error getting user Slack ID", "user", assignee.Login, "err", err.Error())
-			}
+			if pingSlack {
+				userID, err := db.GetUserSlackID(ctx, assignee.Login)
+				if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+					log.Error("error getting user Slack ID", "user", assignee.Login, "err", err.Error())
+				}
 
-			if userID != "" {
-				fmt.Fprintf(&assignees, "<@%s>", userID)
+				if userID != "" {
+					fmt.Fprintf(&assignees, "<@%s>", userID)
+				} else {
+					fmt.Fprintf(&assignees, "@%s", assignee.Login)
+				}
 			} else {
 				fmt.Fprintf(&assignees, "@%s", assignee.Login)
 			}
