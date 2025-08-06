@@ -227,7 +227,8 @@ func validateTeamExists(teamURL, bearerToken string) error {
 	return nil
 }
 
-func (c Client) FetchOrgMembersAsTeam(ctx context.Context, log *slog.Logger) error {
+// FetchOrgAsTeam fetches the organization as a team, hence there needs to be a team in the organization with the same name as the organization.
+func (c Client) FetchOrgAsTeam(ctx context.Context, log *slog.Logger) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)

@@ -34,7 +34,7 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 	log.Info("Getting info about teams from Github")
 
 	if subscribeToOrg {
-		if err := githubClient.FetchOrgMembersAsTeam(ctx, log); err != nil {
+		if err := githubClient.FetchOrgAsTeam(ctx, log); err != nil {
 			log.Error("fetching org members from Github", "err", err.Error())
 			return
 		}
