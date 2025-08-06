@@ -16,7 +16,7 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 	storedTeams, err := db.ListTeams(ctx)
 	if err != nil {
 		log.Error("listing teams from database", "err", err.Error())
-		os.Exit(1)
+		return
 	}
 
 	for name := range teamConfig {
@@ -27,7 +27,7 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 		log.Info("Adding team to database", "team", name)
 		if err := db.CreateTeam(ctx, name); err != nil {
 			log.Error("creating team in database", "team", name, "err", err.Error())
-			os.Exit(1)
+			return
 		}
 	}
 
@@ -36,17 +36,17 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 	if subscribeToOrg {
 		if err := githubClient.FetchOrgMembersAsTeam(ctx, log); err != nil {
 			log.Error("fetching org members from Github", "err", err.Error())
-			os.Exit(1)
+			return
 		}
 	} else {
 		if err := githubClient.FetchTeams(ctx, log, os.Getenv("GITHUB_BLOCKLIST_REPOS")); err != nil {
 			log.Error("fetching teams from Github", "err", err.Error())
-			os.Exit(1)
+			return
 		}
 	}
 
 	if err := githubClient.FetchOrgMembers(ctx, log); err != nil {
 		log.Error("fetching org members from Github", "err", err.Error())
-		os.Exit(1)
+		return
 	}
 }
