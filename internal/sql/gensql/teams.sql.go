@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const addTeamMember = `-- name: AddTeamMember :exec
+const AddTeamMember = `-- name: AddTeamMember :exec
 INSERT INTO team_members (team_slug, user_login) VALUES ($1, $2)
 ON CONFLICT (team_slug, user_login) DO NOTHING
 `
@@ -20,11 +20,11 @@ type AddTeamMemberParams struct {
 }
 
 func (q *Queries) AddTeamMember(ctx context.Context, arg AddTeamMemberParams) error {
-	_, err := q.db.Exec(ctx, addTeamMember, arg.TeamSlug, arg.UserLogin)
+	_, err := q.db.Exec(ctx, AddTeamMember, arg.TeamSlug, arg.UserLogin)
 	return err
 }
 
-const addTeamRepository = `-- name: AddTeamRepository :exec
+const AddTeamRepository = `-- name: AddTeamRepository :exec
 INSERT INTO team_repositories (team_slug, repository_id) VALUES ($1, $2)
 ON CONFLICT (team_slug, repository_id) DO NOTHING
 `
@@ -35,31 +35,31 @@ type AddTeamRepositoryParams struct {
 }
 
 func (q *Queries) AddTeamRepository(ctx context.Context, arg AddTeamRepositoryParams) error {
-	_, err := q.db.Exec(ctx, addTeamRepository, arg.TeamSlug, arg.RepositoryID)
+	_, err := q.db.Exec(ctx, AddTeamRepository, arg.TeamSlug, arg.RepositoryID)
 	return err
 }
 
-const createTeam = `-- name: CreateTeam :exec
+const CreateTeam = `-- name: CreateTeam :exec
 INSERT INTO teams (slug) VALUES ($1)
 ON CONFLICT (slug) DO NOTHING
 `
 
 func (q *Queries) CreateTeam(ctx context.Context, slug string) error {
-	_, err := q.db.Exec(ctx, createTeam, slug)
+	_, err := q.db.Exec(ctx, CreateTeam, slug)
 	return err
 }
 
-const getTeam = `-- name: GetTeam :one
+const GetTeam = `-- name: GetTeam :one
 SELECT slug FROM teams WHERE slug = $1
 `
 
 func (q *Queries) GetTeam(ctx context.Context, slug string) (string, error) {
-	row := q.db.QueryRow(ctx, getTeam, slug)
+	row := q.db.QueryRow(ctx, GetTeam, slug)
 	err := row.Scan(&slug)
 	return slug, err
 }
 
-const getTeamMember = `-- name: GetTeamMember :one
+const GetTeamMember = `-- name: GetTeamMember :one
 SELECT user_login FROM team_members WHERE team_slug = $1 AND user_login = $2
 `
 
@@ -69,13 +69,13 @@ type GetTeamMemberParams struct {
 }
 
 func (q *Queries) GetTeamMember(ctx context.Context, arg GetTeamMemberParams) (string, error) {
-	row := q.db.QueryRow(ctx, getTeamMember, arg.TeamSlug, arg.UserLogin)
+	row := q.db.QueryRow(ctx, GetTeamMember, arg.TeamSlug, arg.UserLogin)
 	var user_login string
 	err := row.Scan(&user_login)
 	return user_login, err
 }
 
-const getTeamMemberByEmail = `-- name: GetTeamMemberByEmail :one
+const GetTeamMemberByEmail = `-- name: GetTeamMemberByEmail :one
 SELECT tm.user_login
 FROM team_members tm
 JOIN emails e ON tm.user_login = e.login
@@ -88,13 +88,13 @@ type GetTeamMemberByEmailParams struct {
 }
 
 func (q *Queries) GetTeamMemberByEmail(ctx context.Context, arg GetTeamMemberByEmailParams) (string, error) {
-	row := q.db.QueryRow(ctx, getTeamMemberByEmail, arg.TeamSlug, arg.Email)
+	row := q.db.QueryRow(ctx, GetTeamMemberByEmail, arg.TeamSlug, arg.Email)
 	var user_login string
 	err := row.Scan(&user_login)
 	return user_login, err
 }
 
-const getTeamMembersWithEmails = `-- name: GetTeamMembersWithEmails :many
+const GetTeamMembersWithEmails = `-- name: GetTeamMembersWithEmails :many
 SELECT tm.user_login, e.email
 FROM team_members tm
 JOIN emails e ON tm.user_login = e.login
@@ -108,7 +108,7 @@ type GetTeamMembersWithEmailsRow struct {
 }
 
 func (q *Queries) GetTeamMembersWithEmails(ctx context.Context, teamSlug string) ([]GetTeamMembersWithEmailsRow, error) {
-	rows, err := q.db.Query(ctx, getTeamMembersWithEmails, teamSlug)
+	rows, err := q.db.Query(ctx, GetTeamMembersWithEmails, teamSlug)
 	if err != nil {
 		return nil, err
 	}
@@ -127,12 +127,12 @@ func (q *Queries) GetTeamMembersWithEmails(ctx context.Context, teamSlug string)
 	return items, nil
 }
 
-const listTeamMembers = `-- name: ListTeamMembers :many
+const ListTeamMembers = `-- name: ListTeamMembers :many
 SELECT user_login FROM team_members WHERE team_slug = $1 ORDER BY user_login
 `
 
 func (q *Queries) ListTeamMembers(ctx context.Context, teamSlug string) ([]string, error) {
-	rows, err := q.db.Query(ctx, listTeamMembers, teamSlug)
+	rows, err := q.db.Query(ctx, ListTeamMembers, teamSlug)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func (q *Queries) ListTeamMembers(ctx context.Context, teamSlug string) ([]strin
 	return items, nil
 }
 
-const listTeamRepositories = `-- name: ListTeamRepositories :many
+const ListTeamRepositories = `-- name: ListTeamRepositories :many
 SELECT r.id, r.name
 FROM team_repositories tr
 JOIN repositories r ON tr.repository_id = r.id
@@ -160,7 +160,7 @@ ORDER BY r.name
 `
 
 func (q *Queries) ListTeamRepositories(ctx context.Context, teamSlug string) ([]Repository, error) {
-	rows, err := q.db.Query(ctx, listTeamRepositories, teamSlug)
+	rows, err := q.db.Query(ctx, ListTeamRepositories, teamSlug)
 	if err != nil {
 		return nil, err
 	}
@@ -179,12 +179,12 @@ func (q *Queries) ListTeamRepositories(ctx context.Context, teamSlug string) ([]
 	return items, nil
 }
 
-const listTeams = `-- name: ListTeams :many
+const ListTeams = `-- name: ListTeams :many
 SELECT slug FROM teams ORDER BY slug
 `
 
 func (q *Queries) ListTeams(ctx context.Context) ([]string, error) {
-	rows, err := q.db.Query(ctx, listTeams)
+	rows, err := q.db.Query(ctx, ListTeams)
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +203,7 @@ func (q *Queries) ListTeams(ctx context.Context) ([]string, error) {
 	return items, nil
 }
 
-const listTeamsByRepository = `-- name: ListTeamsByRepository :many
+const ListTeamsByRepository = `-- name: ListTeamsByRepository :many
 SELECT t.slug
 FROM teams t
 JOIN team_repositories tr ON t.slug = tr.team_slug
@@ -213,7 +213,7 @@ ORDER BY t.slug
 `
 
 func (q *Queries) ListTeamsByRepository(ctx context.Context, name string) ([]string, error) {
-	rows, err := q.db.Query(ctx, listTeamsByRepository, name)
+	rows, err := q.db.Query(ctx, ListTeamsByRepository, name)
 	if err != nil {
 		return nil, err
 	}
@@ -232,7 +232,7 @@ func (q *Queries) ListTeamsByRepository(ctx context.Context, name string) ([]str
 	return items, nil
 }
 
-const removeTeamMember = `-- name: RemoveTeamMember :exec
+const RemoveTeamMember = `-- name: RemoveTeamMember :exec
 DELETE FROM team_members WHERE team_slug = $1 AND user_login = $2
 `
 
@@ -242,11 +242,11 @@ type RemoveTeamMemberParams struct {
 }
 
 func (q *Queries) RemoveTeamMember(ctx context.Context, arg RemoveTeamMemberParams) error {
-	_, err := q.db.Exec(ctx, removeTeamMember, arg.TeamSlug, arg.UserLogin)
+	_, err := q.db.Exec(ctx, RemoveTeamMember, arg.TeamSlug, arg.UserLogin)
 	return err
 }
 
-const removeTeamRepository = `-- name: RemoveTeamRepository :exec
+const RemoveTeamRepository = `-- name: RemoveTeamRepository :exec
 DELETE FROM team_repositories
 WHERE team_slug = $1 AND repository_id = (SELECT id FROM repositories WHERE name = $2)
 `
@@ -257,6 +257,6 @@ type RemoveTeamRepositoryParams struct {
 }
 
 func (q *Queries) RemoveTeamRepository(ctx context.Context, arg RemoveTeamRepositoryParams) error {
-	_, err := q.db.Exec(ctx, removeTeamRepository, arg.TeamSlug, arg.Name)
+	_, err := q.db.Exec(ctx, RemoveTeamRepository, arg.TeamSlug, arg.Name)
 	return err
 }

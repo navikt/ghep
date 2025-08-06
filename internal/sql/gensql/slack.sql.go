@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const createSlackMessage = `-- name: CreateSlackMessage :exec
+const CreateSlackMessage = `-- name: CreateSlackMessage :exec
 INSERT INTO slack_messages (team_slug, event_id, thread_ts, channel, payload) VALUES ($1, $2, $3, $4, $5)
 ON CONFLICT (team_slug, event_id) DO UPDATE
 SET thread_ts = EXCLUDED.thread_ts,
@@ -26,7 +26,7 @@ type CreateSlackMessageParams struct {
 }
 
 func (q *Queries) CreateSlackMessage(ctx context.Context, arg CreateSlackMessageParams) error {
-	_, err := q.db.Exec(ctx, createSlackMessage,
+	_, err := q.db.Exec(ctx, CreateSlackMessage,
 		arg.TeamSlug,
 		arg.EventID,
 		arg.ThreadTs,
@@ -36,7 +36,7 @@ func (q *Queries) CreateSlackMessage(ctx context.Context, arg CreateSlackMessage
 	return err
 }
 
-const getSlackMessage = `-- name: GetSlackMessage :one
+const GetSlackMessage = `-- name: GetSlackMessage :one
 SELECT thread_ts, channel, payload
 FROM slack_messages
 WHERE team_slug = $1 AND event_id = $2
@@ -54,13 +54,13 @@ type GetSlackMessageRow struct {
 }
 
 func (q *Queries) GetSlackMessage(ctx context.Context, arg GetSlackMessageParams) (GetSlackMessageRow, error) {
-	row := q.db.QueryRow(ctx, getSlackMessage, arg.TeamSlug, arg.EventID)
+	row := q.db.QueryRow(ctx, GetSlackMessage, arg.TeamSlug, arg.EventID)
 	var i GetSlackMessageRow
 	err := row.Scan(&i.ThreadTs, &i.Channel, &i.Payload)
 	return i, err
 }
 
-const updateSlackMessage = `-- name: UpdateSlackMessage :exec
+const UpdateSlackMessage = `-- name: UpdateSlackMessage :exec
 UPDATE slack_messages
 SET payload = $3
 WHERE team_slug = $1 AND event_id = $2
@@ -73,6 +73,6 @@ type UpdateSlackMessageParams struct {
 }
 
 func (q *Queries) UpdateSlackMessage(ctx context.Context, arg UpdateSlackMessageParams) error {
-	_, err := q.db.Exec(ctx, updateSlackMessage, arg.TeamSlug, arg.EventID, arg.Payload)
+	_, err := q.db.Exec(ctx, UpdateSlackMessage, arg.TeamSlug, arg.EventID, arg.Payload)
 	return err
 }

@@ -9,31 +9,31 @@ import (
 	"context"
 )
 
-const createRepository = `-- name: CreateRepository :one
+const CreateRepository = `-- name: CreateRepository :one
 INSERT INTO repositories (name) VALUES ($1)
 ON CONFLICT (name) DO NOTHING
 RETURNING id
 `
 
 func (q *Queries) CreateRepository(ctx context.Context, name string) (int32, error) {
-	row := q.db.QueryRow(ctx, createRepository, name)
+	row := q.db.QueryRow(ctx, CreateRepository, name)
 	var id int32
 	err := row.Scan(&id)
 	return id, err
 }
 
-const getRepository = `-- name: GetRepository :one
+const GetRepository = `-- name: GetRepository :one
 SELECT id, name FROM repositories WHERE name = $1
 `
 
 func (q *Queries) GetRepository(ctx context.Context, name string) (Repository, error) {
-	row := q.db.QueryRow(ctx, getRepository, name)
+	row := q.db.QueryRow(ctx, GetRepository, name)
 	var i Repository
 	err := row.Scan(&i.ID, &i.Name)
 	return i, err
 }
 
-const updateRepository = `-- name: UpdateRepository :exec
+const UpdateRepository = `-- name: UpdateRepository :exec
 UPDATE repositories
 SET name = $1
 WHERE name = $2
@@ -45,6 +45,6 @@ type UpdateRepositoryParams struct {
 }
 
 func (q *Queries) UpdateRepository(ctx context.Context, arg UpdateRepositoryParams) error {
-	_, err := q.db.Exec(ctx, updateRepository, arg.Name, arg.OldName)
+	_, err := q.db.Exec(ctx, UpdateRepository, arg.Name, arg.OldName)
 	return err
 }

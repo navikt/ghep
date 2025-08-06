@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const createEmail = `-- name: CreateEmail :exec
+const CreateEmail = `-- name: CreateEmail :exec
 INSERT INTO emails (login, email) VALUES ($1, $2)
 ON CONFLICT (login, email) DO NOTHING
 `
@@ -20,48 +20,48 @@ type CreateEmailParams struct {
 }
 
 func (q *Queries) CreateEmail(ctx context.Context, arg CreateEmailParams) error {
-	_, err := q.db.Exec(ctx, createEmail, arg.Login, arg.Email)
+	_, err := q.db.Exec(ctx, CreateEmail, arg.Login, arg.Email)
 	return err
 }
 
-const createUser = `-- name: CreateUser :exec
+const CreateUser = `-- name: CreateUser :exec
 INSERT INTO users (login) VALUES ($1)
 ON CONFLICT (login) DO NOTHING
 `
 
 func (q *Queries) CreateUser(ctx context.Context, login string) error {
-	_, err := q.db.Exec(ctx, createUser, login)
+	_, err := q.db.Exec(ctx, CreateUser, login)
 	return err
 }
 
-const deleteUser = `-- name: DeleteUser :exec
+const DeleteUser = `-- name: DeleteUser :exec
 DELETE FROM users WHERE login = $1
 `
 
 func (q *Queries) DeleteUser(ctx context.Context, login string) error {
-	_, err := q.db.Exec(ctx, deleteUser, login)
+	_, err := q.db.Exec(ctx, DeleteUser, login)
 	return err
 }
 
-const existsUser = `-- name: ExistsUser :one
+const ExistsUser = `-- name: ExistsUser :one
 SELECT EXISTS (SELECT login FROM users WHERE login = $1)
 `
 
 func (q *Queries) ExistsUser(ctx context.Context, login string) (bool, error) {
-	row := q.db.QueryRow(ctx, existsUser, login)
+	row := q.db.QueryRow(ctx, ExistsUser, login)
 	var exists bool
 	err := row.Scan(&exists)
 	return exists, err
 }
 
-const getUserByEmail = `-- name: GetUserByEmail :one
+const GetUserByEmail = `-- name: GetUserByEmail :one
 SELECT e.login
 FROM emails e
 WHERE e.email ilike $1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (string, error) {
-	row := q.db.QueryRow(ctx, getUserByEmail, email)
+	row := q.db.QueryRow(ctx, GetUserByEmail, email)
 	var login string
 	err := row.Scan(&login)
 	return login, err
