@@ -4,38 +4,7 @@
 
 package gensql
 
-type Email struct {
-	Login string
-	Email string
-}
-
 type Repository struct {
 	ID   int32
 	Name string
-}
-
-type SlackMessage struct {
-	TeamSlug string
-	EventID  string
-	ThreadTs string
-	Channel  string
-	Payload  []byte
-}
-
-type Team struct {
-	Slug string
-}
-
-type TeamMember struct {
-	TeamSlug  string
-	UserLogin string
-}
-
-type TeamRepository struct {
-	TeamSlug     string
-	RepositoryID int32
-}
-
-type User struct {
-	Login string
 }

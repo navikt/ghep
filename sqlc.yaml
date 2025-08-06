@@ -7,3 +7,4 @@ sql:
       go:
         out: "internal/sql/gensql"
         sql_package: "pgx/v5"
+        omit_unused_structs: true
