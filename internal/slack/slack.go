@@ -66,6 +66,11 @@ type Channel struct {
 	Name string `json:"name"`
 }
 
+type User struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
+}
+
 type Response struct {
 	Ok       bool   `json:"ok"`
 	Error    string `json:"error"`
@@ -99,6 +104,17 @@ type ChannelResponse struct {
 	Response
 
 	Channels []Channel `json:"channels"`
+}
+
+type UserResponse struct {
+	Response
+
+	Users []struct {
+		ID      string `json:"id"`
+		Profile struct {
+			Email string `json:"email"`
+		} `json:"profile"`
+	} `json:"members"`
 }
 
 type Client struct {
