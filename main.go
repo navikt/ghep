@@ -39,7 +39,7 @@ func main() {
 	subscribeToOrg, _ := strconv.ParseBool(os.Getenv("GHEP_SUBSCRIBE_TO_ORG"))
 
 	go ghep.FetchGithubData(ctx, log.With("component", "fetch-teams"), db, teamConfig, githubClient, subscribeToOrg)
-	ghep.FetchSlackUsers(ctx, log.With("component", "fetch-slack"), db)
+	go ghep.FetchSlackUsers(ctx, log.With("component", "fetch-slack"), db)
 
 	glog := log.With("component", "ghep")
 	if err := ghep.Run(ctx, glog, db, teamConfig, githubClient, subscribeToOrg); err != nil {
