@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "cmd/**"
+      - "main.go"
       - "internal/**"
       - "go.mod"
       - "go.sum"
