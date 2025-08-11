@@ -84,7 +84,7 @@ func TestHandleEvent(t *testing.T) {
 			case github.TypeCodeScanningAlert:
 				message = slack.CreateCodeScanningAlertMessage(slackChannel, "", event)
 			case github.TypeDependabotAlert:
-				message = slack.CreateDependabotAlertMessage(slackChannel, event, "")
+				message = slack.CreateDependabotAlertMessage(slackChannel, "", event)
 			case github.TypeSecurityAdvisory:
 				message = slack.CreateSecurityAdvisoryMessage(slackChannel, event)
 			case github.TypeSecretScanningAlert:

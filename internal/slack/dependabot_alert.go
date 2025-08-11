@@ -6,7 +6,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateDependabotAlertMessage(channel string, event github.Event, timestamp string) *Message {
+func CreateDependabotAlertMessage(channel, timestamp string, event github.Event) *Message {
 	var attachments []Attachment
 	if event.Action == "created" {
 		attachments = []Attachment{
