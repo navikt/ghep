@@ -27,7 +27,6 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 
 	var timestamp string
 	channel := team.SlackChannels.Security
-	// TODO: Burde ha bedre kontroll på hvilke Actions vi håndterer
 	if event.Action != "created" {
 		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
 			TeamSlug: team.Name,
