@@ -6,7 +6,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateCodeScanningAlertMessage(channel string, event github.Event) *Message {
+func CreateCodeScanningAlertMessage(channel, timestamp string, event github.Event) *Message {
 	var attachments []Attachment
 	if event.Action == "created" {
 		color := getColorBySeverity(event.Alert.Rule.SeverityType())
@@ -20,8 +20,9 @@ func CreateCodeScanningAlertMessage(channel string, event github.Event) *Message
 	}
 
 	return &Message{
-		Channel:     channel,
-		Text:        fmt.Sprintf("A code scanning alert was just %s for the repository %s.\nRead more: %s", event.Action, event.Repository.ToSlack(), event.Alert.URL),
-		Attachments: attachments,
+		Channel:         channel,
+		Text:            fmt.Sprintf("A code scanning alert was just %s for the repository %s.\nRead more: %s", event.Action, event.Repository.ToSlack(), event.Alert.URL),
+		Attachments:     attachments,
+		ThreadTimestamp: timestamp,
 	}
 }
