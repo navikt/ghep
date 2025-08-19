@@ -295,3 +295,7 @@ data:
         workflows:
           ignoreBots: true
           branches: ["main", "sandbox"]
+    utsikt:
+      commits: "#utsikt-commits"
+      issues: "#utsikt-pull-requests"
+      pulls: "#utsikt-pull-requests"
