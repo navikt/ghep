@@ -45,11 +45,11 @@ data:
       pulls: "team-bømlo-pull-requests"
       issues: "team-bømlo-pull-requests"
     dv-a-team:
-      commits: "#dv-a-team-commits"
-      issues: "#dv-a-team-pull-requests"
-      pulls: "#dv-a-team-pull-requests"
-      workflows: "#dv-a-team-ops"
-      security: "#dv-a-team-ops"
+      commits: "#a-team-commits"
+      issues: "#a-team-pull-requests"
+      pulls: "#a-team-pull-requests"
+      workflows: "#a-team-ops"
+      security: "#a-team-ops"
     spenn:
       commits: "#spenn-commits"
       issues: "#spenn-pull-requests"
