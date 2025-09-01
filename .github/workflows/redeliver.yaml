@@ -13,7 +13,7 @@ jobs:
     name: Redeliver failed deliveries
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: navikt/github-app-token-generator@v1
         id: get-token
