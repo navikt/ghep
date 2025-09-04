@@ -51,9 +51,9 @@ data:
       workflows: "#a-team-ops"
       security: "#a-team-ops"
     spenn:
-      commits: "#spenn-commits"
-      issues: "#spenn-pull-requests"
-      pulls: "#spenn-pull-requests"
+      commits: "#team-spenn-commits"
+      issues: "#team-spenn-pull-requests"
+      pulls: "#team-spenn-pull-requests"
       security: "#team-spenn-security"
     leesah-quiz:
       commits: "#leesah-game-ci"
