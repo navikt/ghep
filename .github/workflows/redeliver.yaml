@@ -13,7 +13,7 @@ jobs:
     name: Redeliver failed deliveries
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: navikt/github-app-token-generator@v1
         id: get-token
@@ -21,7 +21,7 @@ jobs:
           app-id: "${{ secrets.REDELIVERY_APP_ID }}"
           private-key: "${{ secrets.REDELIVERY_PRIVATE_KEY }}"
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "18.x"
 
