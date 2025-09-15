@@ -244,6 +244,7 @@ data:
       issues: "#helseytelser-speilvendt-github"
       pulls: "#helseytelser-speilvendt-github"
       workflows: "#helseytelser-speilvendt-github"
+      security: "#helseytelser-speilvendt-github"
       config:
         silenceDependabot: "always"
         workflows:
