@@ -33,6 +33,7 @@ data:
       issues: "#flex-github-feed"
       pulls: "#flex-github-pullrequest-feed"
       workflows: "#spøkelser"
+      security: "#spøkelser"
       config:
         externalContributorsChannel: "#flex-ghep-extern-contrib"
         workflows:
