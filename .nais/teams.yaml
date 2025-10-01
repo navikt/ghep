@@ -51,6 +51,9 @@ data:
       pulls: "#a-team-pull-requests"
       workflows: "#a-team-ops"
       security: "#a-team-ops"
+      config:
+        workflows:
+          branches: ["main"]
     spenn:
       commits: "#team-spenn-commits"
       issues: "#team-spenn-pull-requests"
