@@ -304,3 +304,5 @@ data:
       commits: "#utsikt-commits"
       issues: "#utsikt-pull-requests"
       pulls: "#utsikt-pull-requests"
+    appsec:
+      security: "#appsec-aktivitet"
