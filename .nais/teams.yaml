@@ -288,10 +288,10 @@ data:
         security:
           severityFilter: "high"
     pensjonskalkulator:
-      commits: "#pensjonskalkulator-teknisk"
-      pulls: "#pensjonskalkulator-teknisk"
-      security: "#pensjonskalkulator-teknisk"
-      workflows: "#pensjonskalkulator-teknisk"
+      commits: "#planlegge-pensjon-github-events"
+      pulls: "#planlegge-pensjon-pull-requests"
+      security: "#planlegge-pensjon-github-events"
+      workflows: "#planlegge-pensjon-github-events"
       config:
         ignoreRepositories:
           - "pensjon-pen"
