@@ -310,3 +310,12 @@ data:
       config:
         workflows:
           repositories: ["nav-cloc"]
+    dataplattform-datakatalog:
+      commits: "#dataplattform-datakatalog-commits"
+      issues: "#dataplattform-datakatalog-pull-requests"
+      pulls: "#dataplattform-datakatalog-pull-requests"
+      workflows: "#dataplattform-datakatalog-ops"
+      security: "#dataplattform-datakatalog-ops"
+      config:
+        workflows:
+          branches: ["main"]
