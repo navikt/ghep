@@ -30,6 +30,22 @@ data:
             - master
 
 ---
+apiVersion: data.nais.io/v1
+kind: Postgres
+metadata:
+  name: gnep
+  namespace: the-g-team
+spec:
+  cluster:
+    majorVersion: "17"
+    resources:
+      cpu: 100m
+      diskSize: 2Gi
+      memory: 2G
+  database:
+    collation: nb_NO
+
+---
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
@@ -75,14 +91,7 @@ spec:
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
   postgres:
-    cluster:
-      majorVersion: "17"
-      resources:
-        cpu: 100m
-        diskSize: 2Gi
-        memory: 2G
-    database:
-      collation: nb_NO
+    clusterName: gnep
   startup:
     path: /internal/health
     initialDelay: 10
