@@ -306,10 +306,14 @@ data:
       pulls: "#utsikt-pull-requests"
     appsec:
       security: "#appsec-aktivitet"
+      issues: "#appsec-aktivitet"
+      commits: "#appsec-aktivitet"
+      pulls: "#appsec-aktivitet"
       workflows: "#appsec-aktivitet"
       config:
         workflows:
           repositories: ["nav-cloc"]
+        silenceDependabot: "always"
     dataplattform-datakatalog:
       commits: "#dataplattform-datakatalog-commits"
       issues: "#dataplattform-datakatalog-pull-requests"
