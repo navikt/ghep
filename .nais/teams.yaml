@@ -120,8 +120,11 @@ data:
           branches: ["main"]
     tilleggsstonader:
       pulls: "#tilleggsstønader-gh-pr"
+      security: "#tilleggsstønader-alerts"
       config:
         silenceDependabot: "always"
+        security:
+          severityFilter: "critical"
     k9saksbehandling:
       security: "#sif-sikkerhetsvarsel"
       pulls: "#k9saksbehandling-feed"
