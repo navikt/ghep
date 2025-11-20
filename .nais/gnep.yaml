@@ -40,7 +40,7 @@ spec:
     majorVersion: "17"
     resources:
       cpu: 100m
-      diskSize: 2Gi
+      diskSize: 4Gi
       memory: 2G
   database:
     collation: nb_NO
