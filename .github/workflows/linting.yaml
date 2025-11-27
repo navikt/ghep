@@ -13,7 +13,7 @@ jobs:
     name: Run linters
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: "yamllint .nais/teams.yaml"
         run: |
           yq '.data."teams.yaml"' .nais/teams.yaml | yq | yamllint -d "{extends: default, rules: { empty-values: {forbid-in-block-mappings: true}, quoted-strings: {required: true}, document-start: {present: false}}}" -

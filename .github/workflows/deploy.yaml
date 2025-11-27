@@ -31,7 +31,7 @@ jobs:
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Fetch all history for what-changed action
       - name: Determine what to do
@@ -51,7 +51,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
@@ -63,7 +63,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
