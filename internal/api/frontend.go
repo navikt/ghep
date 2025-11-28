@@ -15,7 +15,7 @@ var indexHTML = `<!DOCTYPE html>
 <body>
     <h1>Teams with repositories!</h1>
     {{- range . }}
-        <h2>{{ .Name }}:</h2>
+        <h2 id="{{ .Name }}">{{ .Name }}:</h2>
         <ul>
             {{ range .Repositories }}
                 <li>{{ . }}</li>
