@@ -27,6 +27,7 @@ metadata:
 spec:
   ingresses:
     - https://ghep.nav.no
+    - https://ghep.intern.nav.no
   replicas:
     max: 2
     min: 1

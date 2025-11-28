@@ -56,6 +56,7 @@ metadata:
 spec:
   ingresses:
     - https://ghep.nav.no/nais
+    - https://gnep.intern.nav.no
   replicas:
     max: 2
     min: 1
