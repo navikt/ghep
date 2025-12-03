@@ -326,3 +326,11 @@ data:
       config:
         workflows:
           branches: ["main"]
+    mob:
+      workflows: "#utbetaling-team-motta-og-beregne-vaktmester"
+      security: "#utbetaling-team-motta-og-beregne-vaktmester"
+      config:
+        workflows:
+          branches: ["main"]
+        security:
+          severityFilter: "high"
