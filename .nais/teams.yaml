@@ -339,9 +339,11 @@ data:
       security: "#utbetaling-team-motta-og-beregne-vaktmester"
       config:
         workflows:
+          ignoreBots: true
           branches: ["main"]
+        silenceDependabot: "always"
         security:
-          severityFilter: "high"
+          severityFilter: "critical"
     bankkommunikasjon:
       pulls: "#team-kobra-utviklere"
       workflows: "#team-kobra-utviklere"
