@@ -105,10 +105,18 @@ data:
       issues: "#team-fager-bots"
       pulls: "#team-fager-bots"
       workflows: "#team-fager-bots"
+      security: "#team-fager-alerts"
+      config:
+        security:
+          severityFilter: "high"
     permittering-og-nedbemanning:
       issues: "#team-fager-bots"
       pulls: "#team-fager-bots"
       workflows: "#team-fager-bots"
+      security: "#team-fager-alerts"
+      config:
+        security:
+          severityFilter: "high"
     arbeidsforhold:
       pulls: "#team-arbeidsforhold-github"
       workflows: "#team-arbeidsforhold-github"
@@ -334,3 +342,14 @@ data:
           branches: ["main"]
         security:
           severityFilter: "high"
+    bankkommunikasjon:
+      pulls: "#team-kobra-utviklere"
+      workflows: "#team-kobra-utviklere"
+      security: "#team-kobra-alerts-prod"
+      config:
+        workflows:
+          ignoreBots: true
+          branches: [ "main" ]
+        silenceDependabot: "always"
+        security:
+          severityFilter: "critical"
