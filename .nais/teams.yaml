@@ -350,3 +350,10 @@ data:
         silenceDependabot: "always"
         security:
           severityFilter: "critical"
+    ytelsesrapportering:
+      pulls: "#team-kobra-utviklere"
+      security: "#team-kobra-alerts-prod"
+      config:
+        silenceDependabot: "always"
+        security:
+          severityFilter: "critical"
