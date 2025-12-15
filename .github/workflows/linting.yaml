@@ -5,8 +5,8 @@ on:
     branches-ignore:
       - main
     paths:
-      - '.nais/teams.yaml'
-      - '.github/workflows/linting.yaml'
+      - ".nais/teams.yaml"
+      - ".github/workflows/linting.yaml"
 
 jobs:
   lint-teams:
@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: "yamllint .nais/teams.yaml"
-        run: |
-          yq '.data."teams.yaml"' .nais/teams.yaml | yq | yamllint -d "{extends: default, rules: { empty-values: {forbid-in-block-mappings: true}, quoted-strings: {required: true}, document-start: {present: false}}}" -
+      - name: Lint the yaml
+        run: yamllint -c .yamllint.yaml .nais/teams.yaml
+      - name: Validate it
+        run: go run cmd/validate/validate.go .nais/teams.yaml

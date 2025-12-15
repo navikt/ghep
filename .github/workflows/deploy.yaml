@@ -34,11 +34,17 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Fetch all history for what-changed action
+      - run: |
+          yq '
+          .data["teams.yaml"] = load_str(strenv(TEAMS_FILE))
+          ' .nais/teams-resource.yaml > teams_for_deploy.yaml
+        env:
+          TEAMS_FILE: .nais/teams.yaml
       - name: Determine what to do
         id: changed-files
         uses: "nais/what-changed@main"
         with:
-          files: .nais/teams.yaml,.nais/ghep.yaml,.nais/gnep.yaml
+          files: .nais/teams_for_deploy.yaml,.nais/ghep.yaml,.nais/gnep.yaml
       - name: Push docker image to GAR
         if: steps.changed-files.outputs.changed != 'only-inputs'
         uses: nais/docker-build-push@v0
@@ -55,7 +61,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
-          RESOURCE: .nais/teams.yaml,.nais/ghep.yaml
+          RESOURCE: .nais/teams_for_deploy.yaml,.nais/ghep.yaml
           WORKLOAD_IMAGE: ${{ needs.build.outputs.image }}
 
   gnep:

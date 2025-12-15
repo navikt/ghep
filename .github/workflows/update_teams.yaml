@@ -17,7 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - run: |
+          yq '
+          .data["teams.yaml"] = load_str(strenv(TEAMS_FILE))
+          ' .nais/teams-resource.yaml > teams_for_deploy.yaml
+        env:
+          TEAMS_FILE: .nais/teams.yaml
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
-          RESOURCE: .nais/teams.yaml
+          RESOURCE: .nais/teams.yaml, teams_for_deploy.yaml
