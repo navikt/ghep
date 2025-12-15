@@ -23,8 +23,7 @@ jobs:
           ' .nais/teams-resource.yaml > .nais/teams_for_deploy.yaml
         env:
           TEAMS_FILE: .nais/teams.yaml
-      - run: cat .nais/teams_for_deploy.yaml
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
-          RESOURCE: .nais/teams.yaml, .nais/teams_for_deploy.yaml
+          RESOURCE: .nais/teams.yaml,.nais/teams_for_deploy.yaml
