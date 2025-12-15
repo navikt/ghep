@@ -337,7 +337,7 @@ bankkommunikasjon:
   security: "#team-kobra-alerts-prod"
   config:
     workflows:
-      ignoreBots: "true"
+      ignoreBots: true
       branches: ["main"]
     silenceDependabot: "always"
     security:
