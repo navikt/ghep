@@ -92,7 +92,7 @@ team:
 - `security.severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
 - `pingSlackUsers`- Pinger Slack-brukere som er tildelt issues eller pull requests
 
-#### Workflows
+#### Pull Requests
 
 ``` yaml
 team:
