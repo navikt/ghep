@@ -133,7 +133,7 @@ data:
       config:
         silenceDependabot: "always"
         externalContributorsChannel: "#tilleggsstonader-gh-extern-contrib"
-        pingSlackUsers: "true"
+        pingSlackUsers: true
         security:
           severityFilter: "critical"
         workflows:
