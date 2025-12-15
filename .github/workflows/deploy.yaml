@@ -37,7 +37,7 @@ jobs:
       - run: |
           yq '
           .data["teams.yaml"] = load_str(strenv(TEAMS_FILE))
-          ' .nais/teams-resource.yaml > teams_for_deploy.yaml
+          ' .nais/teams-resource.yaml > .nais/teams_for_deploy.yaml
         env:
           TEAMS_FILE: .nais/teams.yaml
       - name: Determine what to do
