@@ -1,0 +1,9 @@
+extends: default
+
+rules:
+  empty-values:
+    forbid-in-block-mappings: true
+    forbid-in-flow-mappings: true
+    forbid-in-block-sequences: true
+  document-start:
+    present: false

@@ -43,7 +43,11 @@ func fetchCoAuthors(commit string) ([]github.Author, error) {
 			_, after, found := strings.Cut(before, "+")
 			if found {
 				author.Username = after
+			} else {
+				author.Username = before
 			}
+		} else if author.Name == "GitHub Action user" {
+			continue
 		}
 
 		coAuthors = append(coAuthors, author)

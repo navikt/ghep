@@ -1,357 +1,361 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ghep-teams
-  namespace: the-g-team
-  labels:
-    team: the-g-team
-  annotations:
-    reloader.stakater.com/match: "true"
-data:
-  teams.yaml: |
-    nada:
-      commits: "#nada-commits"
-      issues: "#nada-issues"
-      pulls: "#nada-pull-requests"
-      workflows: "#nada-ci"
-    tilgangsmaskin:
-      issues: "#tilgangsmaskinen-alerts"
-      pulls: "#tilgangsmaskinen-alerts"
-      workflows: "#tilgangsmaskinen-alerts"
-      security: "#tilgangsmaskinen-alerts"
-    aap:
-      commits: "#aap-github-workflows"
-      releases: "#aap-github-workflows"
-      workflows: "#aap-github-workflows"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          ignoreBots: true
-          branches: ["main"]
-    flex:
-      commits: "#flex-github-feed"
-      issues: "#flex-github-feed"
-      pulls: "#flex-github-pullrequest-feed"
-      workflows: "#spøkelser"
-      security: "#spøkelser"
-      config:
-        externalContributorsChannel: "#flex-ghep-extern-contrib"
-        workflows:
-          ignoreBots: false
-          branches: ["main"]
-    tbd:
-      commits: "#helseytelser-dev"
-      workflows: "#team-bømlo-workflow"
-      security: "#helseytelser-dev"
-      pulls: "team-bømlo-pull-requests"
-      issues: "team-bømlo-pull-requests"
-    dv-a-team:
-      commits: "#a-team-commits"
-      issues: "#a-team-pull-requests"
-      pulls: "#a-team-pull-requests"
-      workflows: "#a-team-ops"
-      security: "#a-team-ops"
-      config:
-        workflows:
-          branches: ["main"]
-    spenn:
-      commits: "#team-spenn-commits"
-      issues: "#team-spenn-pull-requests"
-      pulls: "#team-spenn-pull-requests"
-      security: "#team-spenn-security"
-    leesah-quiz:
-      commits: "#leesah-game-ci"
-      issues: "#leesah-game-ci"
-      pulls: "#leesah-game-ci"
-    teamsykefravr:
-      pulls: "#isyfo-pr"
-      workflows: "#syfo-alarm"
-      config:
-        workflows:
-          ignoreBots: true
-          branches: ["main", "master"]
-    teamsykmelding:
-      commits: "tsm-commits"
-      workflows: "tsm-broken-actions"
-      issues: "tsm-issues"
-      config:
-        silenceDependabot: "always"
-        externalContributorsChannel: "#tsm-extern-contrib"
-        workflows:
-          ignoreBots: true
-          branches: ["main", "master"]
-    tsm:
-      commits: "tsm-commits"
-      workflows: "tsm-broken-actions"
-      issues: "tsm-issues"
-      config:
-        silenceDependabot: "always"
-        externalContributorsChannel: "#tsm-extern-contrib"
-        workflows:
-          ignoreBots: true
-          branches: ["main"]
-    teamdagpenger:
-      commits: "#dp-commits"
-      issues: "#dp-issues"
-      pulls: "#dp-pull-requests"
-      workflows: "#dp-failed-workflows"
-    dataseksjonen:
-      commits: "#dataseksjonen-github"
-      issues: "#dataseksjonen-github"
-      pulls: "#dataseksjonen-github"
-      workflows: "#dataseksjonen-github"
-      security: "#dataseksjonen-github"
-    fager:
-      issues: "#team-fager-bots"
-      pulls: "#team-fager-bots"
-      workflows: "#team-fager-bots"
-      security: "#team-fager-alerts"
-      config:
-        security:
-          severityFilter: "high"
-    permittering-og-nedbemanning:
-      issues: "#team-fager-bots"
-      pulls: "#team-fager-bots"
-      workflows: "#team-fager-bots"
-      security: "#team-fager-alerts"
-      config:
-        security:
-          severityFilter: "high"
-    arbeidsforhold:
-      pulls: "#team-arbeidsforhold-github"
-      workflows: "#team-arbeidsforhold-github"
-      config:
-        ignoreRepositories:
-          - "arbeid-og-inntekt"
-          - "nav-maskinporten"
-        workflows:
-          branches: ["main"]
-    tilleggsstonader:
-      pulls: "#tilleggsstønader-gh-pr"
-      security: "#tilleggsstønader-alerts"
-      config:
-        silenceDependabot: "always"
-        security:
-          severityFilter: "critical"
-    k9saksbehandling:
-      security: "#sif-sikkerhetsvarsel"
-      pulls: "#k9saksbehandling-feed"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          branches: ["main", "master"]
-        security:
-          severityFilter: "critical"
-    omsorgspenger:
-      security: "#sif-sikkerhetsvarsel"
-      pulls: "#k9saksbehandling-feed"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          branches: ["main", "master"]
-        security:
-          severityFilter: "critical"
-    dusseldorf:
-      security: "#sif-sikkerhetsvarsel"
-      pulls: "#k9saksbehandling-feed"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          branches: ["main", "master"]
-        security:
-          severityFilter: "critical"
-    dolly:
-      commits: "#dolly-ghep"
-      issues: "#dolly-ghep"
-      pulls: "#dolly-ghep"
-      workflows: "#dolly-ghep"
-    tpts:
-      commits: "#tp-github-feed"
-      issues: "#tp-github-feed"
-      pulls: "#tp-pull-request"
-      workflows: "#tp-github-feed"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          branches: ["main", "master"]
-    obo:
-      issues: "#team-obo-github-events"
-      pulls: "#team-obo-pr"
-      workflows: "#team-obo-github-events"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          branches: ["main", "master"]
-    wendelboe:
-      workflows: "#pen-dataprodukt-github"
-      security: "#pen-dataprodukt-github"
-      commits: "#pen-dataprodukt-commits"
-      issues: "#pen-dataprodukt-github"
-      pulls: "#pen-dataprodukt-github"
-    cv:
-      issues: "#team-cv-github-events"
-      pulls: "#team-cv-github-events"
-      workflows: "#team-cv-github-events"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          branches: ["main", "master"]
-    hubba-devs:
-      workflows: "#team-hubba-alerts"
-      config:
-        workflows:
-          ignoreBots: true
-          branches: ["main", "master"]
-          repositories: ["pam-stillingsok"]
-          workflows: ["Playwright Tests"]
-    virksomhetsdatalaget:
-      commits: "#virksomhetsdatalaget-gh"
-      issues: "#virksomhetsdatalaget-gh"
-      pulls: "#virksomhetsdatalaget-gh"
-      workflows: "#virksomhetsdatalaget-gh"
-      releases: "#virksomhetsdatalaget-gh"
-      config:
-        workflows:
-          branches: ["main", "master"]
-    team-nav-no:
-      releases: "#team-navno-releases"
-      workflows: "#team-navno-failover-prod"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          branches: ["main"]
-          repos: ["nav-enonicxp-frontend"]
-          workflows: ["Deploy til prod-failover"]
-    allosaurus:
-      issues: "#allosaurus-github"
-      pulls: "#allosaurus-github"
-    historisk:
-      issues: "#historisk-github"
-      pulls: "#historisk-github"
-      workflows: "#historisk-github"
-      releases: "#historisk-github"
-      security: "#historisk-github"
-      config:
-        workflows:
-          branches: ["main"]
-    team-esyfo:
-      commits: "#esyfo-github-feed"
-      workflows: "#esyfo-github-feed"
-      issues: "#esyfo-github-feed"
-      pulls: "#esyfo-pull-requests"
-      config:
-        ignoreRepositories:
-          - "arbeidsgiver-notifikasjon-produsenter"
-          - "isdialogmelding"
-          - "isdialogmote"
-          - "isdialogmote-schema"
-          - "isnarmesteleder"
-          - "isyfomock"
-          - "isoppfolgingstilfelle"
-          - "nav-ekstern-api-dok"
-          - "syfomodiaperson"
-        silenceDependabot: "always"
-        workflows:
-          ignoreBots: true
-          branches: ["main", "master"]
-    speilvendt:
-      commits: "#helseytelser-speilvendt-github"
-      issues: "#helseytelser-speilvendt-github"
-      pulls: "#helseytelser-speilvendt-github"
-      workflows: "#helseytelser-speilvendt-github"
-      security: "#helseytelser-speilvendt-github"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          ignoreBots: false
-          branches: ["main"]
-    yrkesskade:
-      workflows: "#yrkesskade-workflows"
-      pulls: "#yrkesskade-kodeles"
-      releases: "#yrkesskade-releases"
-      security: "#yrkesskade-sikkerhet"
-      config:
-        silenceDependabot: "always"
-        workflows:
-          ignoreBots: true
-          branches: ["main", "dev"]
-    utvikling-admin:
-      commits: "utvikling-admin-dev"
-      workflows: "utvikling-admin-dev"
-      issues: "utvikling-admin-dev"
-      pulls: "utvikling-admin-dev"
-    pdfgen:
-      commits: "pdfgen"
-      workflows: "pdfgen"
-      issues: "pdfgen"
-      pulls: "pdfgen"
-    idm:
-      security: "#team-idm-security-alerts"
-    team-mulighetsrommet:
-      security: "#team-valp-monitorering-dev"
-      workflows: "#team-valp-monitoring"
-      config:
-        workflows:
-          branches: ["main"]
-    pdl:
-      security: "#pdl-teknisk"
-      config:
-        security:
-          severityFilter: "high"
-    pensjonskalkulator:
-      commits: "#planlegge-pensjon-github-events"
-      pulls: "#planlegge-pensjon-pull-requests"
-      security: "#planlegge-pensjon-github-events"
-      workflows: "#planlegge-pensjon-github-events"
-      config:
-        ignoreRepositories:
-          - "pensjon-pen"
-        security:
-          severityFilter: "high"
-        workflows:
-          ignoreBots: true
-          branches: ["main", "sandbox"]
-    utsikt:
-      commits: "#utsikt-commits"
-      issues: "#utsikt-pull-requests"
-      pulls: "#utsikt-pull-requests"
-    appsec:
-      security: "#appsec-aktivitet"
-      issues: "#appsec-aktivitet"
-      commits: "#appsec-aktivitet"
-      pulls: "#appsec-aktivitet"
-      workflows: "#appsec-aktivitet"
-      config:
-        workflows:
-          repositories: ["nav-cloc"]
-        silenceDependabot: "always"
-    dataplattform-datakatalog:
-      commits: "#dataplattform-datakatalog-commits"
-      issues: "#dataplattform-datakatalog-pull-requests"
-      pulls: "#dataplattform-datakatalog-pull-requests"
-      workflows: "#dataplattform-datakatalog-ops"
-      security: "#dataplattform-datakatalog-ops"
-      config:
-        workflows:
-          branches: ["main"]
-    mob:
-      workflows: "#utbetaling-team-motta-og-beregne-vaktmester"
-      security: "#utbetaling-team-motta-og-beregne-vaktmester"
-      config:
-        workflows:
-          ignoreBots: true
-          branches: ["main"]
-        silenceDependabot: "always"
-        security:
-          severityFilter: "critical"
-    bankkommunikasjon:
-      pulls: "#team-kobra-utviklere"
-      workflows: "#team-kobra-utviklere"
-      security: "#team-kobra-alerts-prod"
-      config:
-        workflows:
-          ignoreBots: true
-          branches: [ "main" ]
-        silenceDependabot: "always"
-        security:
-          severityFilter: "critical"
+nada:
+  commits: "#nada-commits"
+  issues: "#nada-issues"
+  pulls: "#nada-pull-requests"
+  workflows: "#nada-ci"
+tilgangsmaskin:
+  issues: "#tilgangsmaskinen-alerts"
+  pulls: "#tilgangsmaskinen-alerts"
+  workflows: "#tilgangsmaskinen-alerts"
+  security: "#tilgangsmaskinen-alerts"
+aap:
+  commits: "#aap-github-workflows"
+  releases: "#aap-github-workflows"
+  workflows: "#aap-github-workflows"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      ignoreBots: true
+      branches: ["main"]
+flex:
+  commits: "#flex-github-feed"
+  issues: "#flex-github-feed"
+  pulls: "#flex-github-pullrequest-feed"
+  workflows: "#spøkelser"
+  security: "#spøkelser"
+  config:
+    externalContributorsChannel: "#flex-ghep-extern-contrib"
+    workflows:
+      ignoreBots: false
+      branches: ["main"]
+tbd:
+  commits: "#helseytelser-dev"
+  workflows: "#team-bømlo-workflow"
+  security: "#helseytelser-dev"
+  pulls: "team-bømlo-pull-requests"
+  issues: "team-bømlo-pull-requests"
+dv-a-team:
+  commits: "#a-team-commits"
+  issues: "#a-team-pull-requests"
+  pulls: "#a-team-pull-requests"
+  workflows: "#a-team-ops"
+  security: "#a-team-ops"
+  config:
+    workflows:
+      branches: ["main"]
+spenn:
+  commits: "#team-spenn-commits"
+  issues: "#team-spenn-pull-requests"
+  pulls: "#team-spenn-pull-requests"
+  security: "#team-spenn-security"
+leesah-quiz:
+  commits: "#leesah-game-ci"
+  issues: "#leesah-game-ci"
+  pulls: "#leesah-game-ci"
+teamsykefravr:
+  pulls: "#isyfo-pr"
+  workflows: "#syfo-alarm"
+  config:
+    workflows:
+      ignoreBots: true
+      branches: ["main", "master"]
+teamsykmelding:
+  commits: "tsm-commits"
+  workflows: "tsm-broken-actions"
+  issues: "tsm-issues"
+  config:
+    silenceDependabot: "always"
+    externalContributorsChannel: "#tsm-extern-contrib"
+    workflows:
+      ignoreBots: true
+      branches: ["main", "master"]
+tsm:
+  commits: "tsm-commits"
+  workflows: "tsm-broken-actions"
+  issues: "tsm-issues"
+  config:
+    silenceDependabot: "always"
+    externalContributorsChannel: "#tsm-extern-contrib"
+    workflows:
+      ignoreBots: true
+      branches: ["main"]
+teamdagpenger:
+  commits: "#dp-commits"
+  issues: "#dp-issues"
+  pulls: "#dp-pull-requests"
+  workflows: "#dp-failed-workflows"
+dataseksjonen:
+  commits: "#dataseksjonen-github"
+  issues: "#dataseksjonen-github"
+  pulls: "#dataseksjonen-github"
+  workflows: "#dataseksjonen-github"
+  security: "#dataseksjonen-github"
+fager:
+  issues: "#team-fager-bots"
+  pulls: "#team-fager-bots"
+  workflows: "#team-fager-bots"
+  security: "#team-fager-alerts"
+  config:
+    security:
+      severityFilter: "high"
+permittering-og-nedbemanning:
+  issues: "#team-fager-bots"
+  pulls: "#team-fager-bots"
+  workflows: "#team-fager-bots"
+  security: "#team-fager-alerts"
+  config:
+    security:
+      severityFilter: "high"
+arbeidsforhold:
+  pulls: "#team-arbeidsforhold-github"
+  workflows: "#team-arbeidsforhold-github"
+  config:
+    ignoreRepositories:
+      - "arbeid-og-inntekt"
+      - "nav-maskinporten"
+    workflows:
+      branches: ["main"]
+tilleggsstonader:
+  pulls: "#tilleggsstønader-gh-pr"
+  security: "#tilleggsstønader-alerts"
+  workflows: "#tilleggsstonader-gh-workflows"
+  config:
+    silenceDependabot: "always"
+    externalContributorsChannel: "#tilleggsstonader-gh-extern-contrib"
+    pingSlackUsers: true
+    pulls:
+      ignoreBots: true
+    security:
+      severityFilter: "critical"
+    workflows:
+      branches:
+        - "main"
+k9saksbehandling:
+  security: "#sif-sikkerhetsvarsel"
+  pulls: "#k9saksbehandling-feed"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      branches: ["main", "master"]
+    security:
+      severityFilter: "critical"
+omsorgspenger:
+  security: "#sif-sikkerhetsvarsel"
+  pulls: "#k9saksbehandling-feed"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      branches: ["main", "master"]
+    security:
+      severityFilter: "critical"
+dusseldorf:
+  security: "#sif-sikkerhetsvarsel"
+  pulls: "#k9saksbehandling-feed"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      branches: ["main", "master"]
+    security:
+      severityFilter: "critical"
+dolly:
+  commits: "#dolly-ghep"
+  issues: "#dolly-ghep"
+  pulls: "#dolly-ghep"
+  workflows: "#dolly-ghep"
+tpts:
+  commits: "#tp-github-feed"
+  issues: "#tp-github-feed"
+  pulls: "#tp-pull-request"
+  workflows: "#tp-github-feed"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      branches: ["main", "master"]
+obo:
+  issues: "#team-obo-github-events"
+  pulls: "#team-obo-pr"
+  workflows: "#team-obo-github-events"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      branches: ["main", "master"]
+wendelboe:
+  workflows: "#pen-dataprodukt-github"
+  security: "#pen-dataprodukt-github"
+  commits: "#pen-dataprodukt-commits"
+  issues: "#pen-dataprodukt-github"
+  pulls: "#pen-dataprodukt-github"
+cv:
+  issues: "#team-cv-github-events"
+  pulls: "#team-cv-github-events"
+  workflows: "#team-cv-github-events"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      branches: ["main", "master"]
+hubba-devs:
+  workflows: "#team-hubba-alerts"
+  config:
+    workflows:
+      ignoreBots: true
+      branches: ["main", "master"]
+      repositories: ["pam-stillingsok"]
+      workflows: ["Playwright Tests"]
+virksomhetsdatalaget:
+  commits: "#virksomhetsdatalaget-gh"
+  issues: "#virksomhetsdatalaget-gh"
+  pulls: "#virksomhetsdatalaget-gh"
+  workflows: "#virksomhetsdatalaget-gh"
+  releases: "#virksomhetsdatalaget-gh"
+  config:
+    workflows:
+      branches: ["main", "master"]
+team-nav-no:
+  releases: "#team-navno-releases"
+  workflows: "#team-navno-failover-prod"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      branches: ["main"]
+      repos: ["nav-enonicxp-frontend"]
+      workflows: ["Deploy til prod-failover"]
+allosaurus:
+  issues: "#allosaurus-github"
+  pulls: "#allosaurus-github"
+historisk:
+  issues: "#historisk-github"
+  pulls: "#historisk-github"
+  workflows: "#historisk-github"
+  releases: "#historisk-github"
+  security: "#historisk-github"
+  config:
+    workflows:
+      branches: ["main"]
+team-esyfo:
+  commits: "#esyfo-github-feed"
+  workflows: "#esyfo-github-feed"
+  issues: "#esyfo-github-feed"
+  pulls: "#esyfo-pull-requests"
+  config:
+    ignoreRepositories:
+      - "arbeidsgiver-notifikasjon-produsenter"
+      - "isdialogmelding"
+      - "isdialogmote"
+      - "isdialogmote-schema"
+      - "isnarmesteleder"
+      - "isyfomock"
+      - "isoppfolgingstilfelle"
+      - "nav-ekstern-api-dok"
+      - "syfomodiaperson"
+    silenceDependabot: "always"
+    workflows:
+      ignoreBots: true
+      branches: ["main", "master"]
+speilvendt:
+  commits: "#helseytelser-speilvendt-github"
+  issues: "#helseytelser-speilvendt-github"
+  pulls: "#helseytelser-speilvendt-github"
+  workflows: "#helseytelser-speilvendt-github"
+  security: "#helseytelser-speilvendt-github"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      ignoreBots: false
+      branches: ["main"]
+yrkesskade:
+  workflows: "#yrkesskade-workflows"
+  pulls: "#yrkesskade-kodeles"
+  releases: "#yrkesskade-releases"
+  security: "#yrkesskade-sikkerhet"
+  config:
+    silenceDependabot: "always"
+    workflows:
+      ignoreBots: true
+      branches: ["main", "dev"]
+utvikling-admin:
+  commits: "utvikling-admin-dev"
+  workflows: "utvikling-admin-dev"
+  issues: "utvikling-admin-dev"
+  pulls: "utvikling-admin-dev"
+pdfgen:
+  commits: "pdfgen"
+  workflows: "pdfgen"
+  issues: "pdfgen"
+  pulls: "pdfgen"
+idm:
+  security: "#team-idm-security-alerts"
+team-mulighetsrommet:
+  security: "#team-valp-monitorering-dev"
+  workflows: "#team-valp-monitoring"
+  config:
+    workflows:
+      branches: ["main"]
+pdl:
+  security: "#pdl-teknisk"
+  config:
+    security:
+      severityFilter: "high"
+pensjonskalkulator:
+  commits: "#planlegge-pensjon-github-events"
+  pulls: "#planlegge-pensjon-pull-requests"
+  security: "#planlegge-pensjon-github-events"
+  workflows: "#planlegge-pensjon-github-events"
+  config:
+    ignoreRepositories:
+      - "pensjon-pen"
+    security:
+      severityFilter: "high"
+    workflows:
+      ignoreBots: true
+      branches: ["main", "sandbox"]
+utsikt:
+  commits: "#utsikt-commits"
+  issues: "#utsikt-pull-requests"
+  pulls: "#utsikt-pull-requests"
+appsec:
+  security: "#appsec-aktivitet"
+  issues: "#appsec-aktivitet"
+  commits: "#appsec-aktivitet"
+  pulls: "#appsec-aktivitet"
+  workflows: "#appsec-aktivitet"
+  config:
+    workflows:
+      repositories: ["nav-cloc"]
+    silenceDependabot: "always"
+dataplattform-datakatalog:
+  commits: "#dataplattform-datakatalog-commits"
+  issues: "#dataplattform-datakatalog-pull-requests"
+  pulls: "#dataplattform-datakatalog-pull-requests"
+  workflows: "#dataplattform-datakatalog-ops"
+  security: "#dataplattform-datakatalog-ops"
+  config:
+    workflows:
+      branches: ["main"]
+bankkommunikasjon:
+  pulls: "#team-kobra-utviklere"
+  workflows: "#team-kobra-utviklere"
+  security: "#team-kobra-alerts-prod"
+  config:
+    workflows:
+      ignoreBots: "true"
+      branches: ["main"]
+    silenceDependabot: "always"
+    security:
+      severityFilter: "critical"
+ytelsesrapportering:
+  pulls: "#team-kobra-utviklere"
+  security: "#team-kobra-alerts-prod"
+  config:
+    silenceDependabot: "always"
+    security:
+      severityFilter: "critical"
+mob:
+  workflows: "#utbetaling-team-motta-og-beregne-vaktmester"
+  security: "#utbetaling-team-motta-og-beregne-vaktmester"
+  config:
+    workflows:
+      ignoreBots: true
+      branches: ["main"]
+    silenceDependabot: "always"
+    security:
+      severityFilter: "critical"

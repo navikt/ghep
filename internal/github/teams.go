@@ -39,6 +39,11 @@ type Config struct {
 	IgnoreRepositories          []string         `yaml:"ignoreRepositories"`
 	Security                    Security         `yaml:"security"`
 	PingSlackUsers              bool             `yaml:"pingSlackUsers"`
+	Pulls                       PullsConfig      `yaml:"pulls"`
+}
+
+type PullsConfig struct {
+	IgnoreBots bool `yaml:"ignoreBots"`
 }
 
 func (c Config) ShouldSilenceDependabot() bool {

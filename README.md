@@ -92,6 +92,18 @@ team:
 - `security.severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
 - `pingSlackUsers`- Pinger Slack-brukere som er tildelt issues eller pull requests
 
+#### Pull Requests
+
+``` yaml
+team:
+  pulls: #channel
+  config:
+    pulls:
+      ignoreBots: bool
+```
+
+- `ignoreBots` - Ikke få Slack-melding om Pull Request opprettet av bots
+
 #### Workflows
 
 ``` yaml
