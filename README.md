@@ -96,6 +96,18 @@ team:
 
 ``` yaml
 team:
+  pulls: #channel
+  config:
+    pulls:
+      ignoreBots: bool
+```
+
+- `ignoreBots` - Ikke få Slack-melding om Pull Request opprettet av bots
+
+#### Workflows
+
+``` yaml
+team:
   workflows: #channel
   config:
     workflows:

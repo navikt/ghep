@@ -54,6 +54,10 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 }
 
 func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
+	if team.Config.Pulls.IgnoreBots && event.Sender.IsBot() {
+		return nil, nil
+	}
+
 	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
 		return nil, nil
 	}
