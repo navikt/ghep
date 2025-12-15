@@ -134,6 +134,8 @@ data:
         silenceDependabot: "always"
         externalContributorsChannel: "#tilleggsstonader-gh-extern-contrib"
         pingSlackUsers: true
+        pulls: 
+          ignoreBots: true
         security:
           severityFilter: "critical"
         workflows:
