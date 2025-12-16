@@ -23,6 +23,8 @@ data:
           - "scoop-bucket"
         silenceDependabot: always
         externalContributorsChannel: "#nais-external-contributors"
+        pulls:
+          ignoreBots: true
         workflows:
           ignoreBots: true
           branches:
