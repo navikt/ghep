@@ -118,7 +118,7 @@ arbeidsforhold:
 tilleggsstonader:
   pulls: "#tilleggsstønader-gh-pr"
   security: "#tilleggsstønader-alerts"
-  workflows: "#tilleggsstonader-gh-workflows"
+  workflows: "#tilleggsstønader-alerts"
   config:
     silenceDependabot: "always"
     externalContributorsChannel: "#tilleggsstonader-gh-extern-contrib"
