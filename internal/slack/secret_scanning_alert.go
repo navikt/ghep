@@ -6,7 +6,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateSecretScanningAlertMessage(channel string, event github.Event) *Message {
+func CreateSecretScanningAlertMessage(channel, timestamp string, event github.Event) *Message {
 	var text string
 	switch event.Action {
 	case "created":
@@ -29,8 +29,9 @@ func CreateSecretScanningAlertMessage(channel string, event github.Event) *Messa
 	}
 
 	return &Message{
-		Channel:     channel,
-		Text:        text,
-		Attachments: attachments,
+		Channel:         channel,
+		Text:            text,
+		Attachments:     attachments,
+		ThreadTimestamp: timestamp,
 	}
 }

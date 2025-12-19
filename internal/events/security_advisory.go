@@ -16,6 +16,7 @@ func (h *Handler) handleSecurityAdvisoryEvent(_ context.Context, log *slog.Logge
 	if event.SecurityAdvisory.SeverityType() < team.Config.Security.SeverityType() {
 		return nil, nil
 	}
+
 	log.Info("Received security advisory", "severity", event.SecurityAdvisory.Severity)
 	return slack.CreateSecurityAdvisoryMessage(team.SlackChannels.Security, event), nil
 }

@@ -88,7 +88,7 @@ func TestHandleEvent(t *testing.T) {
 			case github.TypeSecurityAdvisory:
 				message = slack.CreateSecurityAdvisoryMessage(slackChannel, event)
 			case github.TypeSecretScanningAlert:
-				message = slack.CreateSecretScanningAlertMessage(slackChannel, event)
+				message = slack.CreateSecretScanningAlertMessage(slackChannel, "", event)
 			default:
 				t.Fatalf("unknown event file: %s", entry.Name())
 			}
