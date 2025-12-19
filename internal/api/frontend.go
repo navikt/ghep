@@ -15,7 +15,7 @@ var indexHTML = `<!DOCTYPE html>
 <body>
     <h1>Teams with repositories!</h1>
     {{- range . }}
-        <h2 id="{{ .Name }}">{{ .Name }}:</h2>
+        <h2 id="{{ .Name }}"><a href="https://github.com/orgs/navikt/teams/{{ .Name }}/repositories">{{ .Name }}</a>:</h2>
         <ul>
             {{ range .Repositories }}
                 <li>{{ . }}</li>
