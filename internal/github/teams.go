@@ -300,6 +300,10 @@ func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist
 			}
 		}
 
+		if err != sql.RemoveRepositoriesNotBelongingToTeam(ctx, c.db, team, repositories) {
+			return fmt.Errorf("cleaning up old repositories: %v", err)
+		}
+
 		members, err := fetchMembers(teamURL, bearerToken)
 		if err != nil {
 			return fmt.Errorf("fetching members for %s: %v", team, err)

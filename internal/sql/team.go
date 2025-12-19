@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/sql/gensql"
@@ -48,4 +49,23 @@ func AddMemberToTeam(ctx context.Context, db *gensql.Queries, team, userLogin st
 		TeamSlug:  team,
 		UserLogin: userLogin,
 	})
+}
+
+func RemoveRepositoriesNotBelongingToTeam(ctx context.Context, db *gensql.Queries, team string, repositories []string) error {
+	currentRepositories, err := db.ListTeamRepositories(ctx, team)
+	if err != nil {
+		return err
+	}
+
+	for _, repository := range currentRepositories {
+		exists := slices.Contains(repositories, repository.Name)
+		if !exists {
+			db.RemoveTeamRepository(ctx, gensql.RemoveTeamRepositoryParams{
+				TeamSlug: team,
+				Name:     repository.Name,
+			})
+		}
+	}
+
+	return nil
 }
