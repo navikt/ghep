@@ -135,28 +135,34 @@ k9saksbehandling:
   pulls: "#k9saksbehandling-feed"
   config:
     silenceDependabot: "always"
+    pulls:
+      ignoreBots: true
     workflows:
       branches: ["main", "master"]
     security:
-      severityFilter: "critical"
+      severityFilter: "high"
 omsorgspenger:
   security: "#sif-sikkerhetsvarsel"
   pulls: "#k9saksbehandling-feed"
   config:
     silenceDependabot: "always"
+    pulls:
+      ignoreBots: true
     workflows:
       branches: ["main", "master"]
     security:
-      severityFilter: "critical"
+      severityFilter: "high"
 dusseldorf:
   security: "#sif-sikkerhetsvarsel"
   pulls: "#k9saksbehandling-feed"
   config:
     silenceDependabot: "always"
+    pulls:
+      ignoreBots: true
     workflows:
       branches: ["main", "master"]
     security:
-      severityFilter: "critical"
+      severityFilter: "high"
 dolly:
   commits: "#dolly-ghep"
   issues: "#dolly-ghep"
