@@ -324,6 +324,10 @@ func (e Event) IsCommit() bool {
 	return strings.HasPrefix(e.Ref, RefHeadsPrefix) && e.Alert == nil
 }
 
+func (e Event) IsCodeQLWorkflow() bool {
+	return e.Workflow != nil && e.Workflow.Name == "CodeQL"
+}
+
 type Event struct {
 	Action              string            `json:"action"`
 	Alert               *Alert            `json:"alert"`

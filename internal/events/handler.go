@@ -51,6 +51,10 @@ func eventIsFromDependabot(event github.Event) bool {
 }
 
 func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) error {
+	if event.IsCodeQLWorkflow() {
+		return nil
+	}
+
 	if team.Config.ShouldSilenceDependabot() && eventIsFromDependabot(event) {
 		return nil
 	}
