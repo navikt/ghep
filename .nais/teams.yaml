@@ -55,10 +55,15 @@ leesah-quiz:
 teamsykefravr:
   pulls: "#isyfo-pr"
   workflows: "#syfo-alarm"
+  security: "#syfo-alarm"
   config:
+    silenceDependabot: "always"
+    externalContributorsChannel: "#isyfo"
     workflows:
       ignoreBots: true
       branches: ["main", "master"]
+    security:
+      severityFilter: "high"
 teamsykmelding:
   commits: "tsm-commits"
   workflows: "tsm-broken-actions"
