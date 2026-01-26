@@ -58,7 +58,6 @@ teamsykefravr:
   security: "#syfo-alarm"
   config:
     silenceDependabot: "always"
-    externalContributorsChannel: "#isyfo"
     workflows:
       ignoreBots: true
       branches: ["main", "master"]
