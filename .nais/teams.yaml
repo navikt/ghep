@@ -299,8 +299,6 @@ team-mulighetsrommet:
   security: "#team-valp-monitorering-dev"
   workflows: "#team-valp-monitoring"
   config:
-    pulls:
-      ignoreBots: true
     workflows:
       ignoreBots: true
       branches: ["main"]
