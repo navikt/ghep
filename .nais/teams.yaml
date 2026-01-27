@@ -300,6 +300,7 @@ team-mulighetsrommet:
   workflows: "#team-valp-monitoring"
   config:
     workflows:
+      ignoreBots: true
       branches: ["main"]
 pdl:
   security: "#pdl-teknisk"
