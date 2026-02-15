@@ -361,3 +361,13 @@ ytelsesrapportering:
     silenceDependabot: "always"
     security:
       severityFilter: "critical"
+mob:
+  workflows: "#utbetaling-team-motta-og-beregne-vaktmester"
+  security: "#utbetaling-team-motta-og-beregne-vaktmester"
+  config:
+    workflows:
+      ignoreBots: true
+      branches: ["main"]
+    silenceDependabot: "always"
+    security:
+      severityFilter: "critical"
