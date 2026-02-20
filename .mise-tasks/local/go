@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+#MISE description="Run Go"
+
+set -e
+
+go run .
