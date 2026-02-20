@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"slices"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/events"
@@ -41,7 +42,21 @@ func (c *Client) Run(base, addr string) error {
 	http.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
 	http.HandleFunc("GET /internal/health", c.healthGetHandler)
 	http.HandleFunc("GET /internal/", c.frontendGetHandler)
-	return http.ListenAndServe(addr, nil)
+
+	mux := http.NewServeMux()
+	mux.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
+	mux.HandleFunc("GET /internal/health", c.healthGetHandler)
+	mux.HandleFunc("GET /internal/", c.frontendGetHandler)
+
+	srv := &http.Server{
+		Addr:         ":8080",
+		Handler:      mux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	return srv.ListenAndServe()
 }
 
 func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
