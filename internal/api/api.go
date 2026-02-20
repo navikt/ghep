@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"html"
 	"io"
 	"log/slog"
 	"net/http"
@@ -197,9 +198,13 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(teams) > 1 {
-		fmt.Fprintf(w, "Event handled for teams %s\n", teams)
+		escaped := make([]string, len(teams))
+		for i, t := range teams {
+			escaped[i] = html.EscapeString(t)
+		}
+		fmt.Fprintf(w, "Event handled for teams %s\n", escaped)
 	} else {
-		fmt.Fprintf(w, "Event handled for team %s\n", teams[0])
+		fmt.Fprintf(w, "Event handled for team %s\n", html.EscapeString(teams[0]))
 	}
 }
 
