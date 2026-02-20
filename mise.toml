@@ -6,6 +6,42 @@ go = "latest"
 description = "Pin GitHub Actions versions"
 run = "ratchet pin .github/workflows/*.yaml"
 
+[tasks."check"]
+description = "Run all checks"
+run = "unset MISE_TASK_OUTPUT && mise run check:deadcode ::: check:gosec ::: check:staticcheck ::: check:vulncheck"
+
+[tasks."check:deadcode"]
+description = "Run deadcode"
+run = "go tool golang.org/x/tools/cmd/deadcode -test -tags integration_test ./..."
+
+[tasks."check:gosec"]
+description = "Run gosec"
+run = "go tool github.com/securego/gosec/v2/cmd/gosec --exclude-generated -terse ./..."
+
+[tasks."check:staticcheck"]
+description = "Run staticcheck"
+run = "go tool honnef.co/go/tools/cmd/staticcheck ./..."
+
+[tasks."check:vulncheck"]
+description = "Run vulncheck"
+run = "go tool golang.org/x/vuln/cmd/govulncheck ./..."
+
+[tasks."fmt"]
+description = "Format all code"
+run = "mise run fmt:go ::: fmt:gofix"
+
+[tasks."fmt:go"]
+description = "Format go code using gofumpt"
+run = "go tool mvdan.cc/gofumpt -w ./"
+
 [tasks."fmt:gofix"]
 description = "Fix runs the Go fix tool (cmd/fix) on the named packages and applies suggested fixes."
 run = "go fix ./..."
+
+[tasks."local"]
+description = "Run Go"
+run = "go run ."
+
+[tasks."test"]
+description = "Test Go code"
+run = "go test ./..."

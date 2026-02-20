@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-#MISE description="Test Go code"
-
-set -e
-
-go test ./...

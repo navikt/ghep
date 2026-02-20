@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-#MISE description="Format all code"
-
-set -e
-
-mise run fmt:go ::: fmt:gofix

@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-#MISE description="Format go code using gofumpt"
-
-set -e
-
-go tool mvdan.cc/gofumpt -w ./
