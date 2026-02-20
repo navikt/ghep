@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
@@ -162,7 +163,7 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 }
 
 func ParseTeamConfig(path string) (map[string]Team, error) {
-	file, err := os.Open(path)
+	file, err := os.Open(filepath.Clean(path))
 	if err != nil {
 		return nil, err
 	}
