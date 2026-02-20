@@ -1,2 +1,7 @@
 [tools]
 go = "latest"
+"go:github.com/sethvargo/ratchet" = "0.11.4"
+
+[tasks."ci:ratchet"]
+description = "Pin GitHub Actions versions"
+run = "ratchet pin .github/workflows/*.yaml"

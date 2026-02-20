@@ -31,17 +31,17 @@ jobs:
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6
         with:
           fetch-depth: 0 # Fetch all history for what-changed action
       - name: Determine what to do
         id: changed-files
-        uses: "nais/what-changed@main"
+        uses: "nais/what-changed@bc3dad0463b36ad29044134bba5898f0af73c34c" # ratchet:nais/what-changed@main
         with:
           files: .nais/ghep.yaml,.nais/gnep.yaml
       - name: Push docker image to GAR
         if: steps.changed-files.outputs.changed != 'only-inputs'
-        uses: nais/docker-build-push@v0
+        uses: nais/docker-build-push@87f920b0411b987d9a1fd4113aa384e1e3b54f2c # ratchet:nais/docker-build-push@v0
         id: docker-build-push
         with:
           team: the-g-team
@@ -51,7 +51,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6
       - name: Generate k8s resource for teams.yaml
         run: |
           yq '
@@ -59,7 +59,7 @@ jobs:
           ' .nais/teams-resource.yaml > .nais/teams_for_deploy.yaml
         env:
           TEAMS_FILE: .nais/teams.yaml
-      - uses: nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/teams_for_deploy.yaml,.nais/ghep.yaml
@@ -70,8 +70,8 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: nais/deploy/actions/deploy@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6
+      - uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/gnep.yaml
