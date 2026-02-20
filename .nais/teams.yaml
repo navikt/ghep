@@ -361,3 +361,9 @@ ytelsesrapportering:
     silenceDependabot: "always"
     security:
       severityFilter: "critical"
+pensjonsbrev:
+  workflows: "#pensjonsbrev-alerts-dev"
+  security: "#pensjonsbrev-alerts-dev"
+  config:
+    workflows:
+      branches: ["main"]
