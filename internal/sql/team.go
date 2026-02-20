@@ -60,10 +60,12 @@ func RemoveRepositoriesNotBelongingToTeam(ctx context.Context, db *gensql.Querie
 	for _, repository := range currentRepositories {
 		exists := slices.Contains(repositories, repository.Name)
 		if !exists {
-			db.RemoveTeamRepository(ctx, gensql.RemoveTeamRepositoryParams{
+			if err := db.RemoveTeamRepository(ctx, gensql.RemoveTeamRepositoryParams{
 				TeamSlug: team,
 				Name:     repository.Name,
-			})
+			}); err != nil {
+				return err
+			}
 		}
 	}
 

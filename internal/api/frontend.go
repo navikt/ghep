@@ -71,5 +71,10 @@ func (c *Client) frontendGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println(teams)
-	tmpl.Execute(w, teams)
+	if err := tmpl.Execute(w, teams); err != nil {
+			c.log.Error("failed creating site from template", "error", err)
+			http.Error(w, fmt.Sprintf("failed creating site from template: %s", err.Error()), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 }

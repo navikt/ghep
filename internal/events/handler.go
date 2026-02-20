@@ -221,10 +221,12 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, team github.Team, 
 func (h *Handler) handleRenamedRepository(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
 	log.Info("Received repository renamed")
 
-	h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
+	if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
 		Name:    event.Repository.Name,
 		OldName: event.Changes.Repository.Name.From,
-	})
+	}); err != nil {
+		return nil, err
+	}
 
 	if team.SlackChannels.Commits == "" {
 		return nil, nil
