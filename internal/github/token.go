@@ -66,7 +66,7 @@ func (c Client) createBearerToken() (string, error) {
 		return "", fmt.Errorf("error getting bearer token, got %v: %v", resp.StatusCode, string(body))
 	}
 
-	var bearer map[string]interface{}
+	var bearer map[string]any
 	if err := json.Unmarshal(body, &bearer); err != nil {
 		return "", err
 	}
