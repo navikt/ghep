@@ -5,3 +5,7 @@ go = "latest"
 [tasks."ci:ratchet"]
 description = "Pin GitHub Actions versions"
 run = "ratchet pin .github/workflows/*.yaml"
+
+[tasks."fmt:gofix"]
+description = "Fix runs the Go fix tool (cmd/fix) on the named packages and applies suggested fixes."
+run = "go fix ./..."

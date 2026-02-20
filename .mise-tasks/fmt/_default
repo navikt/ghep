@@ -3,4 +3,4 @@
 
 set -e
 
-mise run fmt:go
+mise run fmt:go ::: fmt:gofix
