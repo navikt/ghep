@@ -367,6 +367,7 @@ pensjonsbrev:
   config:
     workflows:
       branches: ["main"]
+      ignoreBots: true
     ignoreRepositories:
       - "eessi-pensjon-prefill"
       - "pensjon-pen"
