@@ -371,3 +371,10 @@ pensjonsbrev:
     ignoreRepositories:
       - "eessi-pensjon-prefill"
       - "pensjon-pen"
+oppgjorsrapporter:
+  pulls: "#team-pengeflyt-prs"
+  security: "#team-pengeflyt-alerts-prod"
+  config:
+    silenceDependabot: "always"
+    security:
+      severityFilter: "high"
