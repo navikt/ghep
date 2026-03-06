@@ -100,9 +100,11 @@ team:
   config:
     pulls:
       ignoreBots: bool
+      ignoreDrafts: bool
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om Pull Request opprettet av bots
+- `ignoreDrafts` - Ignorer draft pull requests
 
 #### Workflows
 

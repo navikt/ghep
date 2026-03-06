@@ -66,6 +66,10 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 		return nil, nil
 	}
 
+	if team.Config.Pulls.IgnoreDrafts && event.PullRequest.Draft {
+		return nil, nil
+	}
+
 	channel := team.SlackChannels.PullRequests
 	if event.Sender.IsUser() {
 		if _, err := db.GetTeamMember(ctx, gensql.GetTeamMemberParams{
