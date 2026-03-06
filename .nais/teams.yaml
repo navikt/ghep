@@ -187,6 +187,8 @@ obo:
   security: "#team-obo-github-events"
   workflows: "#team-obo-github-events"
   config:
+    pulls:
+      ignoreDrafts: true
     silenceDependabot: "always"
     workflows:
       branches: ["main", "master"]
