@@ -380,5 +380,5 @@ oppgjorsrapporter:
     pulls:
       ignoreDrafts: true
     security:
-      severityFilter: "high"
+      severityFilter: "critical"
     silenceDependabot: "always"
