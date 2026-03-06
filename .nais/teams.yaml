@@ -43,6 +43,9 @@ dv-a-team:
   config:
     workflows:
       branches: ["main"]
+    pulls:
+      ignoreBots: true
+      ignoreDrafts: true
 spenn:
   commits: "#team-spenn-commits"
   issues: "#team-spenn-pull-requests"
