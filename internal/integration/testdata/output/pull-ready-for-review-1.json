@@ -1,0 +1,15 @@
+{
+  "channel": "#test",
+  "text": "Pull request <https://github.com/navikt/sokos-oppgjorsrapporter/pull/74|#74> was marked ready for review in `<https://github.com/navikt/sokos-oppgjorsrapporter|sokos-oppgjorsrapporter>` by <https://github.com/haraldme|haraldme>",
+  "attachments": [
+    {
+      "text": "*<https://github.com/navikt/sokos-oppgjorsrapporter/pull/74|#74 TOB-5812: Fikser for metrikken sokos_oppgjorsrapporter_rapport_count>*\n1. Legg til index på rapport_audit.hendelse, slik at det blir mindre tungt for databasen å hente ut kun radene som har med nedlastinger å gjøre\r\n2. Legg til 'any'/'any' som nye dimensjons-verdier for 'nedlastinger'/auth_type', slik at denne metrikken lettere kan svare på hvor mange rapporter som ligger lagret i systemet (uavhengig av om de har blitt lastet ned eller ei)\r\n3. Legg inn 'idporten' som mulig verdi for 'auth_type'; etter at applikasjonen begynte å støtte idporten/tokenx-auth, har nedlasting med slik auth feilaktig blitt rapportert som 'systembruker'\r\n4. Fiks GROUP BY i tellingingen av nedlastinger; denne har til nå gruppert på fullt brukernavn som gjorde nedlastingen, men rapportert på kun autentiseringstypen, slik at tallene har blitt feil.\r\n5. Legg til noen tester av at RapportRepository.metrikkForRapporter og VarselRepository.metrikkForUprosesserteVarsler svarer som forventet.",
+      "type": "mrkdwn",
+      "color": "#34a44c",
+      "footer": "<https://github.com/navikt/sokos-oppgjorsrapporter|navikt/sokos-oppgjorsrapporter>",
+      "footer_icon": "https://slack-imgs.com/?c=1&o1=wi32.he32.si&url=https%3A%2F%2Fslack.github.com%2Fstatic%2Fimg%2Ffavicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

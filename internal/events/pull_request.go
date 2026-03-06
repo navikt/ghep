@@ -17,7 +17,7 @@ import (
 
 func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
 	var timestamp string
-	if slices.Contains([]string{"closed", "reopened", "edited", "review_requested", "review_request_removed"}, event.Action) {
+	if !slices.Contains([]string{"opened", "synchronize"}, event.Action) {
 
 		id := strconv.Itoa(event.PullRequest.ID)
 		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
@@ -58,7 +58,7 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 		return nil, nil
 	}
 
-	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
+	if !slices.Contains([]string{"opened", "closed", "ready_for_review"}, event.Action) {
 		return nil, nil
 	}
 
