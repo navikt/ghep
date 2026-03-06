@@ -377,6 +377,8 @@ oppgjorsrapporter:
   pulls: "#team-pengeflyt-prs"
   security: "#team-pengeflyt-alerts-prod"
   config:
-    silenceDependabot: "always"
+    pulls:
+      ignoreDrafts: true
     security:
       severityFilter: "high"
+    silenceDependabot: "always"
