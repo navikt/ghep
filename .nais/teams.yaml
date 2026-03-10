@@ -385,3 +385,15 @@ oppgjorsrapporter:
     security:
       severityFilter: "critical"
     silenceDependabot: "always"
+isa:
+  pulls: "#isa-github-varsling"
+  config:
+    ignoreRepositories:
+      - "gosys-tjenestespesifikasjoner"
+      - "isa-legacy-tjenestespesifikasjoner"
+      - "jenkins-dsl-scripts"
+    silenceDependabot: "always"
+    pulls:
+      ignoreDrafts: true
+      ignoreBots: true
+      minimalist: true
