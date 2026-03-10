@@ -392,7 +392,6 @@ isa:
       - "gosys-tjenestespesifikasjoner"
       - "isa-legacy-tjenestespesifikasjoner"
       - "jenkins-dsl-scripts"
-      - "vault-iac"
     silenceDependabot: "always"
     pulls:
       ignoreDrafts: true
