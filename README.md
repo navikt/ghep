@@ -101,7 +101,7 @@ team:
     pulls:
       ignoreBots: bool
       ignoreDrafts: bool
-	  minimalist: bool
+      minimalist: bool
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om Pull Request opprettet av bots
