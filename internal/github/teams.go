@@ -44,8 +44,9 @@ type Config struct {
 }
 
 type PullsConfig struct {
-	IgnoreBots bool `yaml:"ignoreBots"`
+	IgnoreBots   bool `yaml:"ignoreBots"`
 	IgnoreDrafts bool `yaml:"ignoreDrafts"`
+	Minimalist   bool `yaml:"minimalist"`
 }
 
 func (c Config) ShouldSilenceDependabot() bool {

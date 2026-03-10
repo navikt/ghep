@@ -101,10 +101,12 @@ team:
     pulls:
       ignoreBots: bool
       ignoreDrafts: bool
+	  minimalist: bool
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om Pull Request opprettet av bots
 - `ignoreDrafts` - Ignorer draft pull requests
+- `minimalist` - Don't post the body as attachment, only add title to the message
 
 #### Workflows
 
