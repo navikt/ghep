@@ -147,7 +147,7 @@ k9saksbehandling:
     workflows:
       branches: ["main", "master"]
     security:
-      severityFilter: "high"
+      severityFilter: "critical"
 omsorgspenger:
   security: "#sif-sikkerhetsvarsel"
   pulls: "#k9saksbehandling-feed"
@@ -158,7 +158,7 @@ omsorgspenger:
     workflows:
       branches: ["main", "master"]
     security:
-      severityFilter: "high"
+      severityFilter: "critical"
 dusseldorf:
   security: "#sif-sikkerhetsvarsel"
   pulls: "#k9saksbehandling-feed"
@@ -169,7 +169,7 @@ dusseldorf:
     workflows:
       branches: ["main", "master"]
     security:
-      severityFilter: "high"
+      severityFilter: "critical"
 dolly:
   commits: "#dolly-ghep"
   issues: "#dolly-ghep"
