@@ -330,7 +330,6 @@ utsikt:
   issues: "#utsikt-pull-requests"
   pulls: "#utsikt-pull-requests"
 appsec:
-  security: "#appsec-aktivitet"
   issues: "#appsec-aktivitet"
   commits: "#appsec-aktivitet"
   pulls: "#appsec-aktivitet"
