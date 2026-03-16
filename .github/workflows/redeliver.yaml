@@ -21,7 +21,7 @@ jobs:
           app-id: "${{ secrets.REDELIVERY_APP_ID }}"
           private-key: "${{ secrets.REDELIVERY_PRIVATE_KEY }}"
 
-      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # ratchet:actions/setup-node@v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # ratchet:actions/setup-node@v6
         with:
           node-version: "18.x"
 
