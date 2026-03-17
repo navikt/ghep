@@ -31,6 +31,10 @@ Dette gjør det enkelt for dere å følge med på hva som skjer.
 
 ![A pull request posted to Slack](images/pull-request.png)
 
+We also support a minimalist version of pull request without body.
+
+![A pull request posted to Slack without body](images/pull-request-minimalist.png)
+
 ### Workflows
 
 Workflows som er vellykket er ikke så interessant, derfor er det kun workflows som feiler som blir postet til Slack.
