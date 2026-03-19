@@ -12,25 +12,22 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	if team.SlackChannels.Security == "" {
-		return nil, nil
-	}
-
+func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event) (*slack.Message, error) {
 	if !slices.Contains([]string{"created", "fixed", "dismissed", "reintroduced", "reopened"}, event.Action) {
 		return nil, nil
 	}
 
-	if team.Config.Security.IgnoreThreshold(event.Alert.SecurityAdvisory.Severity) {
+	if source.Config.Security.IgnoreThreshold(event.Alert.SecurityAdvisory.Severity) {
 		return nil, nil
 	}
 
 	var timestamp string
-	channel := team.SlackChannels.Security
+	channel := source.Channel
 	if event.Action != "created" {
 		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
 			TeamSlug: team.Name,
 			EventID:  event.Alert.URL,
+			Channel:  source.Channel,
 		})
 		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", event.Alert.URL)
@@ -47,8 +44,8 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 			}
 
 			log.Info("Posting reaction to Dependabot alert", "action", event.Action, "alert_state", event.Alert.State, "timestamp", timestamp, "reaction", reaction)
-			if err := h.slack.PostReaction(team.SlackChannels.Workflows, timestamp, reaction); err != nil {
-				log.Error("error posting reaction", "err", err.Error(), "channel", team.SlackChannels.Workflows, "timestamp", timestamp, "reaction", reaction)
+			if err := h.slack.PostReaction(source.Channel, timestamp, reaction); err != nil {
+				log.Error("error posting reaction", "err", err.Error(), "channel", source.Channel, "timestamp", timestamp, "reaction", reaction)
 			}
 		}
 

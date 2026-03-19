@@ -70,12 +70,69 @@ nada:
 
 PS: Hvis kanalene dine er private må du selv invitere @ghep inn i hver kanal.
 
+### Sources
+
+Du kan også bruke `sources` for å sende samme hendelsestype til flere kanaler med forskjellig konfigurasjon.
+For eksempel kan du sende pull requests fra bots til én kanal og resten til en annen.
+
+``` yaml
+nada:
+  sources:
+    - source: pulls
+      channel: "#nada-pull-requests"
+      config:
+        pulls:
+          ignoreBots: true
+    - source: pulls
+      channel: "#nada-bot-prs"
+      config:
+        pulls:
+          ignoreBots: false
+    - source: commits
+      channel: "#nada-commits"
+    - source: workflows
+      channel: "#nada-ci"
+      config:
+        workflows:
+          branches:
+            - main
+    - source: releases
+      channel: "#nada-releases"
+    - source: issues
+      channel: "#nada-issues"
+    - source: security
+      channel: "#nada-security"
+      config:
+        security:
+          severityFilter: "high"
+```
+
+Gyldige source-typer er: `commits`, `pulls`, `issues`, `workflows`, `releases`, `security`.
+
+Du kan kombinere det gamle formatet med `sources`. Flate kanaler (f.eks. `commits: "#kanal"`) blir alltid inkludert, og eksplisitte `sources` legges til i tillegg.
+
+``` yaml
+nada:
+  commits: "#nada-commits"
+  pulls: "#nada-pull-requests"
+  sources:
+    - source: pulls
+      channel: "#nada-bot-prs"
+      config:
+        pulls:
+          ignoreBots: false
+```
+
+I eksempelet over vil pull requests sendes til _både_ `#nada-pull-requests` (fra flat config) og `#nada-bot-prs` (fra sources).
+
 ### Konfigurering
 
 Vi har også støtte for litt konfigurering.
-Dette legges under `teamnavn.config`.
+Dette legges under `teamnavn.config` for globale innstillinger, eller per source under `sources[].config`.
 
 #### Team configuration
+
+Globale innstillinger som gjelder for alle sources:
 
 ``` yaml
 team:
@@ -85,22 +142,21 @@ team:
       - repoB
     silenceDependabot: "always"
     externalContributorsChannel: "#channel"
-    security:
-      severityFilter: "high"
     pingSlackUsers: true
 ```
 
 - `ignoreRepositories` - En liste med repositories man ikke ønsker hendelser fra
 - `silenceDependabot` - Hvis denne blir satt til `always` så ignorer man alle hendelser fra Dependabot
 - `externalContributorsChannel` - Issues og pull requests fra brukere som ikke er i teamet ditt vil havne i en egen kanal
-- `security.severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
 - `pingSlackUsers`- Pinger Slack-brukere som er tildelt issues eller pull requests
 
 #### Pull Requests
 
+Kan konfigureres globalt (under `config.pulls`) eller per source (under `sources[].config.pulls`):
+
 ``` yaml
 team:
-  pulls: #channel
+  pulls: "#channel"
   config:
     pulls:
       ignoreBots: bool
@@ -114,9 +170,11 @@ team:
 
 #### Workflows
 
+Kan konfigureres globalt (under `config.workflows`) eller per source (under `sources[].config.workflows`):
+
 ``` yaml
 team:
-  workflows: #channel
+  workflows: "#channel"
   config:
     workflows:
       ignoreBots: bool
@@ -129,6 +187,20 @@ team:
 - `branches` - Få *kun* Slack-melding om workflows som feiler for spesifikke branches
 - `workflows` - Få *kun* Slack-melding om workflows som feiler for spesifikke workflows
 - `repositories` - Få *kun* Slack-melding om workflows som feiler for spesifikke repositories
+
+#### Security
+
+Kan konfigureres globalt (under `config.security`) eller per source (under `sources[].config.security`):
+
+``` yaml
+team:
+  security: "#channel"
+  config:
+    security:
+      severityFilter: "high"
+```
+
+- `severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
 
 ## Lokal utvikling
 

@@ -12,11 +12,9 @@ import (
 )
 
 func TestHandleCommitEvent(t *testing.T) {
-	team := github.Team{
-		Name: "test",
-		SlackChannels: github.SlackChannels{
-			Commits: "#test",
-		},
+	source := github.Source{
+		SourceType: "commits",
+		Channel:    "#test",
 	}
 
 	type args struct {
@@ -74,7 +72,7 @@ func TestHandleCommitEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := handleCommitEvent(context.Background(), slog.Default(), team, tt.args.event, &gensql.Queries{})
+			got, err := handleCommitEvent(context.Background(), slog.Default(), source, tt.args.event, &gensql.Queries{})
 			if err != nil {
 				t.Error(err)
 			}
@@ -93,6 +91,7 @@ func TestHandleCommitEvent(t *testing.T) {
 func TestHandleIssueAndPullEvent(t *testing.T) {
 	type args struct {
 		team   github.Team
+		source github.Source
 		mockDB mock.Database
 		event  github.Event
 	}
@@ -107,10 +106,10 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 			args: args{
 				team: github.Team{
 					Name: "test",
-					SlackChannels: github.SlackChannels{
-						Issues:       "#internal",
-						PullRequests: "#internal",
-					},
+				},
+				source: github.Source{
+					SourceType: "issues",
+					Channel:    "#internal",
 				},
 				mockDB: mock.Database{
 					Members: []string{"internal"},
@@ -140,13 +139,13 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 			args: args{
 				team: github.Team{
 					Name: "test",
-					SlackChannels: github.SlackChannels{
-						Issues:       "#internal",
-						PullRequests: "#internal",
-					},
 					Config: github.Config{
 						ExternalContributorsChannel: "#external",
 					},
+				},
+				source: github.Source{
+					SourceType: "issues",
+					Channel:    "#internal",
 				},
 				mockDB: mock.Database{
 					Members: []string{"internal"},
@@ -176,13 +175,13 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 			args: args{
 				team: github.Team{
 					Name: "test",
-					SlackChannels: github.SlackChannels{
-						Issues:       "#internal",
-						PullRequests: "#internal",
-					},
 					Config: github.Config{
 						ExternalContributorsChannel: "#external",
 					},
+				},
+				source: github.Source{
+					SourceType: "issues",
+					Channel:    "#internal",
 				},
 				mockDB: mock.Database{
 					Members: []string{"internal"},
@@ -211,7 +210,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			issue, err := handleIssueEvent(context.Background(), slog.Default(), &tt.args.mockDB, tt.args.team, "timestamp", tt.args.event)
+			issueSource := tt.args.source
+			issueSource.SourceType = "issues"
+			issue, err := handleIssueEvent(context.Background(), slog.Default(), &tt.args.mockDB, tt.args.team, issueSource, "timestamp", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -220,7 +221,9 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 				t.Errorf("handleIssueEvent() mismatch (-want +got):\n%s", diff)
 			}
 
-			pull, err := handlePullRequestEvent(context.Background(), slog.Default(), &tt.args.mockDB, tt.args.team, "timestamp", tt.args.event)
+			pullSource := tt.args.source
+			pullSource.SourceType = "pulls"
+			pull, err := handlePullRequestEvent(context.Background(), slog.Default(), &tt.args.mockDB, tt.args.team, pullSource, "timestamp", tt.args.event)
 			if err != nil {
 				t.Error(err)
 			}
@@ -233,27 +236,22 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 }
 
 func TestHandleWorkflow(t *testing.T) {
-	team := github.Team{
-		Name: "test",
-		SlackChannels: github.SlackChannels{
-			Workflows: "#test",
-		},
+	source := github.Source{
+		SourceType: "workflows",
+		Channel:    "#test",
 	}
 
 	tests := []struct {
-		name  string
-		event github.Event
-		team  github.Team
-		err   bool
-		want  []byte
+		name   string
+		event  github.Event
+		source github.Source
+		err    bool
+		want   []byte
 	}{
 		{
-			name:  "No slack channel",
-			event: github.Event{},
-			team: github.Team{
-				Name:          "test",
-				SlackChannels: github.SlackChannels{},
-			},
+			name:   "No slack channel",
+			event:  github.Event{},
+			source: github.Source{SourceType: "workflows", Channel: ""},
 		},
 		{
 			name: "Not completed action",
@@ -266,7 +264,7 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: team,
+			source: source,
 		},
 		{
 			name: "Not failure conclusion",
@@ -276,7 +274,7 @@ func TestHandleWorkflow(t *testing.T) {
 					Conclusion: "success",
 				},
 			},
-			team: team,
+			source: source,
 		},
 		{
 			name: "Valid event",
@@ -289,8 +287,8 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: team,
-			want: []byte("test"),
+			source: source,
+			want:   []byte("test"),
 		},
 		{
 			name: "Event from bot user",
@@ -307,12 +305,10 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: github.Team{
-				Name: "test",
-				SlackChannels: github.SlackChannels{
-					Workflows: "#test",
-				},
-				Config: github.Config{
+			source: github.Source{
+				SourceType: "workflows",
+				Channel:    "#test",
+				Config: github.SourceConfig{
 					Workflows: github.Workflows{
 						IgnoreBots: true,
 					},
@@ -331,12 +327,10 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: github.Team{
-				Name: "test",
-				SlackChannels: github.SlackChannels{
-					Workflows: "#test",
-				},
-				Config: github.Config{
+			source: github.Source{
+				SourceType: "workflows",
+				Channel:    "#test",
+				Config: github.SourceConfig{
 					Workflows: github.Workflows{
 						Branches: []string{"main"},
 					},
@@ -356,12 +350,10 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: github.Team{
-				Name: "test",
-				SlackChannels: github.SlackChannels{
-					Workflows: "#test",
-				},
-				Config: github.Config{
+			source: github.Source{
+				SourceType: "workflows",
+				Channel:    "#test",
+				Config: github.SourceConfig{
 					Workflows: github.Workflows{
 						Branches: []string{"main"},
 					},
@@ -380,12 +372,10 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: github.Team{
-				Name: "test",
-				SlackChannels: github.SlackChannels{
-					Workflows: "#test",
-				},
-				Config: github.Config{
+			source: github.Source{
+				SourceType: "workflows",
+				Channel:    "#test",
+				Config: github.SourceConfig{
 					Workflows: github.Workflows{
 						Repositories: []string{"other-repo"},
 					},
@@ -405,12 +395,10 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: github.Team{
-				Name: "test",
-				SlackChannels: github.SlackChannels{
-					Workflows: "#test",
-				},
-				Config: github.Config{
+			source: github.Source{
+				SourceType: "workflows",
+				Channel:    "#test",
+				Config: github.SourceConfig{
 					Workflows: github.Workflows{
 						Workflows: []string{"other-workflow"},
 					},
@@ -430,12 +418,10 @@ func TestHandleWorkflow(t *testing.T) {
 					Name: "test",
 				},
 			},
-			team: github.Team{
-				Name: "test",
-				SlackChannels: github.SlackChannels{
-					Workflows: "#test",
-				},
-				Config: github.Config{
+			source: github.Source{
+				SourceType: "workflows",
+				Channel:    "#test",
+				Config: github.SourceConfig{
 					Workflows: github.Workflows{
 						Repositories: []string{"test"},
 						Workflows:    []string{"test"},
@@ -448,7 +434,7 @@ func TestHandleWorkflow(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := handleWorkflowEvent(slog.Default(), tt.team, tt.event)
+			got, err := handleWorkflowEvent(slog.Default(), tt.source, tt.event)
 			if err != nil && !tt.err {
 				t.Error(err)
 			}

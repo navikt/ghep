@@ -15,13 +15,14 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
+func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event) (*slack.Message, error) {
 	var timestamp string
 	if slices.Contains([]string{"closed", "reopened", "edited", "assigned", "unassigned"}, event.Action) {
 		id := strconv.Itoa(event.Issue.ID)
 		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
 			TeamSlug: team.Name,
 			EventID:  id,
+			Channel:  source.Channel,
 		})
 		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
@@ -49,18 +50,15 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 		}
 	}
 
-	return handleIssueEvent(ctx, log, h.db, team, timestamp, event)
+	return handleIssueEvent(ctx, log, h.db, team, source, timestamp, event)
 }
 
-func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
+func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, source github.Source, threadTimestamp string, event github.Event) (*slack.Message, error) {
 	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
 		return nil, nil
 	}
-	if team.SlackChannels.PullRequests == "" {
-		return nil, nil
-	}
 
-	channel := team.SlackChannels.Issues
+	channel := source.Channel
 	if event.Sender.IsUser() {
 		if _, err := db.GetTeamMember(ctx, gensql.GetTeamMemberParams{
 			TeamSlug:  team.Name,

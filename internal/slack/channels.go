@@ -18,12 +18,10 @@ func (c Client) EnsureChannels(teams map[string]github.Team) error {
 	}
 
 	for name, team := range teams {
-		team.SlackChannels.Commits = c.findChannelIDByName(team.SlackChannels.Commits, joinedChannels)
-		team.SlackChannels.Issues = c.findChannelIDByName(team.SlackChannels.Issues, joinedChannels)
-		team.SlackChannels.PullRequests = c.findChannelIDByName(team.SlackChannels.PullRequests, joinedChannels)
-		team.SlackChannels.Workflows = c.findChannelIDByName(team.SlackChannels.Workflows, joinedChannels)
+		for i := range team.Sources {
+			team.Sources[i].Channel = c.findChannelIDByName(team.Sources[i].Channel, joinedChannels)
+		}
 		team.Config.ExternalContributorsChannel = c.findChannelIDByName(team.Config.ExternalContributorsChannel, joinedChannels)
-		team.SlackChannels.Releases = c.findChannelIDByName(team.SlackChannels.Releases, joinedChannels)
 		teams[name] = team
 	}
 

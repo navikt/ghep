@@ -76,6 +76,20 @@ type SlackChannels struct {
 	Workflows    string `yaml:"workflows"`
 }
 
+// SourceConfig holds event-type-specific config for a source.
+type SourceConfig struct {
+	Pulls     PullsConfig `yaml:"pulls"`
+	Workflows Workflows   `yaml:"workflows"`
+	Security  Security    `yaml:"security"`
+}
+
+// Source defines a single event-type-to-channel mapping with optional config.
+type Source struct {
+	SourceType string       `yaml:"source"`
+	Channel    string       `yaml:"channel"`
+	Config     SourceConfig `yaml:"config"`
+}
+
 func (t Team) IsExternalContributor() bool {
 	return t.Name == "external-contributors"
 }
@@ -84,6 +98,38 @@ type Team struct {
 	Name          string
 	SlackChannels SlackChannels `yaml:",inline"`
 	Config        Config        `yaml:"config"`
+	Sources       []Source      `yaml:"sources"`
+}
+
+// SourcesForType returns all sources matching the given event type.
+func (t Team) SourcesForType(eventType EventType) []Source {
+	var sourceType string
+	switch eventType {
+	case TypeCommit:
+		sourceType = "commits"
+	case TypeIssue:
+		sourceType = "issues"
+	case TypePullRequest:
+		sourceType = "pulls"
+	case TypeWorkflow:
+		sourceType = "workflows"
+	case TypeRelease:
+		sourceType = "releases"
+	case TypeCodeScanningAlert, TypeDependabotAlert, TypeSecretScanningAlert, TypeSecurityAdvisory:
+		sourceType = "security"
+	case TypeRepositoryRenamed, TypeRepositoryPublic:
+		sourceType = "commits"
+	default:
+		return nil
+	}
+
+	var sources []Source
+	for _, s := range t.Sources {
+		if s.SourceType == sourceType {
+			sources = append(sources, s)
+		}
+	}
+	return sources
 }
 
 type githubError struct {
@@ -176,12 +222,86 @@ func ParseTeamConfig(path string) (map[string]Team, error) {
 		return nil, fmt.Errorf("decoding team config: %v", err)
 	}
 
+	validSourceTypes := map[string]bool{
+		"commits":   true,
+		"pulls":     true,
+		"issues":    true,
+		"workflows": true,
+		"releases":  true,
+		"security":  true,
+	}
+
 	for name, team := range teams {
 		team.Name = name
+
+		// Validate source types
+		for _, s := range team.Sources {
+			if !validSourceTypes[s.SourceType] {
+				return nil, fmt.Errorf("team %s: invalid source type %q", name, s.SourceType)
+			}
+		}
+
+		// Always convert flat SlackChannels to sources, then append explicit sources on top
+		flatSources := flatChannelsToSources(team.SlackChannels, team.Config)
+		team.Sources = append(flatSources, team.Sources...)
+
 		teams[name] = team
 	}
 
 	return teams, nil
+}
+
+// flatChannelsToSources converts the old flat channel format into sources for backward compatibility.
+func flatChannelsToSources(channels SlackChannels, cfg Config) []Source {
+	var sources []Source
+
+	if channels.Commits != "" {
+		sources = append(sources, Source{
+			SourceType: "commits",
+			Channel:    channels.Commits,
+		})
+	}
+	if channels.PullRequests != "" {
+		sources = append(sources, Source{
+			SourceType: "pulls",
+			Channel:    channels.PullRequests,
+			Config: SourceConfig{
+				Pulls: cfg.Pulls,
+			},
+		})
+	}
+	if channels.Issues != "" {
+		sources = append(sources, Source{
+			SourceType: "issues",
+			Channel:    channels.Issues,
+		})
+	}
+	if channels.Workflows != "" {
+		sources = append(sources, Source{
+			SourceType: "workflows",
+			Channel:    channels.Workflows,
+			Config: SourceConfig{
+				Workflows: cfg.Workflows,
+			},
+		})
+	}
+	if channels.Releases != "" {
+		sources = append(sources, Source{
+			SourceType: "releases",
+			Channel:    channels.Releases,
+		})
+	}
+	if channels.Security != "" {
+		sources = append(sources, Source{
+			SourceType: "security",
+			Channel:    channels.Security,
+			Config: SourceConfig{
+				Security: cfg.Security,
+			},
+		})
+	}
+
+	return sources
 }
 
 func validateOrgExists(url, bearerToken string) error {

@@ -41,6 +41,33 @@ func TestParseTeamConfig(t *testing.T) {
 						},
 						PingSlackUsers: true,
 					},
+					Sources: []Source{
+						{SourceType: "commits", Channel: "#commits"},
+						{SourceType: "pulls", Channel: "#pulls"},
+						{SourceType: "issues", Channel: "#issues"},
+						{
+							SourceType: "workflows",
+							Channel:    "#workflows",
+							Config: SourceConfig{
+								Workflows: Workflows{
+									Branches:     []string{"main"},
+									IgnoreBots:   true,
+									Repositories: []string{"my-little-repo"},
+									Workflows:    []string{"deploy"},
+								},
+							},
+						},
+						{SourceType: "releases", Channel: "#releases"},
+						{
+							SourceType: "security",
+							Channel:    "#security",
+							Config: SourceConfig{
+								Security: Security{
+									SeverityFilter: "high",
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -52,6 +79,89 @@ func TestParseTeamConfig(t *testing.T) {
 					Name: "nada",
 					SlackChannels: SlackChannels{
 						Commits: "#nada-test",
+					},
+					Sources: []Source{
+						{SourceType: "commits", Channel: "#nada-test"},
+					},
+				},
+			},
+		},
+		{
+			name: "team with sources config",
+			path: "testdata/sources_config.yaml",
+			want: map[string]Team{
+				"nada": {
+					Name: "nada",
+					Config: Config{
+						ExternalContributorsChannel: "#external",
+						SilenceDependabot:           "always",
+						IgnoreRepositories:          []string{"repoA"},
+						PingSlackUsers:              true,
+					},
+					Sources: []Source{
+						{
+							SourceType: "pulls",
+							Channel:    "#pr-main",
+							Config: SourceConfig{
+								Pulls: PullsConfig{
+									IgnoreBots:   true,
+									IgnoreDrafts: true,
+									Minimalist:   true,
+								},
+							},
+						},
+						{
+							SourceType: "pulls",
+							Channel:    "#pr-all",
+						},
+						{SourceType: "commits", Channel: "#commits"},
+						{
+							SourceType: "workflows",
+							Channel:    "#ci",
+							Config: SourceConfig{
+								Workflows: Workflows{
+									IgnoreBots: true,
+									Branches:   []string{"main"},
+								},
+							},
+						},
+						{SourceType: "releases", Channel: "#releases"},
+						{SourceType: "issues", Channel: "#issues"},
+						{
+							SourceType: "security",
+							Channel:    "#security",
+							Config: SourceConfig{
+								Security: Security{
+									SeverityFilter: "high",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "hybrid config: flat channels + explicit sources",
+			path: "testdata/hybrid_config.yaml",
+			want: map[string]Team{
+				"nada": {
+					Name: "nada",
+					SlackChannels: SlackChannels{
+						Commits:      "#commits",
+						PullRequests: "#pr-default",
+					},
+					Sources: []Source{
+						{SourceType: "commits", Channel: "#commits"},
+						{SourceType: "pulls", Channel: "#pr-default"},
+						{
+							SourceType: "pulls",
+							Channel:    "#pr-bots",
+							Config: SourceConfig{
+								Pulls: PullsConfig{
+									IgnoreBots: false,
+								},
+							},
+						},
 					},
 				},
 			},

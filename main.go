@@ -17,14 +17,14 @@ func main() {
 
 	db, err := sql.New(ctx, log.With("client", "db"), true)
 	if err != nil {
-		log.Error("creating SQL client", "err", err.Error())
+		log.Error("Creating SQL client", "error", err)
 		os.Exit(1)
 	}
 
 	log.Info("Parsing team configuration")
 	teamConfig, err := github.ParseTeamConfig(os.Getenv("REPOS_CONFIG_FILE_PATH"))
 	if err != nil {
-		log.Error("parsing team config", "err", err.Error())
+		log.Error("Parsing team config", "error", err)
 		os.Exit(1)
 	}
 
@@ -43,7 +43,7 @@ func main() {
 
 	glog := log.With("component", "ghep")
 	if err := ghep.Run(ctx, glog, db, teamConfig, githubClient, subscribeToOrg); err != nil {
-		glog.Error("running Ghep", "err", err.Error())
+		glog.Error("Running Ghep", "error", err)
 		os.Exit(1)
 	}
 }

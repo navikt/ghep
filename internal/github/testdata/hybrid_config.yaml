@@ -1,0 +1,9 @@
+nada:
+  commits: "#commits"
+  pulls: "#pr-default"
+  sources:
+    - source: pulls
+      channel: "#pr-bots"
+      config:
+        pulls:
+          ignoreBots: false

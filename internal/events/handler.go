@@ -63,7 +63,42 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		return nil
 	}
 
-	message, err := h.handle(ctx, log, team, event)
+	eventType := event.GetEventType()
+	log = log.With("event_type", eventType.String())
+
+	// Handle one-time DB side effects before iterating over sources
+	switch eventType {
+	case github.TypeRepositoryRenamed:
+		if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
+			Name:    event.Repository.Name,
+			OldName: event.Changes.Repository.Name.From,
+		}); err != nil {
+			return err
+		}
+	case github.TypeTeam:
+		if err := h.handleTeamSideEffects(ctx, log, event); err != nil {
+			return err
+		}
+	}
+
+	sources := team.SourcesForType(eventType)
+	for _, source := range sources {
+		if err := h.handleSource(ctx, log, team, source, event, eventType); err != nil {
+			log.Error("error handling source", "err", err.Error(), "source_type", source.SourceType, "channel", source.Channel)
+		}
+	}
+
+	return nil
+}
+
+func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event, eventType github.EventType) error {
+	if source.Channel == "" {
+		return nil
+	}
+
+	log = log.With("channel", source.Channel)
+
+	message, err := h.handleForSource(ctx, log, team, source, event, eventType)
 	if err != nil {
 		return err
 	}
@@ -87,36 +122,9 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		log.Error("error storing event", "err", err.Error(), "event_id", getEventID(event), "team", team.Name)
 	}
 
-	// This checks if we have sent the message with channel name, and not the channel ID
+	// Update source channel name to ID if Slack returned a different channel identifier
 	if message.Channel != resp.Channel {
-		channels := team.SlackChannels
-		if channels.Commits == message.Channel {
-			channels.Commits = resp.Channel
-		}
-		if channels.Issues == message.Channel {
-			channels.Issues = resp.Channel
-		}
-		if channels.PullRequests == message.Channel {
-			channels.PullRequests = resp.Channel
-		}
-		if channels.Releases == message.Channel {
-			channels.Releases = resp.Channel
-		}
-		if channels.Workflows == message.Channel {
-			channels.Workflows = resp.Channel
-		}
-		if team.Config.ExternalContributorsChannel == message.Channel {
-			team.Config.ExternalContributorsChannel = resp.Channel
-		}
-
-		for name, t := range h.teamsConfig {
-			if name == team.Name {
-				t.SlackChannels = channels
-				t.Config.ExternalContributorsChannel = team.Config.ExternalContributorsChannel
-				h.teamsConfig[t.Name] = t
-				break
-			}
-		}
+		h.updateSourceChannelID(team, source, message.Channel, resp.Channel)
 
 		if err := h.slack.JoinChannel(resp.Channel); err != nil {
 			log.Error("error joining channel", "err", err.Error(), "channel", message.Channel, "channel_id", resp.Channel)
@@ -124,6 +132,39 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	}
 
 	return nil
+}
+
+func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event, eventType github.EventType) (*slack.Message, error) {
+	switch eventType {
+	case github.TypeCommit:
+		return handleCommitEvent(ctx, log, source, event, h.db)
+	case github.TypeCodeScanningAlert:
+		return h.handleCodeScanningAlertEvent(ctx, log, team, source, event)
+	case github.TypeDependabotAlert:
+		return h.handleDependabotAlertEvent(ctx, log, team, source, event)
+	case github.TypeIssue:
+		return h.handleIssueEvent(ctx, log, team, source, event)
+	case github.TypePullRequest:
+		return h.handlePullRequestEvent(ctx, log, team, source, event)
+	case github.TypeRelease:
+		return h.handleReleaseEvent(ctx, log, team, source, event)
+	case github.TypeRepositoryRenamed:
+		log.Info("Posting renamed repository message", "channel", source.Channel)
+		return slack.CreateRenamedMessage(source.Channel, event), nil
+	case github.TypeRepositoryPublic:
+		log.Info("Received repository publicized", "channel", source.Channel)
+		return slack.CreatePublicizedMessage(source.Channel, event), nil
+	case github.TypeSecurityAdvisory:
+		return h.handleSecurityAdvisoryEvent(ctx, log, team, source, event)
+	case github.TypeSecretScanningAlert:
+		return h.handleSecretScanningAlertEvent(ctx, log, team, source, event)
+	case github.TypeTeam:
+		return handleTeamEvent(log, source.Channel, event)
+	case github.TypeWorkflow:
+		return h.handleWorkflowEvent(ctx, log, team, source, event)
+	}
+
+	return nil, nil
 }
 
 // getEventID returns the event ID based on the type of event.
@@ -165,45 +206,29 @@ func (h *Handler) storeEvent(ctx context.Context, log *slog.Logger, event github
 	return nil
 }
 
-func (h *Handler) handle(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	eventType := event.GetEventType()
-	log = log.With("event_type", eventType.String())
+// updateSourceChannelID updates the source channel from name to Slack channel ID in the teamsConfig.
+func (h *Handler) updateSourceChannelID(team github.Team, source github.Source, oldChannel, newChannel string) {
+	for name, t := range h.teamsConfig {
+		if name != team.Name {
+			continue
+		}
 
-	switch eventType {
-	case github.TypeCommit:
-		return handleCommitEvent(ctx, log, team, event, h.db)
-	case github.TypeCodeScanningAlert:
-		return h.handleCodeScanningAlertEvent(ctx, log, team, event)
-	case github.TypeDependabotAlert:
-		return h.handleDependabotAlertEvent(ctx, log, team, event)
-	case github.TypeIssue:
-		return h.handleIssueEvent(ctx, log, team, event)
-	case github.TypePullRequest:
-		return h.handlePullRequestEvent(ctx, log, team, event)
-	case github.TypeRelease:
-		return h.handleReleaseEvent(ctx, log, team, event)
-	case github.TypeRepositoryRenamed:
-		return h.handleRenamedRepository(ctx, log, team, event)
-	case github.TypeRepositoryPublic:
-		return handlePublicRepositoryEvent(log, team, event)
-	case github.TypeSecurityAdvisory:
-		return h.handleSecurityAdvisoryEvent(ctx, log, team, event)
-	case github.TypeSecretScanningAlert:
-		return h.handleSecretScanningAlertEvent(ctx, log, team, event)
-	case github.TypeTeam:
-		return h.handleTeamEvent(ctx, log, event)
-	case github.TypeWorkflow:
-		return h.handleWorkflowEvent(ctx, log, team, event)
+		for i := range t.Sources {
+			if t.Sources[i].Channel == oldChannel {
+				t.Sources[i].Channel = newChannel
+			}
+		}
+
+		if t.Config.ExternalContributorsChannel == oldChannel {
+			t.Config.ExternalContributorsChannel = newChannel
+		}
+
+		h.teamsConfig[name] = t
+		break
 	}
-
-	return nil, nil
 }
 
-func handleCommitEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event, db *gensql.Queries) (*slack.Message, error) {
-	if team.SlackChannels.Commits == "" {
-		return nil, nil
-	}
-
+func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Source, event github.Event, db *gensql.Queries) (*slack.Message, error) {
 	branch := strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
 	if branch != event.Repository.DefaultBranch {
 		return nil, nil
@@ -213,34 +238,7 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, team github.Team, 
 		return nil, nil
 	}
 
-	log = log.With("slack_channel", team.SlackChannels.Commits)
+	log = log.With("slack_channel", source.Channel)
 	log.Info("Received commit event")
-	return slack.CreateCommitMessage(ctx, log, db, team.SlackChannels.Commits, event)
-}
-
-func (h *Handler) handleRenamedRepository(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	log.Info("Received repository renamed")
-
-	if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
-		Name:    event.Repository.Name,
-		OldName: event.Changes.Repository.Name.From,
-	}); err != nil {
-		return nil, err
-	}
-
-	if team.SlackChannels.Commits == "" {
-		return nil, nil
-	}
-
-	log.Info("Posting renamed repository message", "slack_channel", team.SlackChannels.Commits)
-	return slack.CreateRenamedMessage(team.SlackChannels.Commits, event), nil
-}
-
-func handlePublicRepositoryEvent(log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
-	if team.SlackChannels.Commits == "" {
-		return nil, nil
-	}
-
-	log.Info("Received repository publicized", "slack_channel", team.SlackChannels.Commits)
-	return slack.CreatePublicizedMessage(team.SlackChannels.Commits, event), nil
+	return slack.CreateCommitMessage(ctx, log, db, source.Channel, event)
 }

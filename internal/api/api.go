@@ -118,9 +118,9 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	if isAnExternalContributorEvent {
 		team := github.Team{
 			Name: github.TeamNameExternalContributors,
-			SlackChannels: github.SlackChannels{
-				PullRequests: c.ExternalContributorsChannel,
-				Issues:       c.ExternalContributorsChannel,
+			Sources: []github.Source{
+				{SourceType: "pulls", Channel: c.ExternalContributorsChannel},
+				{SourceType: "issues", Channel: c.ExternalContributorsChannel},
 			},
 		}
 

@@ -15,7 +15,7 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
+func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event) (*slack.Message, error) {
 	var timestamp string
 	if !slices.Contains([]string{"opened", "synchronize"}, event.Action) {
 
@@ -23,6 +23,7 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
 			TeamSlug: team.Name,
 			EventID:  id,
+			Channel:  source.Channel,
 		})
 		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
@@ -37,7 +38,7 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 					log.Error("error unmarshalling message", "err", err.Error())
 				}
 
-				updatedMessage := slack.CreatePullRequestMessage(ctx, log, h.db, oldMessage.Channel, timestamp, team.Config.PingSlackUsers, team.Config.Pulls.Minimalist, event)
+				updatedMessage := slack.CreatePullRequestMessage(ctx, log, h.db, oldMessage.Channel, timestamp, team.Config.PingSlackUsers, source.Config.Pulls.Minimalist, event)
 				updatedMessage.Timestamp = timestamp
 
 				log.Info("Posting update of pull request", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
@@ -50,11 +51,11 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 		}
 	}
 
-	return handlePullRequestEvent(ctx, log, h.db, team, timestamp, event)
+	return handlePullRequestEvent(ctx, log, h.db, team, source, timestamp, event)
 }
 
-func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, threadTimestamp string, event github.Event) (*slack.Message, error) {
-	if team.Config.Pulls.IgnoreBots && event.Sender.IsBot() {
+func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, source github.Source, threadTimestamp string, event github.Event) (*slack.Message, error) {
+	if source.Config.Pulls.IgnoreBots && event.Sender.IsBot() {
 		return nil, nil
 	}
 
@@ -62,15 +63,11 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 		return nil, nil
 	}
 
-	if team.SlackChannels.PullRequests == "" {
+	if source.Config.Pulls.IgnoreDrafts && event.PullRequest.Draft {
 		return nil, nil
 	}
 
-	if team.Config.Pulls.IgnoreDrafts && event.PullRequest.Draft {
-		return nil, nil
-	}
-
-	channel := team.SlackChannels.PullRequests
+	channel := source.Channel
 	if event.Sender.IsUser() {
 		if _, err := db.GetTeamMember(ctx, gensql.GetTeamMemberParams{
 			TeamSlug:  team.Name,
@@ -87,5 +84,5 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 	}
 
 	log.Info("Received pull request", "slack_channel", channel)
-	return slack.CreatePullRequestMessage(ctx, log, db, channel, threadTimestamp, team.Config.PingSlackUsers, team.Config.Pulls.Minimalist, event), nil
+	return slack.CreatePullRequestMessage(ctx, log, db, channel, threadTimestamp, team.Config.PingSlackUsers, source.Config.Pulls.Minimalist, event), nil
 }

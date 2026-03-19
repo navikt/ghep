@@ -1,0 +1,38 @@
+nada:
+  config:
+    ignoreRepositories:
+      - repoA
+    silenceDependabot: "always"
+    externalContributorsChannel: "#external"
+    pingSlackUsers: true
+  sources:
+    - source: pulls
+      channel: "#pr-main"
+      config:
+        pulls:
+          ignoreBots: true
+          ignoreDrafts: true
+          minimalist: true
+    - source: pulls
+      channel: "#pr-all"
+      config:
+        pulls:
+          ignoreBots: false
+    - source: commits
+      channel: "#commits"
+    - source: workflows
+      channel: "#ci"
+      config:
+        workflows:
+          ignoreBots: true
+          branches:
+            - main
+    - source: releases
+      channel: "#releases"
+    - source: issues
+      channel: "#issues"
+    - source: security
+      channel: "#security"
+      config:
+        security:
+          severityFilter: "high"
