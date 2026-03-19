@@ -239,14 +239,30 @@ allosaurus:
   issues: "#allosaurus-github"
   pulls: "#allosaurus-github"
 historisk:
-  issues: "#historisk-github"
-  pulls: "#historisk-github"
-  workflows: "#historisk-github"
-  releases: "#historisk-github"
-  security: "#historisk-github"
-  config:
-    workflows:
-      branches: ["main"]
+  sources:
+    - source: issues
+      channel: "#historisk-github"
+    - source: pulls
+      channel: "#historisk-github"
+      config:
+        pulls:
+          ignoreBots: true
+    - source: pulls
+      channel: "#historisk-github-bots"
+      config:
+        pulls:
+          onlyBots: true
+    - source: workflows
+      channel: "#historisk-github"
+      config:
+        workflows:
+          branches:
+            - main
+    - source: releases
+      channel: "#historisk-github"
+    - source: security
+      channel: "#historisk-github"
+
 team-esyfo:
   commits: "#esyfo-github-feed"
   workflows: "#esyfo-github-feed"
