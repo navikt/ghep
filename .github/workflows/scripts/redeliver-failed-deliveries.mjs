@@ -67,8 +67,16 @@ async function checkAndRedeliverWebhooks() {
     }
 
     // Redeliver any failed deliveries.
+    let redeliveryCount = 0;
+    const failedRedeliveries = [];
     for (const deliveryId of failedDeliveryIDs) {
-      await redeliverWebhook({deliveryId, app});
+      try {
+        await redeliverWebhook({deliveryId, app});
+        redeliveryCount++;
+      } catch (error) {
+        failedRedeliveries.push({deliveryId, error});
+        console.warn(`Failed to redeliver delivery ${deliveryId}: ${error.message}`);
+      }
     }
 
     // Update the configuration variable (or create the variable if it doesn't already exist) to store the time that this script started.
@@ -84,12 +92,16 @@ async function checkAndRedeliverWebhooks() {
 
     // Log the number of redeliveries.
     console.log(
-      `Redelivered ${
-        failedDeliveryIDs.length
-      } failed webhook deliveries out of ${
+      `Redelivered ${redeliveryCount} failed webhook deliveries out of ${
         deliveries.length
       } total deliveries since ${Date(lastWebhookRedeliveryTime)}.`
     );
+
+    if (failedRedeliveries.length > 0) {
+      console.warn(
+        `Failed to redeliver ${failedRedeliveries.length} deliveries: ${failedRedeliveries.map(({deliveryId}) => deliveryId).join(", ")}`
+      );
+    }
   } catch (error) {
     // If there was an error, log the error so that it appears in the workflow run log, then throw the error so that the workflow run registers as a failure.
     if (error.response) {
@@ -145,11 +157,26 @@ async function fetchWebhookDeliveriesSince({lastWebhookRedeliveryTime, app}) {
   return deliveries;
 }
 
-// This function will redeliver a failed webhook delivery.
-async function redeliverWebhook({deliveryId, app}) {
-  await app.octokit.request("POST /app/hook/deliveries/{delivery_id}/attempts", {
-    delivery_id: deliveryId,
-  });
+// This function will redeliver a failed webhook delivery, with retries for transient errors.
+async function redeliverWebhook({deliveryId, app, maxRetries = 3}) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await app.octokit.request("POST /app/hook/deliveries/{delivery_id}/attempts", {
+        delivery_id: deliveryId,
+      });
+      return;
+    } catch (error) {
+      if (error.status === 404 || error.status >= 500) {
+        if (attempt < maxRetries) {
+          const delay = attempt * 1000;
+          console.warn(`Attempt ${attempt}/${maxRetries} failed for delivery ${deliveryId} (HTTP ${error.status}), retrying in ${delay}ms...`);
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          continue;
+        }
+      }
+      throw error;
+    }
+  }
 }
 
 // This function gets the value of a configuration variable.
