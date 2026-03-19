@@ -220,6 +220,10 @@ func (c *Client) isAnExternalContributorEvent(ctx context.Context, event github.
 		return false, nil
 	}
 
+	if event.Sender.Login == "" {
+		return false, nil
+	}
+
 	// Check if the user is in the database, if not, we consider them an external contributor.
 	exisits, err := c.db.ExistsUser(ctx, event.Sender.Login)
 	return !exisits, err
