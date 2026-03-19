@@ -71,5 +71,10 @@ func (c Client) createBearerToken() (string, error) {
 		return "", err
 	}
 
-	return bearer["token"].(string), nil
+	token, ok := bearer["token"].(string)
+	if !ok {
+		return "", fmt.Errorf("token not found or not a string in response")
+	}
+
+	return token, nil
 }

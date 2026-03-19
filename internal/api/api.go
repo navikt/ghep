@@ -46,7 +46,7 @@ func (c *Client) Run(base, addr string) error {
 	mux.HandleFunc("GET /internal/", c.frontendGetHandler)
 
 	srv := &http.Server{
-		Addr:         ":8080",
+		Addr:         addr,
 		Handler:      mux,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
