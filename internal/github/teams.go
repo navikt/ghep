@@ -45,6 +45,7 @@ type Config struct {
 
 type PullsConfig struct {
 	IgnoreBots   bool `yaml:"ignoreBots"`
+	OnlyBots     bool `yaml:"onlyBots"`
 	IgnoreDrafts bool `yaml:"ignoreDrafts"`
 	Minimalist   bool `yaml:"minimalist"`
 }

@@ -160,11 +160,13 @@ team:
   config:
     pulls:
       ignoreBots: bool
+      onlyBots: bool
       ignoreDrafts: bool
       minimalist: bool
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om Pull Request opprettet av bots
+- `onlyBots` - Få *kun* Slack-melding om Pull Request opprettet av bots (nyttig for å sende Dependabot PRs til egen kanal)
 - `ignoreDrafts` - Ignorer draft pull requests
 - `minimalist` - Don't post the body as attachment, only add title to the message
 

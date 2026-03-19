@@ -59,6 +59,10 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 		return nil, nil
 	}
 
+	if source.Config.Pulls.OnlyBots && !event.Sender.IsBot() {
+		return nil, nil
+	}
+
 	if !slices.Contains([]string{"opened", "closed", "ready_for_review"}, event.Action) {
 		return nil, nil
 	}
