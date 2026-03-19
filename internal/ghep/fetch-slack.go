@@ -32,7 +32,10 @@ func FetchSlackUsers(ctx context.Context, log *slog.Logger, db *gensql.Queries) 
 	log.Info("Saving Slack users ID to database")
 	for _, user := range users {
 		login, err := db.GetUserByEmail(ctx, user.Email)
-		if err != nil && errors.Is(err, pgx.ErrNoRows) {
+		if err != nil {
+			if !errors.Is(err, pgx.ErrNoRows) {
+				log.Error("Getting user by email", "error", err, "email", user.Email)
+			}
 			continue
 		}
 

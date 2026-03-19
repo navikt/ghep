@@ -40,17 +40,13 @@ func New(log *slog.Logger, db *gensql.Queries, events events.Handler, teamConfig
 }
 
 func (c *Client) Run(base, addr string) error {
-	http.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
-	http.HandleFunc("GET /internal/health", c.healthGetHandler)
-	http.HandleFunc("GET /internal/", c.frontendGetHandler)
-
 	mux := http.NewServeMux()
 	mux.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
 	mux.HandleFunc("GET /internal/health", c.healthGetHandler)
 	mux.HandleFunc("GET /internal/", c.frontendGetHandler)
 
 	srv := &http.Server{
-		Addr:         ":8080",
+		Addr:         addr,
 		Handler:      mux,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -221,6 +217,10 @@ func (c *Client) isAnExternalContributorEvent(ctx context.Context, event github.
 
 	// If the sender is a bot, we do not handle it as an external contributor event.
 	if event.Sender.IsBot() {
+		return false, nil
+	}
+
+	if event.Sender.Login == "" {
 		return false, nil
 	}
 

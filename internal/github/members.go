@@ -40,6 +40,7 @@ func fetchMembers(teamURL, bearerToken string) ([]*User, error) {
 		}
 
 		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
 		if err != nil {
 			return nil, err
 		}

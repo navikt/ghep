@@ -167,6 +167,10 @@ func CreateUpdatedCommitMessage(payload []byte, event github.Event) (*Message, e
 		return nil, fmt.Errorf("unmarshalling message: %w", err)
 	}
 
+	if len(message.Attachments) == 0 {
+		return nil, nil
+	}
+
 	if message.Attachments[0].Footer != "" {
 		return nil, nil
 	}

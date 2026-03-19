@@ -31,6 +31,7 @@ func (c Client) ListUsers() ([]User, error) {
 		}
 
 		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
 		if err != nil {
 			return nil, err
 		}
