@@ -87,7 +87,7 @@ nada:
       channel: "#nada-bot-prs"
       config:
         pulls:
-          ignoreBots: false
+          onlyBots: true
     - source: commits
       channel: "#nada-commits"
     - source: workflows
@@ -120,7 +120,7 @@ nada:
       channel: "#nada-bot-prs"
       config:
         pulls:
-          ignoreBots: false
+          onlyBots: true
 ```
 
 I eksempelet over vil pull requests sendes til _både_ `#nada-pull-requests` (fra flat config) og `#nada-bot-prs` (fra sources).
