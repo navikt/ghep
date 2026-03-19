@@ -40,10 +40,6 @@ func New(log *slog.Logger, db *gensql.Queries, events events.Handler, teamConfig
 }
 
 func (c *Client) Run(base, addr string) error {
-	http.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
-	http.HandleFunc("GET /internal/health", c.healthGetHandler)
-	http.HandleFunc("GET /internal/", c.frontendGetHandler)
-
 	mux := http.NewServeMux()
 	mux.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
 	mux.HandleFunc("GET /internal/health", c.healthGetHandler)
