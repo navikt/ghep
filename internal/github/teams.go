@@ -425,7 +425,7 @@ func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist
 			}
 		}
 
-		if err != sql.RemoveRepositoriesNotBelongingToTeam(ctx, c.db, team, repositories) {
+		if err := sql.RemoveRepositoriesNotBelongingToTeam(ctx, c.db, team, repositories); err != nil {
 			return fmt.Errorf("cleaning up old repositories: %v", err)
 		}
 
