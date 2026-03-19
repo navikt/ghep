@@ -171,6 +171,7 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 		}
 
 		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
 		if err != nil {
 			return nil, err
 		}

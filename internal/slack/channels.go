@@ -80,6 +80,7 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 		}
 
 		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
 		if err != nil {
 			return nil, err
 		}

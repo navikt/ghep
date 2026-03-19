@@ -100,10 +100,11 @@ func (c *Client) FetchOrgUsersWithEmail(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("doing request: %v", err)
 		}
-		defer httpResp.Body.Close()
 
 		var githubResp githubResponse
-		if err := json.NewDecoder(httpResp.Body).Decode(&githubResp); err != nil {
+		err = json.NewDecoder(httpResp.Body).Decode(&githubResp)
+		httpResp.Body.Close()
+		if err != nil {
 			return fmt.Errorf("decoding response: %v", err)
 		}
 
