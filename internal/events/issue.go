@@ -25,7 +25,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 			Channel:  source.Channel,
 		})
 		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-			log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+			log.Error("Getting thread timestamp", "error", err, "id", id)
 		}
 
 		if message.ThreadTs != "" {
@@ -34,7 +34,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 			if message.Payload != nil && event.Action != "closed" {
 				var oldMessage slack.Message
 				if err := json.Unmarshal(message.Payload, &oldMessage); err != nil {
-					log.Error("error unmarshalling message", "err", err.Error())
+					log.Error("Unmarshalling message", "error", err)
 				}
 
 				updatedMessage := slack.CreateIssueMessage(ctx, log, h.db, oldMessage.Channel, timestamp, team.Config.PingSlackUsers, event)
@@ -42,7 +42,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 
 				log.Info("Posting update of issue", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
 				if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
-					log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", timestamp)
+					log.Error("Posting updated message", "error", err, "channel", updatedMessage.Channel, "timestamp", timestamp)
 				}
 
 				return nil, nil
@@ -69,11 +69,11 @@ func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team
 					channel = team.Config.ExternalContributorsChannel
 				}
 			} else {
-				log.Error("error getting team member", "err", err.Error(), "user", event.Sender.Login)
+				log.Error("Getting team member", "error", err, "user", event.Sender.Login)
 			}
 		}
 	}
 
-	log.Info("Received issue", "slack_channel", channel)
+	log.Info("Received issue", "channel", channel)
 	return slack.CreateIssueMessage(ctx, log, db, channel, threadTimestamp, team.Config.PingSlackUsers, event), nil
 }

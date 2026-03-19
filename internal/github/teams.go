@@ -381,12 +381,12 @@ func (c Client) FetchOrgAsTeam(ctx context.Context, log *slog.Logger) error {
 
 	for _, member := range members {
 		if err := sql.AddMemberToTeam(ctx, c.db, c.org, member.Login); err != nil {
-			log.Error("Failed to add member to team", "team", c.org, "member", member.Login, "error", err)
+			log.Error("Adding member to team", "team", c.org, "member", member.Login, "error", err)
 			continue
 		}
 	}
 
-	log.Info(fmt.Sprintf("Subscribed to %s", c.org), "org", c.org, "members", len(members))
+	log.Info("Subscribed to org", "org", c.org, "members", len(members))
 
 	return nil
 }
@@ -438,7 +438,7 @@ func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist
 			}
 		}
 
-		log.Info(fmt.Sprintf("Processed team %s with %d repositories and %d members", team, len(repositories), len(members)))
+		log.Info("Processed team", "team", team, "repositories", len(repositories), "members", len(members))
 	}
 
 	return nil

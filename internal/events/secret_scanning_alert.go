@@ -21,7 +21,7 @@ func (h *Handler) handleSecretScanningAlertEvent(ctx context.Context, log *slog.
 		Channel:  source.Channel,
 	})
 	if err != nil {
-		log.Error("error getting slack message", "err", err.Error(), "event_id", event.Alert.URL)
+		log.Error("Getting slack message", "error", err, "event_id", event.Alert.URL)
 	}
 
 	log.Info("Received secret scanning alert", "secret_type", event.Alert.SecretType)

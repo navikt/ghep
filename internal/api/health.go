@@ -10,7 +10,7 @@ import (
 func (c *Client) healthGetHandler(w http.ResponseWriter, r *http.Request) {
 	teams, err := c.db.ListTeams(r.Context())
 	if err != nil {
-		c.log.Error("error listing teams from database", "error", err)
+		c.log.Error("Listing teams from database", "error", err)
 		http.Error(w, fmt.Sprintf("error listing teams from database: %s", err.Error()), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -27,7 +27,7 @@ func (c *Client) healthGetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(payload)
 	if err != nil {
-		c.log.Error("error when encoding response", "error", err)
+		c.log.Error("Encoding response", "error", err)
 		http.Error(w, fmt.Sprintf("error encoding response: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}

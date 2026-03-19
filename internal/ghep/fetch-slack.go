@@ -18,14 +18,14 @@ func FetchSlackUsers(ctx context.Context, log *slog.Logger, db *gensql.Queries) 
 		os.Getenv("SLACK_TOKEN"),
 	)
 	if err != nil {
-		log.Error("creating Slack client", "err", err.Error())
+		log.Error("Creating Slack client", "error", err)
 		return
 	}
 
 	log.Info("Fetching users from Slack")
 	users, err := slackAPI.ListUsers()
 	if err != nil {
-		log.Error("listing Slack users", "err", err.Error())
+		log.Error("Listing Slack users", "error", err)
 		return
 	}
 
@@ -41,7 +41,7 @@ func FetchSlackUsers(ctx context.Context, log *slog.Logger, db *gensql.Queries) 
 				Login: login,
 				ID:    user.ID,
 			}); err != nil {
-				log.Error("saving Slack user ID to database", "user", user.ID, "err", err.Error())
+				log.Error("Saving Slack user ID to database", "user", user.ID, "error", err)
 				return
 			}
 		}

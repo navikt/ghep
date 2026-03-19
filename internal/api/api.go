@@ -67,7 +67,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Error("error reading body", "err", err.Error())
+		log.Error("Reading body", "error", err)
 		http.Error(w, fmt.Sprintf("error reading body: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
@@ -75,7 +75,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	event, err := github.CreateEvent(body)
 	if err != nil {
-		log.Error("error creating event", "err", err.Error())
+		log.Error("Creating event", "error", err)
 		http.Error(w, fmt.Sprintf("error creating event: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
@@ -85,13 +85,13 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		switch event.Action {
 		case "member_added":
 			if err := c.db.CreateUser(r.Context(), event.Membership.User.Login); err != nil {
-				log.Error("error creating user in database", "user", event.Membership.User.Login, "err", err.Error())
+				log.Error("Creating user in database", "user", event.Membership.User.Login, "error", err)
 				http.Error(w, fmt.Sprintf("Error creating user in database: %s", err.Error()), http.StatusInternalServerError)
 				return
 			}
 		case "member_removed":
 			if err := c.db.DeleteUser(r.Context(), event.Membership.User.Login); err != nil {
-				log.Error("error deleting user from database", "user", event.Membership.User.Login, "err", err.Error())
+				log.Error("Deleting user from database", "user", event.Membership.User.Login, "error", err)
 				http.Error(w, fmt.Sprintf("Error deleting user from database: %s", err.Error()), http.StatusInternalServerError)
 				return
 			}
@@ -110,7 +110,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	isAnExternalContributorEvent, err := c.isAnExternalContributorEvent(r.Context(), event)
 	if err != nil {
-		log.Error("error checking if user is an external contributor", "user", event.Sender.Login, "err", err.Error())
+		log.Error("Checking if user is an external contributor", "user", event.Sender.Login, "error", err)
 		http.Error(w, fmt.Sprintf("Error checking if user is an external contributor: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
@@ -127,7 +127,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		log := log.With("repository", event.GetRepositoryName(), "team", team.Name, "action", event.Action, "user", event.Sender.Login, "external_contributor", true)
 		log.Info("Handling event for external contributors")
 		if err := c.events.Handle(r.Context(), log, team, event); err != nil {
-			log.Error("error handling event for external contributors", "err", err.Error())
+			log.Error("Handling event for external contributors", "error", err)
 			http.Error(w, "Error handling event for external contributors", http.StatusInternalServerError)
 			return
 		}
@@ -153,7 +153,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			team, err := c.db.GetTeam(r.Context(), event.Team.Name)
 			if err != nil {
 				if !errors.Is(err, pgx.ErrNoRows) {
-					log.Error("error getting team from database", "team", event.Team.Name, "err", err.Error())
+					log.Error("Getting team from database", "team", event.Team.Name, "error", err)
 					http.Error(w, fmt.Sprintf("Error getting team from database: %s", err.Error()), http.StatusInternalServerError)
 					return
 				}
@@ -169,7 +169,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			teamsFromDB, err := c.db.ListTeamsByRepository(r.Context(), event.GetRepositoryName())
 			if err != nil {
-				log.Error("error listing teams by repository", "repository", event.GetRepositoryName(), "err", err.Error())
+				log.Error("Listing teams by repository", "repository", event.GetRepositoryName(), "error", err)
 				http.Error(w, fmt.Sprintf("Error listing teams by repository: %s", err.Error()), http.StatusInternalServerError)
 				return
 			}
@@ -191,7 +191,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	for _, name := range teams {
 		log = log.With("repository", event.GetRepositoryName(), "team", name, "action", event.Action)
 		if err := c.events.Handle(r.Context(), log, c.teamConfig[name], event); err != nil {
-			log.Error("error handling event", "team", name, "err", err.Error())
+			log.Error("Handling event", "team", name, "error", err)
 			http.Error(w, fmt.Sprintf("Error handling event for %s", name), http.StatusInternalServerError)
 			return
 		}

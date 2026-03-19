@@ -22,26 +22,26 @@ func (h *Handler) handleWorkflowEvent(ctx context.Context, log *slog.Logger, tea
 		EventID:  gitCommitSHA,
 	})
 	if err != nil {
-		log.Error("error listing commit messages", "err", err.Error(), "id", gitCommitSHA)
+		log.Error("Listing commit messages", "error", err, "id", gitCommitSHA)
 	}
 
 	for _, commitMessage := range commitMessages {
 		if !event.Sender.IsBot() {
 			if err := h.slack.PostWorkflowReaction(log, event, commitMessage.Channel, commitMessage.ThreadTs); err != nil {
-				log.Error("error posting workflow reaction", "err", err.Error(), "channel", commitMessage.Channel, "timestamp", commitMessage.ThreadTs)
+				log.Error("Posting workflow reaction", "error", err, "channel", commitMessage.Channel, "timestamp", commitMessage.ThreadTs)
 			}
 
 			if commitMessage.Payload != nil {
 				updatedCommitMessage, err := slack.CreateUpdatedCommitMessage(commitMessage.Payload, event)
 				if err != nil {
-					log.Error("error updating message", "err", err.Error(), "timestamp", commitMessage.ThreadTs)
+					log.Error("Updating message", "error", err, "timestamp", commitMessage.ThreadTs)
 					continue
 				}
 				updatedCommitMessage.Timestamp = commitMessage.ThreadTs
 
 				log.Info("Posting update of commit", "channel", updatedCommitMessage.Channel, "timestamp", updatedCommitMessage.Timestamp)
 				if err = h.slack.PostUpdatedMessage(*updatedCommitMessage); err != nil {
-					log.Error("error posting updated commit message", "err", err.Error())
+					log.Error("Posting updated commit message", "error", err)
 				}
 			}
 		}
@@ -54,7 +54,7 @@ func (h *Handler) handleWorkflowEvent(ctx context.Context, log *slog.Logger, tea
 		Channel:  source.Channel,
 	})
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-		log.Error("error getting workflow timestamp", "err", err.Error(), "id", workflowID)
+		log.Error("Getting workflow timestamp", "error", err, "id", workflowID)
 	}
 
 	if workflowMessage.ThreadTs != "" {
@@ -62,13 +62,13 @@ func (h *Handler) handleWorkflowEvent(ctx context.Context, log *slog.Logger, tea
 		if event.Action == "completed" && event.Workflow.Conclusion == "success" {
 			log.Info("Reacting to workflow", "action", event.Action, "workflow_status", event.Workflow.Status, "workflow_conclusion", event.Workflow.Conclusion)
 			if err := h.slack.PostReaction(source.Channel, workflowTimestamp, slack.ReactionSuccess); err != nil {
-				log.Error("error posting reaction", "err", err.Error(), "channel", source.Channel, "timestamp", workflowTimestamp)
+				log.Error("Posting reaction", "error", err, "channel", source.Channel, "timestamp", workflowTimestamp)
 			}
 		}
 	}
 
 	if err := event.Workflow.UpdateFailedJob(); err != nil {
-		log.Error("error updating failed job", "err", err.Error())
+		log.Error("Updating failed job", "error", err)
 	}
 
 	return handleWorkflowEvent(log, source, event)
@@ -95,6 +95,6 @@ func handleWorkflowEvent(log *slog.Logger, source github.Source, event github.Ev
 		return nil, nil
 	}
 
-	log.Info("Received workflow run", "conclusion", event.Workflow.Conclusion, "slack_channel", source.Channel)
+	log.Info("Received workflow run", "conclusion", event.Workflow.Conclusion, "channel", source.Channel)
 	return slack.CreateWorkflowMessage(source.Channel, event), nil
 }

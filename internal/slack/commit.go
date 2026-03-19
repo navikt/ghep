@@ -84,7 +84,7 @@ func createAuthors(ctx context.Context, log *slog.Logger, db sql.Userer, event g
 	for _, commit := range event.Commits {
 		coAuthors, err := fetchCoAuthors(commit.Message)
 		if err != nil {
-			log.Error("Failed to fetch co-authors", "error", err)
+			log.Error("Fetching co-authors", "error", err)
 		}
 
 		for _, coAuthor := range coAuthors {
@@ -100,7 +100,7 @@ func createAuthors(ctx context.Context, log *slog.Logger, db sql.Userer, event g
 		if strings.HasSuffix(coAuthor.Email, "@nav.no") {
 			username, err := db.GetUserByEmail(ctx, coAuthor.Email)
 			if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-				log.Error("Failed to get user by email", "email", coAuthor.Email, "error", err)
+				log.Error("Getting user by email", "email", coAuthor.Email, "error", err)
 			}
 
 			if username != "" {

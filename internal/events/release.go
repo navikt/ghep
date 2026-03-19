@@ -23,7 +23,7 @@ func (h *Handler) handleReleaseEvent(ctx context.Context, log *slog.Logger, team
 		})
 		if err != nil {
 			if !errors.Is(err, pgx.ErrNoRows) {
-				log.Error("error getting thread timestamp", "err", err.Error(), "id", id)
+				log.Error("Getting thread timestamp", "error", err, "id", id)
 			}
 
 			return nil, nil
@@ -34,7 +34,7 @@ func (h *Handler) handleReleaseEvent(ctx context.Context, log *slog.Logger, team
 
 		log.Info("Posting update of release", "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
 		if err = h.slack.PostUpdatedMessage(*updatedMessage); err != nil {
-			log.Error("error posting updated message", "err", err.Error(), "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
+			log.Error("Posting updated message", "error", err, "channel", updatedMessage.Channel, "timestamp", updatedMessage.Timestamp)
 		}
 
 		return nil, nil
@@ -48,6 +48,6 @@ func handleReleaseEvent(log *slog.Logger, source github.Source, event github.Eve
 		return nil, nil
 	}
 
-	log.Info("Received release", "slack_channel", source.Channel)
+	log.Info("Received release", "channel", source.Channel)
 	return slack.CreateReleaseMessage(source.Channel, event), nil
 }

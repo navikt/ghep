@@ -50,7 +50,7 @@ func CreatePullRequestMessage(ctx context.Context, log *slog.Logger, db sql.User
 				if pingSlack {
 					userID, err := db.GetUserSlackID(ctx, reviewer.Login)
 					if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-						log.Error("error getting user Slack ID", "user", reviewer.Login, "err", err.Error())
+						log.Error("Getting user Slack ID", "user", reviewer.Login, "error", err)
 					}
 
 					if userID != "" {

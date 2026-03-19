@@ -15,7 +15,7 @@ import (
 )
 
 func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, subscribeToOrg bool) error {
-	log.Info(fmt.Sprintf("Starting Ghep for %s", os.Getenv("GITHUB_ORG")))
+	log.Info("Starting Ghep", "org", os.Getenv("GITHUB_ORG"))
 
 	log.Info("Creating Slack client")
 	slackAPI, err := slack.New(
@@ -31,7 +31,7 @@ func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig m
 		teams = append(teams, name)
 	}
 
-	log.Info(fmt.Sprintf("Teams using Ghep: %s", strings.Join(teams, ", ")))
+	log.Info("Teams using Ghep", "teams", strings.Join(teams, ", "))
 
 	log.Info("Ensuring Slack channels")
 	if err := slackAPI.EnsureChannels(teamConfig); err != nil {

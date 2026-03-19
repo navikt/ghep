@@ -155,7 +155,7 @@ func (c Client) postRequest(apiMethod string, payload []byte) (string, error) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.log.Error("error reading response body", "error", err)
+		c.log.Error("Reading response body", "error", err)
 		return "", err
 	}
 
@@ -192,7 +192,7 @@ func (c Client) getRequest(apiMethod, channel, timestamp string) (string, error)
 func (c Client) handleSlackResponse(resp *http.Response, body string) (string, error) {
 	var slackResp Response
 	if err := json.Unmarshal([]byte(body), &slackResp); err != nil {
-		c.log.Error("error unmarshalling response", "error", err, "body", body)
+		c.log.Error("Unmarshalling response", "error", err, "body", body)
 		return body, err
 	}
 
@@ -205,7 +205,7 @@ func (c Client) handleSlackResponse(resp *http.Response, body string) (string, e
 	}
 
 	if slackResp.Warning != "" {
-		c.log.Info("got a warning", "warn", slackResp.Warning)
+		c.log.Info("Got a warning", "warn", slackResp.Warning)
 	}
 
 	return body, nil

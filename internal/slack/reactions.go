@@ -69,7 +69,7 @@ func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, curre
 func (c Client) GetReactions(channel, timestamp string) ([]string, error) {
 	body, err := c.getRequest("reactions.get", channel, timestamp)
 	if err != nil {
-		c.log.Error("Error getting reactions", "response", body, "error", err)
+		c.log.Error("Getting reactions", "response", body, "error", err)
 		return nil, err
 	}
 

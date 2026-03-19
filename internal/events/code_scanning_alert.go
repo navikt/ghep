@@ -24,7 +24,7 @@ func (h *Handler) handleCodeScanningAlertEvent(ctx context.Context, log *slog.Lo
 		Channel:  source.Channel,
 	})
 	if err != nil {
-		log.Error("error getting slack message", "err", err.Error(), "event_id", event.Alert.URL)
+		log.Error("Getting slack message", "error", err, "event_id", event.Alert.URL)
 	}
 
 	channel := source.Channel

@@ -30,7 +30,7 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 			Channel:  source.Channel,
 		})
 		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-			log.Error("error getting thread timestamp", "err", err.Error(), "id", event.Alert.URL)
+			log.Error("Getting thread timestamp", "error", err, "id", event.Alert.URL)
 		}
 
 		timestamp = message.ThreadTs
@@ -45,7 +45,7 @@ func (h *Handler) handleDependabotAlertEvent(ctx context.Context, log *slog.Logg
 
 			log.Info("Posting reaction to Dependabot alert", "action", event.Action, "alert_state", event.Alert.State, "timestamp", timestamp, "reaction", reaction)
 			if err := h.slack.PostReaction(source.Channel, timestamp, reaction); err != nil {
-				log.Error("error posting reaction", "err", err.Error(), "channel", source.Channel, "timestamp", timestamp, "reaction", reaction)
+				log.Error("Posting reaction", "error", err, "channel", source.Channel, "timestamp", timestamp, "reaction", reaction)
 			}
 		}
 

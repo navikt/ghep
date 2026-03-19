@@ -84,7 +84,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	sources := team.SourcesForType(eventType)
 	for _, source := range sources {
 		if err := h.handleSource(ctx, log, team, source, event, eventType); err != nil {
-			log.Error("error handling source", "err", err.Error(), "source_type", source.SourceType, "channel", source.Channel)
+			log.Error("Handling source", "error", err, "source_type", source.SourceType, "channel", source.Channel)
 		}
 	}
 
@@ -114,12 +114,12 @@ func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team githu
 
 	resp, err := h.slack.PostMessage(payload)
 	if err != nil {
-		log.Error("error posting message", "err", err.Error(), "channel", message.Channel, "timestamp", message.ThreadTimestamp)
+		log.Error("Posting message", "error", err, "channel", message.Channel, "timestamp", message.ThreadTimestamp)
 		return err
 	}
 
 	if err := h.storeEvent(ctx, log, event, team, resp, payload); err != nil {
-		log.Error("error storing event", "err", err.Error(), "event_id", getEventID(event), "team", team.Name)
+		log.Error("Storing event", "error", err, "event_id", getEventID(event), "team", team.Name)
 	}
 
 	// Update source channel name to ID if Slack returned a different channel identifier
@@ -127,7 +127,7 @@ func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team githu
 		h.updateSourceChannelID(team, source, message.Channel, resp.Channel)
 
 		if err := h.slack.JoinChannel(resp.Channel); err != nil {
-			log.Error("error joining channel", "err", err.Error(), "channel", message.Channel, "channel_id", resp.Channel)
+			log.Error("Joining channel", "error", err, "channel", message.Channel, "channel_id", resp.Channel)
 		}
 	}
 
@@ -200,7 +200,7 @@ func (h *Handler) storeEvent(ctx context.Context, log *slog.Logger, event github
 		Channel:  resp.Channel,
 		Payload:  payload,
 	}); err != nil {
-		log.Error("error storing message", "err", err.Error(), "ts", resp.Timestamp)
+		log.Error("Storing message", "error", err, "timestamp", resp.Timestamp)
 	}
 
 	return nil
@@ -238,7 +238,7 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Sour
 		return nil, nil
 	}
 
-	log = log.With("slack_channel", source.Channel)
+	log = log.With("channel", source.Channel)
 	log.Info("Received commit event")
 	return slack.CreateCommitMessage(ctx, log, db, source.Channel, event)
 }

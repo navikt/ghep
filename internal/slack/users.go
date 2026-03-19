@@ -49,12 +49,12 @@ func (c Client) ListUsers() ([]User, error) {
 						return nil, err
 					}
 
-					c.log.Info("rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter.Seconds())
+					c.log.Info("Rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter.Seconds())
 					time.Sleep(retryAfter)
 					continue
 				}
 
-				c.log.Info("rate limited and no Retry-After header set, sleeping 5 second")
+				c.log.Info("Rate limited and no Retry-After header set, sleeping 5 seconds")
 				time.Sleep(5 * time.Second)
 				continue
 			}
@@ -67,7 +67,7 @@ func (c Client) ListUsers() ([]User, error) {
 		}
 
 		if slackResp.Warning != "" {
-			c.log.Info("got a warning", "warn", slackResp.Warning)
+			c.log.Info("Got a warning", "warn", slackResp.Warning)
 		}
 
 		for _, user := range slackResp.Users {
@@ -76,7 +76,7 @@ func (c Client) ListUsers() ([]User, error) {
 				Email: user.Profile.Email,
 			})
 		}
-		c.log.Info(fmt.Sprintf("Found %d users", len(users)), "new_users_added", len(slackResp.Users))
+		c.log.Info("Found users", "total", len(users), "new_users_added", len(slackResp.Users))
 
 		if slackResp.ResponseMetadata.NextCursor == "" {
 			break
@@ -86,6 +86,6 @@ func (c Client) ListUsers() ([]User, error) {
 		time.Sleep(2 * time.Second)
 	}
 
-	c.log.Info(fmt.Sprintf("Total users fetched: %d", len(users)))
+	c.log.Info("Total users fetched", "total", len(users))
 	return users, nil
 }

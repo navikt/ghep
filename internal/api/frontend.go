@@ -34,7 +34,7 @@ func (c *Client) frontendGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.New("index.html").Parse(indexHTML)
 	if err != nil {
-		c.log.Error("error parsing index.html template", "error", err)
+		c.log.Error("Parsing index.html template", "error", err)
 		http.Error(w, fmt.Sprintf("error parsing index.html template: %s", err.Error()), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -42,7 +42,7 @@ func (c *Client) frontendGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	teamNames, err := c.db.ListTeams(r.Context())
 	if err != nil {
-		c.log.Error("error listing teams from database", "error", err)
+		c.log.Error("Listing teams from database", "error", err)
 		http.Error(w, fmt.Sprintf("error listing teams from database: %s", err.Error()), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -53,7 +53,7 @@ func (c *Client) frontendGetHandler(w http.ResponseWriter, r *http.Request) {
 	for i, teamName := range teamNames {
 		repositories, err := c.db.ListTeamRepositories(r.Context(), teamName)
 		if err != nil {
-			c.log.Error(fmt.Sprintf("error listing repositories for %s from database", teamName), "error", err)
+			c.log.Error("Listing repositories from database", "team", teamName, "error", err)
 			http.Error(w, fmt.Sprintf("error listing teams from database: %s", err.Error()), http.StatusInternalServerError)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -72,7 +72,7 @@ func (c *Client) frontendGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(teams)
 	if err := tmpl.Execute(w, teams); err != nil {
-		c.log.Error("failed creating site from template", "error", err)
+		c.log.Error("Creating site from template", "error", err)
 		http.Error(w, fmt.Sprintf("failed creating site from template: %s", err.Error()), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
 		return

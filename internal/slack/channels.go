@@ -36,7 +36,7 @@ func (c Client) findChannelIDByName(channel string, joinedChannels map[string]st
 			return id
 		}
 
-		c.log.Warn("channel not joined", "channel", channel)
+		c.log.Warn("Channel not joined", "channel", channel)
 	}
 
 	return channel
@@ -98,12 +98,12 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 						return nil, err
 					}
 
-					c.log.Info("rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter.Seconds())
+					c.log.Info("Rate limited, sleeping", "status", resp.Status, "error", slackResp.Error, "retry_after", retryAfter.Seconds())
 					time.Sleep(retryAfter)
 					continue
 				}
 
-				c.log.Info("rate limited and no Retry-After header set, sleeping 5 second")
+				c.log.Info("Rate limited and no Retry-After header set, sleeping 5 seconds")
 				time.Sleep(5 * time.Second)
 				continue
 			}
@@ -116,11 +116,11 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 		}
 
 		if slackResp.Warning != "" {
-			c.log.Info("got a warning", "warn", slackResp.Warning)
+			c.log.Info("Got a warning", "warn", slackResp.Warning)
 		}
 
 		channels = append(channels, slackResp.Channels...)
-		c.log.Info(fmt.Sprintf("Found %d channels", len(channels)), "new_channels", len(slackResp.Channels))
+		c.log.Info("Found channels", "total", len(channels), "new_channels", len(slackResp.Channels))
 
 		if slackResp.ResponseMetadata.NextCursor == "" {
 			break
@@ -140,7 +140,7 @@ func (c Client) JoinChannel(channel string) error {
 
 	marshalled, err := json.Marshal(payload)
 	if err != nil {
-		c.log.Error("Error marshalling payload", "error", err)
+		c.log.Error("Marshalling payload", "error", err)
 		return err
 	}
 
