@@ -57,7 +57,7 @@ dv-a-team:
         workflows:
           branches: ["main"]
           ignoreBots: true
-    - source: pulls
+    - source: workflows
       channel: "#a-team-bots"
       config:
         workflows:
