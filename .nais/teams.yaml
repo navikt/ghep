@@ -37,15 +37,32 @@ tbd:
 dv-a-team:
   commits: "#a-team-commits"
   issues: "#a-team-pull-requests"
-  pulls: "#a-team-pull-requests"
-  workflows: "#a-team-ops"
-  security: "#a-team-ops"
-  config:
-    workflows:
-      branches: ["main"]
-    pulls:
-      ignoreBots: true
-      ignoreDrafts: true
+  security: "#a-team-bots"
+  sources:
+    - source: pulls
+      channel: "#a-team-pull-requests"
+      config:
+        pulls:
+          ignoreBots: true
+          ignoreDrafts: true
+    - source: pulls
+      channel: "#a-team-bots"
+      config:
+        pulls:
+          onlyBots: true
+          ignoreDrafts: true
+    - source: workflows
+      channel: "#a-team-ops"
+      config:
+        workflows:
+          branches: ["main"]
+          ignoreBots: true
+    - source: pulls
+      channel: "#a-team-bots"
+      config:
+        workflows:
+          branches: ["main"]
+          onlyBots: true
 spenn:
   commits: "#team-spenn-commits"
   issues: "#team-spenn-pull-requests"
