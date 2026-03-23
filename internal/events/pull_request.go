@@ -55,11 +55,13 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 }
 
 func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, source github.Source, threadTimestamp string, event github.Event) (*slack.Message, error) {
-	if source.Config.Pulls.IgnoreBots && event.Sender.IsBot() {
+	prIsFromBot := event.Sender.IsBot() || event.PullRequest.User.IsBot()
+
+	if source.Config.Pulls.IgnoreBots && prIsFromBot {
 		return nil, nil
 	}
 
-	if source.Config.Pulls.OnlyBots && !event.Sender.IsBot() {
+	if source.Config.Pulls.OnlyBots && !prIsFromBot {
 		return nil, nil
 	}
 

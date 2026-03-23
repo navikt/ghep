@@ -235,6 +235,117 @@ func TestHandleIssueAndPullEvent(t *testing.T) {
 	}
 }
 
+func TestHandlePullRequestBotFilter(t *testing.T) {
+	team := github.Team{Name: "test"}
+
+	tests := []struct {
+		name        string
+		source      github.Source
+		event       github.Event
+		wantMessage bool
+	}{
+		{
+			name: "onlyBots: human sender, bot PR author (Dependabot merged by human) - should send",
+			source: github.Source{
+				SourceType: "pulls",
+				Channel:    "#bots",
+				Config: github.SourceConfig{
+					Pulls: github.PullsConfig{OnlyBots: true},
+				},
+			},
+			event: github.Event{
+				Action: "closed",
+				Sender: github.User{Login: "human-user", Type: "User"},
+				PullRequest: &github.Issue{
+					Number: 1,
+					User:   github.User{Login: "dependabot[bot]", Type: "Bot"},
+					Merged: true,
+				},
+				Repository: &github.Repository{Name: "test"},
+			},
+			wantMessage: true,
+		},
+		{
+			name: "onlyBots: human sender, human PR author - should not send",
+			source: github.Source{
+				SourceType: "pulls",
+				Channel:    "#bots",
+				Config: github.SourceConfig{
+					Pulls: github.PullsConfig{OnlyBots: true},
+				},
+			},
+			event: github.Event{
+				Action: "opened",
+				Sender: github.User{Login: "human-user", Type: "User"},
+				PullRequest: &github.Issue{
+					Number: 2,
+					User:   github.User{Login: "human-user", Type: "User"},
+				},
+				Repository: &github.Repository{Name: "test"},
+			},
+			wantMessage: false,
+		},
+		{
+			name: "ignoreBots: human sender, bot PR author (Dependabot merged by human) - should not send",
+			source: github.Source{
+				SourceType: "pulls",
+				Channel:    "#humans",
+				Config: github.SourceConfig{
+					Pulls: github.PullsConfig{IgnoreBots: true},
+				},
+			},
+			event: github.Event{
+				Action: "closed",
+				Sender: github.User{Login: "human-user", Type: "User"},
+				PullRequest: &github.Issue{
+					Number: 3,
+					User:   github.User{Login: "dependabot[bot]", Type: "Bot"},
+					Merged: true,
+				},
+				Repository: &github.Repository{Name: "test"},
+			},
+			wantMessage: false,
+		},
+		{
+			name: "ignoreBots: bot sender, human PR author - should not send",
+			source: github.Source{
+				SourceType: "pulls",
+				Channel:    "#humans",
+				Config: github.SourceConfig{
+					Pulls: github.PullsConfig{IgnoreBots: true},
+				},
+			},
+			event: github.Event{
+				Action: "opened",
+				Sender: github.User{Login: "dependabot[bot]", Type: "Bot"},
+				PullRequest: &github.Issue{
+					Number: 4,
+					User:   github.User{Login: "human-user", Type: "User"},
+				},
+				Repository: &github.Repository{Name: "test"},
+			},
+			wantMessage: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db := &mock.Database{Members: []string{}}
+			msg, err := handlePullRequestEvent(context.Background(), slog.Default(), db, team, tt.source, "", tt.event)
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+
+			if tt.wantMessage && msg == nil {
+				t.Errorf("expected a message, got nil")
+			}
+			if !tt.wantMessage && msg != nil {
+				t.Errorf("expected no message, got %+v", msg)
+			}
+		})
+	}
+}
+
 func TestHandleWorkflow(t *testing.T) {
 	source := github.Source{
 		SourceType: "workflows",
