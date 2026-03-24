@@ -108,6 +108,11 @@ teamdagpenger:
   issues: "#dp-issues"
   pulls: "#dp-pull-requests"
   workflows: "#dp-failed-workflows"
+teamdokumenthandtering:
+  security: "#dokmorgenvakt"
+  config:
+    security:
+      severityFilter: "critical"
 dataseksjonen:
   commits: "#dataseksjonen-github"
   issues: "#dataseksjonen-github"
