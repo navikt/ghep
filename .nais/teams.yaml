@@ -109,10 +109,19 @@ teamdagpenger:
   pulls: "#dp-pull-requests"
   workflows: "#dp-failed-workflows"
 teamdokumenthandtering:
+  pulls: "#team_dokument_pr"
+  releases: "#team_dokument_pr"
+  workflows: "#team_dokument_ci"
   security: "#dokmorgenvakt"
   config:
     security:
       severityFilter: "critical"
+    silenceDependabot: "always"
+    pulls:
+      ignoreDrafts: true
+      ignoreBots: true
+    workflows:
+      ignoreBots: true
 dataseksjonen:
   commits: "#dataseksjonen-github"
   issues: "#dataseksjonen-github"
