@@ -109,6 +109,7 @@ teamdagpenger:
   pulls: "#dp-pull-requests"
   workflows: "#dp-failed-workflows"
 teamdokumenthandtering:
+  commits: "#team_dokument_ci"
   pulls: "#team_dokument_pr"
   releases: "#team_dokument_pr"
   workflows: "#team_dokument_ci"
