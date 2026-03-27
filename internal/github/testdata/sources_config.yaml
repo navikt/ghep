@@ -20,13 +20,19 @@ nada:
           ignoreBots: false
     - source: commits
       channel: "#commits"
+    - source: commits
+      channel: "#commits-develop"
+      config:
+        branches:
+          - develop
+          - staging
     - source: workflows
       channel: "#ci"
       config:
+        branches:
+          - main
         workflows:
           ignoreBots: true
-          branches:
-            - main
     - source: releases
       channel: "#releases"
     - source: issues

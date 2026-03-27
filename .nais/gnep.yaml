@@ -13,9 +13,17 @@ data:
       commits: "#nais-commits"
       issues: "#nais-issues"
       pulls: "#nais-pull-requests"
-      workflows: "#nais-ci"
       releases: "#nais-releases"
       security: "#nais-github-security"
+      sources:
+        - source: workflows
+          channel: "#nais-ci"
+          config:
+            branches:
+              - main
+              - master
+            workflows:
+              ignoreBots: true
       config:
         ignoreRepositories:
           - "nur"
@@ -25,11 +33,6 @@ data:
         externalContributorsChannel: "#nais-external-contributors"
         pulls:
           ignoreBots: true
-        workflows:
-          ignoreBots: true
-          branches:
-            - main
-            - master
 
 ---
 apiVersion: data.nais.io/v1

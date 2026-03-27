@@ -11,23 +11,31 @@ tilgangsmaskin:
 aap:
   commits: "#aap-github-workflows"
   releases: "#aap-github-workflows"
-  workflows: "#aap-github-workflows"
+  sources:
+    - source: workflows
+      channel: "#aap-github-workflows"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: true
   config:
     silenceDependabot: "always"
-    workflows:
-      ignoreBots: true
-      branches: ["main"]
 flex:
   commits: "#flex-github-feed"
   issues: "#flex-github-feed"
   pulls: "#flex-github-pullrequest-feed"
-  workflows: "#spøkelser"
   security: "#spøkelser"
+  sources:
+    - source: workflows
+      channel: "#spøkelser"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: false
   config:
     externalContributorsChannel: "#flex-ghep-extern-contrib"
-    workflows:
-      ignoreBots: false
-      branches: ["main"]
 tbd:
   commits: "#helseytelser-dev"
   workflows: "#team-bømlo-workflow"
@@ -54,14 +62,16 @@ dv-a-team:
     - source: workflows
       channel: "#a-team-ops"
       config:
+        branches:
+          - main
         workflows:
-          branches: ["main"]
           ignoreBots: true
     - source: workflows
       channel: "#a-team-bots"
       config:
+        branches:
+          - main
         workflows:
-          branches: ["main"]
           onlyBots: true
 spenn:
   commits: "#team-spenn-commits"
@@ -74,35 +84,49 @@ leesah-quiz:
   pulls: "#leesah-game-ci"
 teamsykefravr:
   pulls: "#isyfo-pr"
-  workflows: "#syfo-alarm"
   security: "#syfo-alarm"
+  sources:
+    - source: workflows
+      channel: "#syfo-alarm"
+      config:
+        branches:
+          - main
+          - master
+        workflows:
+          ignoreBots: true
   config:
     silenceDependabot: "always"
-    workflows:
-      ignoreBots: true
-      branches: ["main", "master"]
     security:
       severityFilter: "high"
 teamsykmelding:
   commits: "tsm-commits"
-  workflows: "tsm-broken-actions"
   issues: "tsm-issues"
+  sources:
+    - source: workflows
+      channel: "tsm-broken-actions"
+      config:
+        branches:
+          - main
+          - master
+        workflows:
+          ignoreBots: true
   config:
     silenceDependabot: "always"
     externalContributorsChannel: "#tsm-extern-contrib"
-    workflows:
-      ignoreBots: true
-      branches: ["main", "master"]
 tsm:
   commits: "tsm-commits"
-  workflows: "tsm-broken-actions"
   issues: "tsm-issues"
+  sources:
+    - source: workflows
+      channel: "tsm-broken-actions"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: true
   config:
     silenceDependabot: "always"
     externalContributorsChannel: "#tsm-extern-contrib"
-    workflows:
-      ignoreBots: true
-      branches: ["main"]
 teamdagpenger:
   commits: "#dp-commits"
   issues: "#dp-issues"
@@ -147,17 +171,25 @@ permittering-og-nedbemanning:
       severityFilter: "high"
 arbeidsforhold:
   pulls: "#team-arbeidsforhold-github"
-  workflows: "#team-arbeidsforhold-github"
+  sources:
+    - source: workflows
+      channel: "#team-arbeidsforhold-github"
+      config:
+        branches:
+          - main
   config:
     ignoreRepositories:
       - "arbeid-og-inntekt"
       - "nav-maskinporten"
-    workflows:
-      branches: ["main"]
 tilleggsstonader:
   pulls: "#tilleggsstønader-gh-pr"
   security: "#tilleggsstønader-alerts"
-  workflows: "#tilleggsstønader-alerts"
+  sources:
+    - source: workflows
+      channel: "#tilleggsstønader-alerts"
+      config:
+        branches:
+          - main
   config:
     silenceDependabot: "always"
     externalContributorsChannel: "#tilleggsstonader-gh-extern-contrib"
@@ -166,9 +198,6 @@ tilleggsstonader:
       ignoreBots: true
     security:
       severityFilter: "critical"
-    workflows:
-      branches:
-        - "main"
 k9saksbehandling:
   security: "#sif-sikkerhetsvarsel"
   pulls: "#k9saksbehandling-feed"
@@ -176,8 +205,6 @@ k9saksbehandling:
     silenceDependabot: "always"
     pulls:
       ignoreBots: true
-    workflows:
-      branches: ["main", "master"]
     security:
       severityFilter: "critical"
 omsorgspenger:
@@ -187,8 +214,6 @@ omsorgspenger:
     silenceDependabot: "always"
     pulls:
       ignoreBots: true
-    workflows:
-      branches: ["main", "master"]
     security:
       severityFilter: "critical"
 dusseldorf:
@@ -198,8 +223,6 @@ dusseldorf:
     silenceDependabot: "always"
     pulls:
       ignoreBots: true
-    workflows:
-      branches: ["main", "master"]
     security:
       severityFilter: "critical"
 dolly:
@@ -211,22 +234,30 @@ tpts:
   commits: "#tp-github-feed"
   issues: "#tp-github-feed"
   pulls: "#tp-pull-request"
-  workflows: "#tp-github-feed"
+  sources:
+    - source: workflows
+      channel: "#tp-github-feed"
+      config:
+        branches:
+          - main
+          - master
   config:
     silenceDependabot: "always"
-    workflows:
-      branches: ["main", "master"]
 obo:
   issues: "#team-obo-github-events"
   pulls: "#team-obo-pr"
   security: "#team-obo-github-events"
-  workflows: "#team-obo-github-events"
+  sources:
+    - source: workflows
+      channel: "#team-obo-github-events"
+      config:
+        branches:
+          - main
+          - master
   config:
     pulls:
       ignoreDrafts: true
     silenceDependabot: "always"
-    workflows:
-      branches: ["main", "master"]
 wendelboe:
   workflows: "#pen-dataprodukt-github"
   security: "#pen-dataprodukt-github"
@@ -236,44 +267,62 @@ wendelboe:
 cv:
   issues: "#team-cv-github-events"
   pulls: "#team-cv-github-events"
-  workflows: "#team-cv-github-events"
+  sources:
+    - source: workflows
+      channel: "#team-cv-github-events"
+      config:
+        branches:
+          - main
+          - master
   config:
     silenceDependabot: "always"
-    workflows:
-      branches: ["main", "master"]
 hubba-devs:
-  workflows: "#team-hubba-alerts"
-  config:
-    workflows:
-      ignoreBots: true
-      branches: ["main", "master"]
-      repositories: ["pam-stillingsok"]
-      workflows: ["Playwright Tests"]
+  sources:
+    - source: workflows
+      channel: "#team-hubba-alerts"
+      config:
+        branches:
+          - main
+          - master
+        workflows:
+          ignoreBots: true
+          repositories:
+            - pam-stillingsok
+          workflows:
+            - Playwright Tests
 virksomhetsdatalaget:
   commits: "#virksomhetsdatalaget-gh"
   issues: "#virksomhetsdatalaget-gh"
   pulls: "#virksomhetsdatalaget-gh"
-  workflows: "#virksomhetsdatalaget-gh"
   releases: "#virksomhetsdatalaget-gh"
-  config:
-    workflows:
-      branches: ["main", "master"]
+  sources:
+    - source: workflows
+      channel: "#virksomhetsdatalaget-gh"
+      config:
+        branches:
+          - main
+          - master
 team-nav-no:
   releases: "#team-navno-releases"
-  workflows: "#team-navno-failover-prod"
+  sources:
+    - source: workflows
+      channel: "#team-navno-failover-prod"
+      config:
+        branches:
+          - main
+        workflows:
+          repositories:
+            - nav-enonicxp-frontend
+          workflows:
+            - Deploy til prod-failover
   config:
     silenceDependabot: "always"
-    workflows:
-      branches: ["main"]
-      repos: ["nav-enonicxp-frontend"]
-      workflows: ["Deploy til prod-failover"]
 allosaurus:
   issues: "#allosaurus-github"
   pulls: "#allosaurus-github"
 historisk:
   pulls: "#historisk-github"
   issues: "#historisk-github"
-  workflows: "#historisk-github"
   releases: "#historisk-github"
   security: "#historisk-github"
   sources:
@@ -282,19 +331,30 @@ historisk:
       config:
         pulls:
           onlyBots: true
+    - source: workflows
+      channel: "#historisk-github"
+      config:
+        branches:
+          - main
   config:
     pulls:
       ignoreBots: true
-    workflows:
-      branches: ["main"]
 team-esyfo:
   commits: "#esyfo-github-feed"
-  workflows: "#esyfo-github-feed"
   issues: "#esyfo-github-feed"
   pulls: "#esyfo-pull-requests"
+  sources:
+    - source: workflows
+      channel: "#esyfo-github-feed"
+      config:
+        branches:
+          - main
+          - master
+        workflows:
+          ignoreBots: true
   config:
     ignoreRepositories:
-      - "arbeidsgiver-notifikasjon-produsenter"
+      - "arbeid-og-inntekt"
       - "isdialogmelding"
       - "isdialogmote"
       - "isdialogmote-schema"
@@ -304,30 +364,36 @@ team-esyfo:
       - "nav-ekstern-api-dok"
       - "syfomodiaperson"
     silenceDependabot: "always"
-    workflows:
-      ignoreBots: true
-      branches: ["main", "master"]
 speilvendt:
   commits: "#helseytelser-speilvendt-github"
   issues: "#helseytelser-speilvendt-github"
   pulls: "#helseytelser-speilvendt-github"
-  workflows: "#helseytelser-speilvendt-github"
   security: "#helseytelser-speilvendt-github"
+  sources:
+    - source: workflows
+      channel: "#helseytelser-speilvendt-github"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: false
   config:
     silenceDependabot: "always"
-    workflows:
-      ignoreBots: false
-      branches: ["main"]
 yrkesskade:
-  workflows: "#yrkesskade-workflows"
   pulls: "#yrkesskade-kodeles"
   releases: "#yrkesskade-releases"
   security: "#yrkesskade-sikkerhet"
+  sources:
+    - source: workflows
+      channel: "#yrkesskade-workflows"
+      config:
+        branches:
+          - main
+          - dev
+        workflows:
+          ignoreBots: true
   config:
     silenceDependabot: "always"
-    workflows:
-      ignoreBots: true
-      branches: ["main", "dev"]
 utvikling-admin:
   commits: "utvikling-admin-dev"
   workflows: "utvikling-admin-dev"
@@ -344,11 +410,14 @@ idm:
   security: "#team-idm-security-alerts"
 team-mulighetsrommet:
   security: "#team-valp-monitorering-dev"
-  workflows: "#team-valp-monitoring"
-  config:
-    workflows:
-      ignoreBots: true
-      branches: ["main"]
+  sources:
+    - source: workflows
+      channel: "#team-valp-monitoring"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: true
 pdl:
   security: "#pdl-teknisk"
   config:
@@ -358,15 +427,20 @@ pensjonskalkulator:
   commits: "#planlegge-pensjon-github-events"
   pulls: "#planlegge-pensjon-pull-requests"
   security: "#planlegge-pensjon-github-events"
-  workflows: "#planlegge-pensjon-github-events"
+  sources:
+    - source: workflows
+      channel: "#planlegge-pensjon-github-events"
+      config:
+        branches:
+          - main
+          - sandbox
+        workflows:
+          ignoreBots: true
   config:
     ignoreRepositories:
       - "pensjon-pen"
     security:
       severityFilter: "high"
-    workflows:
-      ignoreBots: true
-      branches: ["main", "sandbox"]
 utsikt:
   commits: "#utsikt-commits"
   issues: "#utsikt-pull-requests"
@@ -384,21 +458,29 @@ dataplattform-datakatalog:
   commits: "#dataplattform-datakatalog-commits"
   issues: "#dataplattform-datakatalog-pull-requests"
   pulls: "#dataplattform-datakatalog-pull-requests"
-  workflows: "#dataplattform-datakatalog-ops"
   security: "#dataplattform-datakatalog-ops"
-  config:
-    workflows:
-      branches: ["main"]
+  sources:
+    - source: workflows
+      channel: "#dataplattform-datakatalog-ops"
+      config:
+        branches:
+          - main
 bankkommunikasjon:
   pulls: "#team-pengeflyt-prs"
-  workflows: "#utbetaling-team-pengeflyt-utviklere"
   security: "#team-pengeflyt-alerts-prod"
+  sources:
+    - source: workflows
+      channel: "#utbetaling-team-pengeflyt-utviklere"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: true
   config:
     pulls:
       ignoreDrafts: true
     workflows:
       ignoreBots: true
-      branches: ["main"]
     silenceDependabot: "always"
     security:
       severityFilter: "critical"
@@ -410,12 +492,16 @@ ytelsesrapportering:
     security:
       severityFilter: "critical"
 pensjonsbrev:
-  workflows: "#pensjonsbrev-alerts-dev"
   security: "#pensjonsbrev-alerts-dev"
+  sources:
+    - source: workflows
+      channel: "#pensjonsbrev-alerts-dev"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: true
   config:
-    workflows:
-      branches: ["main"]
-      ignoreBots: true
     ignoreRepositories:
       - "eessi-pensjon-prefill"
       - "pensjon-pen"

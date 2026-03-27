@@ -28,7 +28,6 @@ func TestParseTeamConfig(t *testing.T) {
 					},
 					Config: Config{
 						Workflows: Workflows{
-							Branches:     []string{"main"},
 							IgnoreBots:   true,
 							Repositories: []string{"my-little-repo"},
 							Workflows:    []string{"deploy"},
@@ -50,7 +49,6 @@ func TestParseTeamConfig(t *testing.T) {
 							Channel:    "#workflows",
 							Config: SourceConfig{
 								Workflows: Workflows{
-									Branches:     []string{"main"},
 									IgnoreBots:   true,
 									Repositories: []string{"my-little-repo"},
 									Workflows:    []string{"deploy"},
@@ -116,12 +114,18 @@ func TestParseTeamConfig(t *testing.T) {
 						},
 						{SourceType: "commits", Channel: "#commits"},
 						{
+							SourceType: "commits",
+							Channel:    "#commits-develop",
+							Config: SourceConfig{
+								Branches: []string{"develop", "staging"},
+							},
+						},
+						{
 							SourceType: "workflows",
 							Channel:    "#ci",
 							Config: SourceConfig{
 								Workflows: Workflows{
 									IgnoreBots: true,
-									Branches:   []string{"main"},
 								},
 							},
 						},

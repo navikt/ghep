@@ -90,12 +90,16 @@ nada:
           onlyBots: true
     - source: commits
       channel: "#nada-commits"
+    - source: commits
+      channel: "#nada-commits-develop"
+      config:
+        branches:
+          - develop
     - source: workflows
       channel: "#nada-ci"
       config:
-        workflows:
-          branches:
-            - main
+        branches:
+          - main
     - source: releases
       channel: "#nada-releases"
     - source: issues
@@ -129,6 +133,8 @@ I eksempelet over vil pull requests sendes til _både_ `#nada-pull-requests` (fr
 
 Vi har også støtte for litt konfigurering.
 Dette legges under `teamnavn.config` for globale innstillinger, eller per source under `sources[].config`.
+Foreløpig er det tillat med blanding av gammel type konfigurasjon, og per source.
+Overtid kommer konfigurasjon som kan brukes av flere sources bli flyttet.
 
 #### Team configuration
 
@@ -149,6 +155,28 @@ team:
 - `silenceDependabot` - Hvis denne blir satt til `always` så ignorer man alle hendelser fra Dependabot
 - `externalContributorsChannel` - Issues og pull requests fra brukere som ikke er i teamet ditt vil havne i en egen kanal
 - `pingSlackUsers`- Pinger Slack-brukere som er tildelt issues eller pull requests
+
+#### Source configuration
+
+Dette er konfigurasjon som settes per source:
+
+``` yaml
+team:
+  sources:
+    - source: commits
+      channel: "#channel"
+      config:
+        branches:
+          - develop
+          - staging
+    - source: pulls
+      channel: "#channel-prs-main"
+      config:
+        branches:
+          - main
+```
+
+- `branches` - Få *kun* hendelser for de oppgitte branchene. For commits erstatter dette default branch for repoet. For pull requests filtreres det på target branch (base ref).
 
 #### Pull Requests
 
@@ -180,13 +208,11 @@ team:
   config:
     workflows:
       ignoreBots: bool
-      branches: [string]
       workflows: [string]
       repositories: [string]
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om workflows som feiler for bots (for eksempel Dependabot)
-- `branches` - Få *kun* Slack-melding om workflows som feiler for spesifikke branches
 - `workflows` - Få *kun* Slack-melding om workflows som feiler for spesifikke workflows
 - `repositories` - Få *kun* Slack-melding om workflows som feiler for spesifikke repositories
 

@@ -189,6 +189,10 @@ type RequestTeam struct {
 
 // Issue is a struct for issues and pull requests
 // Every pull request is an issue, but not every issue is a pull request
+type IssueBase struct {
+	Ref string `json:"ref"`
+}
+
 type Issue struct {
 	Action             string        `json:"action"`
 	Draft              bool          `json:"draft"`
@@ -201,6 +205,7 @@ type Issue struct {
 	StateReason        string        `json:"state_reason"`
 	Merged             bool          `json:"merged"`
 	User               User          `json:"user"`
+	Base               IssueBase     `json:"base"`
 	RequestedReviewers []User        `json:"requested_reviewers"`
 	RequestedTeams     []RequestTeam `json:"requested_teams"`
 	Assignees          []User        `json:"assignees"`

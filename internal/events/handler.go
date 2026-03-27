@@ -135,6 +135,13 @@ func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team githu
 }
 
 func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event, eventType github.EventType) (*slack.Message, error) {
+	if len(source.Config.Branches) > 0 {
+		branch := eventBranch(event, eventType)
+		if branch != "" && !slices.Contains(source.Config.Branches, branch) {
+			return nil, nil
+		}
+	}
+
 	switch eventType {
 	case github.TypeCommit:
 		return handleCommitEvent(ctx, log, source, event, h.db)
@@ -228,9 +235,28 @@ func (h *Handler) updateSourceChannelID(team github.Team, source github.Source, 
 	}
 }
 
+// eventBranch returns the branch associated with an event for a given event type.
+// Returns an empty string for event types that have no branch context.
+func eventBranch(event github.Event, eventType github.EventType) string {
+	switch eventType {
+	case github.TypeCommit:
+		return strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
+	case github.TypeWorkflow:
+		if event.Workflow != nil {
+			return event.Workflow.HeadBranch
+		}
+	case github.TypePullRequest:
+		if event.PullRequest != nil {
+			return event.PullRequest.Base.Ref
+		}
+	}
+	return ""
+}
+
 func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Source, event github.Event, db *gensql.Queries) (*slack.Message, error) {
 	branch := strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
-	if branch != event.Repository.DefaultBranch {
+
+	if len(source.Config.Branches) == 0 && branch != event.Repository.DefaultBranch {
 		return nil, nil
 	}
 

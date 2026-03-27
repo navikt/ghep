@@ -15,8 +15,6 @@ nada:
     pingSlackUsers: true
     workflows:
       ignoreBots: true
-      branches:
-        - main
       workflows:
         - deploy
       repositories:

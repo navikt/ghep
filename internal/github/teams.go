@@ -19,7 +19,6 @@ import (
 )
 
 type Workflows struct {
-	Branches     []string `yaml:"branches"`
 	Repositories []string `yaml:"repositories"`
 	Workflows    []string `yaml:"workflows"`
 	IgnoreBots   bool     `yaml:"ignoreBots"`
@@ -79,6 +78,7 @@ type SlackChannels struct {
 
 // SourceConfig holds event-type-specific config for a source.
 type SourceConfig struct {
+	Branches  []string    `yaml:"branches"`
 	Pulls     PullsConfig `yaml:"pulls"`
 	Workflows Workflows   `yaml:"workflows"`
 	Security  Security    `yaml:"security"`

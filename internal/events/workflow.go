@@ -79,10 +79,6 @@ func handleWorkflowEvent(log *slog.Logger, source github.Source, event github.Ev
 		return nil, nil
 	}
 
-	if len(source.Config.Workflows.Branches) > 0 && !slices.Contains(source.Config.Workflows.Branches, event.Workflow.HeadBranch) {
-		return nil, nil
-	}
-
 	if len(source.Config.Workflows.Repositories) > 0 && !slices.Contains(source.Config.Workflows.Repositories, event.Repository.Name) {
 		return nil, nil
 	}

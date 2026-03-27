@@ -3,6 +3,7 @@ package events
 import (
 	"context"
 	"log/slog"
+	"slices"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -346,6 +347,178 @@ func TestHandlePullRequestBotFilter(t *testing.T) {
 	}
 }
 
+func TestEventBranch(t *testing.T) {
+	tests := []struct {
+		name      string
+		event     github.Event
+		eventType github.EventType
+		want      string
+	}{
+		{
+			name:      "commit on main",
+			eventType: github.TypeCommit,
+			event:     github.Event{Ref: "refs/heads/main"},
+			want:      "main",
+		},
+		{
+			name:      "commit on feature branch",
+			eventType: github.TypeCommit,
+			event:     github.Event{Ref: "refs/heads/feature/my-feature"},
+			want:      "feature/my-feature",
+		},
+		{
+			name:      "workflow on main",
+			eventType: github.TypeWorkflow,
+			event:     github.Event{Workflow: &github.Workflow{HeadBranch: "main"}},
+			want:      "main",
+		},
+		{
+			name:      "workflow with no workflow data",
+			eventType: github.TypeWorkflow,
+			event:     github.Event{},
+			want:      "",
+		},
+		{
+			name:      "pull request targeting main",
+			eventType: github.TypePullRequest,
+			event:     github.Event{PullRequest: &github.Issue{Base: github.IssueBase{Ref: "main"}}},
+			want:      "main",
+		},
+		{
+			name:      "pull request with no PR data",
+			eventType: github.TypePullRequest,
+			event:     github.Event{},
+			want:      "",
+		},
+		{
+			name:      "issue has no branch",
+			eventType: github.TypeIssue,
+			event:     github.Event{},
+			want:      "",
+		},
+		{
+			name:      "release has no branch",
+			eventType: github.TypeRelease,
+			event:     github.Event{},
+			want:      "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := eventBranch(tt.event, tt.eventType)
+			if got != tt.want {
+				t.Errorf("eventBranch() = %q, want %q", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestHandleCommitEventBranchFilter(t *testing.T) {
+	tests := []struct {
+		name        string
+		source      github.Source
+		event       github.Event
+		wantMessage bool
+	}{
+		{
+			name: "no config.branches: push to default branch - should send",
+			source: github.Source{
+				SourceType: "commits",
+				Channel:    "#commits",
+			},
+			event: github.Event{
+				Ref:        "refs/heads/main",
+				Repository: &github.Repository{DefaultBranch: "main"},
+				Commits:    []github.Commit{{ID: "d6f21c84"}},
+			},
+			wantMessage: true,
+		},
+		{
+			name: "no config.branches: push to non-default branch - should not send",
+			source: github.Source{
+				SourceType: "commits",
+				Channel:    "#commits",
+			},
+			event: github.Event{
+				Ref:        "refs/heads/develop",
+				Repository: &github.Repository{DefaultBranch: "main"},
+				Commits:    []github.Commit{{ID: "d6f21c84"}},
+			},
+			wantMessage: false,
+		},
+		{
+			name: "config.branches set: push to listed branch - should send",
+			source: github.Source{
+				SourceType: "commits",
+				Channel:    "#commits",
+				Config:     github.SourceConfig{Branches: []string{"develop", "staging"}},
+			},
+			event: github.Event{
+				Ref:        "refs/heads/develop",
+				Repository: &github.Repository{DefaultBranch: "main"},
+				Commits:    []github.Commit{{ID: "d6f21c84"}},
+			},
+			wantMessage: true,
+		},
+		{
+			name: "config.branches set: push to unlisted branch - should not send",
+			source: github.Source{
+				SourceType: "commits",
+				Channel:    "#commits",
+				Config:     github.SourceConfig{Branches: []string{"develop", "staging"}},
+			},
+			event: github.Event{
+				Ref:        "refs/heads/feature/xyz",
+				Repository: &github.Repository{DefaultBranch: "main"},
+				Commits:    []github.Commit{{ID: "d6f21c84"}},
+			},
+			wantMessage: false,
+		},
+		{
+			name: "config.branches set with non-default branch: overrides default-branch check",
+			source: github.Source{
+				SourceType: "commits",
+				Channel:    "#release-commits",
+				Config:     github.SourceConfig{Branches: []string{"release"}},
+			},
+			event: github.Event{
+				Ref:        "refs/heads/release",
+				Repository: &github.Repository{DefaultBranch: "main"},
+				Commits:    []github.Commit{{ID: "d6f21c84"}},
+			},
+			wantMessage: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Simulate the handleForSource branch filter before calling the handler
+			if len(tt.source.Config.Branches) > 0 {
+				branch := eventBranch(tt.event, github.TypeCommit)
+				if branch != "" && !slices.Contains(tt.source.Config.Branches, branch) {
+					if tt.wantMessage {
+						t.Errorf("source branch filter dropped event, expected a message")
+					}
+					return
+				}
+			}
+
+			msg, err := handleCommitEvent(context.Background(), slog.Default(), tt.source, tt.event, &gensql.Queries{})
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+
+			if tt.wantMessage && msg == nil {
+				t.Errorf("expected a message, got nil")
+			}
+			if !tt.wantMessage && msg != nil {
+				t.Errorf("expected no message, got %+v", msg)
+			}
+		})
+	}
+}
+
 func TestHandleWorkflow(t *testing.T) {
 	source := github.Source{
 		SourceType: "workflows",
@@ -442,9 +615,7 @@ func TestHandleWorkflow(t *testing.T) {
 				SourceType: "workflows",
 				Channel:    "#test",
 				Config: github.SourceConfig{
-					Workflows: github.Workflows{
-						Branches: []string{"main"},
-					},
+					Branches: []string{"main"},
 				},
 			},
 			want: []byte("test"),
@@ -465,9 +636,7 @@ func TestHandleWorkflow(t *testing.T) {
 				SourceType: "workflows",
 				Channel:    "#test",
 				Config: github.SourceConfig{
-					Workflows: github.Workflows{
-						Branches: []string{"main"},
-					},
+					Branches: []string{"main"},
 				},
 			},
 			want: nil,
@@ -545,6 +714,17 @@ func TestHandleWorkflow(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Branch filtering happens in handleForSource, not handleWorkflowEvent — simulate it here.
+			if len(tt.source.Config.Branches) > 0 {
+				branch := eventBranch(tt.event, github.TypeWorkflow)
+				if branch != "" && !slices.Contains(tt.source.Config.Branches, branch) {
+					if tt.want != nil {
+						t.Errorf("source branch filter dropped event, expected a message")
+					}
+					return
+				}
+			}
+
 			got, err := handleWorkflowEvent(slog.Default(), tt.source, tt.event)
 			if err != nil && !tt.err {
 				t.Error(err)
