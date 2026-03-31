@@ -436,3 +436,12 @@ isa:
       ignoreDrafts: true
       ignoreBots: true
       minimalist: true
+nks-aiautomatisering:
+  security: "#nks-bob-alerts"
+  pulls: "#nks-bob-pr"
+  workflows: "#nks-bob-ci"
+  config:
+    pulls:
+      ignoreDrafts: true
+    security:
+      severityFilter: "critical"
