@@ -334,10 +334,12 @@ utvikling-admin:
   issues: "utvikling-admin-dev"
   pulls: "utvikling-admin-dev"
 pdfgen:
-  commits: "pdfgen"
-  workflows: "pdfgen"
   issues: "pdfgen"
   pulls: "pdfgen"
+  config:
+    pulls:
+      ignoreBots: true
+      ignoreDrafts: true
 idm:
   security: "#team-idm-security-alerts"
 team-mulighetsrommet:
