@@ -187,6 +187,7 @@ team:
   pulls: "#channel"
   config:
     pulls:
+      events: [string]
       ignoreBots: bool
       onlyBots: bool
       ignoreDrafts: bool
