@@ -390,10 +390,12 @@ dataplattform-datakatalog:
     workflows:
       branches: ["main"]
 bankkommunikasjon:
-  pulls: "#team-kobra-utviklere"
-  workflows: "#team-kobra-utviklere"
-  security: "#team-kobra-alerts-prod"
+  pulls: "#team-pengeflyt-prs"
+  workflows: "#utbetaling-team-pengeflyt-utviklere"
+  security: "#team-pengeflyt-alerts-prod"
   config:
+    pulls:
+      ignoreDrafts: true
     workflows:
       ignoreBots: true
       branches: ["main"]
