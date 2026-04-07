@@ -73,6 +73,17 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 		return nil, nil
 	}
 
+	if len(source.Config.Pulls.Events) > 0 {
+		action := event.Action
+		if action == "closed" && event.PullRequest.Merged {
+			action = "merged"
+		}
+
+		if !slices.Contains(source.Config.Pulls.Events, action) {
+			return nil, nil
+		}
+	}
+
 	channel := source.Channel
 	if event.Sender.IsUser() {
 		if _, err := db.GetTeamMember(ctx, gensql.GetTeamMemberParams{

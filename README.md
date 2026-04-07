@@ -197,6 +197,7 @@ team:
 - `onlyBots` - Få *kun* Slack-melding om Pull Request opprettet av bots (nyttig for å sende Dependabot PRs til egen kanal)
 - `ignoreDrafts` - Ignorer draft pull requests
 - `minimalist` - Don't post the body as attachment, only add title to the message
+- `events` - Filtrer hvilke pull request-hendelser du vil ha notifikasjoner for. Se [docs.github.com](https://docs.github.com/en/webhooks/webhook-events-and-payloads#pull_request) for komplett liste over events. For de fleste holder det med `opened`, `ready_for_review`, `merged`, `closed`. Merk at `merge` er kun en Ghep event, og er en kombinasjon av event `closed` og `pullRequest.merged: true`
 
 #### Workflows
 

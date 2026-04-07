@@ -18,6 +18,20 @@ nada:
       config:
         pulls:
           ignoreBots: false
+    - source: pulls
+      channel: "#pr-open"
+      config:
+        pulls:
+          ignoreDrafts: true
+          events:
+            - opened
+            - ready_for_review
+    - source: pulls
+      channel: "#pr-merged"
+      config:
+        pulls:
+          events:
+            - merged
     - source: commits
       channel: "#commits"
     - source: commits

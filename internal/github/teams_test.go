@@ -108,9 +108,25 @@ func TestParseTeamConfig(t *testing.T) {
 								},
 							},
 						},
+						{SourceType: "pulls", Channel: "#pr-all"},
 						{
 							SourceType: "pulls",
-							Channel:    "#pr-all",
+							Channel:    "#pr-open",
+							Config: SourceConfig{
+								Pulls: PullsConfig{
+									IgnoreDrafts: true,
+									Events: []string{"opened", "ready_for_review"},
+								},
+							},
+						},
+						{
+							SourceType: "pulls",
+							Channel:    "#pr-merged",
+							Config: SourceConfig{
+								Pulls: PullsConfig{
+									Events: []string{"merged"},
+								},
+							},
 						},
 						{SourceType: "commits", Channel: "#commits"},
 						{
@@ -124,6 +140,7 @@ func TestParseTeamConfig(t *testing.T) {
 							SourceType: "workflows",
 							Channel:    "#ci",
 							Config: SourceConfig{
+								Branches: []string{"main"},
 								Workflows: Workflows{
 									IgnoreBots: true,
 								},
