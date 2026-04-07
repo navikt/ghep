@@ -447,3 +447,8 @@ nks-aiautomatisering:
       ignoreDrafts: true
     security:
       severityFilter: "critical"
+teamdigihot:
+  security: "#digihot-alerts"
+  config:
+    security:
+      severityFilter: "critical"
