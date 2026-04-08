@@ -97,7 +97,7 @@ teamsykefravr:
   config:
     silenceDependabot: "always"
     security:
-      severityFilter: "high"
+      severityFilter: "critical"
 teamsykmelding:
   commits: "tsm-commits"
   issues: "tsm-issues"
