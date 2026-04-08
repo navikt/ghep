@@ -543,7 +543,7 @@ teamdigihot:
         security:
           severityFilter: "critical"
     - source: security
-      channel: "#dighot-security-critical"
+      channel: "#digihot-security-critical"
       config:
         security:
           severityFilter: "critical"
