@@ -1,0 +1,21 @@
+name: Notify self-service merge for teams.yaml
+
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - '.nais/teams.yaml'
+
+permissions:
+  pull-requests: write
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post self-service merge comment
+        run: |
+          gh pr comment "$PR_URL" --body "Denne PR-en endrer \`.nais/teams.yaml\`. Merging er selvbetjent."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
