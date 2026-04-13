@@ -529,6 +529,7 @@ isa:
       ignoreDrafts: true
       ignoreBots: true
       minimalist: true
+      events: ["opened", "ready_for_review"]
 nks-aiautomatisering:
   security: "#nks-bob-alerts"
   pulls: "#nks-bob-pr"
