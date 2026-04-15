@@ -184,6 +184,7 @@ arbeidsforhold:
 tilleggsstonader:
   pulls: "#tilleggsstønader-gh-pr"
   security: "#tilleggsstønader-alerts"
+  commits: "#tilleggsstønader-gh-main"
   sources:
     - source: workflows
       channel: "#tilleggsstønader-alerts"
