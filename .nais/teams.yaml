@@ -559,3 +559,18 @@ teamdigihot:
       config:
         pulls:
           onlyBots: true
+bidrag:
+  pulls: "#team-bidrag-pull-requests"
+  workflows: "#team-bidrag-ci"
+  security: "#team-bidrag-github-varsler"
+  config:
+    security:
+      severityFilter: "critical"
+    silenceDependabot: "always"
+    pulls:
+      ignoreDrafts: true
+      ignoreBots: true
+      minimalist: true
+      events: ["opened", "ready_for_review"]
+    workflows:
+      ignoreBots: true
