@@ -569,8 +569,7 @@ bidrag:
     pulls:
       ignoreDrafts: true
       ignoreBots: true
-      minimalist: true
-      events: ["opened", "ready_for_review"]
+      events: ["opened", "ready_for_review", "merged"]
   sources:
     - source: workflows
       channel: "#team-bidrag-ci"
