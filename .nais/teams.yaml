@@ -561,7 +561,6 @@ teamdigihot:
           onlyBots: true
 bidrag:
   pulls: "#team-bidrag-pull-requests"
-  workflows: "#team-bidrag-ci"
   security: "#team-bidrag-github-varsler"
   config:
     security:
@@ -572,5 +571,11 @@ bidrag:
       ignoreBots: true
       minimalist: true
       events: ["opened", "ready_for_review"]
-    workflows:
-      ignoreBots: true
+  sources:
+  - source: workflows
+    channel: "#team-bidrag-ci"
+    config:
+      branches:
+        - main
+      workflows:
+        ignoreBots: true
