@@ -572,10 +572,10 @@ bidrag:
       minimalist: true
       events: ["opened", "ready_for_review"]
   sources:
-  - source: workflows
-    channel: "#team-bidrag-ci"
-    config:
-      branches:
-        - main
-      workflows:
-        ignoreBots: true
+    - source: workflows
+      channel: "#team-bidrag-ci"
+      config:
+        branches:
+          - main
+        workflows:
+            ignoreBots: true
