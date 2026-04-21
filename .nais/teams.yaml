@@ -562,14 +562,6 @@ teamdigihot:
 bidrag:
   pulls: "#team-bidrag-pull-requests"
   security: "#team-bidrag-github-varsler"
-  config:
-    security:
-      severityFilter: "critical"
-    silenceDependabot: "always"
-    pulls:
-      ignoreDrafts: true
-      ignoreBots: true
-      events: ["opened", "ready_for_review", "merged"]
   sources:
     - source: workflows
       channel: "#team-bidrag-ci"
@@ -578,3 +570,11 @@ bidrag:
           - main
         workflows:
           ignoreBots: true
+  config:
+    security:
+      severityFilter: "high"
+    silenceDependabot: "always"
+    pulls:
+      ignoreDrafts: true
+      ignoreBots: true
+      events: ["opened", "ready_for_review", "merged"]
