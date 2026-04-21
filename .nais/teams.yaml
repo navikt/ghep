@@ -569,7 +569,7 @@ bidrag:
         branches:
           - main
         workflows:
-            ignoreBots: true
+          ignoreBots: true
   config:
     security:
       severityFilter: "high"
