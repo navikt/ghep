@@ -66,7 +66,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	eventType := event.GetEventType()
 	log = log.With("event_type", eventType.String())
 
-	// Handle one-time DB side effects before iterating over sources
+	// Handle one-time side effects before iterating over sources
 	switch eventType {
 	case github.TypeRepositoryRenamed:
 		if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
@@ -78,6 +78,10 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	case github.TypeTeam:
 		if err := h.handleTeamSideEffects(ctx, log, event); err != nil {
 			return err
+		}
+	case github.TypePullRequest:
+		if event.PullRequest.Merged {
+			event.Action = "merged"
 		}
 	}
 

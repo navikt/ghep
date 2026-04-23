@@ -385,7 +385,7 @@ func TestHandlePullRequestEventsFilter(t *testing.T) {
 		// events: [merged] — req. 2
 		{name: "onlyMerged: opened", events: []string{"merged"}, event: newPR("opened", false), wantMessage: false},
 		{name: "onlyMerged: ready_for_review", events: []string{"merged"}, event: newPR("ready_for_review", false), wantMessage: false},
-		{name: "onlyMerged: closed merged", events: []string{"merged"}, event: newPR("closed", true), wantMessage: true},
+		{name: "onlyMerged: closed merged", events: []string{"merged"}, event: newPR("merged", true), wantMessage: true},
 		{name: "onlyMerged: closed not merged", events: []string{"merged"}, event: newPR("closed", false), wantMessage: false},
 	}
 

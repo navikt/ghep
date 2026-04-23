@@ -16,12 +16,10 @@ import (
 func CreatePullRequestMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, pingSlack, minimalist bool, event github.Event) *Message {
 	color := ColorOpened
 	switch event.Action {
+	case "merged":
+		color = ColorMerged
 	case "closed":
 		color = ColorClosed
-		if event.PullRequest.Merged {
-			color = ColorMerged
-			event.Action = "merged"
-		}
 	case "ready_for_review":
 		event.Action = "was marked ready for review"
 	}

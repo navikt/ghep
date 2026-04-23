@@ -115,7 +115,7 @@ func TestParseTeamConfig(t *testing.T) {
 							Config: SourceConfig{
 								Pulls: PullsConfig{
 									IgnoreDrafts: true,
-									Events: []string{"opened", "ready_for_review"},
+									Events:       []string{"opened", "ready_for_review"},
 								},
 							},
 						},

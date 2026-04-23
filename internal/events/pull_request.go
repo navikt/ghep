@@ -65,23 +65,16 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer
 		return nil, nil
 	}
 
-	if !slices.Contains([]string{"opened", "closed", "ready_for_review"}, event.Action) {
-		return nil, nil
-	}
-
 	if source.Config.Pulls.IgnoreDrafts && event.PullRequest.Draft {
 		return nil, nil
 	}
 
-	if len(source.Config.Pulls.Events) > 0 {
-		action := event.Action
-		if action == "closed" && event.PullRequest.Merged {
-			action = "merged"
-		}
+	if len(source.Config.Pulls.Events) == 0 {
+		source.Config.Pulls.Events = []string{"opened", "closed", "ready_for_review", "merged"}
+	}
 
-		if !slices.Contains(source.Config.Pulls.Events, action) {
-			return nil, nil
-		}
+	if !slices.Contains(source.Config.Pulls.Events, event.Action) {
+		return nil, nil
 	}
 
 	channel := source.Channel

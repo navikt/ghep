@@ -66,6 +66,9 @@ func TestHandleEvent(t *testing.T) {
 				message = slack.CreateIssueMessage(ctx, log, mockDB, slackChannel, "", pingSlack, event)
 			case github.TypePullRequest:
 				minimalist := false
+				if event.PullRequest.Merged {
+					event.Action = "merged"
+				}
 				message = slack.CreatePullRequestMessage(ctx, log, mockDB, slackChannel, "", pingSlack, minimalist, event)
 			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)
