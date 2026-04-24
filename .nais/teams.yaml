@@ -496,6 +496,7 @@ ytelsesrapportering:
     security:
       severityFilter: "critical"
 pensjonsbrev:
+  pulls: "#pensjonsbrev-release-notes"
   security: "#pensjonsbrev-alerts-dev"
   sources:
     - source: workflows
@@ -506,6 +507,8 @@ pensjonsbrev:
         workflows:
           ignoreBots: true
   config:
+    pulls:
+      events: ["merged"]
     ignoreRepositories:
       - "eessi-pensjon-prefill"
       - "pensjon-pen"
