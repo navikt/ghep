@@ -576,7 +576,7 @@ bidrag:
           ignoreBots: true
   config:
     security:
-      severityFilter: "high"
+      severityFilter: "critical"
     silenceDependabot: "always"
     pulls:
       ignoreDrafts: true
