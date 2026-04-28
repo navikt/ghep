@@ -405,6 +405,7 @@ utvikling-admin:
       ignoreDrafts: true
 pdfgen:
   issues: "pdfgen"
+  releases: "pdfgen"
   pulls: "pdfgen"
   config:
     pulls:
