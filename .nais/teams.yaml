@@ -396,7 +396,6 @@ yrkesskade:
   config:
     silenceDependabot: "always"
 utvikling-admin:
-  commits: "utvikling-admin-dev"
   issues: "utvikling-admin-dev"
   pulls: "utvikling-admin-dev"
   config:
