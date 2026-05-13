@@ -14,7 +14,7 @@ func CreateReleaseMessage(channel string, event github.Event) *Message {
 		releaseType = "prerelease"
 	}
 
-	text := fmt.Sprintf("%s created a <%s|%s> (`%s`)", event.Sender.ToSlack(), event.Release.URL, releaseType, event.Release.Tag)
+	text := fmt.Sprintf("%s created a <%s|%s> (`%s`) in %s", event.Sender.ToSlack(), event.Release.URL, releaseType, event.Release.Tag, event.Repository.ToSlack())
 
 	return &Message{
 		Channel: channel,
