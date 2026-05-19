@@ -512,6 +512,7 @@ pensjonsbrev:
     ignoreRepositories:
       - "eessi-pensjon-prefill"
       - "pensjon-pen"
+      - "pensjon-pen-dp"
 oppgjorsrapporter:
   pulls: "#team-pengeflyt-prs"
   security: "#team-pengeflyt-alerts-prod"
