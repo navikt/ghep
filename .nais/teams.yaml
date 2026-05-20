@@ -592,3 +592,14 @@ bidrag:
       ignoreDrafts: true
       ignoreBots: true
       events: ["opened", "ready_for_review", "merged"]
+nav-ung:
+  commits: "#team-nav-ung-commits"
+  workflows: "#team-nav-ung-github"
+  security: "#team-nav-ung-github"
+  issues: "#team-nav-ung-github"
+  pulls: "#team-nav-ung-github"
+  releases: "#team-nav-ung-github"
+  digest:
+    channel: "#team-nav-ung-github"
+    day: monday
+    time: "08:00"
