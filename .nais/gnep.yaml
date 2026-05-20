@@ -24,11 +24,11 @@ data:
               - master
             workflows:
               ignoreBots: true
+      digest:
+        channel: "#nais-pull-requests"
+        day: wednesday
+        time: "09:00"
       config:
-        digest:
-          channel: "#nais-pull-requests"
-          day: wednesday
-          time: "09:00"
         ignoreRepositories:
           - "nur"
           - "homebrew-tap"
