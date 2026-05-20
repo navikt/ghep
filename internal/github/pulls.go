@@ -123,7 +123,7 @@ func fetchPRsBatch(ctx context.Context, httpClient http.Client, bearerToken, org
 		return nil, err
 	}
 	body, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	resp.Body.Close() // #nosec G104 -- closing response body, error intentionally ignored
 	if err != nil {
 		return nil, err
 	}

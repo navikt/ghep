@@ -103,7 +103,7 @@ func (c *Client) FetchOrgUsersWithEmail(ctx context.Context) error {
 
 		var githubResp githubResponse
 		err = json.NewDecoder(httpResp.Body).Decode(&githubResp)
-		httpResp.Body.Close()
+		httpResp.Body.Close() // #nosec G104 -- closing response body, error intentionally ignored
 		if err != nil {
 			return fmt.Errorf("decoding response: %v", err)
 		}

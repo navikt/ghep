@@ -214,7 +214,7 @@ func (c Client) handleSlackResponse(resp *http.Response, body string) (string, e
 }
 
 func (c Client) httpDoWithRetry(req *http.Request, retries int) (*http.Response, error) {
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.httpClient.Do(req) // #nosec G704 -- URL is always the hardcoded Slack API constant, not user-controlled
 	if err != nil {
 		if retries == 0 {
 			return nil, err

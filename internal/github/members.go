@@ -40,7 +40,7 @@ func fetchMembers(teamURL, bearerToken string) ([]*User, error) {
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		resp.Body.Close() // #nosec G104 -- closing response body, error intentionally ignored
 		if err != nil {
 			return nil, err
 		}
