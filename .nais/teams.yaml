@@ -185,6 +185,12 @@ arbeidsforhold:
     ignoreRepositories:
       - "arbeid-og-inntekt"
       - "nav-maskinporten"
+  digest:
+    channel: "#team-arbeidsforhold-github"
+    day: monday
+    time: "09:00"
+    timezone: Europe/Oslo
+    send_empty: false
 tilleggsstonader:
   pulls: "#tilleggsstønader-gh-pr"
   security: "#tilleggsstønader-alerts"
