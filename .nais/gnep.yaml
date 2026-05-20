@@ -27,7 +27,7 @@ data:
       config:
         digest:
           channel: "#nais-pull-requests"
-          day: monday
+          day: wednesday
           time: "09:00"
         ignoreRepositories:
           - "nur"
