@@ -158,6 +158,10 @@ fager:
   pulls: "#team-fager-bots"
   workflows: "#team-fager-bots"
   security: "#team-fager-alerts"
+  digest:
+    channel: "#team-fager-bots"
+    day: monday
+    time: "09:00"
   config:
     security:
       severityFilter: "high"
