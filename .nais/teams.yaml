@@ -344,8 +344,8 @@ historisk:
     channel: "#historisk-github"
     day: monday
     time: "09:00"
-    timezone: Europe/Oslo  # valgfri, standard er Europe/Oslo
-    send_empty: false      # valgfri, send melding selv om det ikke er åpne PRs (standard: false)
+    timezone: Europe/Oslo  
+    send_empty: false
 team-esyfo:
   commits: "#esyfo-github-feed"
   issues: "#esyfo-github-feed"
