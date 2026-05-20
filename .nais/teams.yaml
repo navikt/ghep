@@ -344,7 +344,7 @@ historisk:
     channel: "#historisk-github"
     day: monday
     time: "09:00"
-    timezone: Europe/Oslo  
+    timezone: Europe/Oslo
     send_empty: false
 team-esyfo:
   commits: "#esyfo-github-feed"
