@@ -14,17 +14,8 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, subscribeToOrg bool) error {
+func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, slackAPI slack.Client, subscribeToOrg bool) error {
 	log.Info("Starting Ghep", "org", os.Getenv("GITHUB_ORG"))
-
-	log.Info("Creating Slack client")
-	slackAPI, err := slack.New(
-		log.With("client", "slack"),
-		os.Getenv("SLACK_TOKEN"),
-	)
-	if err != nil {
-		return fmt.Errorf("creating Slack client: %w", err)
-	}
 
 	teams := make([]string, 0, len(teamConfig))
 	for name := range teamConfig {

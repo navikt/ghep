@@ -232,6 +232,26 @@ team:
 
 - `severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
 
+### Ukentlig PR-oversikt (digest)
+
+Ghep kan sende en ukentlig melding til en Slack-kanal med en oversikt over åpne pull requests for teamets repoer.
+
+``` yaml
+nada:
+  digest:
+    channel: "#nada-weekly"
+    day: monday
+    time: "09:00"
+    timezone: Europe/Oslo  # valgfri, standard er Europe/Oslo
+    send_empty: false      # valgfri, send melding selv om det ikke er åpne PRs (standard: false)
+```
+
+- `channel` - Slack-kanalen meldingen skal sendes til
+- `day` - Ukedag meldingen skal sendes. Gyldige verdier: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`
+- `time` - Tidspunkt på dagen i `HH:MM`-format
+- `timezone` - IANA-tidssone for når meldingen skal sendes (standard: `Europe/Oslo`)
+- `send_empty` - Hvis `true` sendes en melding selv om alle pull requests er merget. Standard er `false`, dvs. ingen melding sendes hvis det ikke er noe å rapportere
+
 ## Lokal utvikling
 
 Kjør opp Postgres for testing med Docker.

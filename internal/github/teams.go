@@ -96,11 +96,20 @@ func (t Team) IsExternalContributor() bool {
 	return t.Name == "external-contributors"
 }
 
+type DigestConfig struct {
+	Channel   string `yaml:"channel"`
+	Day       string `yaml:"day"`
+	Time      string `yaml:"time"`
+	Timezone  string `yaml:"timezone"`
+	SendEmpty bool   `yaml:"send_empty"`
+}
+
 type Team struct {
 	Name          string
 	SlackChannels SlackChannels `yaml:",inline"`
 	Config        Config        `yaml:"config"`
 	Sources       []Source      `yaml:"sources"`
+	Digest        *DigestConfig `yaml:"digest"`
 }
 
 // SourcesForType returns all sources matching the given event type.
@@ -244,6 +253,13 @@ func ParseTeamConfig(path string) (map[string]Team, error) {
 			}
 		}
 
+		// Validate digest config if present
+		if team.Digest != nil {
+			if err := validateDigestConfig(name, team.Digest); err != nil {
+				return nil, err
+			}
+		}
+
 		// Always convert flat SlackChannels to sources, then append explicit sources on top
 		flatSources := flatChannelsToSources(team.SlackChannels, team.Config)
 		team.Sources = append(flatSources, team.Sources...)
@@ -252,6 +268,28 @@ func ParseTeamConfig(path string) (map[string]Team, error) {
 	}
 
 	return teams, nil
+}
+
+var validWeekdays = []string{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"}
+
+func validateDigestConfig(teamName string, d *DigestConfig) error {
+	if d.Channel == "" {
+		return fmt.Errorf("team %s: digest.channel is required", teamName)
+	}
+	if !slices.Contains(validWeekdays, strings.ToLower(d.Day)) {
+		return fmt.Errorf("team %s: digest.day %q is not a valid weekday", teamName, d.Day)
+	}
+	if _, err := time.Parse("15:04", d.Time); err != nil {
+		return fmt.Errorf("team %s: digest.time %q must be in HH:MM format", teamName, d.Time)
+	}
+	tz := d.Timezone
+	if tz == "" {
+		tz = "Europe/Oslo"
+	}
+	if _, err := time.LoadLocation(tz); err != nil {
+		return fmt.Errorf("team %s: digest.timezone %q is not a valid IANA timezone", teamName, d.Timezone)
+	}
+	return nil
 }
 
 // flatChannelsToSources converts the old flat channel format into sources for backward compatibility.
