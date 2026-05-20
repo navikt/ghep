@@ -77,7 +77,7 @@ func (c Client) FetchOpenPullRequests(ctx context.Context, teamSlug string) ([]R
 	for repoName, conn := range connections {
 		var prs []PullRequest
 		for _, n := range conn.Nodes {
-			prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL})
+			prs = append(prs, PullRequest(n))
 		}
 
 		// Paginate repos that have more than 100 open PRs
@@ -89,7 +89,7 @@ func (c Client) FetchOpenPullRequests(ctx context.Context, teamSlug string) ([]R
 			}
 			conn = more[repoName]
 			for _, n := range conn.Nodes {
-				prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL})
+				prs = append(prs, PullRequest(n))
 			}
 		}
 
