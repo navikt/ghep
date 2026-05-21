@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"slices"
+	"strings"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/sql/gensql"
@@ -32,14 +33,15 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 	}
 
 	log.Info("Getting info about teams from Github")
+	reposBlocklist := strings.Split(os.Getenv("GITHUB_BLOCKLIST_REPOS"), ",")
 
 	if subscribeToOrg {
-		if err := githubClient.FetchOrgAsTeam(ctx, log); err != nil {
+		if err := githubClient.FetchOrgAsTeam(ctx, log, reposBlocklist); err != nil {
 			log.Error("Fetching org members from Github", "error", err)
 			return
 		}
 	} else {
-		if err := githubClient.FetchTeams(ctx, log, os.Getenv("GITHUB_BLOCKLIST_REPOS")); err != nil {
+		if err := githubClient.FetchTeams(ctx, log, reposBlocklist); err != nil {
 			log.Error("Fetching teams from Github", "error", err)
 			return
 		}

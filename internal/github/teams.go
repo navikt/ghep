@@ -398,7 +398,7 @@ func validateTeamExists(teamURL, bearerToken string) error {
 }
 
 // FetchOrgAsTeam fetches the organization as a team, hence there needs to be a team in the organization with the same name as the organization.
-func (c Client) FetchOrgAsTeam(ctx context.Context, log *slog.Logger) error {
+func (c Client) FetchOrgAsTeam(ctx context.Context, log *slog.Logger, reposBlocklist []string) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)
@@ -427,18 +427,32 @@ func (c Client) FetchOrgAsTeam(ctx context.Context, log *slog.Logger) error {
 		}
 	}
 
-	log.Info("Subscribed to org", "org", c.org, "members", len(members))
+	repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
+	if err != nil {
+		return fmt.Errorf("fetching repositories for %s: %v", c.org, err)
+	}
+
+	for _, repository := range repositories {
+		if err := sql.AddRepositoryToTeam(ctx, c.db, c.org, repository); err != nil {
+			return fmt.Errorf("adding repository %s to org %s: %v", repository, c.org, err)
+		}
+	}
+
+	if err := sql.RemoveRepositoriesNotBelongingToTeam(ctx, c.db, c.org, repositories); err != nil {
+		return fmt.Errorf("cleaning up old repositories: %v", err)
+	}
+
+	log.Info("Subscribed to org", "org", c.org, "members", len(members), "repositories", len(repositories))
 
 	return nil
 }
 
-func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklistString string) error {
+func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist []string) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)
 	}
 
-	reposBlocklist := strings.Split(reposBlocklistString, ",")
 	url := fmt.Sprintf("https://api.github.com/orgs/%s/teams", c.org)
 
 	teams, err := c.db.ListTeams(ctx)
