@@ -25,9 +25,10 @@ type RepoPRs struct {
 }
 
 type graphqlPRNode struct {
-	Number int    `json:"number"`
-	Title  string `json:"title"`
-	URL    string `json:"url"`
+	Number  int    `json:"number"`
+	Title   string `json:"title"`
+	URL     string `json:"url"`
+	IsDraft bool   `json:"isDraft"`
 }
 
 type graphqlPRConnection struct {
@@ -77,7 +78,9 @@ func (c Client) FetchOpenPullRequests(ctx context.Context, teamSlug string) ([]R
 	for repoName, conn := range connections {
 		var prs []PullRequest
 		for _, n := range conn.Nodes {
-			prs = append(prs, PullRequest(n))
+			if !n.IsDraft {
+				prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL})
+			}
 		}
 
 		// Paginate repos that have more than 100 open PRs
@@ -89,7 +92,9 @@ func (c Client) FetchOpenPullRequests(ctx context.Context, teamSlug string) ([]R
 			}
 			conn = more[repoName]
 			for _, n := range conn.Nodes {
-				prs = append(prs, PullRequest(n))
+				if !n.IsDraft {
+					prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL})
+				}
 			}
 		}
 
@@ -176,7 +181,7 @@ func buildBatchQuery(org string, repoNames []string, cursors map[string]string) 
 		fmt.Fprintf(&sb, `
   %s: repository(owner: %q, name: %q) {
     pullRequests(states: OPEN, first: 100%s) {
-      nodes { number title url }
+      nodes { number title url isDraft }
       pageInfo { hasNextPage endCursor }
     }
   }`, repoAlias(i), org, name, after)
