@@ -499,6 +499,7 @@ bankkommunikasjon:
   config:
     pulls:
       ignoreDrafts: true
+      ignoreBots: true
     workflows:
       ignoreBots: true
     silenceDependabot: "always"
@@ -535,6 +536,7 @@ oppgjorsrapporter:
   config:
     pulls:
       ignoreDrafts: true
+      ignoreBots: true
     security:
       severityFilter: "critical"
     silenceDependabot: "always"
