@@ -64,16 +64,7 @@ func RunDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Querie
 	}
 }
 
-func maybeFireDigest(
-	ctx context.Context,
-	log *slog.Logger,
-	db *gensql.Queries,
-	now time.Time,
-	teamSlug string,
-	digest *github.DigestConfig,
-	githubClient github.Client,
-	slackClient slack.Client,
-) error {
+func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, now time.Time, teamSlug string, digest *github.DigestConfig, githubClient github.Client, slackClient slack.Client) error {
 	tz := digest.Timezone
 	if tz == "" {
 		tz = "Europe/Oslo"
@@ -125,18 +116,18 @@ func maybeFireDigest(
 	}
 
 	if len(repoPRs) == 0 && !digest.SendEmpty {
-		return nil
-	}
+		log.Info("No pull request to digest", "team", teamSlug, "channel", digest.Channel)
+	} else {
+		msg := slack.CreateDigestMessage(digest.Channel, repoPRs)
 
-	msg := slack.CreateDigestMessage(digest.Channel, repoPRs)
+		payload, err := json.Marshal(msg)
+		if err != nil {
+			return err
+		}
 
-	payload, err := json.Marshal(msg)
-	if err != nil {
-		return err
-	}
-
-	if _, err := slackClient.PostMessage(payload); err != nil {
-		return err
+		if _, err := slackClient.PostMessage(payload); err != nil {
+			return err
+		}
 	}
 
 	if err := db.UpsertDigestSent(ctx, gensql.UpsertDigestSentParams{
