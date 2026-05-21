@@ -1,0 +1,12 @@
+default_provider = "keychain"
+
+[providers.keychain]
+type = "keychain"
+service = "ghep"
+prefix = "ghep-"
+
+[secrets]
+GITHUB_APP_ID= {}
+GITHUB_APP_PRIVATE_KEY= {}
+GITHUB_APP_INSTALLATION_ID= {}
+SLACK_TOKEN= {}

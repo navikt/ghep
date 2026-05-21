@@ -29,5 +29,6 @@ go.work
 .env.nais
 teams.yaml
 teams-nais.yaml
+teams-local.yaml
 github.pem
 github-nais.pem

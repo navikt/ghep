@@ -39,8 +39,9 @@ description = "Fix runs the Go fix tool (cmd/fix) on the named packages and appl
 run = "go fix ./..."
 
 [tasks."local"]
-description = "Run Go"
-run = "go run ."
+description = "Run Go locally"
+run = "fnox exec -- go run ."
+env._.file = ".env"
 
 [tasks."test"]
 description = "Test Go code"
