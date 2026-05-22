@@ -43,6 +43,9 @@ tbd:
   pulls: "team-bømlo-pull-requests"
   issues: "team-bømlo-pull-requests"
 dv-a-team:
+  config:
+    ignoreRepositories:
+      - "dbt-i-nav"
   commits: "#a-team-commits"
   issues: "#a-team-pull-requests"
   security: "#a-team-bots"
