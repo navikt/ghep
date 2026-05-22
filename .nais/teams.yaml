@@ -150,12 +150,16 @@ teamdokumenthandtering:
       ignoreBots: true
     workflows:
       ignoreBots: true
-dataseksjonen:
+datafolk:
   commits: "#dataseksjonen-github"
   issues: "#dataseksjonen-github"
   pulls: "#dataseksjonen-github"
   workflows: "#dataseksjonen-github"
   security: "#dataseksjonen-github"
+  digest:
+    channel: "#dataseksjonen-github"
+    day: monday
+    time: "08:00"
 fager:
   issues: "#team-fager-bots"
   pulls: "#team-fager-bots"
