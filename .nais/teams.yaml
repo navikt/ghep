@@ -369,6 +369,9 @@ historisk:
       ignoreBots: true
     security:
       severityFilter: "critical"
+    ignoreRepositories:
+      - "historisk-superhelt"
+      - "historisk-helsetjenester"
   digest:
     channel: "#infotek-github"
     day: monday
