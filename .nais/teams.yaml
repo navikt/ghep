@@ -352,7 +352,7 @@ historisk:
   pulls: "#historisk-github"
   issues: "#historisk-github"
   releases: "#historisk-github"
-  security: "#historisk-github"
+  security: "#infotek-github"
   sources:
     - source: pulls
       channel: "#historisk-github-bots"
@@ -367,8 +367,10 @@ historisk:
   config:
     pulls:
       ignoreBots: true
+    security:
+      severityFilter: "critical"
   digest:
-    channel: "#historisk-github"
+    channel: "#infotek-github"
     day: monday
     time: "09:00"
     timezone: Europe/Oslo
