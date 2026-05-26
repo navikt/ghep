@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log/slog"
+	"slices"
 	"strings"
 	"time"
 
@@ -55,7 +56,7 @@ func RunDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Querie
 		case now := <-ticker.C:
 			for _, entry := range entries {
 				go func(e digestEntry) {
-					if err := maybeFireDigest(ctx, log, db, now, e.teamSlug, e.digest, githubClient, slackClient); err != nil {
+					if err := maybeFireDigest(ctx, log, db, now, e.teamSlug, e.digest, teamConfig, githubClient, slackClient); err != nil {
 						log.Error("Sending digest", "team", e.teamSlug, "error", err)
 					}
 				}(entry)
@@ -64,7 +65,7 @@ func RunDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Querie
 	}
 }
 
-func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, now time.Time, teamSlug string, digest *github.DigestConfig, githubClient github.Client, slackClient slack.Client) error {
+func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, now time.Time, teamSlug string, digest *github.DigestConfig, teamConfig map[string]github.Team, githubClient github.Client, slackClient slack.Client) error {
 	tz := digest.Timezone
 	if tz == "" {
 		tz = "Europe/Oslo"
@@ -113,6 +114,18 @@ func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 	repoPRs, err := githubClient.FetchOpenPullRequests(ctx, teamSlug)
 	if err != nil {
 		return err
+	}
+
+	// Filter out ignored repositories
+	team, exists := teamConfig[teamSlug]
+	if exists && len(team.Config.IgnoreRepositories) > 0 {
+		var filtered []github.RepoPRs
+		for _, repoPR := range repoPRs {
+			if !slices.Contains(team.Config.IgnoreRepositories, repoPR.RepoName) {
+				filtered = append(filtered, repoPR)
+			}
+		}
+		repoPRs = filtered
 	}
 
 	if len(repoPRs) == 0 && !digest.SendEmpty {
