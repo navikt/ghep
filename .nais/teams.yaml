@@ -366,6 +366,7 @@ historisk:
           - main
   config:
     pulls:
+      events: ready_for_review
       ignoreBots: true
     security:
       severityFilter: "critical"
