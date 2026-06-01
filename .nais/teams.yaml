@@ -349,7 +349,7 @@ allosaurus:
   issues: "#allosaurus-github"
   pulls: "#allosaurus-github"
 historisk:
-  pulls: "#historisk-github"
+  pulls: "#Infotek-github"
   issues: "#historisk-github"
   releases: "#historisk-github"
   security: "#infotek-github"
@@ -366,7 +366,7 @@ historisk:
           - main
   config:
     pulls:
-      events: ["ready_for_review"]
+      events: ["opened", "ready_for_review"]
       ignoreBots: true
     security:
       severityFilter: "critical"
