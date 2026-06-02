@@ -262,6 +262,9 @@ docker run --name adminer --link postgres:db -p 8081:8080 -d adminer
 psql -h localhost -U postgres -c 'CREATE DATABASE ghep;'
 ```
 
+## Self-hosting
+Dersom du ønsker å sette opp en egen instans av Ghep for din Github org team, se [self-hosting guide](./docs/self-hosting.md) for detaljer.
+
 ## Kontakt oss
 
 Ta kontakt i `#ghep-værsågod` på Slack hvis du har noen spørsmål.
