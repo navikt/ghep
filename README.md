@@ -263,7 +263,8 @@ psql -h localhost -U postgres -c 'CREATE DATABASE ghep;'
 ```
 
 ## Self-hosting
-Dersom du ønsker å sette opp en egen instans av Ghep for din Github org team, se [self-hosting guide](./docs/self-hosting.md) for detaljer.
+
+Dersom du ønsker å sette opp en egen instans av Ghep, så kan du ta en titt på [self-hosting guide](./docs/self-hosting.md) for detaljer.
 
 ## Kontakt oss
 
