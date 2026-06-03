@@ -17,6 +17,11 @@ import (
 func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, slackAPI slack.Client, subscribeToOrg bool) error {
 	log.Info("Starting Ghep", "org", os.Getenv("GITHUB_ORG"))
 
+	webhookSecret := os.Getenv("GITHUB_WEBHOOK_SECRET")
+	if webhookSecret == "" {
+		return fmt.Errorf("GITHUB_WEBHOOK_SECRET is required")
+	}
+
 	teams := make([]string, 0, len(teamConfig))
 	for name := range teamConfig {
 		teams = append(teams, name)
@@ -37,6 +42,7 @@ func Run(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig m
 		db,
 		eventHandler,
 		teamConfig,
+		webhookSecret,
 		os.Getenv("EXTERNAL_CONTRIBUTORS_CHANNEL"),
 		subscribeToOrg,
 	)

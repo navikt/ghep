@@ -25,13 +25,11 @@ The app will not be able to do anything with these permissions, but it needs the
 The Github app's job is to post subscribe to Github Events and post them using a webhook.
 You need to set up a webhook endpoint that can receive these events and forward them to the Slack app.
 The webhook endpoint will be `https://my-selfhosted-ghep.no/events`.
+Make sure to configure a webhook secret in your GitHub App settings and set `GITHUB_WEBHOOK_SECRET`.
+Ghep will reject any request with an invalid or missing `X-Hub-Signature-256` header.
 
 In addition to the above Github permissions the configured webhook must check of relevant boxes in "Subscribe to events".
 Note that not all of the events are supported by Ghep today.
-
-**Warning**
-There is currently no server-side validation on the incoming webhook. Meaning anyone who can reach your endpoint can craft spam or potentially requests for phishing.
-The code should ideally be improved by using webhook secrets to validate the source of incoming webhook requests.
 
 #### Debugging webhooks
 
@@ -71,6 +69,7 @@ In addition to the env vars you can read in [the nais yaml](../nais.yaml), you w
 | GITHUB_APP_ID              | The ID of your Github app                                                                                                                                  |
 | GITHUB_APP_INSTALLATION_ID | The installation ID of your Github app. You can find this in the URL when you go to your app's installation page. It is the number after `/installations/` |
 | GITHUB_APP_PRIVATE_KEY     | The private key of your Github app, in PEM format.                                                                                                         |
+| GITHUB_WEBHOOK_SECRET      | The webhook secret configured in your GitHub App settings.                                                                                                 |
 | SLACK_TOKEN                | The bot token of your Slack app, starting with `xoxb-`                                                                                                     |
 
 

@@ -26,7 +26,7 @@ func TestIsAnExternalContributorEvent(t *testing.T) {
 		WillReturnRows(pgxmock.NewRows([]string{"exists"}).AddRow(false))
 
 	db := gensql.New(mock)
-	apiClient := New(slog.Default(), db, events.Handler{}, map[string]github.Team{}, "externalChannel", false)
+	apiClient := New(slog.Default(), db, events.Handler{}, map[string]github.Team{}, "test-secret", "externalChannel", false)
 
 	event := github.Event{
 		Sender: github.User{

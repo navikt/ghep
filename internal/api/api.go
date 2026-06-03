@@ -2,6 +2,9 @@ package api
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"html"
@@ -9,6 +12,7 @@ import (
 	"log/slog"
 	"net/http"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -18,21 +22,23 @@ import (
 )
 
 type Client struct {
-	log        *slog.Logger
-	db         *gensql.Queries
-	events     events.Handler
-	teamConfig map[string]github.Team
+	log           *slog.Logger
+	db            *gensql.Queries
+	events        events.Handler
+	teamConfig    map[string]github.Team
+	webhookSecret string
 
 	ExternalContributorsChannel string
 	SubscribeToOrg              bool
 }
 
-func New(log *slog.Logger, db *gensql.Queries, events events.Handler, teamConfig map[string]github.Team, externalContributorsChannel string, subscribeToOrg bool) Client {
+func New(log *slog.Logger, db *gensql.Queries, events events.Handler, teamConfig map[string]github.Team, webhookSecret, externalContributorsChannel string, subscribeToOrg bool) Client {
 	return Client{
-		log:        log,
-		db:         db,
-		events:     events,
-		teamConfig: teamConfig,
+		log:           log,
+		db:            db,
+		events:        events,
+		teamConfig:    teamConfig,
+		webhookSecret: webhookSecret,
 
 		ExternalContributorsChannel: externalContributorsChannel,
 		SubscribeToOrg:              subscribeToOrg,
@@ -68,6 +74,12 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
+
+	if !c.validSignature(r.Header.Get("X-Hub-Signature-256"), body) {
+		log.Warn("Invalid webhook signature")
+		http.Error(w, "invalid signature", http.StatusUnauthorized)
+		return
+	}
 
 	event, err := github.CreateEvent(body)
 	if err != nil {
@@ -227,4 +239,17 @@ func (c *Client) isAnExternalContributorEvent(ctx context.Context, event github.
 	// Check if the user is in the database, if not, we consider them an external contributor.
 	exisits, err := c.db.ExistsUser(ctx, event.Sender.Login)
 	return !exisits, err
+}
+
+func (c *Client) validSignature(signature string, body []byte) bool {
+	expected, ok := strings.CutPrefix(signature, "sha256=")
+	if !ok {
+		return false
+	}
+
+	mac := hmac.New(sha256.New, []byte(c.webhookSecret))
+	mac.Write(body)
+	actual := hex.EncodeToString(mac.Sum(nil))
+
+	return hmac.Equal([]byte(expected), []byte(actual))
 }
