@@ -14,9 +14,10 @@ import (
 const graphqlURL = "https://api.github.com/graphql"
 
 type PullRequest struct {
-	Number int    `json:"number"`
-	Title  string `json:"title"`
-	URL    string `json:"url"`
+	Number    int       `json:"number"`
+	Title     string    `json:"title"`
+	URL       string    `json:"url"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type RepoPRs struct {
@@ -25,10 +26,11 @@ type RepoPRs struct {
 }
 
 type graphqlPRNode struct {
-	Number  int    `json:"number"`
-	Title   string `json:"title"`
-	URL     string `json:"url"`
-	IsDraft bool   `json:"isDraft"`
+	Number    int       `json:"number"`
+	Title     string    `json:"title"`
+	URL       string    `json:"url"`
+	IsDraft   bool      `json:"isDraft"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type graphqlPRConnection struct {
@@ -79,7 +81,7 @@ func (c Client) FetchOpenPullRequests(ctx context.Context, teamSlug string) ([]R
 		var prs []PullRequest
 		for _, n := range conn.Nodes {
 			if !n.IsDraft {
-				prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL})
+				prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL, CreatedAt: n.CreatedAt})
 			}
 		}
 
@@ -93,7 +95,7 @@ func (c Client) FetchOpenPullRequests(ctx context.Context, teamSlug string) ([]R
 			conn = more[repoName]
 			for _, n := range conn.Nodes {
 				if !n.IsDraft {
-					prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL})
+					prs = append(prs, PullRequest{Number: n.Number, Title: n.Title, URL: n.URL, CreatedAt: n.CreatedAt})
 				}
 			}
 		}
@@ -181,7 +183,7 @@ func buildBatchQuery(org string, repoNames []string, cursors map[string]string) 
 		fmt.Fprintf(&sb, `
   %s: repository(owner: %q, name: %q) {
     pullRequests(states: OPEN, first: 100%s) {
-      nodes { number title url isDraft }
+      nodes { number title url isDraft createdAt }
       pageInfo { hasNextPage endCursor }
     }
   }`, repoAlias(i), org, name, after)

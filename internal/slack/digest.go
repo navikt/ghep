@@ -50,7 +50,12 @@ func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Mes
 		}
 		fmt.Fprintf(&sb, "*%s* (%d %s)\n", repo.RepoName, count, unit)
 		for _, pr := range repo.PRs {
-			fmt.Fprintf(&sb, "• <%s|#%d %s>\n", pr.URL, pr.Number, pr.Title)
+			days := int(time.Since(pr.CreatedAt).Hours() / 24)
+			dayUnit := "dager"
+			if days == 1 {
+				dayUnit = "dag"
+			}
+			fmt.Fprintf(&sb, "• <%s|#%d %s> (%d %s)\n", pr.URL, pr.Number, pr.Title, days, dayUnit)
 		}
 		sb.WriteString("\n")
 	}
