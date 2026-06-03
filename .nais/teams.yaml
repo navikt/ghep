@@ -639,3 +639,13 @@ nav-ung:
     channel: "#team-nav-ung-github"
     day: monday
     time: "08:00"
+nks-statistikk:
+  security: "#team-nks-statistikkoganalyse-alerts"
+  config:
+    security:
+      severityFilter: "high"
+nks-brukerinnsikt:
+  security: "#team-nks-brukerinnsikt-data-alerts"
+  config:
+    security:
+      severityFilter: "high"
