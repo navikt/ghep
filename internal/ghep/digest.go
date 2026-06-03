@@ -116,12 +116,23 @@ func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 		return err
 	}
 
-	// Filter out ignored repositories
+	// Filter out ignored repositories (global config)
 	team, exists := teamConfig[teamSlug]
 	if exists && len(team.Config.IgnoreRepositories) > 0 {
 		var filtered []github.RepoPRs
 		for _, repoPR := range repoPRs {
 			if !slices.Contains(team.Config.IgnoreRepositories, repoPR.RepoName) {
+				filtered = append(filtered, repoPR)
+			}
+		}
+		repoPRs = filtered
+	}
+
+	// Filter out digest-specific ignored repositories
+	if len(digest.IgnoreRepositories) > 0 {
+		var filtered []github.RepoPRs
+		for _, repoPR := range repoPRs {
+			if !slices.Contains(digest.IgnoreRepositories, repoPR.RepoName) {
 				filtered = append(filtered, repoPR)
 			}
 		}

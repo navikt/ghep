@@ -28,6 +28,8 @@ data:
         channel: "#nais-pull-requests"
         day: wednesday
         time: "09:00"
+        ignoreRepositories:
+          - system
       config:
         ignoreRepositories:
           - "nur"

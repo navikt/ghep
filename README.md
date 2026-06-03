@@ -244,6 +244,9 @@ nada:
     time: "09:00"
     timezone: Europe/Oslo  # valgfri, standard er Europe/Oslo
     send_empty: false      # valgfri, send melding selv om det ikke er åpne PRs (standard: false)
+    ignoreRepositories:    # valgfri, repositories som skal utelates fra digest-oversikten
+      - pull-request-collection-repo
+      - oldies-but-goodies-pr-repo
 ```
 
 - `channel` - Slack-kanalen meldingen skal sendes til
@@ -251,6 +254,7 @@ nada:
 - `time` - Tidspunkt på dagen i `HH:MM`-format
 - `timezone` - IANA-tidssone for når meldingen skal sendes (standard: `Europe/Oslo`)
 - `send_empty` - Hvis `true` sendes en melding selv om alle pull requests er merget. Standard er `false`, dvs. ingen melding sendes hvis det ikke er noe å rapportere
+- `ignoreRepositories` - En liste med repositories som skal utelates fra digest-oversikten. Kombineres med den globale `ignoreRepositories`-listen under `config`
 
 ## Lokal utvikling
 

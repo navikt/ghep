@@ -97,11 +97,12 @@ func (t Team) IsExternalContributor() bool {
 }
 
 type DigestConfig struct {
-	Channel   string `yaml:"channel"`
-	Day       string `yaml:"day"`
-	Time      string `yaml:"time"`
-	Timezone  string `yaml:"timezone"`
-	SendEmpty bool   `yaml:"send_empty"`
+	Channel            string   `yaml:"channel"`
+	Day                string   `yaml:"day"`
+	Time               string   `yaml:"time"`
+	Timezone           string   `yaml:"timezone"`
+	SendEmpty          bool     `yaml:"send_empty"`
+	IgnoreRepositories []string `yaml:"ignoreRepositories"`
 }
 
 type Team struct {
