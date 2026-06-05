@@ -639,6 +639,17 @@ nav-ung:
     channel: "#team-nav-ung-github"
     day: monday
     time: "08:00"
+arbeidsindikator:
+  commits: "#team-arbeidsindikator-commits"
+  workflows: "#team-arbeidsindikator-github"
+  security: "#team-arbeidsindikator-github"
+  issues: "#team-arbeidsindikator-github"
+  pulls: "#team-arbeidsindikator-github"
+  releases: "#team-arbeidsindikator-github"
+  digest:
+    channel: "#team-arbeidsindikator-github"
+    day: monday
+    time: "08:00"
 nks-statistikk:
   security: "#team-nks-statistikkoganalyse-alerts"
   config:
