@@ -40,6 +40,8 @@ spec:
   env:
     - name: REPOS_CONFIG_FILE_PATH
       value: /var/run/configmaps/teams.yaml
+    - name: PERSONAL_DIGEST_CONFIG_FILE_PATH
+      value: /var/run/configmaps/personal-digest.yaml
     - name: GITHUB_ORG
       value: navikt
     - name: GITHUB_BLOCKLIST_REPOS

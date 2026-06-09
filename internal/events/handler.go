@@ -7,7 +7,9 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/navikt/ghep/internal/sql/gensql"
@@ -68,6 +70,10 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 
 	// Handle one-time side effects before iterating over sources
 	switch eventType {
+	case github.TypeCommit:
+		if event.Repository != nil {
+			go recordCommitAuthors(ctx, log, h.db, event)
+		}
 	case github.TypeRepositoryRenamed:
 		if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
 			Name:    event.Repository.Name,
@@ -271,4 +277,30 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Sour
 	log = log.With("channel", source.Channel)
 	log.Info("Received commit event")
 	return slack.CreateCommitMessage(ctx, log, db, source.Channel, event)
+}
+
+// recordCommitAuthors counts the commits per unique non-bot author in a push event
+// and upserts the totals into user_commit_counts for the personal weekly digest.
+func recordCommitAuthors(ctx context.Context, log *slog.Logger, db *gensql.Queries, event github.Event) {
+	counts := make(map[string]int32)
+	for _, commit := range event.Commits {
+		if commit.Author.IsBot() || commit.Author.Username == "" {
+			continue
+		}
+		counts[commit.Author.Username]++
+	}
+
+	pushedAt := pgtype.Timestamptz{Time: time.Now(), Valid: true}
+	repo := event.Repository.Name
+
+	for login, count := range counts {
+		if err := db.UpsertUserCommitCount(ctx, gensql.UpsertUserCommitCountParams{
+			Login:        login,
+			Repo:         repo,
+			CommitCount:  count,
+			LastPushedAt: pushedAt,
+		}); err != nil {
+			log.Error("Recording commit author", "login", login, "repo", repo, "error", err)
+		}
+	}
 }

@@ -256,6 +256,43 @@ nada:
 - `send_empty` - Hvis `true` sendes en melding selv om alle pull requests er merget. Standard er `false`, dvs. ingen melding sendes hvis det ikke er noe å rapportere
 - `ignoreRepositories` - En liste med repositories som skal utelates fra digest-oversikten. Kombineres med den globale `ignoreRepositories`-listen under `config`
 
+### Personlig ukentlig commit-oversikt
+
+Ghep kan sende deg en personlig Slack-melding med en oversikt over hvilke repoer du har pushet commits til siden forrige oversikt, sortert etter antall commits.
+
+Dette konfigureres i en egen fil [`.nais/personal-digest.yaml`](https://github.com/navikt/ghep/blob/main/.nais/personal-digest.yaml).
+Utenfor Nav aktiveres dette ved å sette miljøvariabelen `PERSONAL_DIGEST_CONFIG_FILE_PATH` til stien til en fil.
+
+``` yaml
+users:
+  - login: Kyrremann
+    day: friday
+    time: "14:00"
+    timezone: Europe/Oslo
+  - login: navAnders
+  - login: majabaja
+    day: monday
+```
+
+- `login` - GitHub-brukernavnet til mottakeren (påkrevd)
+- `day` - Ukedag DM-en skal sendes. Gyldige verdier: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. Standard: `friday`
+- `time` - Tidspunkt på dagen i `HH:MM`-format. Standard: `14:00`
+- `timezone` - IANA-tidssone for når meldingen skal sendes. Standard: `Europe/Oslo`
+
+Kun brukere som er eksplisitt oppført i listen vil motta en melding.
+Brukere uten commits siden forrige utsendelse hoppes over.
+
+DM-en sendes via Slack og ser omtrent slik ut:
+
+```
+Din ukentlige commit-oversikt — 6. juni 2025
+3 repos med 11 commits totalt
+
+• my-cool-app — 7 commits
+• platform-tools — 3 commits
+• docs-site — 1 commit
+```
+
 ## Lokal utvikling
 
 Kjør opp Postgres for testing med Docker.
