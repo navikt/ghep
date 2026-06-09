@@ -59,13 +59,14 @@ Noen av disse hendelsene kan man filtrere på alvorlighetsgrad.
 Alt du trenger å gjøre er å redigere [`.nais/teams.yaml`](https://github.com/navikt/ghep/blob/main/.nais/teams.yaml) og legge til ditt team og deres kanaler.
 
 ``` yaml
-nada:
- commits: "#nada-commits"
- issues: "#nada-issues"
- pulls: "#nada-pull-requests"
- workflows: "#nada-ci"
- releases: "#nada-releases"
- security: "#nada-security"
+teams:
+  nada:
+   commits: "#nada-commits"
+   issues: "#nada-issues"
+   pulls: "#nada-pull-requests"
+   workflows: "#nada-ci"
+   releases: "#nada-releases"
+   security: "#nada-security"
 ```
 
 PS: Hvis kanalene dine er private må du selv invitere @ghep inn i hver kanal.
@@ -76,39 +77,40 @@ Du kan også bruke `sources` for å sende samme hendelsestype til flere kanaler 
 For eksempel kan du sende pull requests fra bots til én kanal og resten til en annen.
 
 ``` yaml
-nada:
-  sources:
-    - source: pulls
-      channel: "#nada-pull-requests"
-      config:
-        pulls:
-          ignoreBots: true
-    - source: pulls
-      channel: "#nada-bot-prs"
-      config:
-        pulls:
-          onlyBots: true
-    - source: commits
-      channel: "#nada-commits"
-    - source: commits
-      channel: "#nada-commits-develop"
-      config:
-        branches:
-          - develop
-    - source: workflows
-      channel: "#nada-ci"
-      config:
-        branches:
-          - main
-    - source: releases
-      channel: "#nada-releases"
-    - source: issues
-      channel: "#nada-issues"
-    - source: security
-      channel: "#nada-security"
-      config:
-        security:
-          severityFilter: "high"
+teams:
+  nada:
+    sources:
+      - source: pulls
+        channel: "#nada-pull-requests"
+        config:
+          pulls:
+            ignoreBots: true
+      - source: pulls
+        channel: "#nada-bot-prs"
+        config:
+          pulls:
+            onlyBots: true
+      - source: commits
+        channel: "#nada-commits"
+      - source: commits
+        channel: "#nada-commits-develop"
+        config:
+          branches:
+            - develop
+      - source: workflows
+        channel: "#nada-ci"
+        config:
+          branches:
+            - main
+      - source: releases
+        channel: "#nada-releases"
+      - source: issues
+        channel: "#nada-issues"
+      - source: security
+        channel: "#nada-security"
+        config:
+          security:
+            severityFilter: "high"
 ```
 
 Gyldige source-typer er: `commits`, `pulls`, `issues`, `workflows`, `releases`, `security`.
@@ -116,15 +118,16 @@ Gyldige source-typer er: `commits`, `pulls`, `issues`, `workflows`, `releases`, 
 Du kan kombinere det gamle formatet med `sources`. Flate kanaler (f.eks. `commits: "#kanal"`) blir alltid inkludert, og eksplisitte `sources` legges til i tillegg.
 
 ``` yaml
-nada:
-  commits: "#nada-commits"
-  pulls: "#nada-pull-requests"
-  sources:
-    - source: pulls
-      channel: "#nada-bot-prs"
-      config:
-        pulls:
-          onlyBots: true
+teams:
+  nada:
+    commits: "#nada-commits"
+    pulls: "#nada-pull-requests"
+    sources:
+      - source: pulls
+        channel: "#nada-bot-prs"
+        config:
+          pulls:
+            onlyBots: true
 ```
 
 I eksempelet over vil pull requests sendes til _både_ `#nada-pull-requests` (fra flat config) og `#nada-bot-prs` (fra sources).
@@ -141,14 +144,15 @@ Overtid kommer konfigurasjon som kan brukes av flere sources bli flyttet.
 Globale innstillinger som gjelder for alle sources:
 
 ``` yaml
-team:
-  config:
-    ignoreRepositories:
-      - repoA
-      - repoB
-    silenceDependabot: "always"
-    externalContributorsChannel: "#channel"
-    pingSlackUsers: true
+teams:
+  team:
+    config:
+      ignoreRepositories:
+        - repoA
+        - repoB
+      silenceDependabot: "always"
+      externalContributorsChannel: "#channel"
+      pingSlackUsers: true
 ```
 
 - `ignoreRepositories` - En liste med repositories man ikke ønsker hendelser fra
@@ -161,19 +165,20 @@ team:
 Dette er konfigurasjon som settes per source:
 
 ``` yaml
-team:
-  sources:
-    - source: commits
-      channel: "#channel"
-      config:
-        branches:
-          - develop
-          - staging
-    - source: pulls
-      channel: "#channel-prs-main"
-      config:
-        branches:
-          - main
+teams:
+  team:
+    sources:
+      - source: commits
+        channel: "#channel"
+        config:
+          branches:
+            - develop
+            - staging
+      - source: pulls
+        channel: "#channel-prs-main"
+        config:
+          branches:
+            - main
 ```
 
 - `branches` - Få *kun* hendelser for de oppgitte branchene. For commits erstatter dette default branch for repoet. For pull requests filtreres det på target branch (base ref).
@@ -183,15 +188,16 @@ team:
 Kan konfigureres globalt (under `config.pulls`) eller per source (under `sources[].config.pulls`):
 
 ``` yaml
-team:
-  pulls: "#channel"
-  config:
-    pulls:
-      events: [string]
-      ignoreBots: bool
-      onlyBots: bool
-      ignoreDrafts: bool
-      minimalist: bool
+teams:
+  team:
+    pulls: "#channel"
+    config:
+      pulls:
+        events: [string]
+        ignoreBots: bool
+        onlyBots: bool
+        ignoreDrafts: bool
+        minimalist: bool
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om Pull Request opprettet av bots
@@ -205,13 +211,14 @@ team:
 Kan konfigureres globalt (under `config.workflows`) eller per source (under `sources[].config.workflows`):
 
 ``` yaml
-team:
-  workflows: "#channel"
-  config:
-    workflows:
-      ignoreBots: bool
-      workflows: [string]
-      repositories: [string]
+teams:
+  team:
+    workflows: "#channel"
+    config:
+      workflows:
+        ignoreBots: bool
+        workflows: [string]
+        repositories: [string]
 ```
 
 - `ignoreBots` - Ikke få Slack-melding om workflows som feiler for bots (for eksempel Dependabot)
@@ -223,11 +230,12 @@ team:
 Kan konfigureres globalt (under `config.security`) eller per source (under `sources[].config.security`):
 
 ``` yaml
-team:
-  security: "#channel"
-  config:
-    security:
-      severityFilter: "high"
+teams:
+  team:
+    security: "#channel"
+    config:
+      security:
+        severityFilter: "high"
 ```
 
 - `severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
@@ -237,16 +245,17 @@ team:
 Ghep kan sende en ukentlig melding til en Slack-kanal med en oversikt over åpne pull requests for teamets repoer.
 
 ``` yaml
-nada:
-  digest:
-    channel: "#nada-weekly"
-    day: monday
-    time: "09:00"
-    timezone: Europe/Oslo  # valgfri, standard er Europe/Oslo
-    send_empty: false      # valgfri, send melding selv om det ikke er åpne PRs (standard: false)
-    ignoreRepositories:    # valgfri, repositories som skal utelates fra digest-oversikten
-      - pull-request-collection-repo
-      - oldies-but-goodies-pr-repo
+teams:
+  nada:
+    digest:
+      channel: "#nada-weekly"
+      day: monday
+      time: "09:00"
+      timezone: Europe/Oslo  # valgfri, standard er Europe/Oslo
+      send_empty: false      # valgfri, send melding selv om det ikke er åpne PRs (standard: false)
+      ignoreRepositories:    # valgfri, repositories som skal utelates fra digest-oversikten
+        - pull-request-collection-repo
+        - oldies-but-goodies-pr-repo
 ```
 
 - `channel` - Slack-kanalen meldingen skal sendes til
@@ -260,11 +269,10 @@ nada:
 
 Ghep kan sende deg en personlig Slack-melding med en oversikt over hvilke repoer du har pushet commits til siden forrige oversikt, sortert etter antall commits.
 
-Dette konfigureres i en egen fil [`.nais/personal-digest.yaml`](https://github.com/navikt/ghep/blob/main/.nais/personal-digest.yaml).
-Utenfor Nav aktiveres dette ved å sette miljøvariabelen `PERSONAL_DIGEST_CONFIG_FILE_PATH` til stien til en fil.
+Dette konfigureres i den samme filen, [`.nais/teams.yaml`](https://github.com/navikt/ghep/blob/main/.nais/teams.yaml).
 
 ``` yaml
-users:
+personal-digest:
   - login: Kyrremann
     day: friday
     time: "14:00"

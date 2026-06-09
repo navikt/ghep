@@ -191,7 +191,7 @@ func TestParseTeamConfig(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got, err := ParseTeamConfig(test.path)
+			got, _, err := ParseTeamConfig(test.path)
 			if err != nil {
 				t.Error(err)
 			}

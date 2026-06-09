@@ -1,21 +1,22 @@
-nada:
-  commits: "#commits"
-  issues: "#issues"
-  pulls: "#pulls"
-  workflows: "#workflows"
-  releases: "#releases"
-  security: "#security"
-  config:
-    ignoreRepositories:
-      - repoA
-    silenceDependabot: "always"
-    externalContributorsChannel: "#external"
-    security:
-      severityFilter: "high"
-    pingSlackUsers: true
-    workflows:
-      ignoreBots: true
+teams:
+  nada:
+    commits: "#commits"
+    issues: "#issues"
+    pulls: "#pulls"
+    workflows: "#workflows"
+    releases: "#releases"
+    security: "#security"
+    config:
+      ignoreRepositories:
+        - repoA
+      silenceDependabot: "always"
+      externalContributorsChannel: "#external"
+      security:
+        severityFilter: "high"
+      pingSlackUsers: true
       workflows:
-        - deploy
-      repositories:
-        - my-little-repo
+        ignoreBots: true
+        workflows:
+          - deploy
+        repositories:
+          - my-little-repo

@@ -15,8 +15,13 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func RunPersonalDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Queries, slackClient slack.Client, cfg *github.PersonalDigestConfig) {
-	log.Info("Starting personal digest scheduler", "users", len(cfg.Users))
+func RunPersonalDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Queries, slackClient slack.Client, users []github.PersonalDigestUserEntry) {
+	if len(users) == 0 {
+		log.Info("No users configured for personal digest, scheduler not running")
+		return
+	}
+
+	log.Info("Starting personal digest scheduler", "users", len(users))
 
 	ticker := time.NewTicker(time.Minute)
 	defer ticker.Stop()
@@ -26,7 +31,7 @@ func RunPersonalDigestScheduler(ctx context.Context, log *slog.Logger, db *gensq
 		case <-ctx.Done():
 			return
 		case now := <-ticker.C:
-			for _, entry := range cfg.Users {
+			for _, entry := range users {
 				go func(e github.PersonalDigestUserEntry) {
 					if err := maybeFirePersonalDigestForUser(ctx, log, db, slackClient, e, now); err != nil {
 						log.Error("Sending personal digest", "login", e.Login, "error", err)

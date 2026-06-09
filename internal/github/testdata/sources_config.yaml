@@ -1,58 +1,59 @@
-nada:
-  config:
-    ignoreRepositories:
-      - repoA
-    silenceDependabot: "always"
-    externalContributorsChannel: "#external"
-    pingSlackUsers: true
-  sources:
-    - source: pulls
-      channel: "#pr-main"
-      config:
-        pulls:
-          ignoreBots: true
-          ignoreDrafts: true
-          minimalist: true
-    - source: pulls
-      channel: "#pr-all"
-      config:
-        pulls:
-          ignoreBots: false
-    - source: pulls
-      channel: "#pr-open"
-      config:
-        pulls:
-          ignoreDrafts: true
-          events:
-            - opened
-            - ready_for_review
-    - source: pulls
-      channel: "#pr-merged"
-      config:
-        pulls:
-          events:
-            - merged
-    - source: commits
-      channel: "#commits"
-    - source: commits
-      channel: "#commits-develop"
-      config:
-        branches:
-          - develop
-          - staging
-    - source: workflows
-      channel: "#ci"
-      config:
-        branches:
-          - main
-        workflows:
-          ignoreBots: true
-    - source: releases
-      channel: "#releases"
-    - source: issues
-      channel: "#issues"
-    - source: security
-      channel: "#security"
-      config:
-        security:
-          severityFilter: "high"
+teams:
+  nada:
+    config:
+      ignoreRepositories:
+        - repoA
+      silenceDependabot: "always"
+      externalContributorsChannel: "#external"
+      pingSlackUsers: true
+    sources:
+      - source: pulls
+        channel: "#pr-main"
+        config:
+          pulls:
+            ignoreBots: true
+            ignoreDrafts: true
+            minimalist: true
+      - source: pulls
+        channel: "#pr-all"
+        config:
+          pulls:
+            ignoreBots: false
+      - source: pulls
+        channel: "#pr-open"
+        config:
+          pulls:
+            ignoreDrafts: true
+            events:
+              - opened
+              - ready_for_review
+      - source: pulls
+        channel: "#pr-merged"
+        config:
+          pulls:
+            events:
+              - merged
+      - source: commits
+        channel: "#commits"
+      - source: commits
+        channel: "#commits-develop"
+        config:
+          branches:
+            - develop
+            - staging
+      - source: workflows
+        channel: "#ci"
+        config:
+          branches:
+            - main
+          workflows:
+            ignoreBots: true
+      - source: releases
+        channel: "#releases"
+      - source: issues
+        channel: "#issues"
+      - source: security
+        channel: "#security"
+        config:
+          security:
+            severityFilter: "high"

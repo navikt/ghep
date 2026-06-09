@@ -23,7 +23,7 @@ func main() {
 	}
 
 	log.Info("Parsing team configuration")
-	teamConfig, err := github.ParseTeamConfig(os.Getenv("REPOS_CONFIG_FILE_PATH"))
+	teamConfig, personalDigestUsers, err := github.ParseTeamConfig(os.Getenv("REPOS_CONFIG_FILE_PATH"))
 	if err != nil {
 		log.Error("Parsing team config", "error", err)
 		os.Exit(1)
@@ -52,15 +52,7 @@ func main() {
 	go ghep.FetchGithubData(ctx, log.With("component", "fetch-teams"), db, teamConfig, githubClient, subscribeToOrg)
 	go ghep.FetchSlackUsers(ctx, log.With("component", "fetch-slack"), db)
 	go ghep.RunDigestScheduler(ctx, log.With("component", "digest"), db, teamConfig, githubClient, slackClient)
-
-	if personalDigestConfigPath := os.Getenv("PERSONAL_DIGEST_CONFIG_FILE_PATH"); personalDigestConfigPath != "" {
-		personalDigestConfig, err := github.ParsePersonalDigestConfig(personalDigestConfigPath)
-		if err != nil {
-			log.Error("Parsing personal digest config", "error", err)
-			os.Exit(1)
-		}
-		go ghep.RunPersonalDigestScheduler(ctx, log.With("component", "personal-digest"), db, slackClient, personalDigestConfig)
-	}
+	go ghep.RunPersonalDigestScheduler(ctx, log.With("component", "personal-digest"), db, slackClient, personalDigestUsers)
 
 	glog := log.With("component", "ghep")
 	if err := ghep.Run(ctx, glog, db, teamConfig, githubClient, slackClient, subscribeToOrg); err != nil {

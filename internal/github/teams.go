@@ -223,16 +223,27 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 	return repos, nil
 }
 
-func ParseTeamConfig(path string) (map[string]Team, error) {
+type teamsFile struct {
+	PersonalDigest []PersonalDigestUserEntry `yaml:"personal-digest"`
+	Teams          map[string]Team           `yaml:"teams"`
+}
+
+func ParseTeamConfig(path string) (map[string]Team, []PersonalDigestUserEntry, error) {
 	file, err := os.Open(filepath.Clean(path))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer file.Close()
 
-	teams := map[string]Team{}
-	if err := yaml.NewDecoder(file).Decode(&teams); err != nil {
-		return nil, fmt.Errorf("decoding team config: %v", err)
+	var tf teamsFile
+	if err := yaml.NewDecoder(file).Decode(&tf); err != nil {
+		return nil, nil, fmt.Errorf("decoding team config: %v", err)
+	}
+
+	for i := range tf.PersonalDigest {
+		if err := applyPersonalDigestDefaults(&tf.PersonalDigest[i]); err != nil {
+			return nil, nil, fmt.Errorf("personal-digest: user %q: %w", tf.PersonalDigest[i].Login, err)
+		}
 	}
 
 	validSourceTypes := map[string]bool{
@@ -244,31 +255,29 @@ func ParseTeamConfig(path string) (map[string]Team, error) {
 		"security":  true,
 	}
 
+	teams := tf.Teams
 	for name, team := range teams {
 		team.Name = name
 
-		// Validate source types
 		for _, s := range team.Sources {
 			if !validSourceTypes[s.SourceType] {
-				return nil, fmt.Errorf("team %s: invalid source type %q", name, s.SourceType)
+				return nil, nil, fmt.Errorf("team %s: invalid source type %q", name, s.SourceType)
 			}
 		}
 
-		// Validate digest config if present
 		if team.Digest != nil {
 			if err := validateDigestConfig(name, team.Digest); err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 		}
 
-		// Always convert flat SlackChannels to sources, then append explicit sources on top
 		flatSources := flatChannelsToSources(team.SlackChannels, team.Config)
 		team.Sources = append(flatSources, team.Sources...)
 
 		teams[name] = team
 	}
 
-	return teams, nil
+	return teams, tf.PersonalDigest, nil
 }
 
 var validWeekdays = []string{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"}

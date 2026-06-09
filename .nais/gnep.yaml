@@ -9,38 +9,40 @@ metadata:
     reloader.stakater.com/match: "true"
 data:
   teams.yaml: |
-    nais:
-      commits: "#nais-commits"
-      issues: "#nais-issues"
-      pulls: "#nais-pull-requests"
-      releases: "#nais-releases"
-      security: "#nais-github-security"
-      sources:
-        - source: workflows
-          channel: "#nais-ci"
-          config:
-            branches:
-              - main
-              - master
-            workflows:
-              ignoreBots: true
-      digest:
-        channel: "#nais-pull-requests"
-        day: wednesday
-        time: "09:00"
-        ignoreRepositories:
-          - system
-      config:
-        ignoreRepositories:
-          - "nur"
-          - "homebrew-tap"
-          - "scoop-bucket"
-        silenceDependabot: always
-        externalContributorsChannel: "#nais-external-contributors"
-        pulls:
-          ignoreBots: true
-  personal-digest.yaml: |
-    - kyrremann
+    personal-digest:
+      - login: kyrremann
+
+    teams:
+      nais:
+        commits: "#nais-commits"
+        issues: "#nais-issues"
+        pulls: "#nais-pull-requests"
+        releases: "#nais-releases"
+        security: "#nais-github-security"
+        sources:
+          - source: workflows
+            channel: "#nais-ci"
+            config:
+              branches:
+                - main
+                - master
+              workflows:
+                ignoreBots: true
+        digest:
+          channel: "#nais-pull-requests"
+          day: wednesday
+          time: "09:00"
+          ignoreRepositories:
+            - system
+        config:
+          ignoreRepositories:
+            - "nur"
+            - "homebrew-tap"
+            - "scoop-bucket"
+          silenceDependabot: always
+          externalContributorsChannel: "#nais-external-contributors"
+          pulls:
+            ignoreBots: true
 
 ---
 apiVersion: data.nais.io/v1
@@ -82,8 +84,6 @@ spec:
   env:
     - name: REPOS_CONFIG_FILE_PATH
       value: /var/run/configmaps/teams.yaml
-    - name: PERSONAL_DIGEST_CONFIG_FILE_PATH
-      value: /var/run/configmaps/personal-digest.yaml
     - name: GITHUB_ORG
       value: nais
     - name: GHEP_SUBSCRIBE_TO_ORG

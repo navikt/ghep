@@ -1,2 +1,3 @@
-nada:
-  commits: "#nada-test"
+teams:
+  nada:
+    commits: "#nada-test"
