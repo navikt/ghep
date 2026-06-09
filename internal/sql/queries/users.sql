@@ -10,7 +10,7 @@ DELETE FROM users WHERE login = $1;
 
 -- name: CreateEmail :exec
 INSERT INTO emails (login, email) VALUES ($1, $2)
-ON CONFLICT (login, email) DO NOTHING;
+ON CONFLICT (email) DO UPDATE SET login = EXCLUDED.login;
 
 -- name: GetUserByEmail :one
 SELECT e.login

@@ -141,7 +141,7 @@ func (c *Client) FetchOrgUsersWithEmail(ctx context.Context) error {
 				Login: user.Login,
 				Email: identity.SamlIdentity.Email,
 			}); err != nil {
-				return fmt.Errorf("creating email for user %s: %w", user.Login, err)
+				return fmt.Errorf("creating saml email for user %s: %w", user.Login, err)
 			}
 		}
 

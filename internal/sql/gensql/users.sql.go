@@ -11,7 +11,7 @@ import (
 
 const CreateEmail = `-- name: CreateEmail :exec
 INSERT INTO emails (login, email) VALUES ($1, $2)
-ON CONFLICT (login, email) DO NOTHING
+ON CONFLICT (email) DO UPDATE SET login = EXCLUDED.login
 `
 
 type CreateEmailParams struct {
