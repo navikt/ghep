@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	"regexp"
 	"slices"
 	"strings"
 
@@ -14,47 +13,6 @@ import (
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/sql"
 )
-
-func fetchCoAuthors(commit string) ([]github.Author, error) {
-	coAuthorsRegexp := regexp.MustCompile(`Co-authored-by: (.*) <(.*)>`)
-
-	var coAuthors []github.Author
-	coAuthorsMatches := coAuthorsRegexp.FindAllStringSubmatch(commit, -1)
-
-	for _, match := range coAuthorsMatches {
-		name := match[1]
-		email := ""
-		if len(match) > 2 {
-			email = match[2]
-		}
-
-		author := github.Author{
-			Name:  name,
-			Email: email,
-		}
-
-		if strings.HasPrefix(name, "@") {
-			// Prefix with @ to indicate that this is a GitHub user
-			after, _ := strings.CutPrefix(match[1], "@")
-			author.Username = after
-		} else if strings.HasSuffix(email, "@users.noreply.github.com") {
-			// If the email is a GitHub noreply email, we can extract the username from it
-			before, _ := strings.CutSuffix(email, "@users.noreply.github.com")
-			_, after, found := strings.Cut(before, "+")
-			if found {
-				author.Username = after
-			} else {
-				author.Username = before
-			}
-		} else if author.Name == "GitHub Action user" {
-			continue
-		}
-
-		coAuthors = append(coAuthors, author)
-	}
-
-	return coAuthors, nil
-}
 
 func createAuthors(ctx context.Context, log *slog.Logger, db sql.Userer, event github.Event) (string, error) {
 	// event sender has login/username and url
@@ -82,10 +40,7 @@ func createAuthors(ctx context.Context, log *slog.Logger, db sql.Userer, event g
 	// co-author is also an author in a later commit
 	commitCoAuthors := []github.Author{}
 	for _, commit := range event.Commits {
-		coAuthors, err := fetchCoAuthors(commit.Message)
-		if err != nil {
-			log.Error("Fetching co-authors", "error", err)
-		}
+		coAuthors := github.FetchCoAuthors(commit.Message)
 
 		for _, coAuthor := range coAuthors {
 			if slices.ContainsFunc(commitAuthors, compareAuthorFunc(coAuthor)) {

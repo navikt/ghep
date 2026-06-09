@@ -279,15 +279,23 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Sour
 	return slack.CreateCommitMessage(ctx, log, db, source.Channel, event)
 }
 
-// recordCommitAuthors counts the commits per unique non-bot author in a push event
-// and upserts the totals into user_commit_counts for the personal weekly digest.
+// recordCommitAuthors counts the commits per unique non-bot author (including
+// co-authors) for the personal weekly digest.
 func recordCommitAuthors(ctx context.Context, log *slog.Logger, db *gensql.Queries, event github.Event) {
 	counts := make(map[string]int32)
 	for _, commit := range event.Commits {
-		if commit.Author.IsBot() || commit.Author.Username == "" {
-			continue
+		// Primary author
+		if !commit.Author.IsBot() && commit.Author.Username != "" {
+			counts[commit.Author.Username]++
 		}
-		counts[commit.Author.Username]++
+
+		// Co-authors from commit message trailers
+		for _, coAuthor := range github.FetchCoAuthors(commit.Message) {
+			if coAuthor.IsBot() || coAuthor.Username == "" {
+				continue
+			}
+			counts[coAuthor.Username]++
+		}
 	}
 
 	pushedAt := pgtype.Timestamptz{Time: time.Now(), Valid: true}
