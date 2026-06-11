@@ -115,6 +115,15 @@ teams:
     config:
       security:
         severityFilter: "critical"
+      pulls:
+        ignoreDrafts: true
+      ignoreRepositories:
+        - aktivitetskrav-frontend
+        - esyfovarsel
+        - lumi
+        - meroppfolging-backend
+        - syfomotebehov
+        - vault-iac
   teamsykmelding:
     commits: "tsm-commits"
     issues: "tsm-issues"
