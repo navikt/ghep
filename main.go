@@ -53,6 +53,7 @@ func main() {
 	go ghep.FetchSlackUsers(ctx, log.With("component", "fetch-slack"), db)
 	go ghep.RunDigestScheduler(ctx, log.With("component", "digest"), db, teamConfig, githubClient, slackClient)
 	go ghep.RunPersonalDigestScheduler(ctx, log.With("component", "personal-digest"), db, slackClient, personalDigestUsers)
+	go ghep.RunSecurityDigestScheduler(ctx, log.With("component", "security-digest"), db, teamConfig, githubClient, slackClient)
 
 	glog := log.With("component", "ghep")
 	if err := ghep.Run(ctx, glog, db, teamConfig, githubClient, slackClient, subscribeToOrg); err != nil {

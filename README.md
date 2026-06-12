@@ -240,14 +240,14 @@ teams:
 
 - `severityFilter` - Filtrer ut sikkerhetshendelser som har _lavere_ alvorlighetsgrad enn spesifisert
 
-### Ukentlig PR-oversikt (digest)
+### Ukentlig PR-oversikt (pr-digest)
 
 Ghep kan sende en ukentlig melding til en Slack-kanal med en oversikt over åpne pull requests for teamets repoer.
 
 ``` yaml
 teams:
   nada:
-    digest:
+    pr-digest:
       channel: "#nada-weekly"
       day: monday
       time: "09:00"
@@ -263,7 +263,33 @@ teams:
 - `time` - Tidspunkt på dagen i `HH:MM`-format
 - `timezone` - IANA-tidssone for når meldingen skal sendes (standard: `Europe/Oslo`)
 - `send_empty` - Hvis `true` sendes en melding selv om alle pull requests er merget. Standard er `false`, dvs. ingen melding sendes hvis det ikke er noe å rapportere
-- `ignoreRepositories` - En liste med repositories som skal utelates fra digest-oversikten. Kombineres med den globale `ignoreRepositories`-listen under `config`
+- `ignoreRepositories` - En liste med repositories som skal utelates fra pr-digest-oversikten. Kombineres med den globale `ignoreRepositories`-listen under `config`
+
+### Ukentlig sikkerhetsdigest (security-digest)
+
+Ghep kan sende en ukentlig melding til en Slack-kanal med en oversikt over åpne, uløste sikkerhetsvarsler (secret scanning, code scanning og Dependabot) for teamets repoer.
+
+``` yaml
+teams:
+  nada:
+    security-digest:
+      channel: "#nada-security"
+      day: friday
+      time: "09:00"
+      timezone: Europe/Oslo       # valgfri, standard er Europe/Oslo
+      send_empty: false           # valgfri, send melding selv om det ikke er åpne varsler (standard: false)
+      severity_filter: medium     # valgfri, filtrer ut varsler under angitt alvorlighetsgrad (gjelder code scanning og Dependabot)
+      ignoreRepositories:         # valgfri, repositories som skal utelates fra sikkerhetsdigest-oversikten
+        - test-repo
+```
+
+- `channel` - Slack-kanalen meldingen skal sendes til
+- `day` - Ukedag meldingen skal sendes. Gyldige verdier: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`
+- `time` - Tidspunkt på dagen i `HH:MM`-format
+- `timezone` - IANA-tidssone for når meldingen skal sendes (standard: `Europe/Oslo`)
+- `send_empty` - Hvis `true` sendes en melding selv om det ikke er noen åpne varsler. Standard er `false`
+- `severity_filter` - Filtrer ut code scanning- og Dependabot-varsler under angitt alvorlighetsgrad (`low`, `medium`, `high`, `critical`). Secret scanning-varsler inkluderes alltid uavhengig av filter
+- `ignoreRepositories` - En liste med repositories som skal utelates fra sikkerhetsdigest-oversikten. Kombineres med den globale `ignoreRepositories`-listen under `config`
 
 ### Personlig ukentlig commit-oversikt
 

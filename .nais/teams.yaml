@@ -179,7 +179,7 @@ teams:
     pulls: "#dataseksjonen-github"
     workflows: "#dataseksjonen-github"
     security: "#dataseksjonen-github"
-    digest:
+    pr-digest:
       channel: "#dataseksjonen-github"
       day: monday
       time: "08:00"
@@ -188,7 +188,7 @@ teams:
     pulls: "#team-fager-bots"
     workflows: "#team-fager-bots"
     security: "#team-fager-alerts"
-    digest:
+    pr-digest:
       channel: "#team-fager-bots"
       day: monday
       time: "09:00"
@@ -215,7 +215,7 @@ teams:
       ignoreRepositories:
         - "arbeid-og-inntekt"
         - "nav-maskinporten"
-    digest:
+    pr-digest:
       channel: "#team-arbeidsforhold-github"
       day: monday
       time: "09:00"
@@ -386,7 +386,7 @@ teams:
       ignoreRepositories:
         - "historisk-superhelt"
         - "historisk-helsetjenester"
-    digest:
+    pr-digest:
       channel: "#infotek-github"
       day: monday
       time: "09:00"
@@ -502,7 +502,7 @@ teams:
     issues: "#utsikt-pull-requests"
     pulls: "#utsikt-pull-requests"
     security: "#utsikt-pull-requests"
-    digest:
+    pr-digest:
       channel: "#utsikt-pull-requests"
       day: monday
       time: "08:00"
@@ -648,7 +648,7 @@ teams:
     issues: "#team-nav-ung-github"
     pulls: "#team-nav-ung-github"
     releases: "#team-nav-ung-github"
-    digest:
+    pr-digest:
       channel: "#team-nav-ung-github"
       day: monday
       time: "08:00"
@@ -659,7 +659,7 @@ teams:
     issues: "#team-arbeidsindikator-github"
     pulls: "#team-arbeidsindikator-github"
     releases: "#team-arbeidsindikator-github"
-    digest:
+    pr-digest:
       channel: "#team-arbeidsindikator-github"
       day: monday
       time: "08:00"

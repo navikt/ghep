@@ -105,12 +105,27 @@ type DigestConfig struct {
 	IgnoreRepositories []string `yaml:"ignoreRepositories"`
 }
 
+type SecurityDigestConfig struct {
+	Channel            string   `yaml:"channel"`
+	Day                string   `yaml:"day"`
+	Time               string   `yaml:"time"`
+	Timezone           string   `yaml:"timezone"`
+	SendEmpty          bool     `yaml:"send_empty"`
+	SeverityFilter     string   `yaml:"severity_filter"`
+	IgnoreRepositories []string `yaml:"ignoreRepositories"`
+}
+
+func (s SecurityDigestConfig) SeverityType() SeverityType {
+	return AsSeverityType(s.SeverityFilter)
+}
+
 type Team struct {
-	Name          string
-	SlackChannels SlackChannels `yaml:",inline"`
-	Config        Config        `yaml:"config"`
-	Sources       []Source      `yaml:"sources"`
-	Digest        *DigestConfig `yaml:"digest"`
+	Name           string
+	SlackChannels  SlackChannels         `yaml:",inline"`
+	Config         Config                `yaml:"config"`
+	Sources        []Source              `yaml:"sources"`
+	Digest         *DigestConfig         `yaml:"pr-digest"`
+	SecurityDigest *SecurityDigestConfig `yaml:"security-digest"`
 }
 
 // SourcesForType returns all sources matching the given event type.
@@ -271,6 +286,12 @@ func ParseTeamConfig(path string) (map[string]Team, []PersonalDigestUserEntry, e
 			}
 		}
 
+		if team.SecurityDigest != nil {
+			if err := validateSecurityDigestConfig(name, team.SecurityDigest); err != nil {
+				return nil, nil, err
+			}
+		}
+
 		flatSources := flatChannelsToSources(team.SlackChannels, team.Config)
 		team.Sources = append(flatSources, team.Sources...)
 
@@ -284,20 +305,40 @@ var validWeekdays = []string{"monday", "tuesday", "wednesday", "thursday", "frid
 
 func validateDigestConfig(teamName string, d *DigestConfig) error {
 	if d.Channel == "" {
-		return fmt.Errorf("team %s: digest.channel is required", teamName)
+		return fmt.Errorf("team %s: pr-digest.channel is required", teamName)
 	}
 	if !slices.Contains(validWeekdays, strings.ToLower(d.Day)) {
-		return fmt.Errorf("team %s: digest.day %q is not a valid weekday", teamName, d.Day)
+		return fmt.Errorf("team %s: pr-digest.day %q is not a valid weekday", teamName, d.Day)
 	}
 	if _, err := time.Parse("15:04", d.Time); err != nil {
-		return fmt.Errorf("team %s: digest.time %q must be in HH:MM format", teamName, d.Time)
+		return fmt.Errorf("team %s: pr-digest.time %q must be in HH:MM format", teamName, d.Time)
 	}
 	tz := d.Timezone
 	if tz == "" {
 		tz = "Europe/Oslo"
 	}
 	if _, err := time.LoadLocation(tz); err != nil {
-		return fmt.Errorf("team %s: digest.timezone %q is not a valid IANA timezone", teamName, d.Timezone)
+		return fmt.Errorf("team %s: pr-digest.timezone %q is not a valid IANA timezone", teamName, d.Timezone)
+	}
+	return nil
+}
+
+func validateSecurityDigestConfig(teamName string, d *SecurityDigestConfig) error {
+	if d.Channel == "" {
+		return fmt.Errorf("team %s: security-digest.channel is required", teamName)
+	}
+	if !slices.Contains(validWeekdays, strings.ToLower(d.Day)) {
+		return fmt.Errorf("team %s: security-digest.day %q is not a valid weekday", teamName, d.Day)
+	}
+	if _, err := time.Parse("15:04", d.Time); err != nil {
+		return fmt.Errorf("team %s: security-digest.time %q must be in HH:MM format", teamName, d.Time)
+	}
+	tz := d.Timezone
+	if tz == "" {
+		tz = "Europe/Oslo"
+	}
+	if _, err := time.LoadLocation(tz); err != nil {
+		return fmt.Errorf("team %s: security-digest.timezone %q is not a valid IANA timezone", teamName, d.Timezone)
 	}
 	return nil
 }

@@ -28,9 +28,15 @@ data:
                 - master
               workflows:
                 ignoreBots: true
-        digest:
+        pr-digest:
           channel: "#nais-pull-requests"
           day: wednesday
+          time: "09:00"
+          ignoreRepositories:
+            - system
+        security-digest:
+          channel: "#nais-github-security"
+          day: monday
           time: "09:00"
           ignoreRepositories:
             - system
