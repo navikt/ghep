@@ -51,8 +51,8 @@ func main() {
 
 	go ghep.FetchGithubData(ctx, log.With("component", "fetch-teams"), db, teamConfig, githubClient, subscribeToOrg)
 	go ghep.FetchSlackUsers(ctx, log.With("component", "fetch-slack"), db)
-	go ghep.RunDigestScheduler(ctx, log.With("component", "digest"), db, teamConfig, githubClient, slackClient)
 	go ghep.RunPersonalDigestScheduler(ctx, log.With("component", "personal-digest"), db, slackClient, personalDigestUsers)
+	go ghep.RunPullRequestDigestScheduler(ctx, log.With("component", "pr-digest"), db, teamConfig, githubClient, slackClient)
 	go ghep.RunSecurityDigestScheduler(ctx, log.With("component", "security-digest"), db, teamConfig, githubClient, slackClient)
 
 	glog := log.With("component", "ghep")

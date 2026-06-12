@@ -26,7 +26,7 @@ var weekdays = map[string]time.Weekday{
 	"sunday":    time.Sunday,
 }
 
-func RunDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, slackClient slack.Client) {
+func RunPullRequestDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Queries, teamConfig map[string]github.Team, githubClient github.Client, slackClient slack.Client) {
 	type digestEntry struct {
 		teamSlug string
 		digest   *github.DigestConfig
