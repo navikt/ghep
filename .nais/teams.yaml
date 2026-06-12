@@ -390,8 +390,10 @@ teams:
       channel: "#infotek-github"
       day: monday
       time: "09:00"
-      timezone: Europe/Oslo
-      send_empty: false
+    security-digest:
+      channel: "#infotek-github"
+      day: monday
+      time: "09:00"
   team-esyfo:
     commits: "#esyfo-github-feed"
     issues: "#esyfo-github-feed"
