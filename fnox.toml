@@ -6,7 +6,7 @@ service = "ghep"
 prefix = "ghep-"
 
 [secrets]
-GITHUB_APP_ID= {}
-GITHUB_APP_PRIVATE_KEY= {}
-GITHUB_APP_INSTALLATION_ID= {}
-SLACK_TOKEN= {}
+GITHUB_APP_ID= {provider = "keychain", value = "GITHUB_APP_ID" }
+GITHUB_APP_PRIVATE_KEY= {provider = "keychain", value = "GITHUB_APP_PRIVATE_KEY" }
+GITHUB_APP_INSTALLATION_ID= {provider = "keychain", value = "GITHUB_APP_INSTALLATION_ID" }
+SLACK_TOKEN= {provider = "keychain", value = "SLACK_TOKEN" }
