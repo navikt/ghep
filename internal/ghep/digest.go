@@ -34,8 +34,8 @@ func RunDigestScheduler(ctx context.Context, log *slog.Logger, db *gensql.Querie
 
 	var entries []digestEntry
 	for slug, team := range teamConfig {
-		if team.Digest != nil {
-			entries = append(entries, digestEntry{teamSlug: slug, digest: team.Digest})
+		if team.PullRequestDigest != nil {
+			entries = append(entries, digestEntry{teamSlug: slug, digest: team.PullRequestDigest})
 		}
 	}
 

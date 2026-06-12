@@ -120,12 +120,12 @@ func (s SecurityDigestConfig) SeverityType() SeverityType {
 }
 
 type Team struct {
-	Name           string
-	SlackChannels  SlackChannels         `yaml:",inline"`
-	Config         Config                `yaml:"config"`
-	Sources        []Source              `yaml:"sources"`
-	Digest         *DigestConfig         `yaml:"pr-digest"`
-	SecurityDigest *SecurityDigestConfig `yaml:"security-digest"`
+	Name              string
+	SlackChannels     SlackChannels         `yaml:",inline"`
+	Config            Config                `yaml:"config"`
+	Sources           []Source              `yaml:"sources"`
+	PullRequestDigest *DigestConfig         `yaml:"pr-digest"`
+	SecurityDigest    *SecurityDigestConfig `yaml:"security-digest"`
 }
 
 // SourcesForType returns all sources matching the given event type.
@@ -280,8 +280,8 @@ func ParseTeamConfig(path string) (map[string]Team, []PersonalDigestUserEntry, e
 			}
 		}
 
-		if team.Digest != nil {
-			if err := validateDigestConfig(name, team.Digest); err != nil {
+		if team.PullRequestDigest != nil {
+			if err := validateDigestConfig(name, team.PullRequestDigest); err != nil {
 				return nil, nil, err
 			}
 		}
