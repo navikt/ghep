@@ -531,6 +531,14 @@ teams:
   bankkommunikasjon:
     pulls: "#team-pengeflyt-prs"
     security: "#team-pengeflyt-alerts-prod"
+    pr-digest:
+      channel: "#utbetaling-team-pengeflyt-utviklere"
+      day: monday
+      time: "08:35"
+    security-digest:
+      channel: "#utbetaling-team-pengeflyt-utviklere"
+      day: monday
+      time: "08:35"
     sources:
       - source: workflows
         channel: "#utbetaling-team-pengeflyt-utviklere"
@@ -576,6 +584,14 @@ teams:
   oppgjorsrapporter:
     pulls: "#team-pengeflyt-prs"
     security: "#team-pengeflyt-alerts-prod"
+    pr-digest:
+      channel: "#utbetaling-team-pengeflyt-utviklere"
+      day: monday
+      time: "08:30"
+    security-digest:
+      channel: "#utbetaling-team-pengeflyt-utviklere"
+      day: monday
+      time: "08:30"
     config:
       pulls:
         ignoreDrafts: true
