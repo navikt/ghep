@@ -15,6 +15,15 @@ teams:
   aap:
     commits: "#aap-github-workflows"
     releases: "#aap-github-workflows"
+    pr-digest:
+      channel: "#team-aap-utvikling"
+      day: monday
+      time: "08:00"
+    security-digest:
+      channel: "#team-aap-utvikling"
+      day: monday
+      time: "08:01"
+      severity_filter: high 
     sources:
       - source: workflows
         channel: "#aap-github-workflows"
