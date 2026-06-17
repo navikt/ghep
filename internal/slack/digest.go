@@ -8,11 +8,7 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-// CreateDigestMessage returns a summary message and an optional thread message.
-// If there are no open PRs, only the summary message is returned (threadMsg is nil).
-// Otherwise, the summary contains a short header with totals, and threadMsg contains
-// the full repo/PR breakdown to be posted as a thread reply.
-func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Message, threadMsg *Message) {
+func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Message, threadMsgs []*Message) {
 	if len(repoPRs) == 0 {
 		return &Message{
 			Channel: channel,
@@ -41,8 +37,8 @@ func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Mes
 	}
 	summaryText := fmt.Sprintf("*Ukentlig PR-oversikt — %s*\n%d %s med %d %s", dateStr, len(repoPRs), repoUnit, totalPRs, prUnit)
 
-	var sb strings.Builder
 	for _, repo := range repoPRs {
+		var sb strings.Builder
 		count := len(repo.PRs)
 		unit := "åpne"
 		if count == 1 {
@@ -57,14 +53,14 @@ func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Mes
 			}
 			fmt.Fprintf(&sb, "• <%s|#%d %s> (%d %s)\n", pr.URL, pr.Number, pr.Title, days, dayUnit)
 		}
-		sb.WriteString("\n")
+		threadMsgs = append(threadMsgs, &Message{
+			Channel: channel,
+			Text:    strings.TrimRight(sb.String(), "\n"),
+		})
 	}
 
 	return &Message{
-			Channel: channel,
-			Text:    summaryText,
-		}, &Message{
-			Channel: channel,
-			Text:    strings.TrimRight(sb.String(), "\n"),
-		}
+		Channel: channel,
+		Text:    summaryText,
+	}, threadMsgs
 }

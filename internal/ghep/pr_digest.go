@@ -142,7 +142,7 @@ func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 	if len(repoPRs) == 0 && !digest.SendEmpty {
 		log.Info("No pull request to digest", "team", teamSlug, "channel", digest.Channel)
 	} else {
-		summary, threadMsg := slack.CreateDigestMessage(digest.Channel, repoPRs)
+		summary, threadMsgs := slack.CreateDigestMessage(digest.Channel, repoPRs)
 
 		payload, err := json.Marshal(summary)
 		if err != nil {
@@ -154,7 +154,7 @@ func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 			return err
 		}
 
-		if threadMsg != nil {
+		for _, threadMsg := range threadMsgs {
 			threadMsg.ThreadTimestamp = resp.Timestamp
 			threadPayload, err := json.Marshal(threadMsg)
 			if err != nil {
