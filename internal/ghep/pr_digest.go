@@ -142,7 +142,11 @@ func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 	if len(repoPRs) == 0 && !digest.SendEmpty {
 		log.Info("No pull request to digest", "team", teamSlug, "channel", digest.Channel)
 	} else {
-		summary, threadMsgs := slack.CreateDigestMessage(digest.Channel, repoPRs)
+		teamName := ""
+		if digest.SpecifyTeamName {
+			teamName = github.TitleCaseSlug(teamSlug)
+		}
+		summary, threadMsgs := slack.CreatePullRequestDigestMessage(digest.Channel, teamName, repoPRs)
 
 		payload, err := json.Marshal(summary)
 		if err != nil {

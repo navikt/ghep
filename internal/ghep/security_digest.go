@@ -119,7 +119,11 @@ func maybeFireSecurityDigest(ctx context.Context, log *slog.Logger, db *gensql.Q
 	if totalAlerts == 0 && !digest.SendEmpty {
 		log.Info("No security alerts to digest", "team", teamSlug, "channel", digest.Channel)
 	} else {
-		summary, threadMsgs := slack.CreateSecurityDigestMessage(digest.Channel, repoAlerts)
+		teamName := ""
+		if digest.SpecifyTeamName {
+			teamName = github.TitleCaseSlug(teamSlug)
+		}
+		summary, threadMsgs := slack.CreateSecurityDigestMessage(digest.Channel, teamName, repoAlerts)
 
 		payload, err := json.Marshal(summary)
 		if err != nil {

@@ -8,11 +8,16 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateSecurityDigestMessage(channel string, repoAlerts []github.RepoSecurityAlerts) (summary *Message, threadMsgs []*Message) {
+func CreateSecurityDigestMessage(channel, teamName string, repoAlerts []github.RepoSecurityAlerts) (summary *Message, threadMsgs []*Message) {
 	if len(repoAlerts) == 0 {
+		text := "Gratulerer! Ingen åpne sikkerhetsvarsler – dere er helt sikre! :tada:"
+		if teamName != "" {
+			text = fmt.Sprintf("Gratulerer! Ingen åpne sikkerhetsvarsler – %s er helt sikre! :tada:", teamName)
+		}
+
 		return &Message{
 			Channel: channel,
-			Text:    "Gratulerer! Ingen åpne sikkerhetsvarsler – dere er helt sikre! :tada:",
+			Text:    text,
 		}, nil
 	}
 
@@ -59,6 +64,10 @@ func CreateSecurityDigestMessage(channel string, repoAlerts []github.RepoSecurit
 
 	summaryText := fmt.Sprintf("*Ukentlig sikkerhetsdigest — %s*\n%d %s på tvers av %d %s%s",
 		dateStr, total, alertUnit, len(repoAlerts), repoUnit, breakdown.String())
+	if teamName != "" {
+		summaryText = fmt.Sprintf("*Ukentlig sikkerhetsdigest for %s — %s*\n%d %s på tvers av %d %s%s",
+			teamName, dateStr, total, alertUnit, len(repoAlerts), repoUnit, breakdown.String())
+	}
 
 	summary = &Message{
 		Channel: channel,

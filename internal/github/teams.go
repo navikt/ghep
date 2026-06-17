@@ -102,6 +102,7 @@ type DigestConfig struct {
 	Time               string   `yaml:"time"`
 	Timezone           string   `yaml:"timezone"`
 	SendEmpty          bool     `yaml:"send_empty"`
+	SpecifyTeamName    bool     `yaml:"specifyTeamName"`
 	IgnoreRepositories []string `yaml:"ignoreRepositories"`
 }
 
@@ -111,8 +112,20 @@ type SecurityDigestConfig struct {
 	Time               string   `yaml:"time"`
 	Timezone           string   `yaml:"timezone"`
 	SendEmpty          bool     `yaml:"send_empty"`
+	SpecifyTeamName    bool     `yaml:"specifyTeamName"`
 	SeverityFilter     string   `yaml:"severity_filter"`
 	IgnoreRepositories []string `yaml:"ignoreRepositories"`
+}
+
+func TitleCaseSlug(slug string) string {
+	words := strings.Split(slug, "-")
+	for i, w := range words {
+		if len(w) > 0 {
+			words[i] = strings.ToUpper(w[:1]) + w[1:]
+		}
+	}
+
+	return strings.Join(words, " ")
 }
 
 func (s SecurityDigestConfig) SeverityType() SeverityType {

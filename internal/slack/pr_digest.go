@@ -8,11 +8,16 @@ import (
 	"github.com/navikt/ghep/internal/github"
 )
 
-func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Message, threadMsgs []*Message) {
+func CreatePullRequestDigestMessage(channel, teamName string, repoPRs []github.RepoPRs) (summary *Message, threadMsgs []*Message) {
 	if len(repoPRs) == 0 {
+		text := "Gratulerer! Alle pull requests er merget – dere er helt à jour! :tada:"
+		if teamName != "" {
+			text = fmt.Sprintf("Gratulerer! Alle pull requests er merget – %s er helt à jour! :tada:", teamName)
+		}
+
 		return &Message{
 			Channel: channel,
-			Text:    "Gratulerer! Alle pull requests er merget – dere er helt à jour! :tada:",
+			Text:    text,
 		}, nil
 	}
 
@@ -27,6 +32,7 @@ func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Mes
 	for _, repo := range repoPRs {
 		totalPRs += len(repo.PRs)
 	}
+
 	repoUnit := "repos"
 	if len(repoPRs) == 1 {
 		repoUnit = "repo"
@@ -35,7 +41,11 @@ func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Mes
 	if totalPRs == 1 {
 		prUnit = "åpen pull request"
 	}
+
 	summaryText := fmt.Sprintf("*Ukentlig PR-oversikt — %s*\n%d %s med %d %s", dateStr, len(repoPRs), repoUnit, totalPRs, prUnit)
+	if teamName != "" {
+		summaryText = fmt.Sprintf("*Ukentlig PR-oversikt for %s — %s*\n%d %s med %d %s", teamName, dateStr, len(repoPRs), repoUnit, totalPRs, prUnit)
+	}
 
 	for _, repo := range repoPRs {
 		var sb strings.Builder
@@ -45,6 +55,7 @@ func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Mes
 			unit = "åpen"
 		}
 		fmt.Fprintf(&sb, "*%s* (%d %s)\n", repo.RepoName, count, unit)
+
 		for _, pr := range repo.PRs {
 			days := int(time.Since(pr.CreatedAt).Hours() / 24)
 			dayUnit := "dager"
@@ -53,6 +64,7 @@ func CreateDigestMessage(channel string, repoPRs []github.RepoPRs) (summary *Mes
 			}
 			fmt.Fprintf(&sb, "• <%s|#%d %s> (%d %s)\n", pr.URL, pr.Number, pr.Title, days, dayUnit)
 		}
+
 		threadMsgs = append(threadMsgs, &Message{
 			Channel: channel,
 			Text:    strings.TrimRight(sb.String(), "\n"),

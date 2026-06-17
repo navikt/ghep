@@ -253,6 +253,7 @@ teams:
       time: "09:00"
       timezone: Europe/Oslo  # valgfri, standard er Europe/Oslo
       send_empty: false      # valgfri, send melding selv om det ikke er åpne PRs (standard: false)
+      specifyTeamName: false # valgfri, inkluder teamnavn i overskriften (standard: false)
       ignoreRepositories:    # valgfri, repositories som skal utelates fra digest-oversikten
         - pull-request-collection-repo
         - oldies-but-goodies-pr-repo
@@ -263,6 +264,7 @@ teams:
 - `time` - Tidspunkt på dagen i `HH:MM`-format
 - `timezone` - IANA-tidssone for når meldingen skal sendes (standard: `Europe/Oslo`)
 - `send_empty` - Hvis `true` sendes en melding selv om alle pull requests er merget. Standard er `false`, dvs. ingen melding sendes hvis det ikke er noe å rapportere
+- `specifyTeamName` - Hvis `true` inkluderes teamets navn i overskriften på digest-meldingen. Nyttig når flere team deler samme Slack-kanal. Standard er `false`
 - `ignoreRepositories` - En liste med repositories som skal utelates fra pr-digest-oversikten. Kombineres med den globale `ignoreRepositories`-listen under `config`
 
 ### Ukentlig sikkerhetsdigest (security-digest)
@@ -278,6 +280,7 @@ teams:
       time: "09:00"
       timezone: Europe/Oslo       # valgfri, standard er Europe/Oslo
       send_empty: false           # valgfri, send melding selv om det ikke er åpne varsler (standard: false)
+      specifyTeamName: false      # valgfri, inkluder teamnavn i overskriften (standard: false)
       severity_filter: medium     # valgfri, filtrer ut varsler under angitt alvorlighetsgrad (gjelder code scanning og Dependabot)
       ignoreRepositories:         # valgfri, repositories som skal utelates fra sikkerhetsdigest-oversikten
         - test-repo
@@ -288,6 +291,7 @@ teams:
 - `time` - Tidspunkt på dagen i `HH:MM`-format
 - `timezone` - IANA-tidssone for når meldingen skal sendes (standard: `Europe/Oslo`)
 - `send_empty` - Hvis `true` sendes en melding selv om det ikke er noen åpne varsler. Standard er `false`
+- `specifyTeamName` - Hvis `true` inkluderes teamets navn i overskriften på digest-meldingen. Nyttig når flere team deler samme Slack-kanal. Standard er `false`
 - `severity_filter` - Filtrer ut code scanning- og Dependabot-varsler under angitt alvorlighetsgrad (`low`, `medium`, `high`, `critical`). Secret scanning-varsler inkluderes alltid uavhengig av filter
 - `ignoreRepositories` - En liste med repositories som skal utelates fra sikkerhetsdigest-oversikten. Kombineres med den globale `ignoreRepositories`-listen under `config`
 
