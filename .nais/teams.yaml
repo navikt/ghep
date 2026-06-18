@@ -584,6 +584,8 @@ teams:
           workflows:
             ignoreBots: true
     config:
+      branches:
+        - main
       pulls:
         events: ["merged"]
       ignoreRepositories:
