@@ -542,10 +542,12 @@ teams:
     security: "#team-pengeflyt-alerts-prod"
     pr-digest:
       channel: "#utbetaling-team-pengeflyt-utviklere"
+      specifyTeamName: true
       day: monday
       time: "08:35"
     security-digest:
       channel: "#utbetaling-team-pengeflyt-utviklere"
+      specifyTeamName: true
       day: monday
       time: "08:35"
     sources:
@@ -595,10 +597,12 @@ teams:
     security: "#team-pengeflyt-alerts-prod"
     pr-digest:
       channel: "#utbetaling-team-pengeflyt-utviklere"
+      specifyTeamName: true
       day: monday
       time: "08:30"
     security-digest:
       channel: "#utbetaling-team-pengeflyt-utviklere"
+      specifyTeamName: true
       day: monday
       time: "08:30"
     config:
