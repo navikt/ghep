@@ -25,6 +25,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 spec:
+  leaderElection: true
   ingresses:
     - https://ghep.nav.no
     - https://ghep.intern.nav.no
