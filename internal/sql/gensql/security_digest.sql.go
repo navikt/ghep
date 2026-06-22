@@ -11,28 +11,24 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const GetSecurityDigestSentAt = `-- name: GetSecurityDigestSentAt :one
-SELECT sent_at FROM security_digest_sent WHERE team_slug = $1
+const ClaimSecurityDigestSlot = `-- name: ClaimSecurityDigestSlot :one
+INSERT INTO security_digest_sent (team_slug, sent_at)
+VALUES ($1, $2)
+ON CONFLICT (team_slug) DO UPDATE
+  SET sent_at = EXCLUDED.sent_at
+  WHERE security_digest_sent.sent_at < $3
+RETURNING sent_at
 `
 
-func (q *Queries) GetSecurityDigestSentAt(ctx context.Context, teamSlug string) (pgtype.Timestamptz, error) {
-	row := q.db.QueryRow(ctx, GetSecurityDigestSentAt, teamSlug)
+type ClaimSecurityDigestSlotParams struct {
+	TeamSlug    string
+	SentAt      pgtype.Timestamptz
+	ScheduledAt pgtype.Timestamptz
+}
+
+func (q *Queries) ClaimSecurityDigestSlot(ctx context.Context, arg ClaimSecurityDigestSlotParams) (pgtype.Timestamptz, error) {
+	row := q.db.QueryRow(ctx, ClaimSecurityDigestSlot, arg.TeamSlug, arg.SentAt, arg.ScheduledAt)
 	var sent_at pgtype.Timestamptz
 	err := row.Scan(&sent_at)
 	return sent_at, err
-}
-
-const UpsertSecurityDigestSent = `-- name: UpsertSecurityDigestSent :exec
-INSERT INTO security_digest_sent (team_slug, sent_at) VALUES ($1, $2)
-ON CONFLICT (team_slug) DO UPDATE SET sent_at = EXCLUDED.sent_at
-`
-
-type UpsertSecurityDigestSentParams struct {
-	TeamSlug string
-	SentAt   pgtype.Timestamptz
-}
-
-func (q *Queries) UpsertSecurityDigestSent(ctx context.Context, arg UpsertSecurityDigestSentParams) error {
-	_, err := q.db.Exec(ctx, UpsertSecurityDigestSent, arg.TeamSlug, arg.SentAt)
-	return err
 }

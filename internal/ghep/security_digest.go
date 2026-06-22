@@ -3,12 +3,10 @@ package ghep
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"log/slog"
 	"strings"
 	"time"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
@@ -89,12 +87,17 @@ func maybeFireSecurityDigest(ctx context.Context, log *slog.Logger, db *gensql.Q
 		return nil
 	}
 
-	// Check DB: skip if already sent after the most recent scheduled time.
-	sentAt, err := db.GetSecurityDigestSentAt(ctx, teamSlug)
-	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+	// Atomically claim this security digest slot. If another goroutine already
+	// claimed it (returned sent_at >= scheduledAt), bail out without sending.
+	claimedAt, err := db.ClaimSecurityDigestSlot(ctx, gensql.ClaimSecurityDigestSlotParams{
+		TeamSlug:    teamSlug,
+		SentAt:      pgtype.Timestamptz{Time: now, Valid: true},
+		ScheduledAt: pgtype.Timestamptz{Time: scheduledAt, Valid: true},
+	})
+	if err != nil {
 		return err
 	}
-	if sentAt.Valid && sentAt.Time.After(scheduledAt) {
+	if !claimedAt.Time.Equal(now) {
 		return nil
 	}
 
@@ -145,14 +148,6 @@ func maybeFireSecurityDigest(ctx context.Context, log *slog.Logger, db *gensql.Q
 				return err
 			}
 		}
-	}
-
-	if err := db.UpsertSecurityDigestSent(ctx, gensql.UpsertSecurityDigestSentParams{
-		TeamSlug: teamSlug,
-		SentAt:   pgtype.Timestamptz{Time: now, Valid: true},
-	}); err != nil {
-		// Log but don't fail — message was already sent successfully.
-		log.Error("Upserting security digest sent timestamp", "team", teamSlug, "error", err)
 	}
 
 	log.Info("Security digest sent", "team", teamSlug, "channel", digest.Channel, "total_alerts", totalAlerts)

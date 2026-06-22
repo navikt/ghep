@@ -11,28 +11,24 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const GetDigestSentAt = `-- name: GetDigestSentAt :one
-SELECT sent_at FROM digest_sent WHERE team_slug = $1
+const ClaimDigestSlot = `-- name: ClaimDigestSlot :one
+INSERT INTO digest_sent (team_slug, sent_at)
+VALUES ($1, $2)
+ON CONFLICT (team_slug) DO UPDATE
+  SET sent_at = EXCLUDED.sent_at
+  WHERE digest_sent.sent_at < $3
+RETURNING sent_at
 `
 
-func (q *Queries) GetDigestSentAt(ctx context.Context, teamSlug string) (pgtype.Timestamptz, error) {
-	row := q.db.QueryRow(ctx, GetDigestSentAt, teamSlug)
+type ClaimDigestSlotParams struct {
+	TeamSlug    string
+	SentAt      pgtype.Timestamptz
+	ScheduledAt pgtype.Timestamptz
+}
+
+func (q *Queries) ClaimDigestSlot(ctx context.Context, arg ClaimDigestSlotParams) (pgtype.Timestamptz, error) {
+	row := q.db.QueryRow(ctx, ClaimDigestSlot, arg.TeamSlug, arg.SentAt, arg.ScheduledAt)
 	var sent_at pgtype.Timestamptz
 	err := row.Scan(&sent_at)
 	return sent_at, err
-}
-
-const UpsertDigestSent = `-- name: UpsertDigestSent :exec
-INSERT INTO digest_sent (team_slug, sent_at) VALUES ($1, $2)
-ON CONFLICT (team_slug) DO UPDATE SET sent_at = EXCLUDED.sent_at
-`
-
-type UpsertDigestSentParams struct {
-	TeamSlug string
-	SentAt   pgtype.Timestamptz
-}
-
-func (q *Queries) UpsertDigestSent(ctx context.Context, arg UpsertDigestSentParams) error {
-	_, err := q.db.Exec(ctx, UpsertDigestSent, arg.TeamSlug, arg.SentAt)
-	return err
 }

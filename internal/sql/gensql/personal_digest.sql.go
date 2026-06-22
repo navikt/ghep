@@ -22,6 +22,28 @@ func (q *Queries) GetPersonalDigestSentAt(ctx context.Context, login string) (pg
 	return sent_at, err
 }
 
+const ClaimPersonalDigestSlot = `-- name: ClaimPersonalDigestSlot :one
+INSERT INTO personal_digest_sent (login, sent_at)
+VALUES ($1, $2)
+ON CONFLICT (login) DO UPDATE
+  SET sent_at = EXCLUDED.sent_at
+  WHERE personal_digest_sent.sent_at < $3
+RETURNING sent_at
+`
+
+type ClaimPersonalDigestSlotParams struct {
+	Login       string
+	SentAt      pgtype.Timestamptz
+	ScheduledAt pgtype.Timestamptz
+}
+
+func (q *Queries) ClaimPersonalDigestSlot(ctx context.Context, arg ClaimPersonalDigestSlotParams) (pgtype.Timestamptz, error) {
+	row := q.db.QueryRow(ctx, ClaimPersonalDigestSlot, arg.Login, arg.SentAt, arg.ScheduledAt)
+	var sent_at pgtype.Timestamptz
+	err := row.Scan(&sent_at)
+	return sent_at, err
+}
+
 const GetUserCommitsSince = `-- name: GetUserCommitsSince :many
 SELECT repo, commit_count
 FROM user_commit_counts
@@ -81,21 +103,6 @@ func (q *Queries) ListUsersWithCommitsSince(ctx context.Context, lastPushedAt pg
 		return nil, err
 	}
 	return items, nil
-}
-
-const UpsertPersonalDigestSent = `-- name: UpsertPersonalDigestSent :exec
-INSERT INTO personal_digest_sent (login, sent_at) VALUES ($1, $2)
-ON CONFLICT (login) DO UPDATE SET sent_at = EXCLUDED.sent_at
-`
-
-type UpsertPersonalDigestSentParams struct {
-	Login  string
-	SentAt pgtype.Timestamptz
-}
-
-func (q *Queries) UpsertPersonalDigestSent(ctx context.Context, arg UpsertPersonalDigestSentParams) error {
-	_, err := q.db.Exec(ctx, UpsertPersonalDigestSent, arg.Login, arg.SentAt)
-	return err
 }
 
 const UpsertUserCommitCount = `-- name: UpsertUserCommitCount :exec

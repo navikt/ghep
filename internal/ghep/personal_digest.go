@@ -71,23 +71,34 @@ func maybeFirePersonalDigestForUser(ctx context.Context, log *slog.Logger, db *g
 		return nil
 	}
 
-	// Skip if already sent after the most recent scheduled time
-	sentAt, err := db.GetPersonalDigestSentAt(ctx, entry.Login)
+	// Read the previous sent_at to determine the "since" window for commit lookup.
+	prevSentAt, err := db.GetPersonalDigestSentAt(ctx, entry.Login)
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return err
 	}
-	if sentAt.Valid && sentAt.Time.After(scheduledAt) {
+
+	// Atomically claim this personal digest slot. If another goroutine already
+	// claimed it (returned sent_at >= scheduledAt), bail out without sending.
+	claimedAt, err := db.ClaimPersonalDigestSlot(ctx, gensql.ClaimPersonalDigestSlotParams{
+		Login:       entry.Login,
+		SentAt:      pgtype.Timestamptz{Time: now, Valid: true},
+		ScheduledAt: pgtype.Timestamptz{Time: scheduledAt, Valid: true},
+	})
+	if err != nil {
+		return err
+	}
+	if !claimedAt.Time.Equal(now) {
 		return nil
 	}
 
-	return sendPersonalDigest(ctx, log, db, slackClient, entry.Login, now, sentAt)
+	return sendPersonalDigest(ctx, log, db, slackClient, entry.Login, now, prevSentAt)
 }
 
-func sendPersonalDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, slackClient slack.Client, login string, now time.Time, sentAt pgtype.Timestamptz) error {
-	// Determine the time window: since last digest, or 7 days if never sent
+func sendPersonalDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, slackClient slack.Client, login string, now time.Time, prevSentAt pgtype.Timestamptz) error {
+	// Determine the time window: since last digest, or 7 days if never sent.
 	var since pgtype.Timestamptz
-	if sentAt.Valid {
-		since = sentAt
+	if prevSentAt.Valid {
+		since = prevSentAt
 	} else {
 		since = pgtype.Timestamptz{Time: now.Add(-7 * 24 * time.Hour), Valid: true}
 	}
@@ -126,13 +137,6 @@ func sendPersonalDigest(ctx context.Context, log *slog.Logger, db *gensql.Querie
 
 	if _, err := slackClient.PostMessage(payload); err != nil {
 		return err
-	}
-
-	if err := db.UpsertPersonalDigestSent(ctx, gensql.UpsertPersonalDigestSentParams{
-		Login:  login,
-		SentAt: pgtype.Timestamptz{Time: now, Valid: true},
-	}); err != nil {
-		log.Error("Upserting personal digest sent timestamp", "login", login, "error", err)
 	}
 
 	log.Info("Personal digest sent", "login", login, "repos", len(repos))
