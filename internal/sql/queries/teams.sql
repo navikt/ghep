@@ -56,3 +56,6 @@ FROM team_repositories tr
 JOIN repositories r ON tr.repository_id = r.id
 WHERE tr.team_slug = $1
 ORDER BY r.name;
+
+-- name: DeleteTeam :exec
+DELETE FROM teams WHERE slug = $1;

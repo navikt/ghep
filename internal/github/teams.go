@@ -435,10 +435,10 @@ func validateOrgExists(url, bearerToken string) error {
 	return nil
 }
 
-func validateTeamExists(teamURL, bearerToken string) error {
+func validateTeamExists(teamURL, bearerToken string) (bool, error) {
 	req, err := http.NewRequest("GET", teamURL, nil)
 	if err != nil {
-		return fmt.Errorf("creating request: %v", err)
+		return false, fmt.Errorf("creating request: %v", err)
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearerToken))
@@ -450,15 +450,18 @@ func validateTeamExists(teamURL, bearerToken string) error {
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("making request: %v", err)
+		return false, fmt.Errorf("making request: %v", err)
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusNotFound {
+		return true, nil
+	}
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("%s", resp.Status)
+		return false, fmt.Errorf("%s", resp.Status)
 	}
 
-	return nil
+	return false, nil
 }
 
 // FetchOrgAsTeam fetches the organization as a team, hence there needs to be a team in the organization with the same name as the organization.
@@ -526,8 +529,16 @@ func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist
 
 	for _, team := range teams {
 		teamURL := fmt.Sprintf("%s/%s", url, team)
-		if err := validateTeamExists(teamURL, bearerToken); err != nil {
-			log.Error("Team does not exist", "team", team, "error", err)
+		notFound, err := validateTeamExists(teamURL, bearerToken)
+		if err != nil {
+			log.Error("Could not validate team", "team", team, "error", err)
+			continue
+		}
+		if notFound {
+			log.Info("Team not found on GitHub, deleting from database", "team", team)
+			if err := c.db.DeleteTeam(ctx, team); err != nil {
+				log.Error("Deleting team from database", "team", team, "error", err)
+			}
 			continue
 		}
 

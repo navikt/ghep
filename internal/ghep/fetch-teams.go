@@ -32,6 +32,18 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 		}
 	}
 
+	for _, storedTeam := range storedTeams {
+		if _, ok := teamConfig[storedTeam]; ok {
+			continue
+		}
+
+		log.Info("Team no longer in config, deleting from database", "team", storedTeam)
+		if err := db.DeleteTeam(ctx, storedTeam); err != nil {
+			log.Error("Deleting team from database", "team", storedTeam, "error", err)
+			return
+		}
+	}
+
 	log.Info("Getting info about teams from Github")
 	reposBlocklist := strings.Split(os.Getenv("GITHUB_BLOCKLIST_REPOS"), ",")
 

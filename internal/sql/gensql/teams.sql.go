@@ -39,6 +39,15 @@ func (q *Queries) AddTeamRepository(ctx context.Context, arg AddTeamRepositoryPa
 	return err
 }
 
+const DeleteTeam = `-- name: DeleteTeam :exec
+DELETE FROM teams WHERE slug = $1
+`
+
+func (q *Queries) DeleteTeam(ctx context.Context, slug string) error {
+	_, err := q.db.Exec(ctx, DeleteTeam, slug)
+	return err
+}
+
 const CreateTeam = `-- name: CreateTeam :exec
 INSERT INTO teams (slug) VALUES ($1)
 ON CONFLICT (slug) DO NOTHING
