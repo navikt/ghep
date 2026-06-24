@@ -2,6 +2,15 @@ personal-digest:
   - login: kyrremann
 
 teams:
+  the-g-team:
+    commits: "#the-g-team-ci"
+    issues: "#the-g-team-ci"
+    pulls: "#the-g-team-ci"
+    workflows: "#the-g-team-ci"
+    pr-digest:
+      channel: "#the-g-team-ci"
+    security-digest:
+      channel: "#the-g-team-ci"
   nada:
     commits: "#nada-commits"
     issues: "#nada-issues"
