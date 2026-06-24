@@ -9,8 +9,12 @@ teams:
     workflows: "#the-g-team-ci"
     pr-digest:
       channel: "#the-g-team-ci"
+      day: monday
+      time: "09:00"
     security-digest:
       channel: "#the-g-team-ci"
+      day: monday
+      time: "09:00"
   nada:
     commits: "#nada-commits"
     issues: "#nada-issues"
