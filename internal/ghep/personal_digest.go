@@ -85,6 +85,9 @@ func maybeFirePersonalDigestForUser(ctx context.Context, log *slog.Logger, db *g
 		ScheduledAt: pgtype.Timestamptz{Time: scheduledAt, Valid: true},
 	})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil // already claimed this week
+		}
 		return err
 	}
 	if !claimedAt.Time.Equal(now) {

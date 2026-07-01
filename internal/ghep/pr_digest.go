@@ -3,11 +3,13 @@ package ghep
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"slices"
 	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
@@ -42,7 +44,7 @@ func RunPullRequestDigestScheduler(ctx context.Context, log *slog.Logger, db *ge
 		return
 	}
 
-	log.Info("Starting digest scheduler", "teams", len(entries))
+	log.Info("Starting PR-digest scheduler", "teams", len(entries))
 
 	ticker := time.NewTicker(time.Minute)
 	defer ticker.Stop()
@@ -106,6 +108,9 @@ func maybeFireDigest(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 		ScheduledAt: pgtype.Timestamptz{Time: scheduledAt, Valid: true},
 	})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil // already claimed this week
+		}
 		return err
 	}
 	if !claimedAt.Time.Equal(now) {

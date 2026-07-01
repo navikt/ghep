@@ -3,10 +3,12 @@ package ghep
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
@@ -95,6 +97,9 @@ func maybeFireSecurityDigest(ctx context.Context, log *slog.Logger, db *gensql.Q
 		ScheduledAt: pgtype.Timestamptz{Time: scheduledAt, Valid: true},
 	})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil // already claimed this week
+		}
 		return err
 	}
 	if !claimedAt.Time.Equal(now) {
