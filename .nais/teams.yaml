@@ -428,7 +428,7 @@ teams:
             - main
     config:
       pulls:
-        events: [ "opened", "ready_for_review" ]
+        events: ["opened", "ready_for_review"]
         ignoreBots: true
       security:
         severityFilter: "critical"
