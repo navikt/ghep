@@ -384,9 +384,9 @@ teams:
     issues: "#allosaurus-github"
     pulls: "#allosaurus-github"
   historisk:
-    pulls: "#Infotek-github"
-    issues: "#historisk-github"
-    releases: "#historisk-github"
+    pulls: "#infotek-github"
+    issues: "#infotek-github"
+    releases: "#infotek-github"
     security: "#infotek-github"
     sources:
       - source: pulls
@@ -395,7 +395,7 @@ teams:
           pulls:
             onlyBots: true
       - source: workflows
-        channel: "#historisk-github"
+        channel: "#infotek-github"
         config:
           branches:
             - main
@@ -408,6 +408,30 @@ teams:
       ignoreRepositories:
         - "historisk-superhelt"
         - "historisk-helsetjenester"
+    pr-digest:
+      channel: "#infotek-github"
+      day: monday
+      time: "09:00"
+    security-digest:
+      channel: "#infotek-github"
+      day: monday
+      time: "09:00"
+  infotek:
+    issues: "#infotek-github"
+    pulls: "#infotek-github"
+    security: "#infotek-github"
+    sources:
+      - source: workflows
+        channel: "#infotek-github"
+        config:
+          branches:
+            - main
+    config:
+      pulls:
+        events: [ "opened", "ready_for_review" ]
+        ignoreBots: true
+      security:
+        severityFilter: "critical"
     pr-digest:
       channel: "#infotek-github"
       day: monday
