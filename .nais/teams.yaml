@@ -1,5 +1,6 @@
 personal-digest:
   - login: kyrremann
+  - login: navbrynjar
 
 teams:
   the-g-team:
@@ -205,6 +206,20 @@ teams:
       channel: "#dataseksjonen-github"
       day: monday
       time: "08:00"
+      send_empty: true
+      specifyTeamName: true
+    security-digest:
+      channel: "#dataseksjonen-github"
+      day: monday
+      time: "08:05"
+      send_empty: true
+      specifyTeamName: true
+    config:
+      pulls:
+        ignoreBots: true
+        minimalist: true
+      workflows:
+        ignoreBots: true
   fager:
     issues: "#team-fager-bots"
     pulls: "#team-fager-bots"
@@ -722,6 +737,20 @@ teams:
       channel: "#team-nav-ung-github"
       day: monday
       time: "08:00"
+      send_empty: true
+      specifyTeamName: true
+    security-digest:
+      channel: "#team-arbeidsindikator-github"
+      day: monday
+      time: "08:05"
+      send_empty: true
+      specifyTeamName: true
+    config:
+      pulls:
+        ignoreBots: true
+        minimalist: true
+      workflows:
+        ignoreBots: true
   arbeidsindikator:
     commits: "#team-arbeidsindikator-commits"
     workflows: "#team-arbeidsindikator-github"
@@ -733,6 +762,22 @@ teams:
       channel: "#team-arbeidsindikator-github"
       day: monday
       time: "08:00"
+      send_empty: true
+      specifyTeamName: true
+    security-digest:
+      channel: "#team-arbeidsindikator-github"
+      day: monday
+      time: "08:05"
+      send_empty: true
+      specifyTeamName: true
+    config:
+      ignoreRepositories:
+        - ung-arbeidsindikatorverktoey-ungdomsgarantien
+      pulls:
+        ignoreBots: true
+        minimalist: true
+      workflows:
+        ignoreBots: true
   nks-statistikk:
     security: "#team-nks-statistikkoganalyse-alerts"
     config:
