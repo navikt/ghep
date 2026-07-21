@@ -214,12 +214,12 @@ teams:
       time: "08:05"
       send_empty: true
       specifyTeamName: true
-  config:
-    pulls:
-      ignoreBots: true
-      minimalist: true
-    workflows:
-      ignoreBots: true
+    config:
+      pulls:
+        ignoreBots: true
+        minimalist: true
+      workflows:
+        ignoreBots: true
   fager:
     issues: "#team-fager-bots"
     pulls: "#team-fager-bots"
@@ -745,12 +745,12 @@ teams:
       time: "08:05"
       send_empty: true
       specifyTeamName: true
-  config:
-    pulls:
-      ignoreBots: true
-      minimalist: true
-    workflows:
-      ignoreBots: true
+    config:
+      pulls:
+        ignoreBots: true
+        minimalist: true
+      workflows:
+        ignoreBots: true
   arbeidsindikator:
     commits: "#team-arbeidsindikator-commits"
     workflows: "#team-arbeidsindikator-github"
@@ -770,14 +770,14 @@ teams:
       time: "08:05"
       send_empty: true
       specifyTeamName: true
-  config:
-    ignoreRepositories:
-      - ung-arbeidsindikatorverktoey-ungdomsgarantien
-    pulls:
-      ignoreBots: true
-      minimalist: true
-    workflows:
-      ignoreBots: true
+    config:
+      ignoreRepositories:
+        - ung-arbeidsindikatorverktoey-ungdomsgarantien
+      pulls:
+        ignoreBots: true
+        minimalist: true
+      workflows:
+        ignoreBots: true
   nks-statistikk:
     security: "#team-nks-statistikkoganalyse-alerts"
     config:
