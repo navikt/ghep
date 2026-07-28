@@ -20,8 +20,8 @@ SELECT sent_at FROM personal_digest_sent WHERE login = $1;
 
 -- name: ClaimPersonalDigestSlot :one
 INSERT INTO personal_digest_sent (login, sent_at)
-VALUES ($1, $2)
+VALUES (@login, @sent_at)
 ON CONFLICT (login) DO UPDATE
   SET sent_at = EXCLUDED.sent_at
-  WHERE personal_digest_sent.sent_at < $3
+  WHERE personal_digest_sent.sent_at < @scheduled_at
 RETURNING sent_at;

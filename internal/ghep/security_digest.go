@@ -94,7 +94,8 @@ func maybeFireSecurityDigest(ctx context.Context, log *slog.Logger, db *gensql.Q
 
 	// Atomically claim this security digest slot. If another goroutine already
 	// claimed it (returned sent_at >= scheduledAt), bail out without sending.
-	claimedAt, err := db.ClaimSecurityDigestSlot(ctx, gensql.ClaimSecurityDigestSlotParams{
+	claimedAt, err := db.ClaimTeamDigestSlot(ctx, gensql.ClaimTeamDigestSlotParams{
+		Type:        "security",
 		TeamSlug:    teamSlug,
 		SentAt:      pgtype.Timestamptz{Time: now, Valid: true},
 		ScheduledAt: pgtype.Timestamptz{Time: scheduledAt, Valid: true},

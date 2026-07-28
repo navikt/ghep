@@ -11,17 +11,6 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const GetPersonalDigestSentAt = `-- name: GetPersonalDigestSentAt :one
-SELECT sent_at FROM personal_digest_sent WHERE login = $1
-`
-
-func (q *Queries) GetPersonalDigestSentAt(ctx context.Context, login string) (pgtype.Timestamptz, error) {
-	row := q.db.QueryRow(ctx, GetPersonalDigestSentAt, login)
-	var sent_at pgtype.Timestamptz
-	err := row.Scan(&sent_at)
-	return sent_at, err
-}
-
 const ClaimPersonalDigestSlot = `-- name: ClaimPersonalDigestSlot :one
 INSERT INTO personal_digest_sent (login, sent_at)
 VALUES ($1, $2)
@@ -39,6 +28,17 @@ type ClaimPersonalDigestSlotParams struct {
 
 func (q *Queries) ClaimPersonalDigestSlot(ctx context.Context, arg ClaimPersonalDigestSlotParams) (pgtype.Timestamptz, error) {
 	row := q.db.QueryRow(ctx, ClaimPersonalDigestSlot, arg.Login, arg.SentAt, arg.ScheduledAt)
+	var sent_at pgtype.Timestamptz
+	err := row.Scan(&sent_at)
+	return sent_at, err
+}
+
+const GetPersonalDigestSentAt = `-- name: GetPersonalDigestSentAt :one
+SELECT sent_at FROM personal_digest_sent WHERE login = $1
+`
+
+func (q *Queries) GetPersonalDigestSentAt(ctx context.Context, login string) (pgtype.Timestamptz, error) {
+	row := q.db.QueryRow(ctx, GetPersonalDigestSentAt, login)
 	var sent_at pgtype.Timestamptz
 	err := row.Scan(&sent_at)
 	return sent_at, err
