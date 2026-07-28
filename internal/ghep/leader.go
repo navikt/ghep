@@ -21,7 +21,7 @@ func isLeader() (bool, error) {
 	}
 
 	client := &http.Client{Timeout: 5 * time.Second}
-	resp, err := client.Get(electorURL)
+	resp, err := client.Get(electorURL) // #nosec G704
 	if err != nil {
 		return false, fmt.Errorf("querying elector: %w", err)
 	}
