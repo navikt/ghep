@@ -53,7 +53,10 @@ func RunPullRequestDigestScheduler(ctx context.Context, log *slog.Logger, db *ge
 		select {
 		case <-ctx.Done():
 			return
-		case now := <-ticker.C:
+		case t := <-ticker.C:
+			// Truncate to microsecond precision so the value round-trips
+			// through Postgres timestamptz (microsecond) without mismatch.
+			now := t.Truncate(time.Microsecond)
 			for _, entry := range entries {
 				go func(e digestEntry) {
 					if err := maybeFireDigest(ctx, log, db, now, e.teamSlug, e.digest, teamConfig, githubClient, slackClient); err != nil {

@@ -30,7 +30,10 @@ func RunPersonalDigestScheduler(ctx context.Context, log *slog.Logger, db *gensq
 		select {
 		case <-ctx.Done():
 			return
-		case now := <-ticker.C:
+		case t := <-ticker.C:
+			// Truncate to microsecond precision so the value round-trips
+			// through Postgres timestamptz (microsecond) without mismatch.
+			now := t.Truncate(time.Microsecond)
 			for _, entry := range users {
 				go func(e github.PersonalDigestUserEntry) {
 					if err := maybeFirePersonalDigestForUser(ctx, log, db, slackClient, e, now); err != nil {
