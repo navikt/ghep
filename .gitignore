@@ -1,5 +1,6 @@
 .DS_Store
 .agent-shell/
+CONTEXT.md
 
 # Binaries for programs and plugins
 *.exe
