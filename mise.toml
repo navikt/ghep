@@ -51,3 +51,10 @@ env._.file = ".env"
 [tasks."test"]
 description = "Test Go code"
 run = "go test ./..."
+
+[tasks."update:tools"]
+description = "Update all Go tools to latest"
+run = """
+go list tool | xargs go get -tool
+go mod tidy
+"""
