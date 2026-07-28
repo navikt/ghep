@@ -48,6 +48,11 @@ description = "Run Go locally"
 run = "fnox exec -- go run ."
 env._.file = ".env"
 
+[tasks."debug"]
+description = "Run dlv dap for Emacs Dape debugging"
+run = "fnox exec -- dlv dap --listen 127.0.0.1:55878 --log-dest /tmp/dlv-dap.log"
+env._.file = ".env"
+
 [tasks."test"]
 description = "Test Go code"
 run = "go test ./..."
