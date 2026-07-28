@@ -65,13 +65,13 @@ func RunLeaderSchedulers(
 		}
 
 		if leader && cancelSchedulers == nil {
-			log.Info("Elected as leader, starting digest schedulers")
+			log.Info("Elected as leader, starting schedulers")
 			schedulerCtx, cancel := context.WithCancel(ctx)
 			cancelSchedulers = cancel
 
-			go RunPersonalDigestScheduler(schedulerCtx, log.With("component", "personal-digest"), db, slackClient, personalDigestUsers)
-			go RunPullRequestDigestScheduler(schedulerCtx, log.With("component", "pr-digest"), db, teamConfig, githubClient, slackClient)
-			go RunSecurityDigestScheduler(schedulerCtx, log.With("component", "security-digest"), db, teamConfig, githubClient, slackClient)
+			go RunPersonalDigestScheduler(schedulerCtx, log.With("subsystem", "digest-personal"), db, slackClient, personalDigestUsers)
+			go RunPullRequestDigestScheduler(schedulerCtx, log.With("subsystem", "digest-pull-request"), db, teamConfig, githubClient, slackClient)
+			go RunSecurityDigestScheduler(schedulerCtx, log.With("subsystem", "digest-security"), db, teamConfig, githubClient, slackClient)
 		} else if !leader && cancelSchedulers != nil {
 			log.Info("Lost leadership, stopping digest schedulers")
 			cancelSchedulers()
