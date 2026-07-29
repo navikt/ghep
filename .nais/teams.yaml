@@ -1,5 +1,7 @@
 personal-digest:
-  - login: kyrremann
+# Disse må være lik som det faktisk brukernavnet ditt
+# med store og små bokstaver
+  - login: Kyrremann
   - login: navbrynjar
 
 teams:
