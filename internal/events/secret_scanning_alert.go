@@ -2,9 +2,11 @@ package events
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"slices"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
 	"github.com/navikt/ghep/internal/sql/gensql"
@@ -20,7 +22,7 @@ func (h *Handler) handleSecretScanningAlertEvent(ctx context.Context, log *slog.
 		EventID:  event.Alert.URL,
 		Channel:  source.Channel,
 	})
-	if err != nil {
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		log.Error("Getting slack message", "error", err, "event_id", event.Alert.URL)
 	}
 
