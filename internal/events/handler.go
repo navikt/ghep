@@ -72,7 +72,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	switch eventType {
 	case github.TypeCommit:
 		if event.Repository != nil {
-			go recordCommitAuthors(ctx, log, h.db, event)
+			go recordCommitAuthors(context.Background(), log, h.db, event)
 		}
 	case github.TypeRepositoryRenamed:
 		if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
