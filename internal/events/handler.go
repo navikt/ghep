@@ -72,7 +72,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	switch eventType {
 	case github.TypeCommit:
 		if event.Repository != nil {
-			go recordCommitAuthors(context.Background(), log, h.db, event)
+			go recordCommitAuthors(log, h.db, event) // #nosec: G118 - takes to long to share context with request
 		}
 	case github.TypeRepositoryRenamed:
 		if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
@@ -281,10 +281,7 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Sour
 
 // recordCommitAuthors counts the commits per unique non-bot author (including
 // co-authors) for the personal weekly digest.
-func recordCommitAuthors(ctx context.Context, log *slog.Logger, db *gensql.Queries, event github.Event) {
-	ctx, cancel := context.WithDeadline(ctx, time.Now().Add(5*time.Minute))
-	defer cancel()
-
+func recordCommitAuthors(log *slog.Logger, db *gensql.Queries, event github.Event) {
 	counts := make(map[string]int32)
 	for _, commit := range event.Commits {
 		// Primary author
@@ -305,7 +302,7 @@ func recordCommitAuthors(ctx context.Context, log *slog.Logger, db *gensql.Queri
 	repo := event.Repository.Name
 
 	for login, count := range counts {
-		if err := db.UpsertUserCommitCount(ctx, gensql.UpsertUserCommitCountParams{
+		if err := db.UpsertUserCommitCount(context.Background(), gensql.UpsertUserCommitCountParams{
 			Login:        login,
 			Repo:         repo,
 			CommitCount:  count,
