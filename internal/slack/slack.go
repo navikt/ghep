@@ -117,6 +117,16 @@ type UserResponse struct {
 	} `json:"members"`
 }
 
+type Slacker interface {
+	EnsureChannels(teams map[string]github.Team) error
+	GetReactions(channel, timestamp string) ([]string, error)
+	JoinChannel(channel string) error
+	PostMessage(payload []byte) (MessageResponse, error)
+	PostReaction(channel, timestamp, reaction string) error
+	PostUpdatedMessage(message Message) error
+	PostWorkflowReaction(log *slog.Logger, event github.Event, channel, timestamp string) error
+}
+
 type Client struct {
 	log        *slog.Logger
 	httpClient *http.Client

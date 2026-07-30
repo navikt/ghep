@@ -18,11 +18,11 @@ import (
 
 type Handler struct {
 	db          sql.Database
-	slack       slack.Client
+	slack       slack.Slacker
 	teamsConfig map[string]github.Team
 }
 
-func NewHandler(db sql.Database, slackClient slack.Client, teamsConfig map[string]github.Team) Handler {
+func NewHandler(db sql.Database, slackClient slack.Slacker, teamsConfig map[string]github.Team) Handler {
 	return Handler{
 		db:          db,
 		slack:       slackClient,
