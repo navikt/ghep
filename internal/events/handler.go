@@ -134,7 +134,7 @@ func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team githu
 
 	// Update source channel name to ID if Slack returned a different channel identifier
 	if message.Channel != resp.Channel {
-		h.updateSourceChannelID(team, source, message.Channel, resp.Channel)
+		h.updateSourceChannelID(team, message.Channel, resp.Channel)
 
 		if err := h.slack.JoinChannel(resp.Channel); err != nil {
 			log.Error("Joining channel", "error", err, "channel", message.Channel, "channel_id", resp.Channel)
@@ -224,7 +224,7 @@ func (h *Handler) storeEvent(ctx context.Context, log *slog.Logger, event github
 }
 
 // updateSourceChannelID updates the source channel from name to Slack channel ID in the teamsConfig.
-func (h *Handler) updateSourceChannelID(team github.Team, source github.Source, oldChannel, newChannel string) {
+func (h *Handler) updateSourceChannelID(team github.Team, oldChannel, newChannel string) {
 	for name, t := range h.teamsConfig {
 		if name != team.Name {
 			continue
