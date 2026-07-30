@@ -16,15 +16,13 @@ import (
 )
 
 type Handler struct {
-	github      github.Client
 	db          *gensql.Queries
 	slack       slack.Client
 	teamsConfig map[string]github.Team
 }
 
-func NewHandler(githubClient github.Client, db *gensql.Queries, slackClient slack.Client, teamsConfig map[string]github.Team) Handler {
+func NewHandler(db *gensql.Queries, slackClient slack.Client, teamsConfig map[string]github.Team) Handler {
 	return Handler{
-		github:      githubClient,
 		db:          db,
 		slack:       slackClient,
 		teamsConfig: teamsConfig,
