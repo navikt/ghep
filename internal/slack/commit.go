@@ -96,9 +96,9 @@ func CreateCommitMessage(ctx context.Context, log *slog.Logger, db sql.Userer, c
 
 	var attachmentText strings.Builder
 	for _, c := range event.Commits {
-		firstLine := strings.Split(c.Message, "\n")[0]
+		firstLine, _, _ := strings.Cut(c.Message, "\n")
 
-		attachmentText.WriteString(fmt.Sprintf("`<%s|%s>` - %s\n", c.URL, c.ID[:8], firstLine))
+		fmt.Fprintf(&attachmentText, "`<%s|%s>` - %s\n", c.URL, c.ID[:8], firstLine)
 	}
 
 	attachments := []Attachment{
