@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	testdataEventsPath = "testdata/events"
-	slackChannel       = "#test"
+	testdataEventsPath  = "../testdata/events"
+	testdataOutputsPath = "../testdata/output"
+	slackChannel        = "#test"
 )
 
 func TestHandleEvent(t *testing.T) {
@@ -46,7 +47,7 @@ func TestHandleEvent(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			goldenfilePath := filepath.Join("testdata/output", entry.Name())
+			goldenfilePath := filepath.Join(testdataOutputsPath, entry.Name())
 			goldenfile, err := os.ReadFile(goldenfilePath)
 			if err != nil {
 				if !os.IsNotExist(err) {
