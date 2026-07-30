@@ -151,6 +151,7 @@ teams:
         - vault-iac
   teamsykmelding:
     commits: "tsm-commits"
+    releases: "tsm-commits"
     issues: "tsm-issues"
     sources:
       - source: workflows
@@ -166,6 +167,7 @@ teams:
       externalContributorsChannel: "#tsm-extern-contrib"
   tsm:
     commits: "tsm-commits"
+    releases: "tsm-commits"
     issues: "tsm-issues"
     sources:
       - source: workflows
