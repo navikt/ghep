@@ -14,7 +14,7 @@ import (
 	"github.com/navikt/ghep/internal/sql"
 )
 
-func createAuthors(ctx context.Context, log *slog.Logger, db sql.Userer, event github.Event) (string, error) {
+func createAuthors(ctx context.Context, log *slog.Logger, db sql.Database, event github.Event) (string, error) {
 	// event sender has login/username and url
 	// commit co-authors only have a name and e-mail
 	// commit author has name, e-mail, and login/username
@@ -86,7 +86,7 @@ func createAuthors(ctx context.Context, log *slog.Logger, db sql.Userer, event g
 	return senders, nil
 }
 
-func CreateCommitMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel string, event github.Event) (*Message, error) {
+func CreateCommitMessage(ctx context.Context, log *slog.Logger, db sql.Database, channel string, event github.Event) (*Message, error) {
 	authors, err := createAuthors(ctx, log, db, event)
 	if err != nil {
 		return nil, fmt.Errorf("creating authors: %w", err)

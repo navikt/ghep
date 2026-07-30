@@ -12,16 +12,17 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/slack"
+	"github.com/navikt/ghep/internal/sql"
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
 type Handler struct {
-	db          *gensql.Queries
+	db          sql.Database
 	slack       slack.Client
 	teamsConfig map[string]github.Team
 }
 
-func NewHandler(db *gensql.Queries, slackClient slack.Client, teamsConfig map[string]github.Team) Handler {
+func NewHandler(db sql.Database, slackClient slack.Client, teamsConfig map[string]github.Team) Handler {
 	return Handler{
 		db:          db,
 		slack:       slackClient,
@@ -261,7 +262,7 @@ func eventBranch(event github.Event, eventType github.EventType) string {
 	return ""
 }
 
-func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Source, event github.Event, db *gensql.Queries) (*slack.Message, error) {
+func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Source, event github.Event, db sql.Database) (*slack.Message, error) {
 	branch := strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
 
 	if len(source.Config.Branches) == 0 && branch != event.Repository.DefaultBranch {
@@ -279,7 +280,7 @@ func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Sour
 
 // recordCommitAuthors counts the commits per unique non-bot author (including
 // co-authors) for the personal weekly digest.
-func recordCommitAuthors(log *slog.Logger, db *gensql.Queries, event github.Event) {
+func recordCommitAuthors(log *slog.Logger, db sql.Database, event github.Event) {
 	counts := make(map[string]int32)
 	for _, commit := range event.Commits {
 		// Primary author

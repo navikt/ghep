@@ -13,7 +13,7 @@ import (
 	"github.com/navikt/ghep/internal/sql"
 )
 
-func CreatePullRequestMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, pingSlack, minimalist bool, event github.Event) *Message {
+func CreatePullRequestMessage(ctx context.Context, log *slog.Logger, db sql.Database, channel, threadTimestamp string, pingSlack, minimalist bool, event github.Event) *Message {
 	color := ColorOpened
 	switch event.Action {
 	case "merged":

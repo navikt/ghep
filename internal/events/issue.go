@@ -53,7 +53,7 @@ func (h *Handler) handleIssueEvent(ctx context.Context, log *slog.Logger, team g
 	return handleIssueEvent(ctx, log, h.db, team, source, timestamp, event)
 }
 
-func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, source github.Source, threadTimestamp string, event github.Event) (*slack.Message, error) {
+func handleIssueEvent(ctx context.Context, log *slog.Logger, db sql.Database, team github.Team, source github.Source, threadTimestamp string, event github.Event) (*slack.Message, error) {
 	if !slices.Contains([]string{"opened", "closed"}, event.Action) {
 		return nil, nil
 	}

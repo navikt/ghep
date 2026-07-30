@@ -16,10 +16,23 @@ import (
 //go:embed migrations/*.sql
 var embedMigrations embed.FS
 
-type Userer interface {
+type Database interface {
+	AddTeamMember(ctx context.Context, params gensql.AddTeamMemberParams) error
+	AddTeamRepository(ctx context.Context, params gensql.AddTeamRepositoryParams) error
+	CreateRepository(ctx context.Context, name string) (int32, error)
+	CreateSlackMessage(ctx context.Context, arg gensql.CreateSlackMessageParams) error
+	CreateUser(ctx context.Context, login string) error
+	ExistsUser(ctx context.Context, login string) (bool, error)
+	GetRepository(ctx context.Context, name string) (gensql.Repository, error)
+	GetSlackMessage(ctx context.Context, arg gensql.GetSlackMessageParams) (gensql.GetSlackMessageRow, error)
+	GetTeamMember(ctx context.Context, params gensql.GetTeamMemberParams) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (string, error)
 	GetUserSlackID(ctx context.Context, login string) (string, error)
-	GetTeamMember(ctx context.Context, arg gensql.GetTeamMemberParams) (string, error)
+	ListSlackMessagesByEvent(ctx context.Context, arg gensql.ListSlackMessagesByEventParams) ([]gensql.ListSlackMessagesByEventRow, error)
+	RemoveTeamMember(ctx context.Context, arg gensql.RemoveTeamMemberParams) error
+	RemoveTeamRepository(ctx context.Context, arg gensql.RemoveTeamRepositoryParams) error
+	UpdateRepository(ctx context.Context, arg gensql.UpdateRepositoryParams) error
+	UpsertUserCommitCount(ctx context.Context, arg gensql.UpsertUserCommitCountParams) error
 }
 
 type gooseLogger struct {

@@ -11,7 +11,7 @@ import (
 )
 
 // AddRepositoryToTeam adds a repository to a team, creating the repository if it does not exist.
-func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, repositoryName string) error {
+func AddRepositoryToTeam(ctx context.Context, db Database, team, repositoryName string) error {
 	repository, err := db.GetRepository(ctx, repositoryName)
 	if err != nil {
 		if !errors.Is(err, pgx.ErrNoRows) {
@@ -33,7 +33,7 @@ func AddRepositoryToTeam(ctx context.Context, db *gensql.Queries, team, reposito
 }
 
 // AddMemberToTeam adds a user to a team, creating the user if it does not exist.
-func AddMemberToTeam(ctx context.Context, db *gensql.Queries, team, userLogin string) error {
+func AddMemberToTeam(ctx context.Context, db Database, team, userLogin string) error {
 	exists, err := db.ExistsUser(ctx, userLogin)
 	if err != nil {
 		return err

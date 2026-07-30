@@ -54,7 +54,7 @@ func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, 
 	return handlePullRequestEvent(ctx, log, h.db, team, source, timestamp, event)
 }
 
-func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Userer, team github.Team, source github.Source, threadTimestamp string, event github.Event) (*slack.Message, error) {
+func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Database, team github.Team, source github.Source, threadTimestamp string, event github.Event) (*slack.Message, error) {
 	prIsFromBot := event.Sender.IsBot() || event.PullRequest.User.IsBot()
 
 	if source.Config.Pulls.IgnoreBots && prIsFromBot {

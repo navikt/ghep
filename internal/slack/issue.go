@@ -13,7 +13,7 @@ import (
 	"github.com/navikt/ghep/internal/sql"
 )
 
-func CreateIssueMessage(ctx context.Context, log *slog.Logger, db sql.Userer, channel, threadTimestamp string, pingSlack bool, event github.Event) *Message {
+func CreateIssueMessage(ctx context.Context, log *slog.Logger, db sql.Database, channel, threadTimestamp string, pingSlack bool, event github.Event) *Message {
 	color := ColorOpened
 
 	text := fmt.Sprintf("Issue <%s|#%d> %s in `%s` by %s", event.Issue.URL, event.Issue.Number, event.Action, event.Repository.ToSlack(), event.Sender.ToSlack())
