@@ -5,18 +5,18 @@ import (
 	"fmt"
 )
 
-func (c Client) PostMessage(payload []byte) (*MessageResponse, error) {
+func (c Client) PostMessage(payload []byte) (MessageResponse, error) {
 	body, err := c.postRequest("chat.postMessage", payload)
 	if err != nil {
-		return nil, fmt.Errorf("error posting message to Slack: %v", err)
+		return MessageResponse{}, fmt.Errorf("error posting message to Slack: %v", err)
 	}
 
 	var resp MessageResponse
 	if err := json.Unmarshal([]byte(body), &resp); err != nil {
-		return nil, err
+		return MessageResponse{}, err
 	}
 
-	return &resp, nil
+	return resp, nil
 }
 
 func (c Client) PostUpdatedMessage(message Message) error {

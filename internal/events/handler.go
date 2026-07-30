@@ -203,7 +203,7 @@ func getEventID(event github.Event) string {
 	return ""
 }
 
-func (h *Handler) storeEvent(ctx context.Context, log *slog.Logger, event github.Event, team github.Team, resp *slack.MessageResponse, payload []byte) error {
+func (h *Handler) storeEvent(ctx context.Context, log *slog.Logger, event github.Event, team github.Team, resp slack.MessageResponse, payload []byte) error {
 	id := getEventID(event)
 	if id == "" {
 		return nil
