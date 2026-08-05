@@ -262,18 +262,23 @@ type FailedJob struct {
 	Step string
 }
 
+type WorkflowPR struct {
+	ID int `json:"id"`
+}
+
 type Workflow struct {
-	ID         int    `json:"id"`
-	Name       string `json:"name"`
-	HeadBranch string `json:"head_branch"`
-	HeadSHA    string `json:"head_sha"`
-	Status     string `json:"status"`
-	Conclusion string `json:"conclusion"`
-	Title      string `json:"display_title"`
-	RunNumber  int    `json:"run_number"`
-	URL        string `json:"html_url"`
-	JobsURL    string `json:"jobs_url"`
-	FailedJob  FailedJob
+	ID           int    `json:"id"`
+	Name         string `json:"name"`
+	HeadBranch   string `json:"head_branch"`
+	HeadSHA      string `json:"head_sha"`
+	Status       string `json:"status"`
+	Conclusion   string `json:"conclusion"`
+	Title        string `json:"display_title"`
+	RunNumber    int    `json:"run_number"`
+	URL          string `json:"html_url"`
+	JobsURL      string `json:"jobs_url"`
+	FailedJob    FailedJob
+	PullRequests []WorkflowPR `json:"pull_requests"`
 }
 
 // UpdateFailedJob finds and update the failed job in a workflow

@@ -1,0 +1,14 @@
+{
+  "channel": "#test",
+  "text": ":x: <https://github.com/navikt/yrkesskade|yrkesskade> has a workflow with status `success`, triggered by <https://github.com/apps/copilot-pull-request-reviewer|Copilot>.\n<https://github.com/navikt/yrkesskade/actions/runs/30982184485|#530 Running Copilot Code Review>",
+  "attachments": [
+    {
+      "text": "The job <https://url.com|job>[chore/YSMOD-3092-migrer-hent-detaljert-sak-graphql] failed in step `step`",
+      "color": "#d02434",
+      "footer": "<https://github.com/navikt/yrkesskade|navikt/yrkesskade>",
+      "footer_icon": "https://slack.github.com/static/img/favicon-neutral.png"
+    }
+  ],
+  "unfurl_links": false,
+  "unfurl_media": false
+}

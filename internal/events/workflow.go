@@ -47,6 +47,24 @@ func (h *Handler) handleWorkflowEvent(ctx context.Context, log *slog.Logger, tea
 		}
 	}
 
+	for _, pullRequest := range event.Workflow.PullRequests {
+		pullRequestMessages, err := h.db.ListSlackMessagesByEvent(ctx, gensql.ListSlackMessagesByEventParams{
+			TeamSlug: team.Name,
+			EventID:  strconv.Itoa(pullRequest.ID),
+		})
+		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+			log.Error("Getting pull request for workflow timestamp", "error", err, "id", event.Workflow.ID, "pull_request_id", pullRequest.ID)
+			continue
+		}
+
+		for _, message := range pullRequestMessages {
+			log.Info("Reacting to pull request that triggered workflow", "action", event.Action, "workflow_status", event.Workflow.Status, "workflow_conclusion", event.Workflow.Conclusion)
+			if err := h.slack.PostWorkflowReaction(log, event, message.Channel, message.ThreadTs); err != nil {
+				log.Error("Posting workflow pull request reaction", "error", err, "channel", message.Channel, "timestamp", message.ThreadTs)
+			}
+		}
+	}
+
 	workflowID := strconv.Itoa(event.Workflow.ID)
 	workflowMessage, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
 		TeamSlug: team.Name,

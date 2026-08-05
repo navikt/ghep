@@ -315,4 +315,44 @@ func TestHandleWorkflowEvents(t *testing.T) {
 
 		slack.Ensure(t, workflowEvent.GetEventType(), 2, 1, 1)
 	})
+
+	t.Run("Successful workflow with pull request", func(t *testing.T) {
+		slack := &mock.Slack{}
+		handler := NewHandler(&mock.Database{}, slack, teamConfig)
+
+		pullRequestEvent, err := testdata.AsEvent("pull-opened-1.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// prepopulate db with a pull request event
+		if err := handler.handleSource(
+			context.TODO(),
+			slog.Default(),
+			team,
+			team.Sources[0],
+			pullRequestEvent,
+		); err != nil {
+			t.Error(err)
+		}
+
+		slack.EnsureMessages(t, pullRequestEvent.GetEventType(), 1)
+
+		workflowEvent, err := testdata.AsEvent("workflow-run-success-pull-requests-1.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if err := handler.handleSource(
+			context.TODO(),
+			slog.Default(),
+			team,
+			team.Sources[0],
+			workflowEvent,
+		); err != nil {
+			t.Error(err)
+		}
+
+		slack.Ensure(t, workflowEvent.GetEventType(), 1, 1, 0)
+	})
 }
