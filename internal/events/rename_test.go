@@ -29,7 +29,7 @@ func TestHandleRename(t *testing.T) {
 	t.Run("Simple rename event", func(t *testing.T) {
 		event, err := testdata.AsEvent("renamed-1.json")
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if err := handler.handleSource(
@@ -42,8 +42,6 @@ func TestHandleRename(t *testing.T) {
 			t.Error(err)
 		}
 
-		if len(slack.Messages) != 1 {
-			t.Errorf("handleRenameEvent() did not send just one message: %d", len(slack.Messages))
-		}
+		slack.Ensure(t, event.GetEventType(), 1, 0, 0)
 	})
 }

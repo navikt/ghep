@@ -21,7 +21,7 @@ func (h *Handler) handleWorkflowEvent(ctx context.Context, log *slog.Logger, tea
 		TeamSlug: team.Name,
 		EventID:  gitCommitSHA,
 	})
-	if err != nil {
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		log.Error("Listing commit messages", "error", err, "id", gitCommitSHA)
 	}
 

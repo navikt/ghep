@@ -18,7 +18,6 @@ import (
 func (h *Handler) handlePullRequestEvent(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event) (*slack.Message, error) {
 	var timestamp string
 	if !slices.Contains([]string{"opened", "synchronize"}, event.Action) {
-
 		id := strconv.Itoa(event.PullRequest.ID)
 		message, err := h.db.GetSlackMessage(ctx, gensql.GetSlackMessageParams{
 			TeamSlug: team.Name,

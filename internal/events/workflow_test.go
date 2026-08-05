@@ -1,11 +1,14 @@
 package events
 
 import (
+	"context"
 	"log/slog"
 	"slices"
 	"testing"
 
 	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/mock"
+	"github.com/navikt/ghep/internal/testdata"
 )
 
 func TestHandleWorkflow(t *testing.T) {
@@ -232,4 +235,84 @@ func TestHandleWorkflow(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestHandleWorkflowEvents(t *testing.T) {
+	team := github.Team{
+		Name:          "test",
+		SlackChannels: github.SlackChannels{},
+		Config:        github.Config{},
+		Sources: []github.Source{
+			{
+				SourceType: "commits",
+				Channel:    "#test",
+			},
+		},
+	}
+	teamConfig := map[string]github.Team{"test": team}
+
+	t.Run("Simple workflow event", func(t *testing.T) {
+		slack := &mock.Slack{}
+		handler := NewHandler(&mock.Database{}, slack, teamConfig)
+
+		workflowEvent, err := testdata.AsEvent("workflow-run-failure-1.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if err := handler.handleSource(
+			context.TODO(),
+			slog.Default(),
+			team,
+			team.Sources[0],
+			workflowEvent,
+		); err != nil {
+			t.Error(err)
+		}
+
+		slack.Ensure(t, workflowEvent.GetEventType(), 1, 0, 0)
+	})
+
+	t.Run("Workflow event with commit", func(t *testing.T) {
+		slack := &mock.Slack{}
+		handler := NewHandler(&mock.Database{}, slack, teamConfig)
+
+		commitEvent, err := testdata.AsEvent("commit-2.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// prepopulate db with a commit event
+		if err := handler.handleSource(
+			context.TODO(),
+			slog.Default(),
+			team,
+			team.Sources[0],
+			commitEvent,
+		); err != nil {
+			t.Error(err)
+		}
+
+		slack.EnsureMessages(t, commitEvent.GetEventType(), 1)
+
+		workflowEvent, err := testdata.AsEvent("workflow-run-failure-1.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// ensure events are connected
+		workflowEvent.Workflow.HeadSHA = commitEvent.After
+
+		if err := handler.handleSource(
+			context.TODO(),
+			slog.Default(),
+			team,
+			team.Sources[0],
+			workflowEvent,
+		); err != nil {
+			t.Error(err)
+		}
+
+		slack.Ensure(t, workflowEvent.GetEventType(), 2, 1, 1)
+	})
 }

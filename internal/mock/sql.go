@@ -10,59 +10,94 @@ import (
 )
 
 type Database struct {
-	Members []string
+	Members       []string
+	SlackMessages []gensql.CreateSlackMessageParams
 }
 
 func (m *Database) AddTeamMember(ctx context.Context, params gensql.AddTeamMemberParams) error {
-	panic("unimplemented")
+	panic("unimplemented AddTeamMember")
 }
 
 func (m *Database) AddTeamRepository(ctx context.Context, params gensql.AddTeamRepositoryParams) error {
-	panic("unimplemented")
+	panic("unimplemented AddTeamRepository")
 }
 
 func (m *Database) CreateRepository(ctx context.Context, name string) (int32, error) {
-	panic("unimplemented")
+	panic("unimplemented CreateRepository")
 }
 
 func (m *Database) CreateUser(ctx context.Context, login string) error {
-	panic("unimplemented")
+	panic("unimplemented CreateUser")
 }
 
 func (m *Database) ExistsUser(ctx context.Context, login string) (bool, error) {
-	panic("unimplemented")
+	panic("unimplemented ExistsUser")
 }
 
 func (m *Database) GetRepository(ctx context.Context, name string) (gensql.Repository, error) {
-	panic("unimplemented")
+	panic("unimplemented GetRepository")
 }
 
 func (m *Database) CreateSlackMessage(ctx context.Context, arg gensql.CreateSlackMessageParams) error {
-	panic("unimplemented")
+	m.SlackMessages = append(m.SlackMessages, gensql.CreateSlackMessageParams{
+		EventID:  arg.EventID,
+		ThreadTs: arg.ThreadTs,
+		Channel:  arg.Channel,
+		Payload:  arg.Payload,
+		TeamSlug: arg.TeamSlug,
+	})
+
+	return nil
 }
 
 func (m *Database) GetSlackMessage(ctx context.Context, arg gensql.GetSlackMessageParams) (gensql.GetSlackMessageRow, error) {
-	panic("unimplemented")
+	for _, m := range m.SlackMessages {
+		if arg.EventID == m.EventID {
+			return gensql.GetSlackMessageRow{
+				ThreadTs: m.ThreadTs,
+				Channel:  m.Channel,
+				Payload:  m.Payload,
+			}, nil
+		}
+	}
+
+	return gensql.GetSlackMessageRow{}, pgx.ErrNoRows
 }
 
 func (m *Database) ListSlackMessagesByEvent(ctx context.Context, arg gensql.ListSlackMessagesByEventParams) ([]gensql.ListSlackMessagesByEventRow, error) {
-	panic("unimplemented")
+	rows := []gensql.ListSlackMessagesByEventRow{}
+
+	for _, m := range m.SlackMessages {
+		if arg.EventID == m.EventID {
+			rows = append(rows, gensql.ListSlackMessagesByEventRow{
+				ThreadTs: m.ThreadTs,
+				Channel:  m.Channel,
+				Payload:  m.Payload,
+			})
+		}
+	}
+
+	if len(rows) == 0 {
+		return []gensql.ListSlackMessagesByEventRow{}, pgx.ErrNoRows
+	}
+
+	return rows, nil
 }
 
 func (m *Database) RemoveTeamMember(ctx context.Context, arg gensql.RemoveTeamMemberParams) error {
-	panic("unimplemented")
+	panic("unimplemented RemoveTeamMember")
 }
 
 func (m *Database) RemoveTeamRepository(ctx context.Context, arg gensql.RemoveTeamRepositoryParams) error {
-	panic("unimplemented")
+	panic("unimplemented RemoveTeamRepository")
 }
 
 func (m *Database) UpdateRepository(ctx context.Context, arg gensql.UpdateRepositoryParams) error {
-	panic("unimplemented")
+	panic("unimplemented UpdateRepository")
 }
 
 func (m *Database) UpsertUserCommitCount(ctx context.Context, arg gensql.UpsertUserCommitCountParams) error {
-	panic("unimplemented")
+	panic("unimplemented UpsertUserCommitCount")
 }
 
 func (m *Database) GetUserByEmail(_ context.Context, email string) (string, error) {
