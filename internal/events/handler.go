@@ -92,7 +92,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 
 	sources := team.SourcesForType(eventType)
 	for _, source := range sources {
-		if err := h.handleSource(ctx, log, team, source, event, eventType); err != nil {
+		if err := h.handleSource(ctx, log, team, source, event); err != nil {
 			log.Error("Handling source", "error", err, "source_type", source.SourceType, "channel", source.Channel)
 		}
 	}
@@ -100,14 +100,14 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	return nil
 }
 
-func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event, eventType github.EventType) error {
+func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event) error {
 	if source.Channel == "" {
 		return nil
 	}
 
 	log = log.With("channel", source.Channel)
 
-	message, err := h.handleForSource(ctx, log, team, source, event, eventType)
+	message, err := h.handleForSource(ctx, log, team, source, event)
 	if err != nil {
 		return err
 	}
@@ -143,7 +143,9 @@ func (h *Handler) handleSource(ctx context.Context, log *slog.Logger, team githu
 	return nil
 }
 
-func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event, eventType github.EventType) (*slack.Message, error) {
+func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event) (*slack.Message, error) {
+	eventType := event.GetEventType()
+
 	if len(source.Config.Branches) > 0 {
 		branch := eventBranch(event, eventType)
 		if branch != "" && !slices.Contains(source.Config.Branches, branch) {

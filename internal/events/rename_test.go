@@ -53,7 +53,6 @@ func TestHandleRename(t *testing.T) {
 		team,
 		team.Sources[0],
 		event,
-		github.TypeRepositoryRenamed,
 	); err != nil {
 		t.Error(err)
 	}
