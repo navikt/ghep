@@ -7,7 +7,9 @@ import (
 	"testing"
 
 	"github.com/navikt/ghep/internal/github"
+	"github.com/navikt/ghep/internal/mock"
 	"github.com/navikt/ghep/internal/sql/gensql"
+	"github.com/navikt/ghep/internal/testdata"
 )
 
 func TestHandleCommitEventBranchFilter(t *testing.T) {
@@ -113,4 +115,40 @@ func TestHandleCommitEventBranchFilter(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestHandleCommitEvents(t *testing.T) {
+	db := &mock.Database{}
+	slackClient := &mock.Slack{}
+	team := github.Team{
+		Name:          "test",
+		SlackChannels: github.SlackChannels{},
+		Config:        github.Config{},
+		Sources: []github.Source{
+			{
+				SourceType: "commits",
+				Channel:    "#test",
+			},
+		},
+	}
+	handler := NewHandler(db, slackClient, map[string]github.Team{"test": team})
+
+	t.Run("Simple commit event", func(t *testing.T) {
+		event, err := testdata.AsEvent("commit-1.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if err := handler.handleSource(
+			context.TODO(),
+			slog.Default(),
+			team,
+			team.Sources[0],
+			event,
+		); err != nil {
+			t.Error(err)
+		}
+
+		slackClient.Ensure(t, event.GetEventType(), 1, 0, 0)
+	})
 }
