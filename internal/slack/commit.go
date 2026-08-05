@@ -35,9 +35,9 @@ func createAuthors(ctx context.Context, log *slog.Logger, db sql.Database, event
 		}
 	}
 
-	// Then we gather all the co-authors of the commits, since authors have the
-	// username, we don't want add both of them at the same time, in case an
-	// co-author is also an author in a later commit
+	// Then we gather all the co-authors of the commits, since authors have more
+	// information (username), we don't want add both of them at the same time,
+	// in case a co-author is also an author in a later commit
 	commitCoAuthors := []github.Author{}
 	for _, commit := range event.Commits {
 		coAuthors := github.FetchCoAuthors(commit.Message)
@@ -51,6 +51,7 @@ func createAuthors(ctx context.Context, log *slog.Logger, db sql.Database, event
 		}
 	}
 
+	// With each co-author we see if we have more information saved
 	for i, coAuthor := range commitCoAuthors {
 		if strings.HasSuffix(coAuthor.Email, "@nav.no") {
 			username, err := db.GetUserByEmail(ctx, coAuthor.Email)
@@ -64,6 +65,8 @@ func createAuthors(ctx context.Context, log *slog.Logger, db sql.Database, event
 		}
 	}
 
+	// After possible enriching the data we compare them again before adding
+	// them to the list of authors
 	for _, coAuthor := range commitCoAuthors {
 		if !slices.ContainsFunc(commitAuthors, compareAuthorFunc(coAuthor)) {
 			commitAuthors = append(commitAuthors, coAuthor)
