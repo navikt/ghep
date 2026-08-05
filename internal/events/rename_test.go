@@ -26,7 +26,7 @@ func TestHandleRename(t *testing.T) {
 	}
 	handler := NewHandler(db, slack, map[string]github.Team{"test": team})
 
-	t.Run("", func(t *testing.T) {
+	t.Run("Simple rename event", func(t *testing.T) {
 		event, err := testdata.AsEvent("renamed-1.json")
 		if err != nil {
 			t.Error(err)
