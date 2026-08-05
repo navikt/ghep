@@ -2,62 +2,48 @@ package events
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
-	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/mock"
+	"github.com/navikt/ghep/internal/testdata"
 )
 
 func TestHandleRename(t *testing.T) {
 	db := &mock.Database{Members: []string{}}
 	slack := &mock.Slack{}
-	teams := map[string]github.Team{
-		"test": {
-			Name:          "test",
-			SlackChannels: github.SlackChannels{},
-			Config:        github.Config{},
-			Sources: []github.Source{
-				{
-					SourceType: "commits",
-					Channel:    "#test",
-				},
+	team := github.Team{
+		Name:          "test",
+		SlackChannels: github.SlackChannels{},
+		Config:        github.Config{},
+		Sources: []github.Source{
+			{
+				SourceType: "commits",
+				Channel:    "#test",
 			},
 		},
 	}
+	handler := NewHandler(db, slack, map[string]github.Team{"test": team})
 
-	handler := NewHandler(db, slack, teams)
-	team := teams["test"]
-
-	goldenfilePath := filepath.Join("../testdata/events", "renamed-1.json")
-	goldenfile, err := os.ReadFile(goldenfilePath)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			t.Fatal(err)
+	t.Run("", func(t *testing.T) {
+		event, err := testdata.AsEvent("renamed-1.json")
+		if err != nil {
+			t.Error(err)
 		}
 
-		err = nil
-	}
+		if err := handler.handleSource(
+			context.TODO(),
+			slog.Default(),
+			team,
+			team.Sources[0],
+			event,
+		); err != nil {
+			t.Error(err)
+		}
 
-	var event github.Event
-	if nil := json.Unmarshal(goldenfile, &event); err != nil {
-		t.Fatal(err)
-	}
-
-	if err := handler.handleSource(
-		context.TODO(),
-		slog.Default(),
-		team,
-		team.Sources[0],
-		event,
-	); err != nil {
-		t.Error(err)
-	}
-
-	if len(slack.Messages) != 1 {
-		t.Errorf("handleRenameEvent() did not send just one message: %d", len(slack.Messages))
-	}
+		if len(slack.Messages) != 1 {
+			t.Errorf("handleRenameEvent() did not send just one message: %d", len(slack.Messages))
+		}
+	})
 }
