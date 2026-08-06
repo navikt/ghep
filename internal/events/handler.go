@@ -167,11 +167,9 @@ func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team gi
 	case github.TypeRelease:
 		return h.handleReleaseEvent(ctx, log, team, source, event)
 	case github.TypeRepositoryRenamed:
-		log.Info("Posting renamed repository message", "channel", source.Channel)
-		return slack.CreateRenamedMessage(source.Channel, event), nil
+		return handleRenamedEvent(log, source.Channel, event), nil
 	case github.TypeRepositoryPublic:
-		log.Info("Received repository publicized", "channel", source.Channel)
-		return slack.CreatePublicizedMessage(source.Channel, event), nil
+		return handlePublicizedEvent(log, source.Channel, event), nil
 	case github.TypeSecurityAdvisory:
 		return h.handleSecurityAdvisoryEvent(ctx, log, team, source, event)
 	case github.TypeSecretScanningAlert:
@@ -262,22 +260,6 @@ func eventBranch(event github.Event, eventType github.EventType) string {
 		}
 	}
 	return ""
-}
-
-func handleCommitEvent(ctx context.Context, log *slog.Logger, source github.Source, event github.Event, db sql.Database) (*slack.Message, error) {
-	branch := strings.TrimPrefix(event.Ref, github.RefHeadsPrefix)
-
-	if len(source.Config.Branches) == 0 && branch != event.Repository.DefaultBranch {
-		return nil, nil
-	}
-
-	if len(event.Commits) == 0 {
-		return nil, nil
-	}
-
-	log = log.With("channel", source.Channel)
-	log.Info("Received commit event")
-	return slack.CreateCommitMessage(ctx, log, db, source.Channel, event)
 }
 
 // recordCommitAuthors counts the commits per unique non-bot author (including
