@@ -71,6 +71,13 @@ teams:
     security: "#helseytelser-dev"
     pulls: "team-bømlo-pull-requests"
     issues: "team-bømlo-pull-requests"
+    config:
+      silenceDependabot: "always"
+      pulls:
+        ignoreBots: true
+        ignoreDrafts: true
+      security:
+        severityFilter: "critical"
   dv-a-team:
     config:
       ignoreRepositories:
