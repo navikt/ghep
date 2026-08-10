@@ -11,7 +11,7 @@ import (
 
 const CreateSlackID = `-- name: CreateSlackID :exec
 INSERT INTO slack_ids (login, id) VALUES ($1, $2)
-ON CONFLICT (login, id) DO NOTHING
+ON CONFLICT (id) DO UPDATE SET login = EXCLUDED.login
 `
 
 type CreateSlackIDParams struct {

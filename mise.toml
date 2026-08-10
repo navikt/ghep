@@ -3,6 +3,10 @@ go = "1.26"
 "go:github.com/sethvargo/ratchet" = "0.11.4"
 "aqua:sqlc-dev/sqlc" = "1.31.1"
 
+[tasks."generate"]
+description = "Generate all code"
+run = "mise run generate:sqlc ::: generate:go"
+
 [tasks."generate:sqlc"]
 description = "Generate Go code from SQL queries using sqlc"
 run = "sqlc generate"
