@@ -2,10 +2,7 @@ package events
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
-	"net/http"
-	"net/http/httptest"
 	"slices"
 	"testing"
 
