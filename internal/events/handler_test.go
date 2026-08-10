@@ -126,8 +126,7 @@ func TestHandleEvent(t *testing.T) {
 
 			pingSlack := true
 			var message *slack.Message
-			eventType := event.GetEventType()
-			switch eventType {
+			switch event.GetEventType() {
 			case github.TypeCommit:
 				message, err = slack.CreateCommitMessage(ctx, log, mockDB, slackChannel, event)
 			case github.TypeIssue:
@@ -138,6 +137,8 @@ func TestHandleEvent(t *testing.T) {
 					event.Action = "merged"
 				}
 				message = slack.CreatePullRequestMessage(ctx, log, mockDB, slackChannel, "", pingSlack, minimalist, event)
+			case github.TypePullRequestReview:
+				return // no-op for Slack
 			case github.TypeRepositoryRenamed:
 				message = slack.CreateRenamedMessage(slackChannel, event)
 			case github.TypeRepositoryPublic:
@@ -188,7 +189,6 @@ func TestHandleEvent(t *testing.T) {
 					// Probably a new test, output the new golden file
 					t.Logf("Got: %s", got)
 				}
-				// t.Logf("Golden file: %s", goldenfile)
 			}
 		})
 	}
