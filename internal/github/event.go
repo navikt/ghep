@@ -23,6 +23,7 @@ const (
 	TypeDependabotAlert
 	TypeIssue
 	TypePullRequest
+	TypePullRequestReview
 	TypeRelease
 	TypeRepositoryRenamed
 	TypeRepositoryPublic
@@ -330,6 +331,10 @@ func (w *Workflow) UpdateFailedJob() error {
 	return nil
 }
 
+type Review struct {
+	State string `json:"state"`
+}
+
 func (e Event) IsCommit() bool {
 	return strings.HasPrefix(e.Ref, RefHeadsPrefix) && e.Alert == nil
 }
@@ -351,6 +356,7 @@ type Event struct {
 	PullRequest         *Issue            `json:"pull_request"`
 	Release             *Release          `json:"release"`
 	RepositoriesRemoved []Repository      `json:"repositories_removed"`
+	Review              *Review           `json:"review"`
 	Sender              User              `json:"sender"`
 	Team                *TeamEvent        `json:"team"`
 	Member              User              `json:"member"`
@@ -374,6 +380,8 @@ func (e Event) GetEventType() EventType {
 		return TypeSecurityAdvisory
 	} else if e.Issue != nil {
 		return TypeIssue
+	} else if e.Review != nil {
+		return TypePullRequestReview
 	} else if e.PullRequest != nil {
 		return TypePullRequest
 	} else if e.Release != nil {

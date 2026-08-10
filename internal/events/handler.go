@@ -164,6 +164,8 @@ func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team gi
 		return h.handleIssueEvent(ctx, log, team, source, event)
 	case github.TypePullRequest:
 		return h.handlePullRequestEvent(ctx, log, team, source, event)
+	case github.TypePullRequestReview:
+		return h.handlePullRequestReviewEvent(ctx, log, team, source, event)
 	case github.TypeRelease:
 		return h.handleReleaseEvent(ctx, log, team, source, event)
 	case github.TypeRepositoryRenamed:
@@ -178,6 +180,9 @@ func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team gi
 		return handleTeamEvent(log, source.Channel, event)
 	case github.TypeWorkflow:
 		return h.handleWorkflowEvent(ctx, log, team, source, event)
+	case github.TypeUnknown:
+	default:
+		log.Warn("unexpected github.EventType")
 	}
 
 	return nil, nil

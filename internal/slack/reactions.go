@@ -9,12 +9,14 @@ import (
 )
 
 const (
-	ReactionSuccess    = "white_check_mark"
-	ReactionFailure    = "x"
-	ReactionCancelled  = "parking"
-	ReactionQueued     = "eyes"
-	ReactionInProgress = "hourglass_flowing_sand"
-	ReactionDefault    = "dogcited"
+	ReactionSuccess    = "white_check_mark"       // ✅
+	ReactionFailure    = "x"                      // ❌
+	ReactionRequest    = "repeat"                 // 🔁
+	ReactionApproved   = "rocket"                 // 🚀
+	ReactionCancelled  = "parking"                //
+	ReactionQueued     = "eyes"                   // 👀
+	ReactionInProgress = "hourglass_flowing_sand" // ⏳
+	ReactionDefault    = "dogcited"               //
 )
 
 func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, channel, timestamp string) error {
