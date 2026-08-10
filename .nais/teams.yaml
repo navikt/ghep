@@ -741,7 +741,7 @@ teams:
       send_empty: true
       specifyTeamName: true
     security-digest:
-      channel: "#team-arbeidsindikator-github"
+      channel: "#team-nav-ung-github"
       day: monday
       time: "08:05"
       send_empty: true
