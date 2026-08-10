@@ -5,6 +5,7 @@ go 1.26.5
 tool (
 	github.com/securego/gosec/v2/cmd/gosec
 	golang.org/x/tools/cmd/deadcode
+	golang.org/x/tools/cmd/stringer
 	golang.org/x/vuln/cmd/govulncheck
 	honnef.co/go/tools/cmd/staticcheck
 	mvdan.cc/gofumpt

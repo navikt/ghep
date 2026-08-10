@@ -13,24 +13,25 @@ func _() {
 	_ = x[TypeDependabotAlert-3]
 	_ = x[TypeIssue-4]
 	_ = x[TypePullRequest-5]
-	_ = x[TypeRelease-6]
-	_ = x[TypeRepositoryRenamed-7]
-	_ = x[TypeRepositoryPublic-8]
-	_ = x[TypeSecurityAdvisory-9]
-	_ = x[TypeSecretScanningAlert-10]
-	_ = x[TypeTeam-11]
-	_ = x[TypeWorkflow-12]
-	_ = x[TypeUnknown-13]
+	_ = x[TypePullRequestReview-6]
+	_ = x[TypeRelease-7]
+	_ = x[TypeRepositoryRenamed-8]
+	_ = x[TypeRepositoryPublic-9]
+	_ = x[TypeSecurityAdvisory-10]
+	_ = x[TypeSecretScanningAlert-11]
+	_ = x[TypeTeam-12]
+	_ = x[TypeWorkflow-13]
+	_ = x[TypeUnknown-14]
 }
 
-const _EventType_name = "TypeCommitTypeCodeScanningAlertTypeDependabotAlertTypeIssueTypePullRequestTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeSecurityAdvisoryTypeSecretScanningAlertTypeTeamTypeWorkflowTypeUnknown"
+const _EventType_name = "TypeCommitTypeCodeScanningAlertTypeDependabotAlertTypeIssueTypePullRequestTypePullRequestReviewTypeReleaseTypeRepositoryRenamedTypeRepositoryPublicTypeSecurityAdvisoryTypeSecretScanningAlertTypeTeamTypeWorkflowTypeUnknown"
 
-var _EventType_index = [...]uint8{0, 10, 31, 50, 59, 74, 85, 106, 126, 146, 169, 177, 189, 200}
+var _EventType_index = [...]uint8{0, 10, 31, 50, 59, 74, 95, 106, 127, 147, 167, 190, 198, 210, 221}
 
 func (i EventType) String() string {
-	i -= 1
-	if i < 0 || i >= EventType(len(_EventType_index)-1) {
-		return "EventType(" + strconv.FormatInt(int64(i+1), 10) + ")"
+	idx := int(i) - 1
+	if i < 1 || idx >= len(_EventType_index)-1 {
+		return "EventType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _EventType_name[_EventType_index[i]:_EventType_index[i+1]]
+	return _EventType_name[_EventType_index[idx]:_EventType_index[idx+1]]
 }
