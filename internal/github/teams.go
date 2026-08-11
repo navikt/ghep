@@ -145,7 +145,7 @@ type Team struct {
 func (t Team) SourcesForType(eventType EventType) []Source {
 	var sourceType string
 	switch eventType {
-	case TypeCommit:
+	case TypeCommit, TypeRepositoryRenamed, TypeRepositoryPublic:
 		sourceType = "commits"
 	case TypeIssue:
 		sourceType = "issues"
@@ -157,8 +157,6 @@ func (t Team) SourcesForType(eventType EventType) []Source {
 		sourceType = "releases"
 	case TypeCodeScanningAlert, TypeDependabotAlert, TypeSecretScanningAlert, TypeSecurityAdvisory:
 		sourceType = "security"
-	case TypeRepositoryRenamed, TypeRepositoryPublic:
-		sourceType = "commits"
 	default:
 		return nil
 	}
