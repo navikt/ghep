@@ -21,7 +21,7 @@ WHERE team_slug = $1 AND event_id = $2;
 
 -- name: CreateSlackID :exec
 INSERT INTO slack_ids (login, id) VALUES ($1, $2)
-ON CONFLICT (id) DO UPDATE SET login = EXCLUDED.login;
+ON CONFLICT (login) DO UPDATE SET id = EXCLUDED.id;
 
 -- name: GetUserSlackID :one
 SELECT id

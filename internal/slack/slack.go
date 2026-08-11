@@ -111,6 +111,7 @@ type UserResponse struct {
 
 	Users []struct {
 		ID      string `json:"id"`
+		Deleted bool   `json:"deleted"`
 		Profile struct {
 			Email string `json:"email"`
 		} `json:"profile"`

@@ -72,6 +72,10 @@ func (c Client) ListUsers() ([]User, error) {
 		}
 
 		for _, user := range slackResp.Users {
+			if user.Deleted {
+				continue
+			}
+
 			users = append(users, User{
 				ID:    user.ID,
 				Email: user.Profile.Email,
