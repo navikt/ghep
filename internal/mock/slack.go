@@ -82,3 +82,7 @@ func (s *Slack) PostUpdatedMessage(message slack.Message) error {
 func (s *Slack) PostWorkflowReaction(log *slog.Logger, event github.Event, channel string, timestamp string) error {
 	return s.PostReaction(channel, timestamp, "workflow-reaction")
 }
+
+func (s *Slack) PostPullRequestReaction(log *slog.Logger, reviewState, channel string, timestamp string) error {
+	return s.PostReaction(channel, timestamp, "workflow-reaction")
+}

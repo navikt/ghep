@@ -122,6 +122,7 @@ type Slacker interface {
 	GetReactions(channel, timestamp string) ([]string, error)
 	JoinChannel(channel string) error
 	PostMessage(payload []byte) (MessageResponse, error)
+	PostPullRequestReaction(log *slog.Logger, reactionState, channel, timestamp string) error
 	PostReaction(channel, timestamp, reaction string) error
 	PostUpdatedMessage(message Message) error
 	PostWorkflowReaction(log *slog.Logger, event github.Event, channel, timestamp string) error

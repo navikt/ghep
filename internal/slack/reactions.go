@@ -39,7 +39,7 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 	}
 
 	if reaction == "dogcited" {
-		log.Info("No reaction found for event (still reacting)", "action", event.Action, "status", event.Workflow.Status, "conclusion", event.Workflow.Conclusion, "event", event)
+		log.Info("No reaction found for event (still reacting)", "action", event.Action, "status", event.Workflow.Status, "event", event)
 	}
 
 	log.Info("Posting reaction to workflow event", "reaction", reaction, "channel", channel, "timestamp", timestamp)
@@ -47,10 +47,27 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 		return fmt.Errorf("posting reaction to workflow event: %v", err)
 	}
 
-	return c.RemoveOtherReactions(log, channel, timestamp, reaction)
+	return c.removeOtherReactions(log, channel, timestamp, reaction)
 }
 
-func (c Client) RemoveOtherReactions(log *slog.Logger, channel, timestamp, currentReaction string) error {
+func (c Client) PostPullRequestReaction(log *slog.Logger, reviewState, channel, timestamp string) error {
+	reaction := ReactionDefault
+	switch reviewState {
+	case "approved":
+		reaction = ReactionApproved
+	case "changes_requested":
+		reaction = ReactionRequest
+	}
+
+	log.Info("Reacting to reviewed pull request", "action", "submitted", "review_state", reviewState, "reaction", reaction)
+	if err := c.PostReaction(channel, timestamp, reaction); err != nil {
+		log.Error("Posting pull request reaction", "error", err, "channel", channel, "timestamp", timestamp)
+	}
+
+	return c.removeOtherReactions(log, channel, timestamp, reaction)
+}
+
+func (c Client) removeOtherReactions(log *slog.Logger, channel, timestamp, currentReaction string) error {
 	reactions, err := c.GetReactions(channel, timestamp)
 	if err != nil {
 		return fmt.Errorf("getting reactions: %v", err)

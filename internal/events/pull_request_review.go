@@ -27,18 +27,7 @@ func (h *Handler) handlePullRequestReviewEvent(ctx context.Context, log *slog.Lo
 	}
 
 	for _, pullRequest := range pullRequests {
-		reaction := slack.ReactionDefault
-		switch event.Review.State {
-		case "approved":
-			reaction = slack.ReactionApproved
-		case "changes_requested":
-			reaction = slack.ReactionRequest
-		}
-
-		log.Info("Reacting to reviewed pull request", "action", event.Action, "review_state", event.Review.State, "reaction", reaction)
-		if err := h.slack.PostReaction(pullRequest.Channel, pullRequest.ThreadTs, reaction); err != nil {
-			log.Error("Posting pull request reaction", "error", err, "channel", pullRequest.Channel, "timestamp", pullRequest.ThreadTs)
-		}
+		h.slack.PostPullRequestReaction(log, event.Review.State, pullRequest.Channel, pullRequest.ThreadTs)
 	}
 
 	return nil, nil
