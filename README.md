@@ -27,6 +27,20 @@ Issues og pull requests blir behandlet nesten likt, og ser like ut når de havne
 `merged` og `deleted` hendelser vil bli posted i Slack-tråden til et issue eller pull requests.
 Dette gjør det enkelt for dere å følge med på hva som skjer.
 
+Når noen lager en review av en pull request vil Ghep reacte på pull request meldingen din basert på tilbakemeldingen.
+Siste review vil overskrive tidligere reviews.
+
+🚀 - når noen godkjenner pull requesten  
+🔁 - når noen ber om endringer  
+
+Hvis en pull request trigger en workflow så vil Ghep reacte på Slack-meldingen for pull requesten basert på reisen til workflowen.
+
+👀 - når en jobb har blitt satt i kø  
+⏳ - når den kjører  
+✅ - fullført vellykket  
+❌ - fullført feilet  
+🅿️ - fullført kansellert  
+
 ![A issue posted to Slack](images/issue.png)
 
 ![A pull request posted to Slack](images/pull-request.png)
