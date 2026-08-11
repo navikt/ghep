@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#MISE description="POST a local JSON file to the running Ghep server with a valid webhook signature"
+#USAGE arg "<file>" help="Path to the JSON payload file"
+set -euo pipefail
+
+body="$(cat "$usage_file")"
+sig="sha256=$(printf '%s' "$body" | openssl dgst -sha256 -hmac "dummy" | awk '{print $NF}')"
+
+args=(-sS -X POST "http://localhost:8080/events"
+	-H "Content-Type: application/json"
+	-H "X-Hub-Signature-256: $sig")
+
+curl "${args[@]}" --data-binary "$body"
