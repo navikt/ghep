@@ -247,6 +247,14 @@ func TestHandleWorkflowEvents(t *testing.T) {
 				SourceType: "commits",
 				Channel:    "#test",
 			},
+			{
+				SourceType: "workflows",
+				Channel:    "#test",
+			},
+			{
+				SourceType: "pulls",
+				Channel:    "#test",
+			},
 		},
 	}
 	teamConfig := map[string]github.Team{"test": team}
@@ -260,11 +268,16 @@ func TestHandleWorkflowEvents(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		sources := team.SourcesForType(workflowEvent.GetEventType())
+		if sources == nil {
+			t.Errorf("No source found for %s", workflowEvent.GetEventType())
+		}
+
 		if err := handler.handleSource(
 			context.TODO(),
 			slog.Default(),
 			team,
-			team.Sources[0],
+			sources[0],
 			workflowEvent,
 		); err != nil {
 			t.Error(err)
@@ -282,12 +295,17 @@ func TestHandleWorkflowEvents(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		sources := team.SourcesForType(commitEvent.GetEventType())
+		if sources == nil {
+			t.Errorf("No source found for %s", commitEvent.GetEventType())
+		}
+
 		// prepopulate db with a commit event
 		if err := handler.handleSource(
 			context.TODO(),
 			slog.Default(),
 			team,
-			team.Sources[0],
+			sources[0],
 			commitEvent,
 		); err != nil {
 			t.Error(err)
@@ -300,6 +318,11 @@ func TestHandleWorkflowEvents(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		sources = team.SourcesForType(workflowEvent.GetEventType())
+		if sources == nil {
+			t.Errorf("No source found for %s", workflowEvent.GetEventType())
+		}
+
 		// ensure events are connected
 		workflowEvent.Workflow.HeadSHA = commitEvent.After
 
@@ -307,7 +330,7 @@ func TestHandleWorkflowEvents(t *testing.T) {
 			context.TODO(),
 			slog.Default(),
 			team,
-			team.Sources[0],
+			sources[0],
 			workflowEvent,
 		); err != nil {
 			t.Error(err)
@@ -325,12 +348,17 @@ func TestHandleWorkflowEvents(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		sources := team.SourcesForType(pullRequestEvent.GetEventType())
+		if sources == nil {
+			t.Errorf("No source found for %s", pullRequestEvent.GetEventType())
+		}
+
 		// prepopulate db with a pull request event
 		if err := handler.handleSource(
 			context.TODO(),
 			slog.Default(),
 			team,
-			team.Sources[0],
+			sources[0],
 			pullRequestEvent,
 		); err != nil {
 			t.Error(err)
@@ -343,11 +371,16 @@ func TestHandleWorkflowEvents(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		sources = team.SourcesForType(workflowEvent.GetEventType())
+		if sources == nil {
+			t.Errorf("No source found for %s", workflowEvent.GetEventType())
+		}
+
 		if err := handler.handleSource(
 			context.TODO(),
 			slog.Default(),
 			team,
-			team.Sources[0],
+			sources[0],
 			workflowEvent,
 		); err != nil {
 			t.Error(err)
