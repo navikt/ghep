@@ -9,16 +9,10 @@ import (
 	"github.com/navikt/ghep/internal/slack"
 )
 
-type SlackReactionMetadata struct {
-	Channel   string
-	Reaction  string
-	Timestamp string
-}
-
 type Slack struct {
-	Messages        []slack.Message
-	Reactions       []SlackReactionMetadata
-	UpdatedMessages []slack.Message
+	Messages        int
+	Reactions       int
+	UpdatedMessages int
 }
 
 func (s *Slack) Ensure(t *testing.T, eventType github.EventType, messages, reactions, updatedMessages int) {
@@ -30,24 +24,24 @@ func (s *Slack) Ensure(t *testing.T, eventType github.EventType, messages, react
 func (s *Slack) EnsureMessages(t *testing.T, eventType github.EventType, expected int) {
 	t.Helper()
 
-	if len(s.Messages) != expected {
-		t.Errorf("%s expected %d messages, got %d", eventType, expected, len(s.Messages))
+	if s.Messages != expected {
+		t.Errorf("%s expected %d messages, got %d", eventType, expected, s.Messages)
 	}
 }
 
 func (s *Slack) EnsureReactions(t *testing.T, eventType github.EventType, expected int) {
 	t.Helper()
 
-	if len(s.Reactions) != expected {
-		t.Errorf("%s expected %d reactions, got %d", eventType, expected, len(s.Reactions))
+	if s.Reactions != expected {
+		t.Errorf("%s expected %d reactions, got %d", eventType, expected, s.Reactions)
 	}
 }
 
 func (s *Slack) EnsureUpdatedMessages(t *testing.T, eventType github.EventType, expected int) {
 	t.Helper()
 
-	if len(s.UpdatedMessages) != expected {
-		t.Errorf("%s expected %d updated messages, got %d", eventType, expected, len(s.UpdatedMessages))
+	if s.UpdatedMessages != expected {
+		t.Errorf("%s expected %d updated messages, got %d", eventType, expected, s.UpdatedMessages)
 	}
 }
 
@@ -69,22 +63,18 @@ func (s *Slack) PostMessage(payload []byte) (slack.MessageResponse, error) {
 		return slack.MessageResponse{}, nil
 	}
 
-	s.Messages = append(s.Messages, message)
+	s.Messages += 1
 	return slack.MessageResponse{Channel: message.Channel}, nil
 }
 
 func (s *Slack) PostReaction(channel string, timestamp string, reaction string) error {
-	s.Reactions = append(s.Reactions, SlackReactionMetadata{
-		Channel:   channel,
-		Reaction:  reaction,
-		Timestamp: timestamp,
-	})
+	s.Reactions += 1
 
 	return nil
 }
 
 func (s *Slack) PostUpdatedMessage(message slack.Message) error {
-	s.UpdatedMessages = append(s.UpdatedMessages, message)
+	s.UpdatedMessages += 1
 
 	return nil
 }
