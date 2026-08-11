@@ -13,7 +13,7 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func (h *Handler) handlePullRequestReviewEvent(ctx context.Context, log *slog.Logger, team github.Team, source github.Source, event github.Event) (*slack.Message, error) {
+func (h *Handler) handlePullRequestReviewEvent(ctx context.Context, log *slog.Logger, team github.Team, event github.Event) (*slack.Message, error) {
 	if !slices.Contains([]string{"approved", "changes_requested"}, event.Review.State) {
 		return nil, nil
 	}

@@ -165,7 +165,7 @@ func (h *Handler) handleForSource(ctx context.Context, log *slog.Logger, team gi
 	case github.TypePullRequest:
 		return h.handlePullRequestEvent(ctx, log, team, source, event)
 	case github.TypePullRequestReview:
-		return h.handlePullRequestReviewEvent(ctx, log, team, source, event)
+		return h.handlePullRequestReviewEvent(ctx, log, team, event)
 	case github.TypeRelease:
 		return h.handleReleaseEvent(ctx, log, team, source, event)
 	case github.TypeRepositoryRenamed:
