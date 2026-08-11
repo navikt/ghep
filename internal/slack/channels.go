@@ -113,7 +113,7 @@ func (c Client) listChannels(apiMethod string) ([]Channel, error) {
 		}
 
 		if !slackResp.Ok {
-			return nil, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
+			return nil, fmt.Errorf("non OK: %v (needed=%s, provided=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
 		}
 
 		if slackResp.Warning != "" {

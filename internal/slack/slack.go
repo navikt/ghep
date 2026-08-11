@@ -214,7 +214,7 @@ func (c Client) handleSlackResponse(resp *http.Response, body string) (string, e
 	}
 
 	if !slackResp.Ok {
-		return body, fmt.Errorf("non OK: %v (needed=%s, provded=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
+		return body, fmt.Errorf("non OK: %v (needed=%s, provided=%s)", slackResp.Error, slackResp.Needed, slackResp.Provided)
 	}
 
 	if slackResp.Warning != "" {
