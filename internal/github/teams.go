@@ -149,7 +149,7 @@ func (t Team) SourcesForType(eventType EventType) []Source {
 		sourceType = "commits"
 	case TypeIssue:
 		sourceType = "issues"
-	case TypePullRequest:
+	case TypePullRequest, TypePullRequestReview:
 		sourceType = "pulls"
 	case TypeWorkflow:
 		sourceType = "workflows"
