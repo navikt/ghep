@@ -21,7 +21,7 @@ run = "ratchet pin .github/workflows/*.yaml"
 
 [tasks."check"]
 description = "Run all checks"
-run = "unset MISE_TASK_OUTPUT && mise run check:deadcode ::: check:gosec ::: check:staticcheck ::: check:vulncheck"
+run = "mise run check:deadcode ::: check:gosec ::: check:staticcheck ::: check:vulncheck"
 
 [tasks."check:deadcode"]
 description = "Run deadcode"
