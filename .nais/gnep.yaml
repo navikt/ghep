@@ -9,8 +9,9 @@ metadata:
     reloader.stakater.com/match: "true"
 data:
   teams.yaml: |
+    # Brukernavn må være likt som på Github
     personal-digest:
-      - login: kyrremann
+      - login: Kyrremann
 
     teams:
       nais:
