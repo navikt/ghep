@@ -12,6 +12,7 @@ data:
     # Brukernavn må være likt som på Github
     personal-digest:
       - login: Kyrremann
+      - login: tronghn
 
     teams:
       nais:
