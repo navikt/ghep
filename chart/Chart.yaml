@@ -1,0 +1,18 @@
+apiVersion: v2
+name: ghep
+description: |
+  Ghep is a GitHub App that routes GitHub webhook events for teams to Slack
+  channels, and sends scheduled digests summarising open work.
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+home: https://navikt.github.io/ghep
+sources:
+  - https://github.com/navikt/ghep
+keywords:
+  - github
+  - slack
+  - notifications
+maintainers:
+  - name: Kyrre Havik
+    url: https://github.com/navikt

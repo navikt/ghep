@@ -1,0 +1,54 @@
+name: Helm chart
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "chart/**"
+      - ".github/workflows/chart.yaml"
+  pull_request:
+    paths:
+      - "chart/**"
+      - ".github/workflows/chart.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint and template the chart
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
+      - uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # ratchet:azure/setup-helm@v4.3.1
+      - name: Lint
+        run: helm lint chart/
+      - name: Render templates
+        run: |
+          helm template ghep chart/ \
+            --set githubOrg=example \
+            --set existingSecret.name=ghep-secrets \
+            --set database.host=postgres.example.com \
+            --set teamsConfig.name=teams-config
+      - name: Package
+        run: helm package chart/
+
+  publish:
+    name: Push chart to GHCR
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs:
+      - lint
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
+      - uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # ratchet:azure/setup-helm@v4.3.1
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
+      - name: Package and push
+        run: |
+          helm package chart/
+          helm push ghep-*.tgz oci://ghcr.io/navikt/charts

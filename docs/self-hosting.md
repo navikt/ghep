@@ -78,4 +78,47 @@ In addition to the env vars you can read in [the nais yaml](../nais.yaml), you w
 As this is not a 3rd party managed Slackbot, the container image will need to to run somewhere provided by you.
 The ingress needs to be reachable from Github in order to receive Github event webhooks.
 
-We supply a [Helm Chart](../chart) for those running in Kubernetes.
+## Helm chart
+
+We supply a [Helm chart](../chart) for those running in Kubernetes, published to `oci://ghcr.io/navikt/charts/ghep`.
+
+### Prerequisites
+
+1. A PostgreSQL database. Migrations run automatically on startup.
+2. A Secret with database credentials and app secrets:
+
+   ```sh
+   kubectl create secret generic ghep-secrets \
+     --from-literal=db-username=ghep \
+     --from-literal=db-password=secret \
+     --from-literal=slack-token=xoxb-... \
+     --from-literal=github-app-id=123456 \
+     --from-literal=github-app-installation-id=12345678 \
+     --from-literal=github-webhook-secret=... \
+     --from-file=github-app-private-key=private-key.pem
+   ```
+
+   Key names can be overridden via `existingSecret.keys` if your Secret uses different ones.
+
+3. A ConfigMap with your teams configuration:
+
+   ```sh
+   kubectl create configmap ghep-teams --from-file=teams.yaml=teams.yaml
+   ```
+
+### Install
+
+```sh
+helm install ghep oci://ghcr.io/navikt/charts/ghep \
+  --set githubOrg=my-org \
+  --set existingSecret.name=ghep-secrets \
+  --set database.host=my-postgres.example.com \
+  --set database.name=ghep \
+  --set teamsConfig.name=ghep-teams \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host=ghep.example.com
+```
+
+See [values.yaml](../chart/values.yaml) for all options.
+
+Note that the chart runs a single replica on purpose: Ghep performs leader election only on the Nais platform, and multiple replicas would send duplicate scheduled digests.

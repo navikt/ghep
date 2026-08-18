@@ -1,0 +1,111 @@
+# Ghep Helm chart default values.
+#
+# Ghep assumes you have already created:
+#   1. A PostgreSQL database
+#   2. A Secret with database credentials and app secrets (see `existingSecret`)
+#   3. A ConfigMap with your teams.yaml (see `teamsConfig`)
+
+# NOTE: Ghep performs leader election only on nais. On plain Kubernetes it
+# always assumes leadership, so do not scale beyond one replica — scheduled
+# digests would be sent multiple times.
+
+image:
+  repository: ghcr.io/navikt/ghep
+  # tag defaults to the chart's appVersion
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# -- Required. The GitHub organisation Ghep subscribes to.
+githubOrg: ""
+
+# -- Name of an existing Secret containing all credentials.
+# The Secret must contain the following keys:
+#   db-username                  – PostgreSQL username
+#   db-password                  – PostgreSQL password
+#   slack-token                  – Slack bot token (xoxb-...)
+#   github-app-id                – GitHub App ID
+#   github-app-installation-id   – GitHub App installation ID
+#   github-app-private-key       – GitHub App private key (PEM)
+#   github-webhook-secret        – GitHub App webhook secret
+existingSecret:
+  name: ""
+  # Override individual key names if your Secret uses different ones.
+  keys:
+    dbUsername: db-username
+    dbPassword: db-password
+    slackToken: slack-token
+    githubAppId: github-app-id
+    githubAppInstallationId: github-app-installation-id
+    githubAppPrivateKey: github-app-private-key
+    githubWebhookSecret: github-webhook-secret
+
+database:
+  # -- Hostname of the PostgreSQL server.
+  host: ""
+  port: 5432
+  # -- Name of the database Ghep should use. Migrations run on startup.
+  name: ghep
+  # -- Extra query parameters appended to the connection string, e.g. "sslmode=require".
+  params: ""
+
+teamsConfig:
+  # -- Name of an existing ConfigMap containing the teams configuration.
+  name: ""
+  # -- Key in the ConfigMap holding the teams YAML.
+  key: teams.yaml
+
+config:
+  # -- Subscribe to all org repos instead of per-team repos ("true"/"false").
+  subscribeToOrg: "false"
+  # -- Comma-separated list of repos to ignore.
+  blocklistRepos: ""
+  # -- Slack channel for pull requests from non-team members.
+  externalContributorsChannel: ""
+  # -- Address the HTTP server listens on.
+  serverAddr: "0.0.0.0:8080"
+  # -- Base path for the webhook endpoint, e.g. "/ghep".
+  apiBasePath: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: ghep.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: ghep-tls
+  #    hosts:
+  #      - ghep.example.com
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 16Mi
+  limits:
+    memory: 128Mi
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

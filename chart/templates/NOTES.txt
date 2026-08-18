@@ -1,0 +1,20 @@
+Ghep has been deployed.
+
+Webhook endpoint:
+{{- if .Values.ingress.enabled }}
+{{- range .Values.ingress.hosts }}
+  https://{{ .host }}{{ $.Values.config.apiBasePath }}/events
+{{- end }}
+{{- else }}
+  The ingress is not enabled. Ghep must be reachable from GitHub to receive
+  webhook events. Enable the ingress or expose the service another way:
+
+    kubectl port-forward svc/{{ include "ghep.fullname" . }} 8080:{{ .Values.service.port }}
+
+  Then point your GitHub App webhook to: https://<your-host>{{ .Values.config.apiBasePath }}/events
+{{- end }}
+
+Reminders:
+  - Database migrations run automatically on startup.
+  - replicaCount is locked to 1: Ghep has no leader election outside Nais platform,
+    and multiple replicas would send duplicate scheduled digests.

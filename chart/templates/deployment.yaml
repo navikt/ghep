@@ -1,0 +1,140 @@
+{{- include "ghep.validateValues" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ghep.fullname" . }}
+  labels:
+    {{- include "ghep.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "ghep.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ghep.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ghep.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ include "ghep.containerPort" . }}
+              protocol: TCP
+          env:
+            - name: GITHUB_ORG
+              value: {{ .Values.githubOrg | quote }}
+            - name: REPOS_CONFIG_FILE_PATH
+              value: /config/{{ .Values.teamsConfig.key }}
+            - name: GHEP_SUBSCRIBE_TO_ORG
+              value: {{ .Values.config.subscribeToOrg | quote }}
+            - name: SERVER_ADDR
+              value: {{ .Values.config.serverAddr | quote }}
+            {{- with .Values.config.blocklistRepos }}
+            - name: GITHUB_BLOCKLIST_REPOS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.config.externalContributorsChannel }}
+            - name: EXTERNAL_CONTRIBUTORS_CHANNEL
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.config.apiBasePath }}
+            - name: API_BASE_PATH
+              value: {{ . | quote }}
+            {{- end }}
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.keys.dbUsername }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.keys.dbPassword }}
+            - name: PGURL
+              value: "postgres://$(DB_USERNAME):$(DB_PASSWORD)@{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}{{- with .Values.database.params }}?{{ . }}{{- end }}"
+            - name: SLACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.keys.slackToken }}
+            - name: GITHUB_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.keys.githubAppId }}
+            - name: GITHUB_APP_INSTALLATION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.keys.githubAppInstallationId }}
+            - name: GITHUB_APP_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.keys.githubAppPrivateKey }}
+            - name: GITHUB_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.keys.githubWebhookSecret }}
+          startupProbe:
+            httpGet:
+              path: /internal/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /internal/health
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /internal/health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: teams-config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: teams-config
+          configMap:
+            name: {{ .Values.teamsConfig.name }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
