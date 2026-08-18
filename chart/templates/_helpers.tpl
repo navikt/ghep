@@ -84,7 +84,4 @@ Validate required values.
 {{- if not .Values.teamsConfig.name }}
 {{- fail "teamsConfig.name is required — create a ConfigMap containing your teams.yaml" }}
 {{- end }}
-{{- if ne (int .Values.replicaCount) 1 }}
-{{- fail "replicaCount must be 1 — Ghep has no leader election outside nais and would send duplicate digests" }}
-{{- end }}
 {{- end }}
