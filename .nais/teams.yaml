@@ -793,6 +793,9 @@ teams:
     config:
       security:
         severityFilter: "critical"
+      ignore-repositories:
+        - digisos
+        - mock-alt
     pr-digest:
       channel: "#digisos-faktisk-utvikling"
       day: monday
