@@ -33,6 +33,9 @@ func (c Client) PostWorkflowReaction(log *slog.Logger, event github.Event, chann
 			reaction = ReactionFailure
 		case "cancelled":
 			reaction = ReactionCancelled
+		case "skipped":
+			// Skipped workflow should not trigger reaction
+			return nil
 		}
 
 		log = log.With("conclusion", event.Workflow.Conclusion)
