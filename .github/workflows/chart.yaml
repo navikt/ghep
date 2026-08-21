@@ -52,3 +52,15 @@ jobs:
         run: |
           helm package chart/
           helm push ghep-*.tgz oci://ghcr.io/navikt/charts
+      - name: Job summary
+        run: |
+          VERSION=$(yq '.version' chart/Chart.yaml)
+          {
+            echo "## Helm chart published"
+            echo ""
+            echo "**ghep** version \`$VERSION\` → [ghcr.io/navikt/charts/ghep](https://github.com/navikt/ghep/pkgs/container/charts%2Fghep)"
+            echo ""
+            echo '```sh'
+            echo "helm install ghep oci://ghcr.io/navikt/charts/ghep --version $VERSION"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
