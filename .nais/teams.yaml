@@ -788,3 +788,16 @@ teams:
     config:
       security:
         severityFilter: "high"
+  teamdigisos:
+    security: "#digisos-alerts"
+    config:
+      security:
+        severityFilter: "critical"
+    pr-digest:
+      channel: "#digisos-faktisk-utvikling"
+      day: monday
+      time: "10:00"
+    security-digest:
+      channel: "#digisos-faktisk-utvikling"
+      day: friday
+      time: "10:00"
