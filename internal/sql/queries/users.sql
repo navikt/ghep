@@ -5,6 +5,9 @@ ON CONFLICT (login) DO NOTHING;
 -- name: ExistsUser :one
 SELECT EXISTS (SELECT login FROM users WHERE login = $1);
 
+-- name: ExistsUserCaseInsensitive :one
+SELECT EXISTS (SELECT login FROM users WHERE login ILIKE $1);
+
 -- name: DeleteUser :exec
 DELETE FROM users WHERE login = $1;
 

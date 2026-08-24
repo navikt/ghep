@@ -23,6 +23,7 @@ type Database interface {
 	CreateSlackMessage(ctx context.Context, arg gensql.CreateSlackMessageParams) error
 	CreateUser(ctx context.Context, login string) error
 	ExistsUser(ctx context.Context, login string) (bool, error)
+	ExistsUserCaseInsensitive(ctx context.Context, login string) (bool, error)
 	GetRepository(ctx context.Context, name string) (gensql.Repository, error)
 	GetSlackMessage(ctx context.Context, arg gensql.GetSlackMessageParams) (gensql.GetSlackMessageRow, error)
 	GetTeamMember(ctx context.Context, params gensql.GetTeamMemberParams) (string, error)

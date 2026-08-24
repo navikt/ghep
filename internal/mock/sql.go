@@ -10,8 +10,10 @@ import (
 )
 
 type Database struct {
-	Members       []string
-	SlackMessages []gensql.CreateSlackMessageParams
+	Members            []string
+	SlackMessages      []gensql.CreateSlackMessageParams
+	Users              []string
+	CommitCountUpserts []gensql.UpsertUserCommitCountParams
 }
 
 func (m *Database) AddTeamMember(ctx context.Context, params gensql.AddTeamMemberParams) error {
@@ -32,6 +34,12 @@ func (m *Database) CreateUser(ctx context.Context, login string) error {
 
 func (m *Database) ExistsUser(ctx context.Context, login string) (bool, error) {
 	panic("unimplemented ExistsUser")
+}
+
+func (m *Database) ExistsUserCaseInsensitive(_ context.Context, login string) (bool, error) {
+	return slices.ContainsFunc(m.Users, func(user string) bool {
+		return strings.EqualFold(user, login)
+	}), nil
 }
 
 func (m *Database) GetRepository(ctx context.Context, name string) (gensql.Repository, error) {
@@ -96,8 +104,9 @@ func (m *Database) UpdateRepository(ctx context.Context, arg gensql.UpdateReposi
 	panic("unimplemented UpdateRepository")
 }
 
-func (m *Database) UpsertUserCommitCount(ctx context.Context, arg gensql.UpsertUserCommitCountParams) error {
-	panic("unimplemented UpsertUserCommitCount")
+func (m *Database) UpsertUserCommitCount(_ context.Context, arg gensql.UpsertUserCommitCountParams) error {
+	m.CommitCountUpserts = append(m.CommitCountUpserts, arg)
+	return nil
 }
 
 func (m *Database) GetUserByEmail(_ context.Context, email string) (string, error) {

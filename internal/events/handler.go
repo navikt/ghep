@@ -290,6 +290,17 @@ func recordCommitAuthors(log *slog.Logger, db sql.Database, event github.Event) 
 	repo := event.Repository.Name
 
 	for login, count := range counts {
+		exists, err := db.ExistsUserCaseInsensitive(context.Background(), login)
+		if err != nil {
+			log.Error("Checking if commit author exists", "login", login, "error", err)
+			continue
+		}
+
+		if !exists {
+			log.Info("Skipping commit author not in users", "login", login, "repo", repo)
+			continue
+		}
+
 		if err := db.UpsertUserCommitCount(context.Background(), gensql.UpsertUserCommitCountParams{
 			Login:        login,
 			Repo:         repo,

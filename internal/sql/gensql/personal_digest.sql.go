@@ -47,7 +47,7 @@ func (q *Queries) GetPersonalDigestSentAt(ctx context.Context, login string) (pg
 const GetUserCommitsSince = `-- name: GetUserCommitsSince :many
 SELECT repo, commit_count
 FROM user_commit_counts
-WHERE login = $1 AND last_pushed_at > $2
+WHERE login ILIKE $1 AND last_pushed_at > $2
 ORDER BY commit_count DESC
 `
 

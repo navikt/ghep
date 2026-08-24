@@ -54,6 +54,17 @@ func (q *Queries) ExistsUser(ctx context.Context, login string) (bool, error) {
 	return exists, err
 }
 
+const ExistsUserCaseInsensitive = `-- name: ExistsUserCaseInsensitive :one
+SELECT EXISTS (SELECT login FROM users WHERE login ILIKE $1)
+`
+
+func (q *Queries) ExistsUserCaseInsensitive(ctx context.Context, login string) (bool, error) {
+	row := q.db.QueryRow(ctx, ExistsUserCaseInsensitive, login)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const GetUserByEmail = `-- name: GetUserByEmail :one
 SELECT e.login
 FROM emails e
