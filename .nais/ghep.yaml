@@ -22,6 +22,7 @@ metadata:
   namespace: the-g-team
   labels:
     team: the-g-team
+    systemkatalog.nav.no/system: SK-625
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 spec:

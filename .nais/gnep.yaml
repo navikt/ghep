@@ -76,6 +76,7 @@ metadata:
   namespace: the-g-team
   labels:
     team: the-g-team
+    systemkatalog.nav.no/system: SK-625
 spec:
   ingresses:
     - https://ghep.nav.no/nais
