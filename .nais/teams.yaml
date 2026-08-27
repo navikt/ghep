@@ -808,4 +808,4 @@ teams:
     security: "#team-påvegneav-security"
     config:
       security:
-        severityFilter: "critical"
+        severityFilter: "high"
