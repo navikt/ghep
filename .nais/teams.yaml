@@ -804,3 +804,8 @@ teams:
       channel: "#digisos-faktisk-utvikling"
       day: friday
       time: "10:00"
+  repr:
+    security: "#team-påvegneav-security"
+    config:
+      security:
+        severityFilter: "critical"
