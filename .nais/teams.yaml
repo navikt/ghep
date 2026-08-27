@@ -806,6 +806,10 @@ teams:
       time: "10:00"
   repr:
     security: "#team-påvegneav-security"
+    security-digest:
+      channel: "#team-påvegneav-security"
+      day: thursday
+      time: "19:25"
     config:
       security:
         severityFilter: "high"
