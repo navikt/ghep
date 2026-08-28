@@ -793,9 +793,9 @@ teams:
     config:
       security:
         severityFilter: "critical"
-      ignore-repositories:
+      ignoreRepositories:
         - digisos
-        - mock-alt
+        - sosialhjelp-mock-alt
     pr-digest:
       channel: "#digisos-faktisk-utvikling"
       day: monday
