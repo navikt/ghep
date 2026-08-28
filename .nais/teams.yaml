@@ -804,8 +804,10 @@ teams:
     security: "#team-påvegneav-security"
     security-digest:
       channel: "#team-påvegneav-security"
-      day: thursday
-      time: "19:25"
+      day: friday
+      time: "16:15"
+      send_empty: true
+      severity_filter: "high"
     config:
       security:
         severityFilter: "high"
