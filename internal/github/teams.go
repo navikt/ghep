@@ -262,7 +262,9 @@ func ParseTeamConfig(path string) (map[string]Team, []PersonalDigestUserEntry, e
 	defer file.Close()
 
 	var tf teamsFile
-	if err := yaml.NewDecoder(file).Decode(&tf); err != nil {
+	decoder := yaml.NewDecoder(file)
+	decoder.KnownFields(true)
+	if err := decoder.Decode(&tf); err != nil {
 		return nil, nil, fmt.Errorf("decoding team config: %v", err)
 	}
 

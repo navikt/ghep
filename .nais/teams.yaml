@@ -1,6 +1,6 @@
 personal-digest:
-# Disse må være lik som det faktisk brukernavnet ditt
-# med store og små bokstaver
+  # Disse må være lik som det faktisk brukernavnet ditt
+  # med store og små bokstaver
   - login: Kyrremann
   - login: navbrynjar
   - login: tronghn
@@ -111,8 +111,6 @@ teams:
         config:
           branches:
             - main
-          workflows:
-            onlyBots: true
   spenn:
     commits: "#team-spenn-commits"
     issues: "#team-spenn-pull-requests"
@@ -643,8 +641,6 @@ teams:
           workflows:
             ignoreBots: true
     config:
-      branches:
-        - main
       pulls:
         events: ["merged"]
       ignoreRepositories:
