@@ -117,6 +117,11 @@ spec:
         - ipv4: 3.68.170.153
   postgres:
     clusterName: gnep
+  uses:
+    postgres:
+      - envPrefix: PG_
+        name: gnep
+        role: readwrite
   startup:
     path: /internal/health
     initialDelay: 10

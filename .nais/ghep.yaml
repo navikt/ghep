@@ -66,6 +66,11 @@ spec:
         - ipv4: 3.68.170.153
   postgres:
     clusterName: ghep
+  uses:
+    postgres:
+      - envPrefix: PG_
+        name: ghep
+        role: readwrite
   startup:
     path: /internal/health
     initialDelay: 10
