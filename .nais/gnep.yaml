@@ -115,6 +115,8 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
+  postgres:
+    clusterName: gnep
   uses:
     postgres:
       - envPrefix: PG_
