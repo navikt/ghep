@@ -27,7 +27,9 @@ func (h *Handler) handlePullRequestReviewEvent(ctx context.Context, log *slog.Lo
 	}
 
 	for _, pullRequest := range pullRequests {
-		h.slack.PostPullRequestReaction(log, event.Review.State, pullRequest.Channel, pullRequest.ThreadTs)
+		if err := h.slack.PostPullRequestReaction(log, event.Review.State, pullRequest.Channel, pullRequest.ThreadTs); err != nil {
+			log.Error("posting pull request reaction", "error", err)
+		}
 	}
 
 	return nil, nil

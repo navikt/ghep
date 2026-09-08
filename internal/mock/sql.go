@@ -29,7 +29,7 @@ func (m *Database) AddTeamRepository(ctx context.Context, params gensql.AddTeamR
 
 func (m *Database) CreateRepository(ctx context.Context, name string) (int32, error) {
 	m.lastRepositoryName = name
-	return int32(len(name)), nil
+	return int32(len(name)), nil // #nosec G115
 }
 
 func (m *Database) CreateUser(ctx context.Context, login string) error {

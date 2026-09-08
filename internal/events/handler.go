@@ -71,7 +71,7 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 	switch eventType {
 	case github.TypeCommit:
 		if event.Repository != nil {
-			go recordCommitAuthors(log, h.db, event) // #nosec: G118 - takes to long to share context with request
+			go recordCommitAuthors(log, h.db, event) // #nosec G118 - takes too long to share context with request
 		}
 	case github.TypeRepositoryRenamed:
 		if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
