@@ -37,6 +37,7 @@ type Config struct {
 	Workflows                   Workflows        `yaml:"workflows"`
 	SilenceDependabot           DependabotConfig `yaml:"silenceDependabot"`
 	IgnoreRepositories          []string         `yaml:"ignoreRepositories"`
+	IgnoreForks                 bool             `yaml:"ignoreForks"`
 	Security                    Security         `yaml:"security"`
 	PingSlackUsers              bool             `yaml:"pingSlackUsers"`
 	Pulls                       PullsConfig      `yaml:"pulls"`
@@ -175,7 +176,7 @@ type githubError struct {
 	Status  string `json:"status"`
 }
 
-func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]string, error) {
+func fetchRepositories(teamURL, bearerToken string, blocklist []string, ignoreForks bool) ([]string, error) {
 	req, err := http.NewRequest("GET", teamURL+"/repos", nil)
 	if err != nil {
 		return nil, err
@@ -194,6 +195,7 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 	type GithubRepo struct {
 		Name     string `json:"name"`
 		Archived bool   `json:"archived"`
+		Fork     bool   `json:"fork"`
 	}
 
 	var repos []string
@@ -229,6 +231,10 @@ func fetchRepositories(teamURL, bearerToken string, blocklist []string) ([]strin
 
 		for _, repo := range githubRepos {
 			if repo.Archived {
+				continue
+			}
+
+			if repo.Fork && ignoreForks {
 				continue
 			}
 
@@ -494,7 +500,7 @@ func (c Client) FetchOrgAsTeam(ctx context.Context, log *slog.Logger, reposBlock
 		}
 	}
 
-	repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
+	repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist, true)
 	if err != nil {
 		return fmt.Errorf("fetching repositories for %s: %v", c.org, err)
 	}
@@ -514,7 +520,7 @@ func (c Client) FetchOrgAsTeam(ctx context.Context, log *slog.Logger, reposBlock
 	return nil
 }
 
-func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist []string) error {
+func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist []string, teamConfig map[string]Team) error {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {
 		return fmt.Errorf("creating bearer token: %v", err)
@@ -542,7 +548,7 @@ func (c Client) FetchTeams(ctx context.Context, log *slog.Logger, reposBlocklist
 			continue
 		}
 
-		repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist)
+		repositories, err := fetchRepositories(teamURL, bearerToken, reposBlocklist, teamConfig[team].Config.IgnoreForks)
 		if err != nil {
 			return fmt.Errorf("fetching repositories for %s: %v", team, err)
 		}

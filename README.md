@@ -164,12 +164,14 @@ teams:
       ignoreRepositories:
         - repoA
         - repoB
+      ignoreForks: true
       silenceDependabot: "always"
       externalContributorsChannel: "#channel"
       pingSlackUsers: true
 ```
 
 - `ignoreRepositories` - En liste med repositories man ikke ønsker hendelser fra
+- `ignoreForks` - Hvis `true` blir forks utelatt fra teamets repo-liste, og du får verken hendelser eller digest-oppføringer fra dem.
 - `silenceDependabot` - Hvis denne blir satt til `always` så ignorer man alle hendelser fra Dependabot
 - `externalContributorsChannel` - Issues og pull requests fra brukere som ikke er i teamet ditt vil havne i en egen kanal
 - `pingSlackUsers`- Pinger Slack-brukere som er tildelt issues eller pull requests

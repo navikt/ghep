@@ -132,6 +132,7 @@ type Repository struct {
 	URL           string `json:"html_url"`
 	DefaultBranch string `json:"default_branch"`
 	RoleName      string `json:"role_name"`
+	Fork          bool   `json:"fork"`
 }
 
 type Commit struct {

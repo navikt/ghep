@@ -53,7 +53,7 @@ func FetchGithubData(ctx context.Context, log *slog.Logger, db *gensql.Queries, 
 			return
 		}
 	} else {
-		if err := githubClient.FetchTeams(ctx, log, reposBlocklist); err != nil {
+		if err := githubClient.FetchTeams(ctx, log, reposBlocklist, teamConfig); err != nil {
 			log.Error("Fetching teams from Github", "error", err)
 			return
 		}

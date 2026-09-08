@@ -22,6 +22,11 @@ func (h *Handler) handleTeamSideEffects(ctx context.Context, log *slog.Logger, e
 
 	switch event.Action {
 	case "added_to_repository":
+		if event.Repository.Fork && h.teamsConfig[team].Config.IgnoreForks {
+			log.Info("Ignoring fork added to team")
+			return nil
+		}
+
 		if err := sql.AddRepositoryToTeam(ctx, h.db, team, event.Repository.Name); err != nil {
 			return err
 		}

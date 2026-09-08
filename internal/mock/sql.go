@@ -14,6 +14,8 @@ type Database struct {
 	SlackMessages      []gensql.CreateSlackMessageParams
 	Users              []string
 	CommitCountUpserts []gensql.UpsertUserCommitCountParams
+	TeamRepositories   []string
+	lastRepositoryName string
 }
 
 func (m *Database) AddTeamMember(ctx context.Context, params gensql.AddTeamMemberParams) error {
@@ -21,11 +23,13 @@ func (m *Database) AddTeamMember(ctx context.Context, params gensql.AddTeamMembe
 }
 
 func (m *Database) AddTeamRepository(ctx context.Context, params gensql.AddTeamRepositoryParams) error {
-	panic("unimplemented AddTeamRepository")
+	m.TeamRepositories = append(m.TeamRepositories, params.TeamSlug+"/"+m.lastRepositoryName)
+	return nil
 }
 
 func (m *Database) CreateRepository(ctx context.Context, name string) (int32, error) {
-	panic("unimplemented CreateRepository")
+	m.lastRepositoryName = name
+	return int32(len(name)), nil
 }
 
 func (m *Database) CreateUser(ctx context.Context, login string) error {
