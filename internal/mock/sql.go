@@ -47,7 +47,7 @@ func (m *Database) ExistsUserCaseInsensitive(_ context.Context, login string) (b
 }
 
 func (m *Database) GetRepository(ctx context.Context, name string) (gensql.Repository, error) {
-	panic("unimplemented GetRepository")
+	return gensql.Repository{}, pgx.ErrNoRows
 }
 
 func (m *Database) CreateSlackMessage(ctx context.Context, arg gensql.CreateSlackMessageParams) error {
