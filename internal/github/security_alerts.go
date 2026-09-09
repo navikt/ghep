@@ -49,6 +49,32 @@ func (r RepoSecurityAlerts) Total() int {
 	return len(r.SecretScanning) + len(r.CodeScanning) + len(r.Dependabot)
 }
 
+func (r RepoSecurityAlerts) CodeScanningCriticals() int {
+	var criticals int
+	for _, a := range r.CodeScanning {
+		if AsSeverityType(a.Severity) == SeverityCritical {
+			criticals++
+		}
+	}
+
+	return criticals
+}
+
+func (r RepoSecurityAlerts) DependabotCriticals() int {
+	var criticals int
+	for _, a := range r.Dependabot {
+		if AsSeverityType(a.Severity) == SeverityCritical {
+			criticals++
+		}
+	}
+
+	return criticals
+}
+
+func (r RepoSecurityAlerts) Criticals() int {
+	return r.CodeScanningCriticals() + r.DependabotCriticals()
+}
+
 func (c Client) FetchOpenSecurityAlerts(ctx context.Context, teamSlug string, cfg *SecurityDigestConfig, globalIgnore []string) ([]RepoSecurityAlerts, error) {
 	bearerToken, err := c.createBearerToken()
 	if err != nil {

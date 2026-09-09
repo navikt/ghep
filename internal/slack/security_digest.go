@@ -2,6 +2,7 @@ package slack
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
@@ -74,38 +75,37 @@ func CreateSecurityDigestMessage(channel, teamName string, repoAlerts []github.R
 		Text:    summaryText,
 	}
 
-	var totalCriticals int
+	slices.SortFunc(repoAlerts, func(a, b github.RepoSecurityAlerts) int {
+		if c := b.Criticals() - a.Criticals(); c != 0 {
+			return c
+		}
 
+		if c := b.Total() - a.Total(); c != 0 {
+			return c
+		}
+
+		return strings.Compare(a.Repository.Name, b.Repository.Name)
+	})
+
+	var totalCriticals int
 	// One thread message per repo
 	for _, repo := range repoAlerts {
 		var sb strings.Builder
 		fmt.Fprintf(&sb, "*%s*\n", repo.ToSlack())
 
+		codeScanningCriticals := repo.CodeScanningCriticals()
+		dependabotCriticals := repo.DependabotCriticals()
+		totalCriticals += codeScanningCriticals + dependabotCriticals
+
 		if len(repo.SecretScanning) > 0 {
 			fmt.Fprintf(&sb, ":key: %s\n", repo.ToSlackWithMetadata("secret-scanning", len(repo.SecretScanning)))
 		}
 
-		var criticals int
-		for _, a := range repo.CodeScanning {
-			if github.AsSeverityType(a.Severity) == github.SeverityCritical {
-				criticals += 1
-			}
-		}
-		totalCriticals += criticals
-
 		fmt.Fprintf(&sb, ":mag: %s", repo.ToSlackWithMetadata("code-scanning", len(repo.CodeScanning)))
-		addCriticalText(&sb, criticals)
-
-		criticals = 0
-		for _, a := range repo.Dependabot {
-			if github.AsSeverityType(a.Severity) == github.SeverityCritical {
-				criticals += 1
-			}
-		}
-		totalCriticals += criticals
+		addCriticalText(&sb, codeScanningCriticals)
 
 		fmt.Fprintf(&sb, ":dependabot: %s", repo.ToSlackWithMetadata("dependabot", len(repo.Dependabot)))
-		addCriticalText(&sb, criticals)
+		addCriticalText(&sb, dependabotCriticals)
 
 		threadMsgs = append(threadMsgs, &Message{
 			Channel: channel,
