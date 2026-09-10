@@ -2,6 +2,7 @@ package slack
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
@@ -33,6 +34,14 @@ func CreatePersonalDigestMessage(channelID string, repos []gensql.GetUserCommits
 
 	header := fmt.Sprintf("*Din ukentlige commit-oversikt — %s*\n%d %s med %d %s totalt",
 		dateStr, len(repos), repoUnit, totalCommits, commitUnit)
+
+	slices.SortFunc(repos, func(a, b gensql.GetUserCommitsSinceRow) int {
+		if c := a.CommitCount - b.CommitCount; c != 0 {
+			return int(c)
+		}
+
+		return strings.Compare(a.Repo, b.Repo)
+	})
 
 	var sb strings.Builder
 	for _, r := range repos {

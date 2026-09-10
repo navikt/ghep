@@ -2,6 +2,7 @@ package slack
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
@@ -46,6 +47,14 @@ func CreatePullRequestDigestMessage(channel, teamName string, repoPRs []github.R
 	if teamName != "" {
 		summaryText = fmt.Sprintf("*Ukentlig PR-oversikt for %s — %s*\n%d %s med %d %s", teamName, dateStr, len(repoPRs), repoUnit, totalPRs, prUnit)
 	}
+
+	slices.SortFunc(repoPRs, func(a, b github.RepoPRs) int {
+		if c := len(a.PRs) - len(b.PRs); c != 0 {
+			return c
+		}
+
+		return strings.Compare(a.RepoName, b.RepoName)
+	})
 
 	for _, repo := range repoPRs {
 		var sb strings.Builder
