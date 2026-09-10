@@ -14,6 +14,7 @@ type Database struct {
 	SlackMessages      []gensql.CreateSlackMessageParams
 	Users              []string
 	CommitCountUpserts []gensql.UpsertUserCommitCountParams
+	WorkflowFailures   []gensql.UpsertWorkflowFailureParams
 	TeamRepositories   []string
 	lastRepositoryName string
 }
@@ -115,6 +116,19 @@ func (m *Database) UpsertUserCommitCount(_ context.Context, arg gensql.UpsertUse
 
 func (m *Database) ResetUserCommitCounts(_ context.Context, login string) error {
 	panic("unimplemented ResetUserCommitCounts")
+}
+
+func (m *Database) UpsertWorkflowFailure(_ context.Context, arg gensql.UpsertWorkflowFailureParams) error {
+	m.WorkflowFailures = append(m.WorkflowFailures, arg)
+	return nil
+}
+
+func (m *Database) GetWorkflowFailuresSince(_ context.Context, arg gensql.GetWorkflowFailuresSinceParams) ([]gensql.GetWorkflowFailuresSinceRow, error) {
+	panic("unimplemented GetWorkflowFailuresSince")
+}
+
+func (m *Database) ResetWorkflowFailures(_ context.Context, login string) error {
+	panic("unimplemented ResetWorkflowFailures")
 }
 
 func (m *Database) GetUserByEmail(_ context.Context, email string) (string, error) {

@@ -81,6 +81,43 @@ func (q *Queries) GetUserCommitsSince(ctx context.Context, arg GetUserCommitsSin
 	return items, nil
 }
 
+const GetWorkflowFailuresSince = `-- name: GetWorkflowFailuresSince :many
+SELECT repo, failure_count
+FROM user_workflow_failures
+WHERE login ILIKE $1 AND last_failed_at > $2
+ORDER BY failure_count DESC
+`
+
+type GetWorkflowFailuresSinceParams struct {
+	Login        string
+	LastFailedAt pgtype.Timestamptz
+}
+
+type GetWorkflowFailuresSinceRow struct {
+	Repo         string
+	FailureCount int32
+}
+
+func (q *Queries) GetWorkflowFailuresSince(ctx context.Context, arg GetWorkflowFailuresSinceParams) ([]GetWorkflowFailuresSinceRow, error) {
+	rows, err := q.db.Query(ctx, GetWorkflowFailuresSince, arg.Login, arg.LastFailedAt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetWorkflowFailuresSinceRow
+	for rows.Next() {
+		var i GetWorkflowFailuresSinceRow
+		if err := rows.Scan(&i.Repo, &i.FailureCount); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const ListUsersWithCommitsSince = `-- name: ListUsersWithCommitsSince :many
 SELECT DISTINCT login FROM user_commit_counts WHERE last_pushed_at > $1
 `
@@ -114,6 +151,15 @@ func (q *Queries) ResetUserCommitCounts(ctx context.Context, login string) error
 	return err
 }
 
+const ResetWorkflowFailures = `-- name: ResetWorkflowFailures :exec
+UPDATE user_workflow_failures SET failure_count = 0 WHERE login ILIKE $1
+`
+
+func (q *Queries) ResetWorkflowFailures(ctx context.Context, login string) error {
+	_, err := q.db.Exec(ctx, ResetWorkflowFailures, login)
+	return err
+}
+
 const UpsertUserCommitCount = `-- name: UpsertUserCommitCount :exec
 INSERT INTO user_commit_counts (login, repo, commit_count, last_pushed_at)
 VALUES ($1, $2, $3, $4)
@@ -136,6 +182,32 @@ func (q *Queries) UpsertUserCommitCount(ctx context.Context, arg UpsertUserCommi
 		arg.Repo,
 		arg.CommitCount,
 		arg.LastPushedAt,
+	)
+	return err
+}
+
+const UpsertWorkflowFailure = `-- name: UpsertWorkflowFailure :exec
+INSERT INTO user_workflow_failures (login, repo, failure_count, last_failed_at)
+VALUES ($1, $2, $3, $4)
+ON CONFLICT (login, repo)
+DO UPDATE SET
+    failure_count  = user_workflow_failures.failure_count + EXCLUDED.failure_count,
+    last_failed_at = EXCLUDED.last_failed_at
+`
+
+type UpsertWorkflowFailureParams struct {
+	Login        string
+	Repo         string
+	FailureCount int32
+	LastFailedAt pgtype.Timestamptz
+}
+
+func (q *Queries) UpsertWorkflowFailure(ctx context.Context, arg UpsertWorkflowFailureParams) error {
+	_, err := q.db.Exec(ctx, UpsertWorkflowFailure,
+		arg.Login,
+		arg.Repo,
+		arg.FailureCount,
+		arg.LastFailedAt,
 	)
 	return err
 }

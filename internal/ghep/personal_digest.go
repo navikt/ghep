@@ -121,6 +121,14 @@ func sendPersonalDigest(ctx context.Context, log *slog.Logger, db *gensql.Querie
 		return nil
 	}
 
+	failedWorkflows, err := db.GetWorkflowFailuresSince(ctx, gensql.GetWorkflowFailuresSinceParams{
+		Login:        login,
+		LastFailedAt: since,
+	})
+	if err != nil {
+		return err
+	}
+
 	slackID, err := db.GetUserSlackID(ctx, login)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -135,7 +143,7 @@ func sendPersonalDigest(ctx context.Context, log *slog.Logger, db *gensql.Querie
 		return err
 	}
 
-	msg := slack.CreatePersonalDigestMessage(dmChannel, repos)
+	msg := slack.CreatePersonalDigestMessage(dmChannel, repos, failedWorkflows)
 	payload, err := json.Marshal(msg)
 	if err != nil {
 		return err
@@ -147,6 +155,9 @@ func sendPersonalDigest(ctx context.Context, log *slog.Logger, db *gensql.Querie
 
 	if err := db.ResetUserCommitCounts(ctx, login); err != nil {
 		log.Error("Resetting commit counts", "login", login, "error", err)
+	}
+	if err := db.ResetWorkflowFailures(ctx, login); err != nil {
+		log.Error("Resetting workflow failures", "login", login, "error", err)
 	}
 
 	log.Info("Personal digest sent", "login", login, "repos", len(repos))

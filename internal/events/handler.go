@@ -73,6 +73,10 @@ func (h *Handler) Handle(ctx context.Context, log *slog.Logger, team github.Team
 		if event.Repository != nil {
 			go recordCommitAuthors(log, h.db, event) // #nosec G118 - takes too long to share context with request
 		}
+	case github.TypeWorkflow:
+		if event.Workflow != nil && event.Action == "completed" && event.Workflow.Conclusion == "failure" && event.Repository != nil {
+			go recordWorkflowFailure(log, h.db, event) // #nosec G118 - takes too long to share context with request
+		}
 	case github.TypeRepositoryRenamed:
 		if err := h.db.UpdateRepository(ctx, gensql.UpdateRepositoryParams{
 			Name:    event.Repository.Name,
@@ -265,6 +269,35 @@ func eventBranch(event github.Event, eventType github.EventType) string {
 		}
 	}
 	return ""
+}
+
+// recordWorkflowFailure counts a failed workflow run against the non-bot user
+// that triggered it, for the personal weekly digest.
+func recordWorkflowFailure(log *slog.Logger, db sql.Database, event github.Event) {
+	login := event.Sender.Login
+	if event.Sender.IsBot() || login == "" {
+		return
+	}
+
+	exists, err := db.ExistsUserCaseInsensitive(context.Background(), login)
+	if err != nil {
+		log.Error("Checking if workflow triggerer exists", "login", login, "error", err)
+		return
+	}
+
+	if !exists {
+		log.Info("Skipping workflow triggerer not in users", "login", login, "repo", event.Repository.Name)
+		return
+	}
+
+	if err := db.UpsertWorkflowFailure(context.Background(), gensql.UpsertWorkflowFailureParams{
+		Login:        login,
+		Repo:         event.Repository.Name,
+		FailureCount: 1,
+		LastFailedAt: pgtype.Timestamptz{Time: time.Now(), Valid: true},
+	}); err != nil {
+		log.Error("Recording workflow failure", "login", login, "repo", event.Repository.Name, "error", err)
+	}
 }
 
 // recordCommitAuthors counts the commits per unique non-bot author (including

@@ -9,7 +9,7 @@ import (
 	"github.com/navikt/ghep/internal/sql/gensql"
 )
 
-func CreatePersonalDigestMessage(channelID string, repos []gensql.GetUserCommitsSinceRow) *Message {
+func CreatePersonalDigestMessage(channelID string, repos []gensql.GetUserCommitsSinceRow, failedWorkflows []gensql.GetWorkflowFailuresSinceRow) *Message {
 	now := time.Now()
 	months := []string{
 		"", "januar", "februar", "mars", "april", "mai", "juni",
@@ -53,8 +53,22 @@ func CreatePersonalDigestMessage(channelID string, repos []gensql.GetUserCommits
 		fmt.Fprintf(&sb, "• *%s* — %d %s\n", r.Repo, c, cu)
 	}
 
+	var totalFailures int32
+	for _, f := range failedWorkflows {
+		totalFailures += f.FailureCount
+	}
+
+	failureLine := ""
+	if totalFailures > 0 {
+		failureUnit := "feilede workflows"
+		if totalFailures == 1 {
+			failureUnit = "feilet workflow"
+		}
+		failureLine = fmt.Sprintf("\n\n:boom: %d %s denne uka", totalFailures, failureUnit)
+	}
+
 	return &Message{
 		Channel: channelID,
-		Text:    header + "\n\n" + strings.TrimRight(sb.String(), "\n"),
+		Text:    header + "\n\n" + strings.TrimRight(sb.String(), "\n") + failureLine,
 	}
 }

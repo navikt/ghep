@@ -29,12 +29,15 @@ type Database interface {
 	GetTeamMember(ctx context.Context, params gensql.GetTeamMemberParams) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (string, error)
 	GetUserSlackID(ctx context.Context, login string) (string, error)
+	GetWorkflowFailuresSince(ctx context.Context, arg gensql.GetWorkflowFailuresSinceParams) ([]gensql.GetWorkflowFailuresSinceRow, error)
 	ListSlackMessagesByEvent(ctx context.Context, arg gensql.ListSlackMessagesByEventParams) ([]gensql.ListSlackMessagesByEventRow, error)
 	RemoveTeamMember(ctx context.Context, arg gensql.RemoveTeamMemberParams) error
 	RemoveTeamRepository(ctx context.Context, arg gensql.RemoveTeamRepositoryParams) error
 	ResetUserCommitCounts(ctx context.Context, login string) error
+	ResetWorkflowFailures(ctx context.Context, login string) error
 	UpdateRepository(ctx context.Context, arg gensql.UpdateRepositoryParams) error
 	UpsertUserCommitCount(ctx context.Context, arg gensql.UpsertUserCommitCountParams) error
+	UpsertWorkflowFailure(ctx context.Context, arg gensql.UpsertWorkflowFailureParams) error
 }
 
 type gooseLogger struct {

@@ -15,6 +15,23 @@ ORDER BY commit_count DESC;
 -- name: ResetUserCommitCounts :exec
 UPDATE user_commit_counts SET commit_count = 0 WHERE login ILIKE $1;
 
+-- name: UpsertWorkflowFailure :exec
+INSERT INTO user_workflow_failures (login, repo, failure_count, last_failed_at)
+VALUES ($1, $2, $3, $4)
+ON CONFLICT (login, repo)
+DO UPDATE SET
+    failure_count  = user_workflow_failures.failure_count + EXCLUDED.failure_count,
+    last_failed_at = EXCLUDED.last_failed_at;
+
+-- name: GetWorkflowFailuresSince :many
+SELECT repo, failure_count
+FROM user_workflow_failures
+WHERE login ILIKE $1 AND last_failed_at > $2
+ORDER BY failure_count DESC;
+
+-- name: ResetWorkflowFailures :exec
+UPDATE user_workflow_failures SET failure_count = 0 WHERE login ILIKE $1;
+
 -- name: ListUsersWithCommitsSince :many
 SELECT DISTINCT login FROM user_commit_counts WHERE last_pushed_at > $1;
 
