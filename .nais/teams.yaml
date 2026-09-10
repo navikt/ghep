@@ -548,6 +548,7 @@ teams:
   pdl:
     security: "#pdl-teknisk"
     config:
+      ignoreForks: true
       security:
         severityFilter: "high"
   pensjonskalkulator:
