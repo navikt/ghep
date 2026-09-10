@@ -113,6 +113,10 @@ func (m *Database) UpsertUserCommitCount(_ context.Context, arg gensql.UpsertUse
 	return nil
 }
 
+func (m *Database) ResetUserCommitCounts(_ context.Context, login string) error {
+	panic("unimplemented ResetUserCommitCounts")
+}
+
 func (m *Database) GetUserByEmail(_ context.Context, email string) (string, error) {
 	return map[string]string{
 		"andre.roaldseth@nav.no":         "androa",

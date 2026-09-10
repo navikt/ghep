@@ -12,6 +12,9 @@ FROM user_commit_counts
 WHERE login ILIKE $1 AND last_pushed_at > $2
 ORDER BY commit_count DESC;
 
+-- name: ResetUserCommitCounts :exec
+UPDATE user_commit_counts SET commit_count = 0 WHERE login ILIKE $1;
+
 -- name: ListUsersWithCommitsSince :many
 SELECT DISTINCT login FROM user_commit_counts WHERE last_pushed_at > $1;
 

@@ -32,6 +32,7 @@ type Database interface {
 	ListSlackMessagesByEvent(ctx context.Context, arg gensql.ListSlackMessagesByEventParams) ([]gensql.ListSlackMessagesByEventRow, error)
 	RemoveTeamMember(ctx context.Context, arg gensql.RemoveTeamMemberParams) error
 	RemoveTeamRepository(ctx context.Context, arg gensql.RemoveTeamRepositoryParams) error
+	ResetUserCommitCounts(ctx context.Context, login string) error
 	UpdateRepository(ctx context.Context, arg gensql.UpdateRepositoryParams) error
 	UpsertUserCommitCount(ctx context.Context, arg gensql.UpsertUserCommitCountParams) error
 }

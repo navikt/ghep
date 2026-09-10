@@ -105,6 +105,15 @@ func (q *Queries) ListUsersWithCommitsSince(ctx context.Context, lastPushedAt pg
 	return items, nil
 }
 
+const ResetUserCommitCounts = `-- name: ResetUserCommitCounts :exec
+UPDATE user_commit_counts SET commit_count = 0 WHERE login ILIKE $1
+`
+
+func (q *Queries) ResetUserCommitCounts(ctx context.Context, login string) error {
+	_, err := q.db.Exec(ctx, ResetUserCommitCounts, login)
+	return err
+}
+
 const UpsertUserCommitCount = `-- name: UpsertUserCommitCount :exec
 INSERT INTO user_commit_counts (login, repo, commit_count, last_pushed_at)
 VALUES ($1, $2, $3, $4)

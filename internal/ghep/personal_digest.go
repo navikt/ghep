@@ -145,6 +145,10 @@ func sendPersonalDigest(ctx context.Context, log *slog.Logger, db *gensql.Querie
 		return err
 	}
 
+	if err := db.ResetUserCommitCounts(ctx, login); err != nil {
+		log.Error("Resetting commit counts", "login", login, "error", err)
+	}
+
 	log.Info("Personal digest sent", "login", login, "repos", len(repos))
 
 	return nil
