@@ -49,11 +49,11 @@ func CreatePullRequestDigestMessage(channel, teamName string, repoPRs []github.R
 	}
 
 	slices.SortFunc(repoPRs, func(a, b github.RepoPRs) int {
-		if c := len(a.PRs) - len(b.PRs); c != 0 {
+		if c := len(b.PRs) - len(a.PRs); c != 0 {
 			return c
 		}
 
-		return strings.Compare(a.RepoName, b.RepoName)
+		return strings.Compare(b.RepoName, a.RepoName)
 	})
 
 	for _, repo := range repoPRs {
