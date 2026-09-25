@@ -518,6 +518,21 @@ teams:
             ignoreBots: true
     config:
       silenceDependabot: "always"
+  forsikringer:
+    pulls: "#forsikringer-kodeles"
+    releases: "#forsikringer-releases"
+    security: "#forsikringer-sikkerhet"
+    sources:
+      - source: workflows
+        channel: "#forsikringer-workflows"
+        config:
+          branches:
+            - main
+            - dev
+          workflows:
+            ignoreBots: true
+    config:
+      silenceDependabot: "always"
   utvikling-admin:
     issues: "utvikling-admin-dev"
     pulls: "utvikling-admin-dev"
