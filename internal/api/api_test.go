@@ -8,7 +8,7 @@ import (
 	"github.com/navikt/ghep/internal/events"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/sql/gensql"
-	"github.com/pashagolub/pgxmock/v4"
+	"github.com/pashagolub/pgxmock/v5"
 )
 
 func TestIsAnExternalContributorEvent(t *testing.T) {

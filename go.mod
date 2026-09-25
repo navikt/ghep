@@ -80,6 +80,6 @@ require (
 
 require (
 	github.com/jackc/pgx/v5 v5.11.0
-	github.com/pashagolub/pgxmock/v4 v4.9.0
+	github.com/pashagolub/pgxmock/v5 v5.2.0
 	github.com/pressly/goose/v3 v3.28.0
 )
