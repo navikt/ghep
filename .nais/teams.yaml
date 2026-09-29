@@ -517,6 +517,7 @@ teams:
           workflows:
             ignoreBots: true
     config:
+      ignoreForks: true
       silenceDependabot: "always"
   forsikringer:
     pulls: "#forsikringer-kodeles"
@@ -528,10 +529,10 @@ teams:
         config:
           branches:
             - main
-            - dev
           workflows:
             ignoreBots: true
     config:
+      ignoreForks: true
       silenceDependabot: "always"
   utvikling-admin:
     issues: "utvikling-admin-dev"
