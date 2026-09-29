@@ -532,7 +532,7 @@ teams:
           workflows:
             ignoreBots: true
     config:
-      ignoreForks: true    
+      ignoreForks: true
       silenceDependabot: "always"
   utvikling-admin:
     issues: "utvikling-admin-dev"
