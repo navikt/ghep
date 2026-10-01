@@ -83,6 +83,7 @@ teams:
     config:
       ignoreRepositories:
         - "dbt-i-nav"
+        - "dvh-images"
     commits: "#a-team-commits"
     issues: "#a-team-pull-requests"
     security: "#a-team-bots"
@@ -111,6 +112,11 @@ teams:
         config:
           branches:
             - main
+  dvh-etl-tools:
+    commits: "#dvh-images-ops"
+    issues: "#dvh-images-ops"
+    pulls: "#dvh-images-ops"
+    security: "#dvh-images-ops"
   spenn:
     commits: "#team-spenn-commits"
     issues: "#team-spenn-pull-requests"
