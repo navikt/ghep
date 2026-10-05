@@ -41,7 +41,7 @@ jobs:
           files: .nais/ghep.yaml,.nais/gnep.yaml
       - name: Push docker image to GAR
         if: steps.changed-files.outputs.changed != 'only-inputs'
-        uses: nais/docker-build-push@0e73849f69ff260ee27597553c0a7848ca4e9795 # ratchet:nais/docker-build-push@v0
+        uses: nais/docker-build-push@423a915c9b72edf2ba848b88171ccb0489e2a40a # ratchet:nais/docker-build-push@v0
         id: docker-build-push
         with:
           team: the-g-team
@@ -59,7 +59,7 @@ jobs:
           ' .nais/teams-resource.yaml > .nais/teams_for_deploy.yaml
         env:
           TEAMS_FILE: .nais/teams.yaml
-      - uses: nais/deploy/actions/deploy@027a91857992525139798892f2804b0ca21f4af6 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@7ad7c2b833e1db74a80954e3ee6bb6ac060a8ae7 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/teams_for_deploy.yaml,.nais/ghep.yaml
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
-      - uses: nais/deploy/actions/deploy@027a91857992525139798892f2804b0ca21f4af6 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@7ad7c2b833e1db74a80954e3ee6bb6ac060a8ae7 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/gnep.yaml
@@ -102,7 +102,7 @@ jobs:
             type=raw,value={{date 'YYYY-MM-DD-HHmmss'}}-{{sha}}
 
       - name: Build and push
-        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # ratchet:docker/build-push-action@v7.3.0
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # ratchet:docker/build-push-action@v7.4.0
         with:
           context: .
           push: true
