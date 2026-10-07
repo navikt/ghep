@@ -832,3 +832,9 @@ teams:
     config:
       security:
         severityFilter: "high"
+  beregningsplattform:
+    workflows: "#utbetaling-team-beregningsplattform-ci"
+    security: "#utbetaling-team-beregningsplattform-security"
+    config:
+      security:
+        severityFilter: "high"
