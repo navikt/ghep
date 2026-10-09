@@ -844,4 +844,5 @@ teams:
         ignoreDrafts: true
         ignoreBots: true
         minimalist: true
-        events: ready_for_review
+        events:
+          - ready_for_review
