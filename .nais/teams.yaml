@@ -835,6 +835,14 @@ teams:
   beregningsplattform:
     workflows: "#utbetaling-team-beregningsplattform-ci"
     security: "#utbetaling-team-beregningsplattform-security"
+    pulls: "#utbetaling-team-beregningsplattform-pr"
     config:
+      silenceDependabot: "always"
       security:
-        severityFilter: "high"
+        severityFilter: "critical"
+      pulls:
+        ignoreDrafts: true
+        ignoreBots: true
+        minimalist: true
+        events:
+          - ready_for_review
