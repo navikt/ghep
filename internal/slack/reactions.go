@@ -12,7 +12,7 @@ const (
 	ReactionSuccess    = "white_check_mark"       // ✅
 	ReactionFailure    = "x"                      // ❌
 	ReactionRequest    = "repeat"                 // 🔁
-	ReactionApproved   = "rocket"                 // 🚀
+	ReactionApproved   = "ok_hand"                // 👌
 	ReactionCancelled  = "parking"                //
 	ReactionQueued     = "eyes"                   // 👀
 	ReactionInProgress = "hourglass_flowing_sand" // ⏳
