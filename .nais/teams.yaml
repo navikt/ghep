@@ -828,10 +828,10 @@ teams:
       day: friday
       time: "16:15"
       send_empty: true
-      severity_filter: "high"
+      severity_filter: "critical"
     config:
       security:
-        severityFilter: "high"
+        severityFilter: "critical"
   beregningsplattform:
     workflows: "#utbetaling-team-beregningsplattform-ci"
     security: "#utbetaling-team-beregningsplattform-security"
