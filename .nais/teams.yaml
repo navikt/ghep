@@ -838,6 +838,8 @@ teams:
     pulls: "#utbetaling-team-beregningsplattform-pr"
     config:
       silenceDependabot: "always"
+      workflows:
+        ignoreBots: true
       security:
         severityFilter: "critical"
       pulls:
