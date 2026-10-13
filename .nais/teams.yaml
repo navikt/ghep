@@ -587,6 +587,7 @@ teams:
     config:
       ignoreRepositories:
         - "pensjon-pen"
+        - "pensjonsbrev"
       security:
         severityFilter: "high"
   utsikt:
