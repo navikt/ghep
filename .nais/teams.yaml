@@ -834,6 +834,7 @@ teams:
       security:
         severityFilter: "critical"
   beregningsplattform:
+    commits: "#utbetaling-team-beregningsplattform-commits"
     security: "#utbetaling-team-beregningsplattform-security"
     pulls: "#utbetaling-team-beregningsplattform-pr"
     sources:
@@ -845,8 +846,6 @@ teams:
           workflows:
             ignoreBots: true
     config:
-      ignoreRepositories:
-        - beregningsplattformen
       silenceDependabot: "always"
       security:
         severityFilter: "critical"
