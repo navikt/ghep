@@ -855,3 +855,15 @@ teams:
         minimalist: true
         events:
           - ready_for_review
+  teammelosys:
+    security: "#melosys-sikkerhetsvarsel"
+    security-digest:
+      channel: "#melosys-sikkerhetsvarsel"
+      day: monday
+      time: "09:00"
+      severity_filter: "critical"
+      send_empty: true
+      specifyTeamName: true
+    config:
+      security:
+        severityFilter: "critical"
