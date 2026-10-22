@@ -855,6 +855,7 @@ teams:
         minimalist: true
         events:
           - ready_for_review
+          - opened
   teammelosys:
     security: "#melosys-sikkerhetsvarsel"
     security-digest:
