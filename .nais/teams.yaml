@@ -79,6 +79,19 @@ teams:
         ignoreDrafts: true
       security:
         severityFilter: "critical"
+  risk:
+    commits: "#helseytelser-risk-dev"
+    workflows: "#helseytelser-risk-dev"
+    security: "#helseytelser-risk-dev"
+    pulls: "#helseytelser-risk-dev"
+    issues: "#helseytelser-risk-dev"
+    config:
+      silenceDependabot: "always"
+      pulls:
+        ignoreBots: true
+        ignoreDrafts: true
+      security:
+        severityFilter: "critical"
   dv-a-team:
     config:
       ignoreRepositories:
