@@ -896,3 +896,26 @@ teams:
     config:
       security:
         severityFilter: "critical"
+  skatt-og-trekk:
+    commits: "#utbetaling-skatt-og-trekk-commits"
+    security: "#utbetaling-skatt-og-trekk-security"
+    pulls: "#utbetaling-skatt-og-trekk-pr"
+    sources:
+      - source: workflows
+        channel: "#utbetaling-skatt-og-trekk-ci"
+        config:
+          branches:
+            - main
+          workflows:
+            ignoreBots: true
+    config:
+      silenceDependabot: "always"
+      security:
+        severityFilter: "critical"
+      pulls:
+        ignoreDrafts: true
+        ignoreBots: true
+        minimalist: true
+        events:
+          - ready_for_review
+          - opened
