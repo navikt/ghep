@@ -59,7 +59,7 @@ jobs:
           ' .nais/teams-resource.yaml > .nais/teams_for_deploy.yaml
         env:
           TEAMS_FILE: .nais/teams.yaml
-      - uses: nais/deploy/actions/deploy@f93637de5533a1bb573f940ceb7527a5b3b0dea0 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@3944168fd20b7eea3818e97de3810f74b54c78ff # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/teams_for_deploy.yaml,.nais/ghep.yaml
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
-      - uses: nais/deploy/actions/deploy@f93637de5533a1bb573f940ceb7527a5b3b0dea0 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@3944168fd20b7eea3818e97de3810f74b54c78ff # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/gnep.yaml
@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
 
       - name: Log in to GHCR
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # ratchet:docker/login-action@v4.6.0
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # ratchet:docker/login-action@v4.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
