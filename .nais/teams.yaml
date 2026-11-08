@@ -559,9 +559,9 @@ teams:
         ignoreBots: true
         ignoreDrafts: true
   pdfgen:
-    issues: "pdfgen"
-    releases: "pdfgen"
-    pulls: "pdfgen"
+    issues: "pdfgenrs"
+    releases: "pdfgenrs"
+    pulls: "pdfgenrs"
     config:
       pulls:
         ignoreBots: true
