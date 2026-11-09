@@ -12,6 +12,15 @@ tool (
 )
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.3.1
+	github.com/google/go-cmp v0.7.0
+	github.com/jackc/pgx/v5 v5.11.0
+	github.com/pashagolub/pgxmock/v5 v5.2.0
+	github.com/pressly/goose/v3 v3.29.0
+	gopkg.in/yaml.v3 v3.0.1
+)
+
+require (
 	cloud.google.com/go v0.123.0 // indirect
 	cloud.google.com/go/auth v0.24.1 // indirect
 	cloud.google.com/go/compute/metadata v0.10.0 // indirect
@@ -72,13 +81,4 @@ require (
 	google.golang.org/protobuf v1.36.12 // indirect
 	honnef.co/go/tools v0.8.2 // indirect
 	mvdan.cc/gofumpt v0.12.0 // indirect
-)
-
-require (
-	github.com/golang-jwt/jwt/v5 v5.3.1
-	github.com/google/go-cmp v0.7.0
-	github.com/jackc/pgx/v5 v5.12.0
-	github.com/pashagolub/pgxmock/v5 v5.2.0
-	github.com/pressly/goose/v3 v3.29.0
-	gopkg.in/yaml.v3 v3.0.1
 )
