@@ -71,7 +71,7 @@ teams:
     workflows: "#team-bømlo-workflow"
     security: "#helseytelser-dev"
     pulls: "team-bømlo-pull-requests"
-    issues: "team-bømlo-pull-requests"
+    issues: "team-sas-issues"
     config:
       silenceDependabot: "always"
       pulls:
