@@ -78,6 +78,9 @@ metadata:
     team: the-g-team
     systemkatalog.nav.no/system: SK-625
 spec:
+  uses:
+    postgres:
+      - name: gnep
   ingresses:
     - https://ghep.nav.no/nais
     - https://gnep.intern.nav.no
@@ -115,8 +118,6 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
-  postgres:
-    clusterName: gnep
   startup:
     path: /internal/health
     initialDelay: 10
