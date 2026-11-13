@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -51,22 +52,6 @@ data:
           externalContributorsChannel: "#nais-external-contributors"
           pulls:
             ignoreBots: true
-
----
-apiVersion: data.nais.io/v1
-kind: Postgres
-metadata:
-  name: gnep
-  namespace: the-g-team
-spec:
-  cluster:
-    majorVersion: "17"
-    resources:
-      cpu: 100m
-      diskSize: 8Gi
-      memory: 2G
-  database:
-    collation: nb_NO
 
 ---
 apiVersion: nais.io/v1alpha1

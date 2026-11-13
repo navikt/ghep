@@ -1,20 +1,3 @@
----
-apiVersion: data.nais.io/v1
-kind: Postgres
-metadata:
-  name: ghep
-  namespace: the-g-team
-spec:
-  cluster:
-    majorVersion: "17"
-    resources:
-      cpu: 100m
-      diskSize: 8Gi
-      memory: 2G
-  database:
-    collation: nb_NO
-
----
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
@@ -23,8 +6,6 @@ metadata:
   labels:
     team: the-g-team
     systemkatalog.nav.no/system: SK-625
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 spec:
   uses:
     postgres:
