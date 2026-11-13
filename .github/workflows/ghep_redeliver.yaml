@@ -1,4 +1,4 @@
-name: Ghep: Redeliver failed webhook deliveries
+name: "Ghep: Redeliver failed webhook deliveries"
 
 on:
   schedule:
