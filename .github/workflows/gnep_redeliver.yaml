@@ -33,7 +33,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           TOKEN: ${{ steps.get-token.outputs.token }}
           LAST_REDELIVERY_VARIABLE_NAME: "GNEP_LAST_REDELIVERY_EVENT"
-          WORKFLOW_REPO: ${{ github.event.repository.name }}
-          WORKFLOW_REPO_OWNER: ${{ github.repository_owner }}
+          WORKFLOW_REPO: "gnep"
+          WORKFLOW_REPO_OWNER: "nais"
         run: |
           node .github/workflows/scripts/redeliver-failed-deliveries.mjs
