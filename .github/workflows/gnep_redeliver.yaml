@@ -1,0 +1,39 @@
+name: Gnep: Redeliver failed webhook deliveries
+
+on:
+  schedule:
+    - cron: "10 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  redeliver-failed-deliveries:
+    name: Redeliver failed deliveries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
+
+      - uses: navikt/github-app-token-generator@b96ff604b2300989cd1105e3fad09199fca56681 # ratchet:navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          app-id: "${{ secrets.GNEP_REDELIVERY_APP_ID }}"
+          private-key: "${{ secrets.GNEP_REDELIVERY_PRIVATE_KEY }}"
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # ratchet:actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - run: npm install octokit
+
+      - name: Run script
+        env:
+          APP_ID: ${{ secrets.APP_ID }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          TOKEN: ${{ steps.get-token.outputs.token }}
+          LAST_REDELIVERY_VARIABLE_NAME: "GNEP_LAST_REDELIVERY_EVENT"
+          WORKFLOW_REPO: ${{ github.event.repository.name }}
+          WORKFLOW_REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          node .github/workflows/scripts/redeliver-failed-deliveries.mjs

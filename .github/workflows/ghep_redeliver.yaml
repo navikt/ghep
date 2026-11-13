@@ -1,4 +1,4 @@
-name: Redeliver failed webhook deliveries
+name: Ghep: Redeliver failed webhook deliveries
 
 on:
   schedule:
@@ -18,8 +18,8 @@ jobs:
       - uses: navikt/github-app-token-generator@b96ff604b2300989cd1105e3fad09199fca56681 # ratchet:navikt/github-app-token-generator@v1
         id: get-token
         with:
-          app-id: "${{ secrets.REDELIVERY_APP_ID }}"
-          private-key: "${{ secrets.REDELIVERY_PRIVATE_KEY }}"
+          app-id: "${{ secrets.GHEP_REDELIVERY_APP_ID }}"
+          private-key: "${{ secrets.GHEP_REDELIVERY_PRIVATE_KEY }}"
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # ratchet:actions/setup-node@v6
         with:
@@ -32,7 +32,7 @@ jobs:
           APP_ID: ${{ secrets.APP_ID }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           TOKEN: ${{ steps.get-token.outputs.token }}
-          LAST_REDELIVERY_VARIABLE_NAME: "LAST_REDELIVERY_EVENT"
+          LAST_REDELIVERY_VARIABLE_NAME: "GHEP_LAST_REDELIVERY_EVENT"
           WORKFLOW_REPO: ${{ github.event.repository.name }}
           WORKFLOW_REPO_OWNER: ${{ github.repository_owner }}
         run: |
