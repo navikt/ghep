@@ -126,7 +126,7 @@ async function fetchWebhookDeliveriesSince({lastWebhookRedeliveryTime, app}) {
     {
       per_page: 100,
       headers: {
-        "x-github-api-version": "2022-11-28",
+        "x-github-api-version": "2026-03-10",
       },
     }
   );
@@ -166,7 +166,7 @@ async function redeliverWebhook({deliveryId, app, maxRetries = 3}) {
       });
       return;
     } catch (error) {
-      if (error.status === 404 || error.status >= 500) {
+      if (error.status >= 500) {
         if (attempt < maxRetries) {
           const delay = attempt * 1000;
           console.warn(`Attempt ${attempt}/${maxRetries} failed for delivery ${deliveryId} (HTTP ${error.status}), retrying in ${delay}ms...`);
