@@ -1,5 +1,23 @@
 // This script uses GitHub's Octokit SDK to make API requests. For more information, see "[AUTOTITLE](/rest/guides/scripting-with-the-rest-api-and-javascript)."
 import { App, Octokit } from "octokit";
+import JSONbig from "json-bigint";
+
+// Webhook delivery IDs are int64 and exceed JS's safe integer range, so the
+// default JSON.parse silently rounds them and redelivery 404s. This fetch
+// re-parses oversized integers as strings before octokit touches the body.
+const bigJSON = JSONbig({ storeAsString: true });
+
+const bigIntSafeFetch = async (url, options) => {
+  const response = await fetch(url, options);
+  const text = await response.text();
+  if (!text || !response.headers.get("content-type")?.includes("json")) {
+    return new Response(text, response);
+  }
+  // Round-trip through json-bigint so large ints become quoted strings that
+  // survive octokit's own JSON.parse.
+  const safe = JSON.stringify(bigJSON.parse(text));
+  return new Response(safe, response);
+};
 
 //
 async function checkAndRedeliverWebhooks() {
@@ -18,6 +36,7 @@ async function checkAndRedeliverWebhooks() {
   const app = new App({
     appId: APP_ID,
     privateKey: PRIVATE_KEY,
+    Octokit: Octokit.defaults({ request: { fetch: bigIntSafeFetch } }),
   });
 
   // Create an instance of `Octokit` using the token values that were set in the GitHub Actions workflow.
