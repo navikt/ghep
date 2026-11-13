@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/navikt/ghep/internal/sql/gensql"
@@ -57,9 +58,15 @@ func New(ctx context.Context, log *slog.Logger, runMigrations bool) (*gensql.Que
 	if url == "" {
 		return nil, fmt.Errorf("PGURL environment variable is not set")
 	}
-	url = fmt.Sprintf("%s?default_query_exec_mode=cache_describe", url)
 
-	pool, err := pgxpool.New(ctx, url)
+	config, err := pgxpool.ParseConfig(url)
+	if err != nil {
+		return nil, err
+	}
+
+	config.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeCacheDescribe
+
+	pool, err := pgxpool.New(ctx, config.ConnString())
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
