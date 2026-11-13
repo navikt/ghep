@@ -76,22 +76,6 @@ func handlePullRequestEvent(ctx context.Context, log *slog.Logger, db sql.Databa
 		return nil, nil
 	}
 
-	channel := source.Channel
-	if event.Sender.IsUser() {
-		if _, err := db.GetTeamMember(ctx, gensql.GetTeamMemberParams{
-			TeamSlug:  team.Name,
-			UserLogin: event.Sender.Login,
-		}); err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
-				if team.Config.ExternalContributorsChannel != "" {
-					channel = team.Config.ExternalContributorsChannel
-				}
-			} else {
-				log.Error("Getting team member", "error", err, "user", event.Sender.Login)
-			}
-		}
-	}
-
-	log.Info("Received pull request", "channel", channel)
-	return slack.CreatePullRequestMessage(ctx, log, db, channel, threadTimestamp, team.Config.PingSlackUsers, source.Config.Pulls.Minimalist, event), nil
+	log.Info("Received pull request", "channel", source.Channel)
+	return slack.CreatePullRequestMessage(ctx, log, db, source.Channel, threadTimestamp, team.Config.PingSlackUsers, source.Config.Pulls.Minimalist, event), nil
 }
