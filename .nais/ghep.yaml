@@ -26,6 +26,9 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 spec:
+  uses:
+    postgres:
+      - name: gnep
   leaderElection: true
   ingresses:
     - https://ghep.nav.no
@@ -64,8 +67,6 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
-  postgres:
-    clusterName: ghep
   startup:
     path: /internal/health
     initialDelay: 10
