@@ -24,7 +24,7 @@ jobs:
           ' .nais/teams-resource.yaml > .nais/teams_for_deploy.yaml
         env:
           TEAMS_FILE: .nais/teams.yaml
-      - uses: nais/deploy/actions/deploy@7b60caaded00332e9aa117a8342daa0876851dfe # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@6a9dcd6df697ec2d38edc78cadb0b9acd1232f50 # ratchet:nais/deploy/actions/deploy@v3
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/teams_for_deploy.yaml
