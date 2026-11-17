@@ -29,6 +29,7 @@ data:
               branches:
                 - main
                 - master
+                - deploy-v3
               workflows:
                 ignoreBots: true
         pr-digest:
