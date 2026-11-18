@@ -48,6 +48,9 @@ spec:
         - ipv4: 18.159.197.225
         - ipv4: 3.68.124.168
         - ipv4: 3.68.170.153
+  prometheus:
+    enabled: true
+    path: /internal/metrics
   startup:
     path: /internal/health
     initialDelay: 10

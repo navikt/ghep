@@ -19,12 +19,14 @@ import (
 	"github.com/navikt/ghep/internal/events"
 	"github.com/navikt/ghep/internal/github"
 	"github.com/navikt/ghep/internal/sql/gensql"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Client struct {
 	log           *slog.Logger
 	db            *gensql.Queries
 	events        events.Handler
+	metrics       *metrics
 	teamConfig    map[string]github.Team
 	webhookSecret string
 
@@ -37,6 +39,7 @@ func New(log *slog.Logger, db *gensql.Queries, events events.Handler, teamConfig
 		log:           log,
 		db:            db,
 		events:        events,
+		metrics:       newMetrics(),
 		teamConfig:    teamConfig,
 		webhookSecret: webhookSecret,
 
@@ -49,6 +52,7 @@ func (c *Client) Run(base, addr string) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc(fmt.Sprintf("POST %s/events", base), c.eventsPostHandler)
 	mux.HandleFunc("GET /internal/health", c.healthGetHandler)
+	mux.Handle("GET /internal/metrics", promhttp.Handler())
 	mux.HandleFunc("GET /internal/", c.frontendGetHandler)
 
 	srv := &http.Server{
@@ -63,6 +67,8 @@ func (c *Client) Run(base, addr string) error {
 }
 
 func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
+	c.metrics.eventsReceivedTotal.Inc()
+
 	deliveryID := r.Header.Get("X-GitHub-Delivery")
 	eventType := r.Header.Get("X-GitHub-Event")
 	log := c.log.With("delivery_id", deliveryID, "header_event_type", eventType)
@@ -95,16 +101,19 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			if err := c.db.CreateUser(r.Context(), event.Membership.User.Login); err != nil {
 				log.Error("Creating user in database", "user", event.Membership.User.Login, "error", err)
 				http.Error(w, fmt.Sprintf("Error creating user in database: %s", err.Error()), http.StatusInternalServerError)
+				c.metrics.eventsHandledFailedTotal.Inc()
 				return
 			}
 		case "member_removed":
 			if err := c.db.DeleteUser(r.Context(), event.Membership.User.Login); err != nil {
 				log.Error("Deleting user from database", "user", event.Membership.User.Login, "error", err)
 				http.Error(w, fmt.Sprintf("Error deleting user from database: %s", err.Error()), http.StatusInternalServerError)
+				c.metrics.eventsHandledFailedTotal.Inc()
 				return
 			}
 		}
 
+		c.metrics.eventsHandledTotal.Inc()
 		fmt.Fprint(w, "Member event handled for org\n")
 		return
 	}
@@ -120,6 +129,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error("Checking if user is an external contributor", "user", event.Sender.Login, "error", err)
 		http.Error(w, fmt.Sprintf("Error checking if user is an external contributor: %s", err.Error()), http.StatusInternalServerError)
+		c.metrics.eventsHandledFailedTotal.Inc()
 		return
 	}
 
@@ -137,6 +147,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		if err := c.events.Handle(r.Context(), log, team, event); err != nil {
 			log.Error("Handling event for external contributors", "error", err)
 			http.Error(w, "Error handling event for external contributors", http.StatusInternalServerError)
+			c.metrics.eventsHandledFailedTotal.Inc()
 			return
 		}
 	}
@@ -163,6 +174,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 				if !errors.Is(err, pgx.ErrNoRows) {
 					log.Error("Getting team from database", "team", event.Team.Name, "error", err)
 					http.Error(w, fmt.Sprintf("Error getting team from database: %s", err.Error()), http.StatusInternalServerError)
+					c.metrics.eventsHandledFailedTotal.Inc()
 					return
 				}
 
@@ -179,6 +191,7 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Error("Listing teams by repository", "repository", event.GetRepositoryName(), "error", err)
 				http.Error(w, fmt.Sprintf("Error listing teams by repository: %s", err.Error()), http.StatusInternalServerError)
+				c.metrics.eventsHandledFailedTotal.Inc()
 				return
 			}
 
@@ -201,10 +214,12 @@ func (c *Client) eventsPostHandler(w http.ResponseWriter, r *http.Request) {
 		if err := c.events.Handle(r.Context(), log, c.teamConfig[name], event); err != nil {
 			log.Error("Handling event", "team", name, "error", err)
 			http.Error(w, fmt.Sprintf("Error handling event for %s", name), http.StatusInternalServerError)
+			c.metrics.eventsHandledFailedTotal.Inc()
 			return
 		}
 	}
 
+	c.metrics.eventsHandledTotal.Inc()
 	if len(teams) > 1 {
 		escaped := make([]string, len(teams))
 		for i, t := range teams {
