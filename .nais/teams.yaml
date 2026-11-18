@@ -421,7 +421,7 @@ teams:
             repositories:
               - nav-enonicxp-frontend
             workflows:
-              - Deploy til prod-failover
+              - Deploy to prod-failover
     config:
       silenceDependabot: "always"
   allosaurus:
