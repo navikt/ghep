@@ -41,6 +41,12 @@ teams:
       day: monday
       time: "08:01"
       severity_filter: high
+    pulls: "#team-aap-pull-request"
+    config:
+      pulls:
+        ignoreDrafts: true
+        ignoreBots: true
+        events: ["ready_for_review"]
     sources:
       - source: workflows
         channel: "#aap-github-workflows"
