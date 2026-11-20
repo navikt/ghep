@@ -55,7 +55,7 @@ teams:
       pulls:
         ignoreDrafts: true
         ignoreBots: true
-        events: ["ready_for_review"]
+        events: ["opened", "ready_for_review"]
   flex:
     commits: "#flex-github-feed"
     issues: "#flex-github-feed"
