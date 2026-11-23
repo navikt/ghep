@@ -9,5 +9,5 @@ import (
 
 func handlePublicizedEvent(log *slog.Logger, channel string, event github.Event) *slack.Message {
 	log.Info("Received repository publicized", "channel", channel)
-	return slack.CreateRenamedMessage(channel, event)
+	return slack.CreatePublicizedMessage(channel, event)
 }
