@@ -9,7 +9,7 @@ metadata:
 spec:
   uses:
     postgres:
-      - name: gnep
+      - name: ghep
   leaderElection: true
   ingresses:
     - https://ghep.nav.no
