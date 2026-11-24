@@ -73,9 +73,9 @@ teams:
     config:
       externalContributorsChannel: "#flex-ghep-extern-contrib"
   team-sas:
-    commits: "#helseytelser-dev"
+    commits: "#team-sas-commits"
     workflows: "#team-bømlo-workflow"
-    security: "#helseytelser-dev"
+    security: "#team-sas-commits"
     pulls: "team-bømlo-pull-requests"
     issues: "team-sas-issues"
     config:
